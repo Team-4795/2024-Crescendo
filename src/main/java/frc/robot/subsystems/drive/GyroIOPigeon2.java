@@ -35,14 +35,10 @@ public class GyroIOPigeon2 implements GyroIO {
     yaw.setUpdateFrequency(Module.ODOMETRY_FREQUENCY);
     yawVelocity.setUpdateFrequency(100.0);
     pigeon.optimizeBusUtilization();
-    if (phoenixDrive) {
-      yawPositionQueue =
-          PhoenixOdometryThread.getInstance().registerSignal(pigeon, pigeon.getYaw());
-    } else {
-      yawPositionQueue =
-          SparkMaxOdometryThread.getInstance()
-              .registerSignal(() -> pigeon.getYaw().getValueAsDouble());
-    }
+    yawPositionQueue =
+        SparkMaxOdometryThread.getInstance()
+            .registerSignal(() -> pigeon.getYaw().getValueAsDouble());
+    
   }
 
   @Override
