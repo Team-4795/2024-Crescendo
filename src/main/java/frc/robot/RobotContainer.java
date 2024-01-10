@@ -17,15 +17,13 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -36,7 +34,6 @@ import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelIO;
 import frc.robot.subsystems.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.flywheel.FlywheelIOSparkMax;
-import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
@@ -113,6 +110,16 @@ public class RobotContainer {
                 () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel)
             .withTimeout(5.0));
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+    // Set up feedforward characterization
+    autoChooser.addOption(
+        "Drive FF Characterization",
+        new FeedForwardCharacterization(
+            drive, drive::runCharacterizationVolts, drive::getCharacterizationVelocity));
+    autoChooser.addOption(
+        "Flywheel FF Characterization",
+        new FeedForwardCharacterization(
+            flywheel, flywheel::runVolts, flywheel::getCharacterizationVelocity));
 
     // Configure the button bindings
     configureButtonBindings();

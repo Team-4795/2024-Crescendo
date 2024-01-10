@@ -169,7 +169,7 @@ out/
 .fleet
 
 # Simulation GUI and other tools window save file
-*-window.json
+simgui*.json
 
 # Simulation data log directory
 logs/
