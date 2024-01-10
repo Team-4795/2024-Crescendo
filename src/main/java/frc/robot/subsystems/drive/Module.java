@@ -26,6 +26,9 @@ public class Module {
   private static final double WHEEL_RADIUS = Units.inchesToMeters(1.45);
   public static final double ODOMETRY_FREQUENCY = 250.0;
 
+  public static final double DRIVE_GEAR_RATIO = (45 * 22) / (14 * 15);
+  public static final double TURN_GEAR_RATIO = 9424 / 203;
+
   private final ModuleIO io;
   private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
   private final int index;

@@ -39,10 +39,6 @@ import java.util.Queue;
  * "/Drive/ModuleX/TurnAbsolutePositionRad"
  */
 public class ModuleIOSparkMax implements ModuleIO {
-  // Gear ratios for MAX Swerve
-  private static final double DRIVE_GEAR_RATIO = 4.71;
-  private static final double TURN_GEAR_RATIO = 46.47;
-
   private final CANSparkMax driveSparkMax;
   private final CANSparkMax turnSparkMax;
 
@@ -106,14 +102,14 @@ public class ModuleIOSparkMax implements ModuleIO {
     turnRelativeEncoder.setMeasurementPeriod(10);
     turnRelativeEncoder.setAverageDepth(2);
 
-    driveEncoder.setPositionConversionFactor(2.0 * Math.PI / DRIVE_GEAR_RATIO); // Rev -> Rad
-    driveEncoder.setVelocityConversionFactor(2.0 * Math.PI / DRIVE_GEAR_RATIO / 60.0); // RPM -> Rad/s
+    driveEncoder.setPositionConversionFactor(2.0 * Math.PI / Module.DRIVE_GEAR_RATIO); // Rev -> Rad
+    driveEncoder.setVelocityConversionFactor(2.0 * Math.PI / Module.DRIVE_GEAR_RATIO / 60.0); // RPM -> Rad/s
 
     turnAbsoluteEncoder.setPositionConversionFactor(2.0 * Math.PI);
     turnAbsoluteEncoder.setVelocityConversionFactor(2.0 * Math.PI / 60.0);
 
-    turnRelativeEncoder.setPositionConversionFactor(1.0 / TURN_GEAR_RATIO); // Keep in revs
-    turnRelativeEncoder.setVelocityConversionFactor(2.0 * Math.PI / TURN_GEAR_RATIO / 60.0);
+    turnRelativeEncoder.setPositionConversionFactor(1.0 / Module.TURN_GEAR_RATIO); // Keep in revs
+    turnRelativeEncoder.setVelocityConversionFactor(2.0 * Math.PI / Module.TURN_GEAR_RATIO / 60.0);
 
     driveSparkMax.setCANTimeout(0);
     turnSparkMax.setCANTimeout(0);
