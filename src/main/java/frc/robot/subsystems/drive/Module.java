@@ -26,8 +26,8 @@ public class Module {
   private static final double WHEEL_RADIUS = Units.inchesToMeters(1.45);
   public static final double ODOMETRY_FREQUENCY = 250.0;
 
-  public static final double DRIVE_GEAR_RATIO = (45 * 22) / (14 * 15);
-  public static final double TURN_GEAR_RATIO = 9424 / 203;
+  public static final double DRIVE_GEAR_RATIO = (45.0 * 22.0) / (14.0 * 15.0);
+  public static final double TURN_GEAR_RATIO = 9424.0 / 203.0;
 
   private final ModuleIO io;
   private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
@@ -56,7 +56,7 @@ public class Module {
         turnFeedback = new PIDController(7.0, 0.0, 0.0);
         break;
       case SIM:
-        driveFeedforward = new SimpleMotorFeedforward(0.0, 0.13);
+        driveFeedforward = new SimpleMotorFeedforward(0.0, 0.094);
         driveFeedback = new PIDController(0.1, 0.0, 0.0);
         turnFeedback = new PIDController(10.0, 0.0, 0.0);
         break;

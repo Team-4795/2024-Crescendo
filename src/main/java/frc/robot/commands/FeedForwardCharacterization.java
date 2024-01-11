@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.util.PolynomialRegression;
+import frc.robot.util.MultipleLinearRegression;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -96,11 +98,41 @@ public class FeedForwardCharacterization extends Command {
               voltageData.stream().mapToDouble(Double::doubleValue).toArray(),
               1);
 
-      System.out.println("FF Characterization Results:");
+      System.out.println("Simple FF Characterization Results:");
       System.out.println("\tCount=" + Integer.toString(velocityData.size()) + "");
       System.out.println(String.format("\tR2=%.5f", regression.R2()));
       System.out.println(String.format("\tkS=%.5f", regression.beta(0)));
       System.out.println(String.format("\tkV=%.5f", regression.beta(1)));
+
+      double[] y = velocityData.subList(1, velocityData.size())
+          .stream().mapToDouble(Double::doubleValue).toArray();
+
+      double[][] x = new double[velocityData.size() - 1][3];
+
+      for (int i = 0; i < velocityData.size() - 1; i++) {
+        x[i] = new double[] { velocityData.get(i), voltageData.get(i), Math.signum(velocityData.get(i)) };
+      }
+
+      MultipleLinearRegression regression2 = new MultipleLinearRegression(x, y);
+
+      double alpha = regression2.beta(0);
+      double beta = regression2.beta(1);
+      double gamma = regression2.beta(2);
+
+      double ks = -gamma / beta;
+      double kv = (1 - alpha) / beta;
+      double ka = (alpha - 1) * 0.02 / (beta * Math.log(alpha));
+
+      if (alpha <= 0.0 || Math.abs(beta) < 1e-5) {
+        System.out.println("Warning: Data is outside of expected bounds, results may be invalid.");
+      }
+
+      System.out.println("Full FF Characterization Results:");
+      System.out.println("\tCount=" + Integer.toString(velocityData.size()) + "");
+      System.out.println(String.format("\tR2=%.5f", regression2.R2()));
+      System.out.println(String.format("\tkS=%.5f", ks));
+      System.out.println(String.format("\tkV=%.5f", kv));
+      System.out.println(String.format("\tkA=%.5f", ka));
     }
   }
 }

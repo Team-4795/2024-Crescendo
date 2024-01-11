@@ -59,13 +59,13 @@ public class ModuleIOSparkMax implements ModuleIO {
         absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
         break;
       case 1:
-        driveSparkMax = new CANSparkMax(6, MotorType.kBrushless);
-        turnSparkMax = new CANSparkMax(7, MotorType.kBrushless);
+        driveSparkMax = new CANSparkMax(4, MotorType.kBrushless);
+        turnSparkMax = new CANSparkMax(5, MotorType.kBrushless);
         absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
         break;
       case 2:
-        driveSparkMax = new CANSparkMax(4, MotorType.kBrushless);
-        turnSparkMax = new CANSparkMax(5, MotorType.kBrushless);
+        driveSparkMax = new CANSparkMax(6, MotorType.kBrushless);
+        turnSparkMax = new CANSparkMax(7, MotorType.kBrushless);
         absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
         break;
       case 3:
@@ -129,6 +129,7 @@ public class ModuleIOSparkMax implements ModuleIO {
     driveSparkMax.burnFlash();
     turnSparkMax.burnFlash();
   }
+  
   @Override
   public void updateInputs(ModuleIOInputs inputs) {
     inputs.drivePositionRad = driveEncoder.getPosition();
