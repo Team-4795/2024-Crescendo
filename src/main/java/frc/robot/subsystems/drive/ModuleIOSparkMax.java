@@ -54,53 +54,54 @@ public class ModuleIOSparkMax implements ModuleIO {
   public ModuleIOSparkMax(int index) {
     switch (index) {
       case 0:
-        driveSparkMax = new CANSparkMax(2, MotorType.kBrushless);
-        turnSparkMax = new CANSparkMax(3, MotorType.kBrushless);
-        absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
-        break;
-      case 1:
-        driveSparkMax = new CANSparkMax(4, MotorType.kBrushless);
-        turnSparkMax = new CANSparkMax(5, MotorType.kBrushless);
-        absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
-        break;
-      case 2:
-        driveSparkMax = new CANSparkMax(6, MotorType.kBrushless);
-        turnSparkMax = new CANSparkMax(7, MotorType.kBrushless);
-        absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
-        break;
-      case 3:
         driveSparkMax = new CANSparkMax(8, MotorType.kBrushless);
         turnSparkMax = new CANSparkMax(9, MotorType.kBrushless);
-        absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
+        absoluteEncoderOffset = new Rotation2d(Math.PI); // MUST BE CALIBRATED
+        break;
+      case 1:
+        driveSparkMax = new CANSparkMax(6, MotorType.kBrushless);
+        turnSparkMax = new CANSparkMax(7, MotorType.kBrushless);
+        absoluteEncoderOffset = new Rotation2d(Math.PI / 2); // MUST BE CALIBRATED
+        break;
+      case 2:
+        driveSparkMax = new CANSparkMax(4, MotorType.kBrushless);
+        turnSparkMax = new CANSparkMax(5, MotorType.kBrushless);
+        absoluteEncoderOffset = new Rotation2d(-Math.PI / 2); // MUST BE CALIBRATED
+        break;
+      case 3:
+        driveSparkMax = new CANSparkMax(2, MotorType.kBrushless);
+        turnSparkMax = new CANSparkMax(3, MotorType.kBrushless);
+        absoluteEncoderOffset = new Rotation2d(0); // MUST BE CALIBRATED
         break;
       default:
         throw new RuntimeException("Invalid module index");
     }
 
-    turnAbsoluteEncoder = turnSparkMax.getAbsoluteEncoder(Type.kDutyCycle);
-
     driveSparkMax.restoreFactoryDefaults();
     turnSparkMax.restoreFactoryDefaults();
 
-    driveSparkMax.setCANTimeout(250);
-    turnSparkMax.setCANTimeout(250);
+    
+    
+    // driveSparkMax.setCANTimeout(250);
+    // turnSparkMax.setCANTimeout(250);
 
     driveEncoder = driveSparkMax.getEncoder();
     turnRelativeEncoder = turnSparkMax.getEncoder();
+    turnAbsoluteEncoder = turnSparkMax.getAbsoluteEncoder(Type.kDutyCycle);
 
     turnSparkMax.setInverted(isTurnMotorInverted);
-    driveSparkMax.setSmartCurrentLimit(40);
-    turnSparkMax.setSmartCurrentLimit(30);
-    driveSparkMax.enableVoltageCompensation(12.0);
-    turnSparkMax.enableVoltageCompensation(12.0);
+    driveSparkMax.setSmartCurrentLimit(60);
+    turnSparkMax.setSmartCurrentLimit(25);
+    // driveSparkMax.enableVoltageCompensation(12.0);
+    // turnSparkMax.enableVoltageCompensation(12.0);
 
     driveEncoder.setPosition(0.0);
-    driveEncoder.setMeasurementPeriod(10);
-    driveEncoder.setAverageDepth(2);
+    // driveEncoder.setMeasurementPeriod(10);
+    // driveEncoder.setAverageDepth(2);
 
     turnRelativeEncoder.setPosition(0.0);
-    turnRelativeEncoder.setMeasurementPeriod(10);
-    turnRelativeEncoder.setAverageDepth(2);
+    // turnRelativeEncoder.setMeasurementPeriod(10);
+    // turnRelativeEncoder.setAverageDepth(2);
 
     driveEncoder.setPositionConversionFactor(2.0 * Math.PI / Module.DRIVE_GEAR_RATIO); // Rev -> Rad
     driveEncoder.setVelocityConversionFactor(2.0 * Math.PI / Module.DRIVE_GEAR_RATIO / 60.0); // RPM -> Rad/s
@@ -111,11 +112,11 @@ public class ModuleIOSparkMax implements ModuleIO {
     turnRelativeEncoder.setPositionConversionFactor(1.0 / Module.TURN_GEAR_RATIO); // Keep in revs
     turnRelativeEncoder.setVelocityConversionFactor(2.0 * Math.PI / Module.TURN_GEAR_RATIO / 60.0);
 
-    driveSparkMax.setCANTimeout(0);
-    turnSparkMax.setCANTimeout(0);
+    // driveSparkMax.setCANTimeout(0);
+    // turnSparkMax.setCANTimeout(0);
 
-    driveSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
-    driveSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+    // driveSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
+    // driveSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
 
     driveSparkMax.setPeriodicFramePeriod(
         PeriodicFrame.kStatus2, (int) (1000.0 / Module.ODOMETRY_FREQUENCY));
