@@ -1,35 +1,38 @@
 package frc.robot.subsystems.Shooter;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
-    private ShooterIO io;
-    private ShooterIOInputsAutoLogged inputs;
+    private ShooterIO io = new ShooterIOReal();
+    private ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
 
     private ProfiledPIDController controller = new ProfiledPIDController(1, 0, 0, new Constraints(2, 2));
     private double goal = 0;
 
     public Shooter(){
-        
+        io.updateInputs(inputs);
+        goal = inputs.angleMotorRelativePosition;
     }
     public void scoreSpeaker () { 
-        // rightShooterMotor.set(Constants.speaker);
-        // leftShooterMotor.set(Constants.speaker);
+        io.runShooterMotors(Constants.speaker);
     }
     public void scoreAmp () {
-        // rightShooterMotor.set(Constants.amp);
-        // leftShooterMotor.set(Constants.amp);
+        io.runShooterMotors(Constants.amp);
     }
 
+    public void setGoal (double goal) {
+        this.goal = goal;
+    }
 
     @Override
     public void periodic() {
-        // angleMotor.set(controller.calculate(encoder.getPosition(), goal));
+        io.updateInputs(inputs);
+        Logger.processInputs("Shooter", inputs);
+        io.rotateAngleMotor(controller.calculate(goal, inputs.angleMotorRelativePosition));
     }
 }
