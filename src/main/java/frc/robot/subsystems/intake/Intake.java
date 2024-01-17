@@ -14,7 +14,7 @@ public class Intake extends SubsystemBase{
     private IntakeIO io;
     private IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
     public Intake(IntakeIO io) {
-        io = new SparkMaxIO();
+        this.io = io;
         io.updateInputs(inputs);
     }
 

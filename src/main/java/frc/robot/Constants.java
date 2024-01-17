@@ -35,9 +35,11 @@ public final class Constants {
     REPLAY
   }
   public static final class intakeConstants {
-    public static final int frontCanID = 0;
-    public static final int backCanID = 0;
+    public static final int frontCanID = 2;
+    public static final int backCanID = 1;
     public static final double intakeSpeed = 0.2;
+    public static final double simGearRatio = 30;
+
 
   }
 }

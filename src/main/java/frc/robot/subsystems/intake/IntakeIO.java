@@ -7,6 +7,12 @@ public interface IntakeIO {
     public static class IntakeIOInputs {
         public double velocity;
         public double voltage;
+        public double angularpositionrad;
+        public double angularpositionrot;
+  	    public double angularvelocityrad;
+        public double angularvelocityRPM;
+        public double amps;
+        
         
     }
     public default void updateInputs(IntakeIOInputs inputs) {}

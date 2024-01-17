@@ -7,8 +7,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 
 public class SparkMaxIO implements IntakeIO{
-    private final CANSparkMax frontRoller = new CANSparkMax(0, MotorType.kBrushless);
-    private final CANSparkMax backRoller = new CANSparkMax(0, MotorType.kBrushless);
+    private final CANSparkMax frontRoller = new CANSparkMax(1, MotorType.kBrushless);
+    private final CANSparkMax backRoller = new CANSparkMax(10, MotorType.kBrushless);
     private final RelativeEncoder frontEncoder = frontRoller.getEncoder();
     private final RelativeEncoder backEncoder = backRoller.getEncoder();
 
@@ -33,7 +33,6 @@ public class SparkMaxIO implements IntakeIO{
     public void setMotorSpeed(double speed) {
         frontRoller.set(speed);
     }
-
     
     } 
 
