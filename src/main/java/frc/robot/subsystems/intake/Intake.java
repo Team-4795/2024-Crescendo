@@ -13,7 +13,7 @@ import frc.robot.subsystems.intake.IntakeIO.IntakeIOInputs;
 public class Intake extends SubsystemBase{
     private IntakeIO io;
     private IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
-    public Intake() {
+    public Intake(IntakeIO io) {
         io = new SparkMaxIO();
         io.updateInputs(inputs);
     }

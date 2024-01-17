@@ -7,7 +7,7 @@ public interface IntakeIO {
     public static class IntakeIOInputs {
         public double velocity;
         public double voltage;
-
+        
     }
     public default void updateInputs(IntakeIOInputs inputs) {}
     
