@@ -25,7 +25,7 @@ public final class Constants {
   public static final Mode currentMode = Mode.SIM;
   
 
-  public class Shooter {
+  public class ShooterConstants {
     public static final double speaker = 1.0;
     public static final double amp = 0.5;
     public static double shooterKP = 0; 
