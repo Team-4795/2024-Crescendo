@@ -18,6 +18,10 @@ import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -53,6 +57,8 @@ public class Drive extends SubsystemBase {
   private Pose2d pose = new Pose2d();
   private Rotation2d lastGyroRotation = new Rotation2d();
 
+  private final SwerveDrivePoseEstimator m_poseEstimator;
+
   public Drive(
       GyroIO gyroIO,
       ModuleIO flModuleIO,
@@ -64,6 +70,15 @@ public class Drive extends SubsystemBase {
     modules[1] = new Module(frModuleIO, 1);
     modules[2] = new Module(blModuleIO, 2);
     modules[3] = new Module(brModuleIO, 3);
+
+    m_poseEstimator =
+    new SwerveDrivePoseEstimator(kinematics, lastGyroRotation, 
+    new SwerveModulePosition[] {
+      modules[0].getPosition(),
+      modules[1].getPosition(),
+      modules[2].getPosition(),
+      modules[3].getPosition()}, pose);
+
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configureHolonomic(
