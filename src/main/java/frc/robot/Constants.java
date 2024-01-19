@@ -23,6 +23,16 @@ package frc.robot;
  */
 public final class Constants {
   public static final Mode currentMode = Mode.SIM;
+  
+
+  public class Shooter {
+    public static final double speaker = 1.0;
+    public static final double amp = 0.5;
+    public static double shooterKP = 0; 
+    public static double shooterKI = 0; 
+    public static double shooterKD = 0;
+    
+  }
 
   public static enum Mode {
     /** Running on a real robot. */
