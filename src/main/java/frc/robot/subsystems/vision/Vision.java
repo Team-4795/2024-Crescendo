@@ -11,10 +11,12 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.PhotonUtils;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -27,6 +29,7 @@ public class Vision extends SubsystemBase{
     double pitch;
     double area;
     double skew;
+    double distanceToTarget;
     Transform3d pose;
     List<TargetCorner> corners;
     boolean hasTargets;
@@ -37,13 +40,14 @@ public class Vision extends SubsystemBase{
     AprilTagFieldLayout aprilTagFieldLayout;
     Transform3d robotToCam;
     PhotonPoseEstimator photonPoseEstimator;
+    EstimatedRobotPose visionPose;
+    Pose2d speakerPosition;
 
     public Vision () {
         Camera = new PhotonCamera("photonvision");
+
+        //Cam mounted facing forward, half a meter forward of center, half a meter up from center. Change Later
         robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); 
-        photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, Camera, robotToCam);   
-        //Cam mounted facing forward, half a meter forward of center, half a meter up from center. 
-        //Change Later Perchance
 
         try 
         {
@@ -53,12 +57,22 @@ public class Vision extends SubsystemBase{
         {
             e.printStackTrace();
         }
+
+        photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, Camera, robotToCam);   
+
+        aprilTagFieldLayout.getTagPose(4).ifPresent(pose -> speakerPosition = pose.toPose2d()); //Get pose2d of speaker
     }
 
     public Optional<EstimatedRobotPose> getPose(Pose2d prevEstimatedRobotPose) {
         photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
         return photonPoseEstimator.update();
     }
+
+    public double getDistancetoSpeaker(Pose2d robotPose){
+        distanceToTarget = PhotonUtils.getDistanceToPose(robotPose, speakerPosition);
+        return distanceToTarget;
+    }
+
 
     @Override
     public void periodic() {

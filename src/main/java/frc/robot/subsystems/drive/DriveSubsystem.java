@@ -4,6 +4,12 @@
 
 package frc.robot.subsystems.drive;
 
+import org.photonvision.EstimatedRobotPose;
+
+import java.util.Optional;
+
+import org.photonvision.EstimatedRobotPose;
+
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -31,6 +37,8 @@ import frc.robot.util.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+
+import frc.robot.subsystems.vision.Vision;
 
 
 public class DriveSubsystem extends SubsystemBase {
@@ -66,6 +74,9 @@ public class DriveSubsystem extends SubsystemBase {
   private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
+
+  private Vision vision = new Vision();
+  private Pose3d visionPose;
 
   // Odometry class for tracking robot pose
   SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
@@ -112,6 +123,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+
     // Update the odometry in the periodic block
     m_poseEstimator.update(
         Rotation2d.fromDegrees(m_gyro.getAngle()),
@@ -121,21 +133,14 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
+        
     SmartDashboard.putNumber("Gryo Z Rotation", m_gyro.getAngle());
     SmartDashboard.putNumberArray("Swerve States", this.getModuleStates()); 
 
-    m_poseEstimator.update(
-        m_gyro.getRotation2d(), 
-        new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition()
-      });
-
-    m_poseEstimator.addVisionMeasurement(null, 0); //To change later
-
+    //Add vision to pose estimator
+    vision.getPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> m_poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
   }
+  
 
   /**
    * Returns the currently-estimated pose of the robot.
