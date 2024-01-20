@@ -18,7 +18,8 @@ public class Shooter extends SubsystemBase {
     private ProfiledPIDController controller = new ProfiledPIDController(1, 0, 0, new Constraints(2, 2));
     private double goal = 0;
 
-    public Shooter(){}
+    public Shooter(){
+    }
         
 
     public void scoreSpeaker () { 

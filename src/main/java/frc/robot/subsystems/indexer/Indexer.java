@@ -1,21 +1,41 @@
 package frc.robot.subsystems.indexer;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Indexer extends SubsystemBase {
     
-    CANSparkMax indexMotor = new CANSparkMax(69, MotorType.kBrushless);
+    private IndexerIO io;
+    private final IndexerIOInputsAutoLogged inputs = new IndexerIOInputsAutoLogged(); 
+    private double indexerSpeed = 0.0;
 
-    public Indexer() {
-        indexMotor.setSmartCurrentLimit(30);
-        indexMotor.burnFlash();
+    private static Indexer instance;
+
+    public static Indexer getInstance(){
+        return instance;
     }
 
-    public void spin(double motorValue) {
-        indexMotor.set(motorValue);
+    public static void initialize(IndexerIO IndexIo){
+        if(instance == null){
+            instance = new Indexer(IndexIo);
+        }
+    }
+
+    private Indexer(IndexerIO IndexIo) {
+        io = IndexIo;
+        io.updateInputs(inputs);
+    }
+
+    public void setIndexerSpeed(double motorValue) {
+        indexerSpeed = motorValue;
+    }
+
+    @Override
+    public void periodic() {
+        io.updateInputs(inputs);
+        Logger.processInputs("Indexer", inputs);
+        io.setIndexerSpeed(indexerSpeed);
     }
 
 }
