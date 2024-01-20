@@ -4,12 +4,15 @@
 
 package frc.robot.subsystems.MAXSwerve;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class Module {
   private ModuleIO moduleIO;
-  private ModuleIOInputsAutoLogged inputs;
+  private ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
+  private int index;
 
   /**
    * Constructs a MAXSwerveModule and configures the driving and turning motor,
@@ -17,13 +20,15 @@ public class Module {
    * MAXSwerve Module built with NEOs, SPARKS MAX, and a Through Bore
    * Encoder.
    */
-  public Module(ModuleIO io) {
+  public Module(ModuleIO io, int index) {
     moduleIO = io;
     this.updateInputs();
+    this.index = index;
   }
 
   public void updateInputs(){
     moduleIO.updateInputs(inputs);
+    Logger.processInputs("Drive/Module" + Integer.toString(index), inputs);
   }
 
   /**
@@ -35,6 +40,10 @@ public class Module {
     // Apply chassis angular offset to the encoder position to get the position
     // relative to the chassis.
     return new SwerveModuleState(inputs.driveVelocityRadPerSec, inputs.turnAbsolutePosition);
+  }
+
+  public SwerveModuleState getOptimizedState(){
+    return moduleIO.getOptimizedState();
   }
 
   /**

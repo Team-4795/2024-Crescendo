@@ -4,9 +4,13 @@
 
 package frc.robot.subsystems.MAXSwerve;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,6 +22,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.ModuleConstants;
+import frc.robot.util.LocalADStarAK;
 import frc.robot.util.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -32,7 +37,7 @@ public class Drive extends SubsystemBase {
 
     // The gyro sensor
     private GyroIO gyro;
-    private GyroIOInputsAutoLogged gyroInputs;
+    private GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
 
     // Slew rate filter variables for controlling lateral acceleration
     private double m_currentRotation = 0.0;
@@ -48,10 +53,16 @@ public class Drive extends SubsystemBase {
 
     /** Creates a new DriveSubsystem. */
     public Drive(GyroIO gyro, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br) {
-        m_frontLeft = new Module(fl);
-        m_frontRight = new Module(fr);
-        m_rearLeft = new Module(bl);
-        m_rearRight = new Module(br);
+        this.gyro = gyro;
+        m_frontLeft = new Module(fl, 0);
+        m_frontRight = new Module(fr, 1);
+        m_rearLeft = new Module(bl, 2);
+        m_rearRight = new Module(br, 3);
+
+        m_frontLeft.updateInputs();
+        m_frontRight.updateInputs();
+        m_rearLeft.updateInputs();
+        m_rearRight.updateInputs();
 
         m_odometry = new SwerveDriveOdometry(
                 DriveConstants.kDriveKinematics,
@@ -84,11 +95,27 @@ public class Drive extends SubsystemBase {
                 () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red,
                 this // Reference to this subsystem to set requirements
         );
+
+        Pathfinding.setPathfinder(new LocalADStarAK()); // Implements A* pathfinding algorithm (very cool btw) -
+                                                        // assuming I understand this correctly
+
+        PathPlannerLogging.setLogActivePathCallback(
+                (activePath) -> {
+                    Logger.recordOutput(
+                            "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
+                }); // Adds a way for PathPlanner to log what poses it's trying to get the robot to
+                    // go to
+
+        PathPlannerLogging.setLogTargetPoseCallback(
+                (targetPose) -> {
+                    Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
+                }); // Adds a way for PathPlanner to log what pose it's currently trying to go to
     }
 
     @Override
     public void periodic() {
         gyro.updateInputs(gyroInputs);
+        Logger.processInputs("Gyro", gyroInputs);
         m_frontLeft.updateInputs();
         m_frontRight.updateInputs();
         m_rearLeft.updateInputs();
@@ -102,6 +129,9 @@ public class Drive extends SubsystemBase {
                         m_rearLeft.getPosition(),
                         m_rearRight.getPosition()
                 });
+
+        Logger.recordOutput("Swerve/SwerveStates", this.getModuleStates());
+        Logger.recordOutput("Swerve/OptimizedStates", this.getOptimizedStates());
     }
 
     /**
@@ -197,6 +227,9 @@ public class Drive extends SubsystemBase {
         double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
         double rotDelivered = m_currentRotation * DriveConstants.kMaxAngularSpeed;
 
+        Logger.recordOutput("Swerve/XspeedCommanded", xSpeedDelivered);
+        Logger.recordOutput("Swerve/YspeedCommanded", ySpeedDelivered);
+
         var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
                 fieldRelative
                         ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
@@ -218,6 +251,24 @@ public class Drive extends SubsystemBase {
         m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
         m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
         m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+    }
+
+    public SwerveModuleState[] getModuleStates(){
+        SwerveModuleState[] currentState = new SwerveModuleState[4];
+        currentState[0] = m_frontLeft.getState();
+        currentState[1] = m_frontRight.getState();
+        currentState[2] = m_rearLeft.getState();
+        currentState[3] = m_rearRight.getState();
+        return currentState;
+    }
+
+    public SwerveModuleState[] getOptimizedStates(){
+        SwerveModuleState[] currentState = new SwerveModuleState[4];
+        currentState[0] = m_frontLeft.getOptimizedState();
+        currentState[1] = m_frontRight.getOptimizedState();
+        currentState[2] = m_rearLeft.getOptimizedState();
+        currentState[3] = m_rearRight.getOptimizedState();
+        return currentState;
     }
 
     /**

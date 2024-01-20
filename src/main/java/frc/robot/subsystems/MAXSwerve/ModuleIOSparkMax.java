@@ -29,6 +29,7 @@ public class ModuleIOSparkMax implements ModuleIO{
   private Rotation2d m_chassisAngularOffset;
 
   private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
+  private SwerveModuleState optimizedState = new SwerveModuleState(0.0, new Rotation2d());
 
   public ModuleIOSparkMax(int drivingCANId, int turningCANId, double chassisAngularOffset) {
     m_drivingSparkFlex = new CANSparkFlex(drivingCANId, MotorType.kBrushless);
@@ -120,11 +121,20 @@ public class ModuleIOSparkMax implements ModuleIO{
     SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
         new Rotation2d(m_turningEncoder.getPosition()));
 
+    optimizedState = optimizedDesiredState; 
+
     // Command driving and turning SPARKS MAX towards their respective setpoints.
     m_drivingPIDController.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkFlex.ControlType.kVelocity);
     m_turningPIDController.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
 
     m_desiredState = state;
+  }
+
+  
+
+  @Override
+  public SwerveModuleState getOptimizedState() {
+    return optimizedState;
   }
 
   @Override
