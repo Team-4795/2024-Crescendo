@@ -1,11 +1,14 @@
 package frc.robot.subsystems.Shooter;
 
+import com.google.flatbuffers.Constants;
 
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ShooterConstants;
+
 
 public class Shooter extends SubsystemBase {
     private ShooterIO io = new ShooterIOReal();
@@ -19,10 +22,10 @@ public class Shooter extends SubsystemBase {
         goal = inputs.angleMotorRelativePosition;
     }
     public void scoreSpeaker () { 
-        io.runShooterMotors(Constants.speaker);
+        io.runShooterMotors(ShooterConstants.speaker);
     }
     public void scoreAmp () {
-        io.runShooterMotors(Constants.amp);
+        io.runShooterMotors(ShooterConstants.amp);
     }
 
     public void setGoal (double goal) {
