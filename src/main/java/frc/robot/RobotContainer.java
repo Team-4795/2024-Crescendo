@@ -36,7 +36,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     testLeader = new Motor(Controller.MAX, 1).idleMode(IdleMode.kCoast).currentLimit(40).configure();
-    testFollower = new Motor(Controller.MAX, 2).follows(testLeader).configure();
+    testFollower = new Motor(Controller.MAX, 2).follows(testLeader).setRelativeConversionFactors(2, 4).configure();
 
     configureButtonBindings();
   }

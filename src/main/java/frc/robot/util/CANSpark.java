@@ -33,6 +33,10 @@ public class CANSpark {
         private IdleMode mode = IdleMode.kBrake;
         private CANSpark leader;
         private boolean hasAbsoluteEncoder = false;
+        private double relativePosConversion = 1.0;
+        private double relativeVelConversion = 1.0;
+        private double absPosConversion = 1.0;
+        private double absVelConversion = 1.0;
         
         public Motor(Controller type, int canID){
             motorController = type;
@@ -72,6 +76,18 @@ public class CANSpark {
 
         public Motor hasAbsoluteEncoder(boolean absEncoder){
             hasAbsoluteEncoder = absEncoder;
+            return this;
+        }
+
+        public Motor setRelativeConversionFactors(double position, double velocity){
+            relativePosConversion = position;
+            relativeVelConversion = velocity;
+            return this;
+        }
+
+        public Motor setAbsoluteConversionFactors(double position, double velocity){
+            absPosConversion = position;
+            absVelConversion = velocity;
             return this;
         }
 
@@ -116,6 +132,12 @@ public class CANSpark {
             motor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
         }
 
+        //set conversion factors
+        relativeEncoder.setPositionConversionFactor(build.relativePosConversion);
+        relativeEncoder.setVelocityConversionFactor(build.relativeVelConversion);
+        absEncoder.setPositionConversionFactor(build.absPosConversion);
+        absEncoder.setVelocityConversionFactor(build.absVelConversion);
+
         motor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
         motor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
 
@@ -144,22 +166,6 @@ public class CANSpark {
 
     public double getAbsoluteVelocity(){
         return absEncoder.getVelocity();
-    }
-
-    public void setRelativeConversionFactors(double position, double velocity){
-        relativeEncoder.setPositionConversionFactor(position);
-        relativeEncoder.setVelocityConversionFactor(velocity);
-        motor.burnFlash();
-    }
-
-    public void setAbsoluteConversionFactors(double position, double velocity){
-        absEncoder.setPositionConversionFactor(position);
-        absEncoder.setVelocityConversionFactor(velocity);
-        motor.burnFlash();
-    }
-
-    public void setStatusFrameRates(PeriodicFrame status, int periodMs){
-        motor.setPeriodicFramePeriod(status, periodMs);
     }
 
     public void resetEncoders(){
