@@ -45,49 +45,22 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
-        drive =
-            new Drive(
-                new GyroIOPigeon2(),
-                new ModuleIOSparkMax(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId, DriveConstants.kFrontLeftChassisAngularOffset),
-                new ModuleIOSparkMax(DriveConstants.kFrontRightDrivingCanId, DriveConstants.kFrontRightTurningCanId, DriveConstants.kFrontRightChassisAngularOffset),
-                new ModuleIOSparkMax(DriveConstants.kRearLeftDrivingCanId, DriveConstants.kRearLeftTurningCanId, DriveConstants.kBackLeftChassisAngularOffset),
-                new ModuleIOSparkMax(DriveConstants.kRearRightDrivingCanId, DriveConstants.kRearRightTurningCanId, DriveConstants.kBackRightChassisAngularOffset));
-
+        drive = Drive.getInstance();
         break;
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIOSim(DriveConstants.kFrontLeftChassisAngularOffset),
-                new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
-                new ModuleIOSim(DriveConstants.kBackLeftChassisAngularOffset),
-                new ModuleIOSim(DriveConstants.kBackRightChassisAngularOffset));
-
+        drive = Drive.getInstance();
         break;
 
       default:
         // Replayed robot, disable IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
-        // flywheel = new Flywheel(new FlywheelIO() {});
+        drive = Drive.getInstance();
         break;
     }
 
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
-    // Set up feedforward characterization
-    // autoChooser.addOption(
-    //     "Drive FF Characterization",
-    //     new FeedForwardCharacterization(
-    //         drive, drive::runCharacterizationVolts, drive::getCharacterizationVelocity));
 
 
     // Configure the button bindings

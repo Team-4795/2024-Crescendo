@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems.MAXSwerve;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -119,6 +122,14 @@ public final class DriveConstants {
         public static final double kPXController = 1;
         public static final double kPYController = 1;
         public static final double kPThetaController = 1;
+
+        public static final HolonomicPathFollowerConfig follower = new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                        new PIDConstants(ModuleConstants.kDrivingP, ModuleConstants.kDrivingI, ModuleConstants.kDrivingD), // Translation PID constants
+                        new PIDConstants(ModuleConstants.kTurningP, ModuleConstants.kTurningI, ModuleConstants.kTurningD), // Rotation PID constants
+                        4.5, // Max module speed, in m/s ***MIGHT CHANGE***
+                        0.4, // Drive base radius in meters. Distance from robot center to furthest module. ***MIGHT CHANGE***
+                        new ReplanningConfig() // Default path replanning config. See the API for the options here
+                );
 
         // Constraint for the motion profiled robot angle controller
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
