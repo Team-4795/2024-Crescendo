@@ -34,12 +34,8 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
-  public static final class intakeConstants {
-    public static final int frontCanID = 2;
-    public static final int backCanID = 1;
-    public static final double intakeSpeed = 0.2;
-    public static final double simGearRatio = 30;
 
-
+  public static class OIConstants{
+    
   }
 }
