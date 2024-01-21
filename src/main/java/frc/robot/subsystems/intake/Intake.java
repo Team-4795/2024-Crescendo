@@ -12,9 +12,6 @@ public class Intake extends SubsystemBase{
     private static Intake instance;
 
     public static Intake getInstance(){
-        if(instance == null){
-            throw new NullPointerException("Cannot get null instance - call initialize first");
-        }
         return instance;
     }
 

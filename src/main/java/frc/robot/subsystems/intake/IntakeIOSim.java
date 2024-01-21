@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public class IntakeIOSim implements IntakeIO {
   private final DCMotorSim frontroller = new DCMotorSim(DCMotor.getNEO(1), 30, 0.003);
-  private final DCMotorSim backroller = new DCMotorSim(DCMotor.getNEO(1), 30, 0.003);
 
 
   @Override
