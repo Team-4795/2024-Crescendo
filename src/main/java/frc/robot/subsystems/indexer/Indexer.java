@@ -16,10 +16,11 @@ public class Indexer extends SubsystemBase {
         return instance;
     }
 
-    public static void initialize(IndexerIO IndexIo){
+    public static Indexer initialize(IndexerIO IndexIo){
         if(instance == null){
             instance = new Indexer(IndexIo);
         }
+        return instance;
     }
 
     private Indexer(IndexerIO IndexIo) {

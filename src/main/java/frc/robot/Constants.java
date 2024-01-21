@@ -13,6 +13,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -23,16 +25,6 @@ package frc.robot;
  */
 public final class Constants {
   public static final Mode currentMode = Mode.SIM;
-  
-
-  public class ShooterConstants {
-    public static final double speaker = 1.0;
-    public static final double amp = 0.5;
-    public static double shooterKP = 0; 
-    public static double shooterKI = 0; 
-    public static double shooterKD = 0;
-    
-  }
 
   public static enum Mode {
     /** Running on a real robot. */
@@ -43,5 +35,9 @@ public final class Constants {
 
     /** Replaying from a log file. */
     REPLAY
+  }
+
+  public static class OIConstants {
+    public static final CommandXboxController driverController = new CommandXboxController(0);
   }
 }
