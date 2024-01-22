@@ -6,6 +6,7 @@ package frc.robot.subsystems.MAXSwerve;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -35,10 +36,10 @@ public final class DriveConstants {
             new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
     // Angular offsets of the modules relative to the chassis in radians
-    public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
-    public static final double kFrontRightChassisAngularOffset = 0;
-    public static final double kBackLeftChassisAngularOffset = Math.PI;
-    public static final double kBackRightChassisAngularOffset = Math.PI / 2;
+    public static final double kFrontLeftChassisAngularOffset = Math.PI / 2;
+    public static final double kFrontRightChassisAngularOffset = Math.PI;
+    public static final double kBackLeftChassisAngularOffset = 0;
+    public static final double kBackRightChassisAngularOffset = -Math.PI / 2;
 
     // SPARK MAX CAN IDs
     public static final int kFrontLeftDrivingCanId = 2;
@@ -51,9 +52,11 @@ public final class DriveConstants {
     public static final int kFrontRightTurningCanId = 5;
     public static final int kRearRightTurningCanId = 9;
 
+    public static final Rotation2d kChassisAngularOffset = Rotation2d.fromDegrees(0);
+
     public static final int kPigeonCanId = 10;
 
-    public static final boolean kGyroReversed = false;
+    public static final boolean kGyroReversed = true;
 
     public static final class ModuleConstants {
         // The MAXSwerve module can be configured with one of three pinion gears: 12T,
@@ -126,6 +129,6 @@ public final class DriveConstants {
     }
 
     public static final class NeoMotorConstants {
-        public static final double kFreeSpeedRpm = 6784;
+        public static final double kFreeSpeedRpm = 5676;
     }
 }

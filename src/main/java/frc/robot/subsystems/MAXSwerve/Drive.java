@@ -66,7 +66,7 @@ public class Drive extends SubsystemBase {
 
         m_odometry = new SwerveDriveOdometry(
                 DriveConstants.kDriveKinematics,
-                gyroInputs.yaw,
+                gyroInputs.yaw.plus(DriveConstants.kChassisAngularOffset),
                 new SwerveModulePosition[] {
                         m_frontLeft.getPosition(),
                         m_frontRight.getPosition(),
@@ -123,7 +123,7 @@ public class Drive extends SubsystemBase {
 
         // Update the odometry in the periodic block
         m_odometry.update(
-                gyroInputs.yaw,
+                gyroInputs.yaw.plus(DriveConstants.kChassisAngularOffset),
                 new SwerveModulePosition[] {
                         m_frontLeft.getPosition(),
                         m_frontRight.getPosition(),
@@ -153,7 +153,7 @@ public class Drive extends SubsystemBase {
      */
     public void resetOdometry(Pose2d pose) {
         m_odometry.resetPosition(
-                gyroInputs.yaw,
+                gyroInputs.yaw.plus(DriveConstants.kChassisAngularOffset),
                 new SwerveModulePosition[] {
                         m_frontLeft.getPosition(),
                         m_frontRight.getPosition(),
@@ -236,7 +236,7 @@ public class Drive extends SubsystemBase {
         var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
                 fieldRelative
                         ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                                gyroInputs.yaw)
+                                gyroInputs.yaw.plus(DriveConstants.kChassisAngularOffset))
                         : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
         SwerveDriveKinematics.desaturateWheelSpeeds(
                 swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
@@ -316,7 +316,7 @@ public class Drive extends SubsystemBase {
      * @return The turn rate of the robot, in degrees per second
      */
     public double getTurnRate() {
-        return gyroInputs.yawVelocity * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+        return gyroInputs.yawVelocity;
     }
 
     private ChassisSpeeds getRobotRelativeSpeeds() {

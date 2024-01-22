@@ -109,13 +109,12 @@ public class RobotContainer {
             () -> drive.drive(
                 -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftY(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(OIConstants.m_driverController.getRightX(), OIConstants.kDriveDeadband),
+                MathUtil.applyDeadband(OIConstants.m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true),
             drive));
 
       OIConstants.m_driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
   }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

@@ -19,8 +19,8 @@ public class GyroIOPigeon2 implements GyroIO{
 
     @Override
     public void updateInputs(GyroIOInputs inputs) {
-        inputs.yaw = Rotation2d.fromDegrees(pigeon.getAngle());
-        inputs.yawVelocity = pigeon.getRate();
+        inputs.yaw = Rotation2d.fromDegrees(pigeon.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0));
+        inputs.yawVelocity = pigeon.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
     }
     
 }
