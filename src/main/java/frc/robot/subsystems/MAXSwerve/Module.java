@@ -54,7 +54,7 @@ public class Module {
   public SwerveModulePosition getPosition() {
     // Apply chassis angular offset to the encoder position to get the position
     // relative to the chassis.
-    return new SwerveModulePosition(inputs.drivePositionRad, inputs.turnAbsolutePosition);
+    return new SwerveModulePosition(inputs.drivePositionMeters, inputs.turnAbsolutePosition);
   }
 
   /**

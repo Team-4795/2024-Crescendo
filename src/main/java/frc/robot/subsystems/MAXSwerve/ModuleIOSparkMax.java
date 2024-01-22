@@ -17,7 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.ModuleConstants;
 
 public class ModuleIOSparkMax implements ModuleIO{
-  private final CANSparkFlex m_drivingSparkFlex;
+  private final CANSparkMax m_drivingSparkMax;
   private final CANSparkMax m_turningSparkMax;
 
   private final RelativeEncoder m_drivingEncoder;
@@ -32,18 +32,18 @@ public class ModuleIOSparkMax implements ModuleIO{
   private SwerveModuleState optimizedState = new SwerveModuleState(0.0, new Rotation2d());
 
   public ModuleIOSparkMax(int drivingCANId, int turningCANId, double chassisAngularOffset) {
-    m_drivingSparkFlex = new CANSparkFlex(drivingCANId, MotorType.kBrushless);
+    m_drivingSparkMax = new CANSparkMax(drivingCANId, MotorType.kBrushless);
     m_turningSparkMax = new CANSparkMax(turningCANId, MotorType.kBrushless);
 
     // Factory reset, so we get the SPARKS MAX to a known state before configuring
     // them. This is useful in case a SPARK MAX is swapped out.
-    m_drivingSparkFlex.restoreFactoryDefaults();
+    m_drivingSparkMax.restoreFactoryDefaults();
     m_turningSparkMax.restoreFactoryDefaults();
 
     // Setup encoders and PID controllers for the driving and turning SPARKS MAX.
-    m_drivingEncoder = m_drivingSparkFlex.getEncoder();
+    m_drivingEncoder = m_drivingSparkMax.getEncoder();
     m_turningEncoder = m_turningSparkMax.getAbsoluteEncoder(Type.kDutyCycle);
-    m_drivingPIDController = m_drivingSparkFlex.getPIDController();
+    m_drivingPIDController = m_drivingSparkMax.getPIDController();
     m_turningPIDController = m_turningSparkMax.getPIDController();
     m_drivingPIDController.setFeedbackDevice(m_drivingEncoder);
     m_turningPIDController.setFeedbackDevice(m_turningEncoder);
@@ -90,14 +90,14 @@ public class ModuleIOSparkMax implements ModuleIO{
     m_turningPIDController.setOutputRange(ModuleConstants.kTurningMinOutput,
         ModuleConstants.kTurningMaxOutput);
 
-    m_drivingSparkFlex.setIdleMode(ModuleConstants.kDrivingMotorIdleMode);
+    m_drivingSparkMax.setIdleMode(ModuleConstants.kDrivingMotorIdleMode);
     m_turningSparkMax.setIdleMode(ModuleConstants.kTurningMotorIdleMode);
-    m_drivingSparkFlex.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
+    m_drivingSparkMax.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
     m_turningSparkMax.setSmartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
 
     // Save the SPARK MAX configurations. If a SPARK MAX browns out during
     // operation, it will maintain the above configurations.
-    m_drivingSparkFlex.burnFlash();
+    m_drivingSparkMax.burnFlash();
     m_turningSparkMax.burnFlash();
 
     m_chassisAngularOffset = Rotation2d.fromRadians(chassisAngularOffset);
@@ -124,13 +124,11 @@ public class ModuleIOSparkMax implements ModuleIO{
     optimizedState = optimizedDesiredState; 
 
     // Command driving and turning SPARKS MAX towards their respective setpoints.
-    m_drivingPIDController.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkFlex.ControlType.kVelocity);
+    m_drivingPIDController.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
     m_turningPIDController.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
 
     m_desiredState = state;
   }
-
-  
 
   @Override
   public SwerveModuleState getOptimizedState() {
@@ -139,12 +137,11 @@ public class ModuleIOSparkMax implements ModuleIO{
 
   @Override
   public void updateInputs(ModuleIOInputs inputs) {
-    inputs.drivePositionRad = m_drivingEncoder.getPosition();
+    inputs.drivePositionMeters = m_drivingEncoder.getPosition();
     inputs.driveVelocityRadPerSec = m_drivingEncoder.getVelocity();
     
-    inputs.turnAbsolutePosition = Rotation2d.fromRotations(m_turningEncoder.getPosition()).minus(m_chassisAngularOffset);
+    inputs.turnAbsolutePosition = Rotation2d.fromRadians(m_turningEncoder.getPosition()).minus(m_chassisAngularOffset);
     inputs.turnVelocityRadPerSec = m_turningEncoder.getVelocity();
-
   }
 
   

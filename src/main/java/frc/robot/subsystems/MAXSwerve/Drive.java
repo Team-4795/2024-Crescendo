@@ -120,6 +120,7 @@ public class Drive extends SubsystemBase {
         m_frontRight.updateInputs();
         m_rearLeft.updateInputs();
         m_rearRight.updateInputs();
+
         // Update the odometry in the periodic block
         m_odometry.update(
                 gyroInputs.yaw,
@@ -129,6 +130,8 @@ public class Drive extends SubsystemBase {
                         m_rearLeft.getPosition(),
                         m_rearRight.getPosition()
                 });
+
+        Logger.recordOutput("Odometry", getPose());
 
         Logger.recordOutput("Swerve/SwerveStates", this.getModuleStates());
         Logger.recordOutput("Swerve/OptimizedStates", this.getOptimizedStates());

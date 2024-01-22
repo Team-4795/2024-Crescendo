@@ -8,7 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 public interface ModuleIO {
     @AutoLog
     public static class ModuleIOInputs {
-        public double drivePositionRad = 0.0;
+        public double drivePositionMeters = 0.0;
         public double driveVelocityRadPerSec = 0.0;
 
         public Rotation2d turnAbsolutePosition = new Rotation2d();

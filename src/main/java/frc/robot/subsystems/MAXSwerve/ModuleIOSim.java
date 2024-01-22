@@ -55,7 +55,7 @@ public class ModuleIOSim implements ModuleIO {
         driveSim.update(LOOP_PERIOD_SECS);
         turnSim.update(LOOP_PERIOD_SECS);
 
-        inputs.drivePositionRad = driveSim.getAngularPositionRad() * ModuleConstants.kDrivingEncoderPositionFactor;
+        inputs.drivePositionMeters = driveSim.getAngularPositionRad() * ModuleConstants.kDrivingEncoderPositionFactor;
         inputs.driveVelocityRadPerSec = driveSim.getAngularVelocityRadPerSec() * ModuleConstants.kDrivingEncoderVelocityFactor;
         inputs.turnAbsolutePosition = Rotation2d.fromRadians(turnSim.getAngularPositionRad()).minus(chassisAngularOffset);
         inputs.turnVelocityRadPerSec = turnSim.getAngularVelocityRadPerSec();
