@@ -73,6 +73,14 @@ public class Vision extends SubsystemBase{
         return distanceToTarget;
     }
 
+    public double getYaw(){
+        return yaw;
+    }
+
+    public Pose2d getSpeakerPos() {
+        return speakerPosition;
+    }
+
 
     @Override
     public void periodic() {
