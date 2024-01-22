@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.43,
+      "y": 5.54
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Run Flywheel"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3GP middle P1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3GP middle P2"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

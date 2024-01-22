@@ -302,7 +302,7 @@ public class Drive extends SubsystemBase {
         drive(speeds.vxMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond,
                 speeds.vyMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond,
                 speeds.omegaRadiansPerSecond / DriveConstants.kMaxAngularSpeed,
-                false,
+                true,
                 false);
     }
 }
