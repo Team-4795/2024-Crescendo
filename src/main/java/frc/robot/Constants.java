@@ -24,6 +24,15 @@ package frc.robot;
 public final class Constants {
   public static final Mode currentMode = Mode.SIM;
 
+  public class StateConstants {
+    public static final double indexerSpeedSpeaker = 1;
+    public static final double intakeSpeedSpeaker = 1;
+    public static final double pivotAngleSpeaker = 1;
+    public static final double indexerSpeedAmp = 1;
+    public static final double intakeSpeedAmp = 1;
+    public static final double pivotAngleAmp = 1;
+  }
+
   public static enum Mode {
     /** Running on a real robot. */
     REAL,
