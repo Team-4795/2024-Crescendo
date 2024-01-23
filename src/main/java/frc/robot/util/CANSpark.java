@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
@@ -155,6 +156,10 @@ public class CANSpark {
         motor.setVoltage(MathUtil.clamp(voltage, -12, 12));
     }
 
+    public SparkPIDController getPIDController() {
+        return motor.getPIDController();
+    }
+
     public double getRelativePosition(){
         return relativeEncoder.getPosition();
     }
@@ -174,4 +179,14 @@ public class CANSpark {
     public void resetEncoders(){
         relativeEncoder.setPosition(0);
     }
+
+    public void setAbsoluteFeedbackDevice(SparkPIDController controller) {
+        controller.setFeedbackDevice(absEncoder);
+    }
+
+    public void setRelativeFeedbackDevice(SparkPIDController controller) {
+        controller.setFeedbackDevice(relativeEncoder);
+    }
+
+    
 }
