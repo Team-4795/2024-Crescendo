@@ -18,6 +18,14 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.DriveCommands;
+import frc.robot.commands.FeedForwardCharacterization;
+import frc.robot.subsystems.Shooter.*;
+import frc.robot.subsystems.indexer.*;
+import frc.robot.subsystems.pivot.*;
+
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
@@ -34,6 +42,11 @@ import frc.robot.subsystems.intake.SparkMaxIO;
  */
 public class RobotContainer {
   // Subsystems
+  private final Shooter shooter;
+  private final Pivot pivot;
+  private final Indexer indexer;
+
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   private final Intake intake;
 
   // Controller
@@ -47,16 +60,17 @@ public class RobotContainer {
       case REAL:
         //Real robot, instantiate hardware IO implementations
         intake = Intake.initialize(new SparkMaxIO());
+        shooter = Shooter.initialize(new ShooterIOReal());
+        pivot = Pivot.initialize(new PivotIOReal());
+        indexer = Indexer.initialize(new IndexerIOReal());
         break;
 
       case SIM:
-        //Sim robot, instantiate physics sim IO implementations
-        intake = Intake.initialize(new IntakeIOSim());
+        // Sim robot, instantiate physics sim IO implementations
         break;
 
       default:
         // Replayed robot, disable IO implementations
-        intake = Intake.initialize(new IntakeIO() {});
         break;
     }
 
@@ -74,10 +88,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
-    controller.a().whileTrue(Commands.startEnd(
-        () -> intake.setIntakeSpeed(0.7), () -> intake.setIntakeSpeed(0.0), intake));
-
+    
   }
 
   /**
