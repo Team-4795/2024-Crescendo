@@ -33,6 +33,10 @@ public final class Constants {
     public static final double indexerSpeedAmp = 1;
     public static final double intakeSpeedAmp = 1;
     public static final double pivotAngleAmp = 1;
+    public static final double indexerSpeedStow = 1;
+    public static final double intakeSpeedStow = 1;
+    public static final double pivotAngleStow = 1;
+    public static final double shooterSpeedStow = 1;
   }
 
   public static enum Mode {
@@ -44,10 +48,6 @@ public final class Constants {
 
     /** Replaying from a log file. */
     REPLAY
-  }
-
-  public static class OIConstants{
-    
   }
 
   public static class OIConstants {

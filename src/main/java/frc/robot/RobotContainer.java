@@ -26,10 +26,7 @@ import frc.robot.subsystems.pivot.*;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeIO;
-import frc.robot.subsystems.intake.IntakeIOSim;
-import frc.robot.subsystems.intake.SparkMaxIO;
+import frc.robot.subsystems.intake.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -45,8 +42,6 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Pivot pivot;
   private final Indexer indexer;
-
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   private final Intake intake;
 
   // Controller
