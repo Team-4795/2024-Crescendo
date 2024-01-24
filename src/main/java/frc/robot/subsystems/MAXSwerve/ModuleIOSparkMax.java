@@ -26,7 +26,7 @@ public class ModuleIOSparkMax implements ModuleIO{
   private SwerveModuleState optimizedState = new SwerveModuleState(0.0, new Rotation2d());
 
   public ModuleIOSparkMax(int drivingCANId, int turningCANId, double chassisAngularOffset) {
-    m_drivingSparkMax = new Motor(CANSpark.Controller.FLEX, drivingCANId)
+    m_drivingSparkMax = new Motor(CANSpark.Controller.MAX, drivingCANId)
       .idleMode(ModuleConstants.kDrivingMotorIdleMode)
       .currentLimit(ModuleConstants.kDrivingMotorCurrentLimit)
       .setRelativeConversionFactors(ModuleConstants.kDrivingEncoderPositionFactor, ModuleConstants.kDrivingEncoderVelocityFactor)
@@ -46,7 +46,7 @@ public class ModuleIOSparkMax implements ModuleIO{
     m_drivingPIDController = m_drivingSparkMax.getPIDController();
     m_turningPIDController = m_turningSparkMax.getPIDController();
     m_drivingSparkMax.setRelativeFeedbackDevice(m_drivingPIDController);
-    m_turningSparkMax.setRelativeFeedbackDevice(m_turningPIDController);
+    m_turningSparkMax.setAbsoluteFeedbackDevice(m_turningPIDController);
 
     // Enable PID wrap around for the turning motor. This will allow the PID
     // controller to go through 0 to get to the setpoint i.e. going from 350 degrees
