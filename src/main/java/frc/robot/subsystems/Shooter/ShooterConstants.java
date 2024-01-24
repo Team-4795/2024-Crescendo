@@ -1,7 +1,6 @@
 package frc.robot.subsystems.Shooter;
 
-public class ShooterConstants {
-    public static final double speaker = 1.0;
-    public static final double amp = 0.5;
-    
+public final class ShooterConstants {
+    public static final int leftCanID = 10;
+    public static final int rightCanID = 11;
 }
