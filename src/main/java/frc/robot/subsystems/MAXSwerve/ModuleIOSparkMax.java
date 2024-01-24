@@ -4,15 +4,7 @@
 
 package frc.robot.subsystems.MAXSwerve;
 
-import javax.swing.RowFilter.ComparisonType;
-
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.CANSparkFlex;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,7 +26,7 @@ public class ModuleIOSparkMax implements ModuleIO{
   private SwerveModuleState optimizedState = new SwerveModuleState(0.0, new Rotation2d());
 
   public ModuleIOSparkMax(int drivingCANId, int turningCANId, double chassisAngularOffset) {
-    m_drivingSparkMax = new Motor(CANSpark.Controller.MAX, drivingCANId)
+    m_drivingSparkMax = new Motor(CANSpark.Controller.FLEX, drivingCANId)
       .idleMode(ModuleConstants.kDrivingMotorIdleMode)
       .currentLimit(ModuleConstants.kDrivingMotorCurrentLimit)
       .setRelativeConversionFactors(ModuleConstants.kDrivingEncoderPositionFactor, ModuleConstants.kDrivingEncoderVelocityFactor)
@@ -43,6 +35,7 @@ public class ModuleIOSparkMax implements ModuleIO{
       .idleMode(ModuleConstants.kTurningMotorIdleMode)
       .currentLimit(ModuleConstants.kTurningMotorCurrentLimit)
       .inverted(ModuleConstants.kTurningEncoderInverted)
+      .hasAbsoluteEncoder(true)
       .setAbsoluteConversionFactors(ModuleConstants.kTurningEncoderPositionFactor, ModuleConstants.kTurningEncoderVelocityFactor)
       .configure();
 

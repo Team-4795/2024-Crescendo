@@ -131,6 +131,9 @@ public class CANSpark {
             absEncoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
             motor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
             motor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
+            absEncoder.setPositionConversionFactor(build.absPosConversion);
+            
+            absEncoder.setVelocityConversionFactor(build.absVelConversion);
         } else {
             motor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
             motor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
@@ -139,8 +142,7 @@ public class CANSpark {
         //set conversion factors
         relativeEncoder.setPositionConversionFactor(build.relativePosConversion);
         relativeEncoder.setVelocityConversionFactor(build.relativeVelConversion);
-        absEncoder.setPositionConversionFactor(build.absPosConversion);
-        absEncoder.setVelocityConversionFactor(build.absVelConversion);
+        
 
         motor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
         motor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);

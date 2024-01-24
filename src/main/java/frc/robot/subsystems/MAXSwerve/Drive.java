@@ -132,7 +132,6 @@ public class Drive extends SubsystemBase {
                 });
 
         Logger.recordOutput("Odometry", getPose());
-
         Logger.recordOutput("Swerve/SwerveStates", this.getModuleStates());
         Logger.recordOutput("Swerve/OptimizedStates", this.getOptimizedStates());
     }
