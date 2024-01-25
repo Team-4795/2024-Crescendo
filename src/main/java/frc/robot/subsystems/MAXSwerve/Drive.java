@@ -5,6 +5,7 @@
 package frc.robot.subsystems.MAXSwerve;
 
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.EstimatedRobotPose;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
@@ -50,14 +51,12 @@ public class Drive extends SubsystemBase {
     private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
     private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
     private double m_prevTime = WPIUtilJNI.now() * 1e-6;
-
-    // Odometry class for tracking robot pose
-    SwerveDriveOdometry m_odometry;
     
       // Odometry class for tracking robot pose
     SwerveDrivePoseEstimator m_poseEstimator;
+    private EstimatedRobotPose visionPose;
 
-    private Vision vision = new Vision();
+    private Vision vision = Vision.getInstance();
 
     /** Creates a new DriveSubsystem. */
     public Drive(GyroIO gyro, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br) {
@@ -72,16 +71,6 @@ public class Drive extends SubsystemBase {
         m_rearLeft.updateInputs();
         m_rearRight.updateInputs();
 
-        m_odometry = new SwerveDriveOdometry(
-                DriveConstants.kDriveKinematics,
-                gyroInputs.yaw,
-                new SwerveModulePosition[] {
-                        m_frontLeft.getPosition(),
-                        m_frontRight.getPosition(),
-                        m_rearLeft.getPosition(),
-                        m_rearRight.getPosition()
-                });
-
           // Odometry class for tracking robot pose
         m_poseEstimator = new SwerveDrivePoseEstimator(
             DriveConstants.kDriveKinematics,
@@ -91,7 +80,7 @@ public class Drive extends SubsystemBase {
                         m_frontRight.getPosition(),
                         m_rearLeft.getPosition(),
                         m_rearRight.getPosition()
-                }, m_odometry.getPoseMeters());
+                }, new Pose2d(0,0, new Rotation2d(0)));
 
         this.zeroHeading();
 
@@ -140,16 +129,6 @@ public class Drive extends SubsystemBase {
         m_rearLeft.updateInputs();
         m_rearRight.updateInputs();
 
-        // Update the odometry in the periodic block
-        m_odometry.update(
-                gyroInputs.yaw,
-                new SwerveModulePosition[] {
-                        m_frontLeft.getPosition(),
-                        m_frontRight.getPosition(),
-                        m_rearLeft.getPosition(),
-                        m_rearRight.getPosition()
-                });
-
         m_poseEstimator.update(
                 gyroInputs.yaw,
                 new SwerveModulePosition[] {
@@ -160,9 +139,10 @@ public class Drive extends SubsystemBase {
                 });
         
         vision.getPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> m_poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
+        vision.getPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> visionPose = pose);
 
-
-        Logger.recordOutput("Odometry", getPose());
+        Logger.recordOutput("Estimated Pose", getPose());
+        Logger.recordOutput("Vision pose", visionPose.estimatedPose);
 
         Logger.recordOutput("Swerve/SwerveStates", this.getModuleStates());
         Logger.recordOutput("Swerve/OptimizedStates", this.getOptimizedStates());
@@ -183,7 +163,7 @@ public class Drive extends SubsystemBase {
      * @param pose The pose to which to set the odometry.
      */
     public void resetOdometry(Pose2d pose) {
-        m_odometry.resetPosition(
+        m_poseEstimator.resetPosition(
                 gyroInputs.yaw,
                 new SwerveModulePosition[] {
                         m_frontLeft.getPosition(),

@@ -75,7 +75,7 @@ public class DriveSubsystem extends SubsystemBase {
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
-  private Vision vision = new Vision();
+  private Vision vision = Vision.getInstance();
   private Pose3d visionPose;
 
   // Odometry class for tracking robot pose

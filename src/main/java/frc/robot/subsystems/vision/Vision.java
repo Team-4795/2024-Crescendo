@@ -16,9 +16,7 @@ import org.photonvision.PhotonUtils;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -43,7 +41,16 @@ public class Vision extends SubsystemBase{
     EstimatedRobotPose visionPose;
     Pose2d speakerPosition;
 
-    public Vision () {
+    public static Vision instance;
+
+    public static Vision getInstance(){
+        if(instance == null){
+            instance = new Vision();
+        }
+        return instance;
+    }
+
+    private Vision () {
         Camera = new PhotonCamera("Arducam_OV9281_USB_Camera");
 
         //Cam mounted facing forward, half a meter forward of center, half a meter up from center. Change Later
