@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.MAXSwerve.*;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import frc.robot.commands.TurnToSpeaker;;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -114,6 +115,7 @@ public class RobotContainer {
             drive));
 
       OIConstants.m_driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
+      OIConstants.m_driverController.leftBumper().whileTrue(TurnToSpeaker.turnTowardsSpeaker(drive));
   }
 
   /**

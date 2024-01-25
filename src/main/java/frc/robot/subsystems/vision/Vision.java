@@ -44,7 +44,7 @@ public class Vision extends SubsystemBase{
     Pose2d speakerPosition;
 
     public Vision () {
-        Camera = new PhotonCamera("photonvision");
+        Camera = new PhotonCamera("Arducam_OV9281_USB_Camera");
 
         //Cam mounted facing forward, half a meter forward of center, half a meter up from center. Change Later
         robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); 
@@ -87,15 +87,18 @@ public class Vision extends SubsystemBase{
         result = Camera.getLatestResult();
 
         hasTargets = result.hasTargets();
-        targets = result.getTargets();
-        target = result.getBestTarget();
 
-        yaw = target.getYaw();
-        pitch = target.getPitch();
-        area = target.getArea();
-        skew = target.getSkew();
-        pose = target.getBestCameraToTarget();
-        corners = target.getDetectedCorners();
+        if (hasTargets)
+        {
+            targets = result.getTargets();
+            target = result.getBestTarget();
+            yaw = target.getYaw();
+            pitch = target.getPitch();
+            area = target.getArea();
+            skew = target.getSkew();
+            pose = target.getBestCameraToTarget();
+            corners = target.getDetectedCorners();
+        }
     }
 
 }

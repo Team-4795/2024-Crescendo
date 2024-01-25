@@ -91,7 +91,7 @@ public class Drive extends SubsystemBase {
                         m_frontRight.getPosition(),
                         m_rearLeft.getPosition(),
                         m_rearRight.getPosition()
-                }, this.getPose());
+                }, m_odometry.getPoseMeters());
 
         this.zeroHeading();
 
