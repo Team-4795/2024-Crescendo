@@ -26,7 +26,6 @@ public class IndexerIOReal implements IndexerIO {
 
     @Override
     public void updateInputs(IndexerIOInputs inputs) {
-        inputs.motorCurrent.addLast(indexMotor.getOutputCurrent());
         inputs.motorSpeed = encoder.getVelocity();
         inputs.motorPos = encoder.getPosition();
     }

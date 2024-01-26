@@ -5,29 +5,23 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 
 public class PivotIOSim implements PivotIO {
-    private SingleJointedArmSim pivotSim;
+    private SingleJointedArmSim pivotSim = new SingleJointedArmSim(DCMotor.getNEO(2), 30, 1.79, 0.66, 0, 3 * Math.PI / 4, true, 0);
 
     private double pivotAppliedVolts = 0.0;
 
-    public PivotIOSim() {
-        pivotSim = new SingleJointedArmSim(DCMotor.getNeoVortex(2), 30, 1.5, 0.66, 0,90 , true, 0);
-    }
-
+    @Override
     public void updateInputs(PivotIOInputs inputs) {
-        pivotSim.update(0.02);
-
-        inputs.pivotRelativePosition = pivotSim.getAngleRads() / (2* Math.PI);
-        inputs.pivotVelocityRadPerSec = pivotSim.getVelocityRadPerSec () / (2*Math.PI);
+        pivotSim.setInputVoltage(pivotAppliedVolts);
+        pivotSim.update(PivotConstants.kDt);
+        inputs.pivotRelativePosition = pivotSim.getAngleRads();
+        inputs.pivotVelocityRadPerSec = pivotSim.getVelocityRadPerSec();
         inputs.pivotAppliedVolts = pivotAppliedVolts;
-
     }
     
-    public void setARmVoltage(double volts) {
-        pivotAppliedVolts = MathUtil.clamp(volts, -12, 12);
+    @Override
+    public void rotatePivot(double speed) {
+        pivotAppliedVolts = MathUtil.clamp(12 * speed, -12, 12);
         pivotSim.setInputVoltage(pivotAppliedVolts);
-
     }
-
-
 
 }

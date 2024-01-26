@@ -7,7 +7,6 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Pivot extends SubsystemBase {
@@ -38,7 +37,7 @@ public class Pivot extends SubsystemBase {
 
     public Pivot(PivotIO pivotIO) {
         io = pivotIO;
-        visualizer = new PivotVisualizer("Pivot", Color.kDarkOrange);
+        visualizer = new PivotVisualizer(Color.kDarkOrange);
         io.updateInputs(inputs);
         goal = inputs.pivotRelativePosition;
         visualizer.update(360 * inputs.pivotRelativePosition);
@@ -54,9 +53,10 @@ public class Pivot extends SubsystemBase {
         Logger.processInputs("Pivot", inputs);
         visualizer.update(360 * inputs.pivotRelativePosition);
         io.rotatePivot(controller.calculate(goal, inputs.pivotRelativePosition) + 
-            pivotFeedForward.calculate(controller.getSetpoint().position, controller.getSetpoint().position)); 
+            pivotFeedForward.calculate(controller.getSetpoint().position, controller.getSetpoint().position));
+
+        Logger.recordOutput("Goal", goal);
 
     }
-    
     
 }
