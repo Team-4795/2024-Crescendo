@@ -12,4 +12,6 @@ public final class PivotConstants {
     public static final double kD = 0;
     
     public static final double kDt = 0.02;
+    public static final double deadband = 0;
+    public static final double manualSpeed = 0;
 }

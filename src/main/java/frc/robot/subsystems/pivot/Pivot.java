@@ -3,11 +3,13 @@ package frc.robot.subsystems.pivot;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.OIConstants;
 
 public class Pivot extends SubsystemBase {
     private PivotIO io;
@@ -41,6 +43,17 @@ public class Pivot extends SubsystemBase {
         io.updateInputs(inputs);
         goal = inputs.pivotPositionRads;
         visualizer.update(360 * inputs.pivotPositionRads);
+
+        setDefaultCommand(run(() -> {
+            double up = MathUtil.applyDeadband(
+                    OIConstants.operatorController.getRightTriggerAxis(), PivotConstants.deadband);
+            double down = MathUtil.applyDeadband(
+                    OIConstants.operatorController.getLeftTriggerAxis(), PivotConstants.deadband);
+
+            double change = PivotConstants.manualSpeed * (Math.pow(up, 3) - Math.pow(down, 3));
+
+            setGoal(goal + change);
+        }));
     }
 
     public void setGoal(double goal) {
@@ -56,7 +69,5 @@ public class Pivot extends SubsystemBase {
             pivotFeedForward.calculate(controller.getSetpoint().position, controller.getSetpoint().velocity));
 
         Logger.recordOutput("Pivot/Goal", goal);
-
     }
-    
 }

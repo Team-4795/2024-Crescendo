@@ -87,6 +87,8 @@ public class RobotContainer {
     OIConstants.driverController.a().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
     OIConstants.driverController.b().onTrue(Commands.runOnce(() -> manager.setState(State.GroundIntake)));
     OIConstants.driverController.x().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
+    OIConstants.operatorController.a().whileTrue(Commands.runOnce(() -> intake.reverse()));
+    OIConstants.operatorController.y().whileTrue(Commands.runOnce(() -> indexer.reverse()));
   }
 
   /**

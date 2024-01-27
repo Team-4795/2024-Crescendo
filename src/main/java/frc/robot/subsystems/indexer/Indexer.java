@@ -32,6 +32,10 @@ public class Indexer extends SubsystemBase {
         indexerSpeed = motorValue;
     }
 
+    public void reverse() {
+        indexerSpeed *= -1;
+    }
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);

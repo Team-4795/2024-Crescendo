@@ -31,6 +31,10 @@ public class Intake extends SubsystemBase{
         intakeSpeed = speed;
     }
 
+    public void reverse() {
+        intakeSpeed *= -1;
+    }
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);

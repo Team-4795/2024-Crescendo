@@ -48,5 +48,6 @@ public final class Constants {
 
   public static class OIConstants {
     public static final CommandXboxController driverController = new CommandXboxController(0);
+    public static final CommandXboxController operatorController = new CommandXboxController(0);
   }
 }
