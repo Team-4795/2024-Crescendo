@@ -22,7 +22,6 @@ public class ShooterIOReal implements ShooterIO {
         
     }
 
-  
 
     @Override
     public void runShooterMotors(double speed) {
