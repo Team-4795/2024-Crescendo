@@ -18,12 +18,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.OIConstants;
+import frc.robot.StateManager.State;
 import frc.robot.subsystems.Shooter.*;
 import frc.robot.subsystems.indexer.*;
 import frc.robot.subsystems.pivot.*;
 
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 import frc.robot.subsystems.intake.*;
 
 /**
@@ -41,6 +40,7 @@ public class RobotContainer {
   private final Pivot pivot;
   private final Indexer indexer;
   private final Intake intake;
+  private final StateManager manager = StateManager.getInstance();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -84,10 +84,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    OIConstants.driverController.a().onTrue(Commands.runOnce(() -> pivot.setGoal(1.2), pivot));
-    OIConstants.driverController.b().onTrue(Commands.runOnce(() -> pivot.setGoal(0.2), pivot));
-    OIConstants.driverController.x().onTrue(Commands.runOnce(() -> indexer.setIndexerSpeed(0.7), indexer));
-    OIConstants.driverController.y().onTrue(Commands.runOnce(() -> shooter.setShootingSpeed(0.7), shooter));
+    OIConstants.driverController.a().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
+    OIConstants.driverController.b().onTrue(Commands.runOnce(() -> manager.setState(State.GroundIntake)));
+    OIConstants.driverController.x().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
   }
 
   /**

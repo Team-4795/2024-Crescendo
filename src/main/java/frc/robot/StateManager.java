@@ -2,6 +2,8 @@ package frc.robot;
 
 import org.littletonrobotics.junction.Logger;
 
+import frc.robot.Constants.Setpoint;
+import frc.robot.Constants.StateConstants;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
@@ -10,38 +12,30 @@ import frc.robot.subsystems.pivot.Pivot;
 public class StateManager {
     private static StateManager mInstance;
     
-    public State state;
+    public State state = State.Stow;
 
     public enum State {
-        Stow(
-            Constants.StateConstants.pivotAngleStow,
-            Constants.StateConstants.intakeSpeedStow,
-            Constants.StateConstants.indexerSpeedStow,
-            Constants.StateConstants.shooterSpeedStow
-        );
+        Stow(StateConstants.stow),
+        GroundIntake(StateConstants.groundIntake),
+        SourceIntake(StateConstants.sourceIntake);
 
-        double pivotAngle;
-        double intakeSpeed;
-        double indexerSpeed;
-        double shooterSpeed;
+        Setpoint setpoint;
 
-        State(double pivotAngle, double intakeSpeed, double indexerSpeed, double shooterSpeed) {
-            this.pivotAngle = pivotAngle;
-            this.intakeSpeed = intakeSpeed;
-            this.indexerSpeed = indexerSpeed;
-            this.shooterSpeed = shooterSpeed;
+        State(Setpoint setpoint) {
+            this.setpoint = setpoint;
         }
     }
 
     public void setState(State state) {
         this.state = state;
+        this.setSetpoints();
     }
 
     public void setSetpoints() {
-        Shooter.getInstance().setShootingSpeed(this.state.shooterSpeed);
-        Pivot.getInstance().setGoal(this.state.pivotAngle);
-        Intake.getInstance().setIntakeSpeed(this.state.intakeSpeed);
-        Indexer.getInstance().setIndexerSpeed(this.state.indexerSpeed);
+        Shooter.getInstance().setShootingSpeed(this.state.setpoint.shooter());
+        Pivot.getInstance().setGoal(this.state.setpoint.pivot());
+        Intake.getInstance().setIntakeSpeed(this.state.setpoint.intake());
+        Indexer.getInstance().setIndexerSpeed(this.state.setpoint.indexer());
     }
 
     public static StateManager getInstance() {
@@ -55,4 +49,5 @@ public class StateManager {
     public void periodic() {
         Logger.recordOutput("StateManager/State", state.toString());
     }
+
 }

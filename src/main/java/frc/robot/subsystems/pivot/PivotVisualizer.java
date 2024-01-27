@@ -23,6 +23,6 @@ public class PivotVisualizer {
 
     public void update(double pivotAngle) {
         pivot.setAngle(pivotAngle);
-        Logger.recordOutput("PivotMechanism2d", mechanism);
+        Logger.recordOutput("Pivot/PivotMechanism2d", mechanism);
     }
 }

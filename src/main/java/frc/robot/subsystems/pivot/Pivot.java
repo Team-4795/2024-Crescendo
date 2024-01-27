@@ -55,7 +55,7 @@ public class Pivot extends SubsystemBase {
         io.rotatePivot(controller.calculate(inputs.pivotPositionRads, goal) + 
             pivotFeedForward.calculate(controller.getSetpoint().position, controller.getSetpoint().velocity));
 
-        Logger.recordOutput("Goal", goal);
+        Logger.recordOutput("Pivot/Goal", goal);
 
     }
     

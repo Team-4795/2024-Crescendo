@@ -26,17 +26,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public final class Constants {
   public static final Mode currentMode = Mode.SIM;
 
+  //shooter, indexer, intake measured in motor output, pivot measured in radians
+  public record Setpoint(double shooter, double pivot, double indexer, double intake) {}
+
   public class StateConstants {
-    public static final double indexerSpeedSpeaker = 1;
-    public static final double intakeSpeedSpeaker = 1;
-    public static final double pivotAngleSpeaker = 1;
-    public static final double indexerSpeedAmp = 1;
-    public static final double intakeSpeedAmp = 1;
-    public static final double pivotAngleAmp = 1;
-    public static final double indexerSpeedStow = 1;
-    public static final double intakeSpeedStow = 1;
-    public static final double pivotAngleStow = 1;
-    public static final double shooterSpeedStow = 1;
+    public static final Setpoint stow = new Setpoint(0, 0.52, 0, 0);
+    public static final Setpoint groundIntake = new Setpoint(0, 1.22, -0.5, -1);
+    public static final Setpoint sourceIntake = new Setpoint(-0.6, 0.96, -0.5, 0);
   }
 
   public static enum Mode {
