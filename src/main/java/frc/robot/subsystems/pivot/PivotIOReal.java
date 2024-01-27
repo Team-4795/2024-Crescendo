@@ -32,7 +32,7 @@ public class PivotIOReal implements PivotIO {
   @Override
   public void updateInputs(PivotIOInputs inputs) {
     inputs.pivotAppliedVolts = pivotLeft.getBusVoltage();
-    inputs.pivotRelativePosition = encoder.getPosition();
+    inputs.pivotPositionRads = encoder.getPosition();
     inputs.pivotVelocityRadPerSec = encoder.getVelocity();
   }
 

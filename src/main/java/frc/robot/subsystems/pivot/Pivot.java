@@ -16,7 +16,7 @@ public class Pivot extends SubsystemBase {
          new ProfiledPIDController(PivotConstants.kP, PivotConstants.KI, PivotConstants.kD, new Constraints(2, 2));
   
     private final ArmFeedforward pivotFeedForward = 
-         new ArmFeedforward(PivotConstants.kA, PivotConstants.kG, PivotConstants.kS, PivotConstants.KV);
+         new ArmFeedforward(PivotConstants.kS, PivotConstants.kG, PivotConstants.kV, PivotConstants.kA);
     private double goal = 0;
 
     PivotVisualizer visualizer;
@@ -39,8 +39,8 @@ public class Pivot extends SubsystemBase {
         io = pivotIO;
         visualizer = new PivotVisualizer(Color.kDarkOrange);
         io.updateInputs(inputs);
-        goal = inputs.pivotRelativePosition;
-        visualizer.update(360 * inputs.pivotRelativePosition);
+        goal = inputs.pivotPositionRads;
+        visualizer.update(360 * inputs.pivotPositionRads);
     }
 
     public void setGoal(double goal) {
@@ -51,9 +51,9 @@ public class Pivot extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Pivot", inputs);
-        visualizer.update(360 * inputs.pivotRelativePosition);
-        io.rotatePivot(controller.calculate(goal, inputs.pivotRelativePosition) + 
-            pivotFeedForward.calculate(controller.getSetpoint().position, controller.getSetpoint().position));
+        visualizer.update(inputs.pivotPositionRads * (180 / Math.PI));
+        io.rotatePivot(controller.calculate(inputs.pivotPositionRads, goal) + 
+            pivotFeedForward.calculate(controller.getSetpoint().position, controller.getSetpoint().velocity));
 
         Logger.recordOutput("Goal", goal);
 

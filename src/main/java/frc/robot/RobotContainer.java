@@ -67,8 +67,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    OIConstants.driverController.a().onTrue(Commands.runOnce(() -> pivot.setGoal(0.5), pivot));
-    OIConstants.driverController.b().onTrue(Commands.runOnce(() -> pivot.setGoal(0), pivot));
+    OIConstants.driverController.a().onTrue(Commands.runOnce(() -> pivot.setGoal(1.2), pivot));
+    OIConstants.driverController.b().onTrue(Commands.runOnce(() -> pivot.setGoal(0.2), pivot));
     OIConstants.driverController.x().onTrue(Commands.runOnce(() -> indexer.setIndexerSpeed(0.7), indexer));
     OIConstants.driverController.y().onTrue(Commands.runOnce(() -> shooter.setShootingSpeed(0.7), shooter));
   }

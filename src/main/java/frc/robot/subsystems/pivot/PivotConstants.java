@@ -5,7 +5,7 @@ public final class PivotConstants {
     public static final int rightCanID = 13;
     public static final double kA = 0;
     public static final double kG = 0;
-    public static final double KV = 0;
+    public static final double kV = 0;
     public static final double kS = 0;
     public static final double kP = 4;
     public static final double KI = 0;
