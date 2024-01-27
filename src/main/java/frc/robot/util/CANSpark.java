@@ -112,42 +112,43 @@ public class CANSpark {
                 throw new IllegalArgumentException("Not a Recognized Motor Controller Type");
         }
 
-        // motor.restoreFactoryDefaults();
+        motor.restoreFactoryDefaults();
 
-        // motor.setSmartCurrentLimit(build.currentLimit);
-        // motor.setIdleMode(build.mode);
-        // // if(build.compensate){
-        // //     motor.enableVoltageCompensation(build.compensationVolts);
-        // // }
-        // motor.setInverted(build.inverted);
-
-        // if(build.leader != null){
-        //     motor.follow(build.leader.motor);
-        // }
-
-        // relativeEncoder = motor.getEncoder();
-        // relativeEncoder.setPosition(0);
-        // if(build.hasAbsoluteEncoder){
-        //     absEncoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
-        //     // motor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
-        //     // motor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
-        //     absEncoder.setPositionConversionFactor(build.absPosConversion);
-            
-        //     absEncoder.setVelocityConversionFactor(build.absVelConversion);
-        // } else {
-        //     motor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
-        //     motor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
-        // }
-
-        // //set conversion factors
-        // relativeEncoder.setPositionConversionFactor(build.relativePosConversion);
-        // relativeEncoder.setVelocityConversionFactor(build.relativeVelConversion);
+        motor.setSmartCurrentLimit(build.currentLimit);
+        motor.setIdleMode(build.mode);
+        if(build.compensate){
+            motor.enableVoltageCompensation(build.compensationVolts);
+        }
         
+        if(build.leader != null){
+            motor.follow(build.leader.motor);
+        }
+        
+        relativeEncoder = motor.getEncoder();
+        relativeEncoder.setPosition(0);
+        relativeEncoder.setMeasurementPeriod(10);
+        relativeEncoder.setAverageDepth(2);
 
-        // motor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
-        // motor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+        if(build.hasAbsoluteEncoder){
+            absEncoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
+            absEncoder.setInverted(build.inverted);
+            absEncoder.setAverageDepth(2);
+            motor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+            motor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
+            absEncoder.setPositionConversionFactor(build.absPosConversion);
+            
+            absEncoder.setVelocityConversionFactor(build.absVelConversion);
+        } else {
+            motor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
+            motor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
+        }
 
-        // motor.burnFlash();
+        //set conversion factors
+        relativeEncoder.setPositionConversionFactor(build.relativePosConversion);
+        relativeEncoder.setVelocityConversionFactor(build.relativeVelConversion);
+        
+        motor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
+        motor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
     }
 
     public void set(double speed){
