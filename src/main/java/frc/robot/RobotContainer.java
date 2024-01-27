@@ -84,9 +84,10 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    OIConstants.driverController.a().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
-    OIConstants.driverController.b().onTrue(Commands.runOnce(() -> manager.setState(State.GroundIntake)));
-    OIConstants.driverController.x().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
+    OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
+    OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
+    OIConstants.operatorController.povDown().onTrue(Commands.runOnce(() -> manager.setState(State.GroundIntake)));
+    OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> manager.setState(State.ScoreAmp)));
     OIConstants.operatorController.a().whileTrue(Commands.runOnce(() -> intake.reverse()));
     OIConstants.operatorController.y().whileTrue(Commands.runOnce(() -> indexer.reverse()));
   }

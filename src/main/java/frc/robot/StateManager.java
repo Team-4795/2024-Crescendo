@@ -17,7 +17,8 @@ public class StateManager {
     public enum State {
         Stow(StateConstants.stow),
         GroundIntake(StateConstants.groundIntake),
-        SourceIntake(StateConstants.sourceIntake);
+        SourceIntake(StateConstants.sourceIntake),
+        ScoreAmp(StateConstants.scoreAmp);
 
         Setpoint setpoint;
 
