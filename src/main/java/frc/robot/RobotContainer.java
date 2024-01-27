@@ -42,9 +42,6 @@ public class RobotContainer {
   private final Indexer indexer;
   private final Intake intake;
 
-  // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
-
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -59,11 +56,17 @@ public class RobotContainer {
         break;
 
       case SIM:
-        // Sim robot, instantiate physics sim IO implementations
+        intake = Intake.initialize(new IntakeIOSim());
+        shooter = Shooter.initialize(new ShooterIOSim());
+        pivot = Pivot.initialize(new PivotIOSim());
+        indexer = Indexer.initialize(new IndexerIOSim());
         break;
 
       default:
-        // Replayed robot, disable IO implementations
+        intake = Intake.initialize(new IntakeIO() {});
+        shooter = Shooter.initialize(new ShooterIO() {});
+        pivot = Pivot.initialize(new PivotIO() {});
+        indexer = Indexer.initialize(new IndexerIO() {});
         break;
     }
 
