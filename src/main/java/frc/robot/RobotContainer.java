@@ -17,9 +17,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.DriveCommands;
-import frc.robot.commands.FeedForwardCharacterization;
+import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.Shooter.*;
 import frc.robot.subsystems.indexer.*;
 import frc.robot.subsystems.pivot.*;
@@ -83,7 +81,10 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    
+    OIConstants.driverController.a().onTrue(Commands.runOnce(() -> pivot.setGoal(1.2), pivot));
+    OIConstants.driverController.b().onTrue(Commands.runOnce(() -> pivot.setGoal(0.2), pivot));
+    OIConstants.driverController.x().onTrue(Commands.runOnce(() -> indexer.setIndexerSpeed(0.7), indexer));
+    OIConstants.driverController.y().onTrue(Commands.runOnce(() -> shooter.setShootingSpeed(0.7), shooter));
   }
 
   /**

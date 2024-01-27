@@ -6,8 +6,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class ShooterIOReal implements ShooterIO {
     
-    private CANSparkMax rightShooterMotor = new CANSparkMax(13,MotorType.kBrushless);
-    private CANSparkMax leftShooterMotor = new CANSparkMax(14, MotorType.kBrushless);
+    private CANSparkMax rightShooterMotor = new CANSparkMax(ShooterConstants.rightCanID,MotorType.kBrushless);
+    private CANSparkMax leftShooterMotor = new CANSparkMax(ShooterConstants.leftCanID, MotorType.kBrushless);
     private RelativeEncoder leftShooterEncoder = leftShooterMotor.getEncoder();
     private RelativeEncoder rightShooterEncoder = rightShooterMotor.getEncoder();
 
