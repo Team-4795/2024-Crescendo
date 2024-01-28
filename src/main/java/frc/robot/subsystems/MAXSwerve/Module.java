@@ -6,6 +6,7 @@ package frc.robot.subsystems.MAXSwerve;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
@@ -13,6 +14,9 @@ public class Module {
   private ModuleIO moduleIO;
   private ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
   private int index;
+
+  private double lastPositionMeters = 0.0; // Used for delta calculation
+  private SwerveModulePosition positionDelta;
 
   /**
    * Constructs a MAXSwerveModule and configures the driving and turning motor,
@@ -26,9 +30,14 @@ public class Module {
     this.index = index;
   }
 
-  public void updateInputs(){
+  public void updateInputs() {
     moduleIO.updateInputs(inputs);
     Logger.processInputs("Drive/Module" + Integer.toString(index), inputs);
+
+    double positionMeters = inputs.drivePositionMeters;
+    Rotation2d angle = inputs.turnAbsolutePosition; 
+    positionDelta = new SwerveModulePosition(inputs.drivePositionMeters - lastPositionMeters, angle);
+    lastPositionMeters = positionMeters;
   }
 
   /**
@@ -42,7 +51,7 @@ public class Module {
     return new SwerveModuleState(inputs.driveVelocityMetersPerSec, inputs.turnAbsolutePosition);
   }
 
-  public SwerveModuleState getOptimizedState(){
+  public SwerveModuleState getOptimizedState() {
     return moduleIO.getOptimizedState();
   }
 
@@ -55,6 +64,10 @@ public class Module {
     // Apply chassis angular offset to the encoder position to get the position
     // relative to the chassis.
     return new SwerveModulePosition(inputs.drivePositionMeters, inputs.turnAbsolutePosition);
+  }
+
+  public SwerveModulePosition getPositionDelta() {
+    return positionDelta;
   }
 
   /**
