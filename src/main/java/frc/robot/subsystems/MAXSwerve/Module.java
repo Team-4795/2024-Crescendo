@@ -39,7 +39,7 @@ public class Module {
   public SwerveModuleState getState() {
     // Apply chassis angular offset to the encoder position to get the position
     // relative to the chassis.
-    return new SwerveModuleState(inputs.driveVelocityRadPerSec, inputs.turnAbsolutePosition);
+    return new SwerveModuleState(inputs.driveVelocityMetersPerSec, inputs.turnAbsolutePosition);
   }
 
   public SwerveModuleState getOptimizedState(){
