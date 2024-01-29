@@ -15,10 +15,10 @@ public class ShooterIOReal implements ShooterIO {
         
         rightShooterMotor.setSmartCurrentLimit(30);
         leftShooterMotor.setSmartCurrentLimit(30);
-        
+        leftShooterMotor.setInverted(true);     
         rightShooterMotor.burnFlash();
         leftShooterMotor.burnFlash();
-        leftShooterMotor.setInverted(true);
+
         
     }
 
