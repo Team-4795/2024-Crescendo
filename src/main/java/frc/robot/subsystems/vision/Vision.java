@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -22,22 +23,36 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase{
-    PhotonPipelineResult result;
-    double yaw;
-    double pitch;
-    double area;
-    double skew;
+    PhotonPipelineResult arducamResult;
+    PhotonPipelineResult lifecamResult;
+    double arducamYaw;
+    double lifecamYaw;
+    double arducamPitch;
+    double lifecamPitch;
+    double arducamArea;
+    double lifecamArea;
+    double arducamSkew;
+    double lifecamSkew;
     double distanceToTarget;
-    Transform3d pose;
-    List<TargetCorner> corners;
-    boolean hasTargets;
-    List<PhotonTrackedTarget> targets;
-    PhotonTrackedTarget target;
+    Transform3d arducamPose;
+    Transform3d lifecamPose;
+    List<TargetCorner> arducamCorners;
+    List<TargetCorner> lifecamCorners;
+    boolean arducamHasTargets;
+    boolean lifecamHasTargets;
+    List<PhotonTrackedTarget> arducamTargets;
+    List<PhotonTrackedTarget> lifecamTargets;
+    PhotonTrackedTarget arducamTarget;
+    PhotonTrackedTarget lifecamTarget;
 
-    PhotonCamera Camera;
+    PhotonCamera Arducam;
+    PhotonCamera Lifecam;
+
     AprilTagFieldLayout aprilTagFieldLayout;
-    Transform3d robotToCam;
-    PhotonPoseEstimator photonPoseEstimator;
+    Transform3d arducamRobotToCam;
+    Transform3d lifecamRobotToCam;
+    PhotonPoseEstimator arducamePhotonPoseEstimator;
+    PhotonPoseEstimator lifecamPhotonPoseEstimator;
     EstimatedRobotPose visionPose;
     Pose2d speakerPosition;
 
@@ -51,10 +66,12 @@ public class Vision extends SubsystemBase{
     }
 
     private Vision () {
-        Camera = new PhotonCamera("Arducam_OV9281_USB_Camera");
+        Arducam = new PhotonCamera("Arducam_OV9281_USB_Camera");
+        Lifecam = new PhotonCamera("Microsoft_LifeCam_HD-3000");
 
-        //Cam mounted facing forward, half a meter forward of center, half a meter up from center. Change Later
-        robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); 
+        //Cam mounted facing forward, half a meter forward of center, half a meter up from center. Change Both Later
+        arducamRobotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); 
+        lifecamRobotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); 
 
         try 
         {
@@ -65,14 +82,21 @@ public class Vision extends SubsystemBase{
             e.printStackTrace();
         }
 
-        photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, Camera, robotToCam);   
+        arducamePhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, Arducam, arducamRobotToCam);   
+        lifecamPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, Lifecam, lifecamRobotToCam);   
+
 
         aprilTagFieldLayout.getTagPose(4).ifPresent(pose -> speakerPosition = pose.toPose2d()); //Get pose2d of speaker
     }
 
-    public Optional<EstimatedRobotPose> getPose(Pose2d prevEstimatedRobotPose) {
-        photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-        return photonPoseEstimator.update();
+    public Optional<EstimatedRobotPose> getArducamPose(Pose2d prevEstimatedRobotPose) {
+        arducamePhotonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+        return arducamePhotonPoseEstimator.update();
+    }
+
+    public Optional<EstimatedRobotPose> getLifecamPose(Pose2d prevEstimatedRobotPose) {
+        lifecamPhotonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+        return lifecamPhotonPoseEstimator.update();
     }
 
     public double getDistancetoSpeaker(Pose2d robotPose){
@@ -80,8 +104,8 @@ public class Vision extends SubsystemBase{
         return distanceToTarget;
     }
 
-    public double getYaw(){
-        return yaw;
+    public double getArducamYaw(){
+        return arducamYaw;
     }
 
     public Pose2d getSpeakerPos() {
@@ -91,20 +115,51 @@ public class Vision extends SubsystemBase{
 
     @Override
     public void periodic() {
-        result = Camera.getLatestResult();
+        arducamResult = Arducam.getLatestResult();
+        arducamHasTargets = arducamResult.hasTargets();
 
-        hasTargets = result.hasTargets();
-
-        if (hasTargets)
+        if (arducamHasTargets)
         {
-            targets = result.getTargets();
-            target = result.getBestTarget();
-            yaw = target.getYaw();
-            pitch = target.getPitch();
-            area = target.getArea();
-            skew = target.getSkew();
-            pose = target.getBestCameraToTarget();
-            corners = target.getDetectedCorners();
+            arducamTargets = arducamResult.getTargets();
+            arducamTarget = arducamResult.getBestTarget();
+            arducamYaw = arducamTarget.getYaw();
+            Logger.recordOutput("Arducam Yaw", arducamYaw);
+
+            arducamPitch = arducamTarget.getPitch();
+            Logger.recordOutput("Arducam Pitch", arducamPitch);
+    
+            arducamArea = arducamTarget.getArea();
+            Logger.recordOutput("Arducam Area", arducamArea);
+
+            arducamSkew = arducamTarget.getSkew();
+            Logger.recordOutput("Arducam Skew", arducamSkew);
+
+            arducamPose = arducamTarget.getBestCameraToTarget();
+            arducamCorners = arducamTarget.getDetectedCorners();
+        }
+
+        lifecamResult = Lifecam.getLatestResult();
+        lifecamHasTargets = lifecamResult.hasTargets();
+
+        if (lifecamHasTargets)
+        {
+            lifecamTargets = lifecamResult.getTargets();
+            lifecamTarget = lifecamResult.getBestTarget();
+
+            lifecamYaw = lifecamTarget.getYaw();
+            Logger.recordOutput("Lifecam Yaw", lifecamYaw);
+
+            lifecamPitch = lifecamTarget.getPitch();
+            Logger.recordOutput("Lifecam Pitch", lifecamPitch);
+            
+            lifecamArea = lifecamTarget.getArea();
+            Logger.recordOutput("Lifecam Area", lifecamArea);
+
+            lifecamSkew = lifecamTarget.getSkew();
+            Logger.recordOutput("Lifecam Skew", lifecamSkew);
+
+            lifecamPose = lifecamTarget.getBestCameraToTarget();
+            lifecamCorners = lifecamTarget.getDetectedCorners();
         }
     }
 

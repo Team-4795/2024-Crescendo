@@ -17,6 +17,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -54,7 +55,7 @@ public class Drive extends SubsystemBase {
     
       // Odometry class for tracking robot pose
     SwerveDrivePoseEstimator m_poseEstimator;
-    private EstimatedRobotPose visionPose;
+    private EstimatedRobotPose visionPose = new EstimatedRobotPose(new Pose3d(), m_currentRotation, null, null);
 
     private Vision vision = Vision.getInstance();
 
@@ -138,8 +139,10 @@ public class Drive extends SubsystemBase {
                     m_rearRight.getPosition()
                 });
         
-        vision.getPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> m_poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
-        vision.getPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> visionPose = pose);
+        vision.getArducamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> m_poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
+        vision.getLifecamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> m_poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
+        
+        vision.getLifecamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> visionPose = pose);
 
         Logger.recordOutput("Estimated Pose", getPose());
         Logger.recordOutput("Vision pose", visionPose.estimatedPose);

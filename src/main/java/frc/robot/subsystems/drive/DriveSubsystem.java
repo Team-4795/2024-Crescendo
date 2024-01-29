@@ -138,7 +138,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumberArray("Swerve States", this.getModuleStates()); 
 
     //Add vision to pose estimator
-    vision.getPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> m_poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
+    vision.getArducamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> m_poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
   }
   
 
