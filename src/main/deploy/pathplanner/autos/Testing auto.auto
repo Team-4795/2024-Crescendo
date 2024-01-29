@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.43,
-      "y": 5.54
+      "x": 1.26,
+      "y": 5.43
     },
-    "rotation": 1.75
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3GP middle P1"
+            "pathName": "Go forward"
           }
         }
       ]

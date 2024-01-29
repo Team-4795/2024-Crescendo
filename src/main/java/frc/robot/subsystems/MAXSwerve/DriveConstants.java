@@ -19,7 +19,7 @@ public final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 2;
-    public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
+    public static final double kMaxAngularSpeed = 2*Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 10.0; // radians per second
     public static final double kMagnitudeSlewRate = 10.0; // percent per second (1 = 100%)
@@ -102,7 +102,7 @@ public final class DriveConstants {
         public static final double kDrivingMinOutput = -1;
         public static final double kDrivingMaxOutput = 1;
 
-        public static final double kTurningP = 0.5;
+        public static final double kTurningP = 0.4;
         public static final double kTurningI = 0;
         public static final double kTurningD = 0;
         public static final double kTurningFF = 0;
@@ -117,7 +117,7 @@ public final class DriveConstants {
     }
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxSpeedMetersPerSecond = 2;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
@@ -125,14 +125,6 @@ public final class DriveConstants {
         public static final double kPXController = 1;
         public static final double kPYController = 1;
         public static final double kPThetaController = 1;
-
-        public static final HolonomicPathFollowerConfig follower = new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                        new PIDConstants(ModuleConstants.kDrivingP, ModuleConstants.kDrivingI, ModuleConstants.kDrivingD), // Translation PID constants
-                        new PIDConstants(ModuleConstants.kTurningP, ModuleConstants.kTurningI, ModuleConstants.kTurningD), // Rotation PID constants
-                        4.5, // Max module speed, in m/s ***MIGHT CHANGE***
-                        0.4, // Drive base radius in meters. Distance from robot center to furthest module. ***MIGHT CHANGE***
-                        new ReplanningConfig() // Default path replanning config. See the API for the options here
-                );
 
         // Constraint for the motion profiled robot angle controller
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(

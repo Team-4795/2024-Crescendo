@@ -326,11 +326,12 @@ public class Drive extends SubsystemBase {
     }
 
     private void driveRobotRelative(ChassisSpeeds speeds) {
+        Logger.recordOutput("Auto/Speeds", speeds);
         // This takes the velocities and converts them into precentages (-1 to 1)
         drive(speeds.vxMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond,
                 speeds.vyMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond,
                 speeds.omegaRadiansPerSecond / DriveConstants.kMaxAngularSpeed,
                 false,
-                false);
+                true);
     }
 }
