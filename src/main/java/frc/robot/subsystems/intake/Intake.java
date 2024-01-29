@@ -8,6 +8,7 @@ public class Intake extends SubsystemBase{
     private IntakeIO io;
     private IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
     private double intakeSpeed = 0.0;
+    private boolean reverseIntake = false;
 
     private static Intake instance;
 
@@ -31,14 +32,19 @@ public class Intake extends SubsystemBase{
         intakeSpeed = speed;
     }
 
-    public void reverse() {
-        intakeSpeed *= -1;
+    public void setOverride(boolean override) {
+        reverseIntake = override;
     }
 
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Intake", inputs);
-        io.setMotorSpeed(intakeSpeed);
+        if (reverseIntake) {
+            io.setMotorSpeed(IntakeConstants.overrideSpeed);
+        }
+        else{
+            io.setMotorSpeed(intakeSpeed);
+        }
     }
 }

@@ -88,7 +88,10 @@ public class RobotContainer {
     OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
     OIConstants.operatorController.povDown().onTrue(Commands.runOnce(() -> manager.setState(State.GroundIntake)));
     OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> manager.setState(State.ScoreAmp)));
-    OIConstants.operatorController.a().whileTrue(Commands.runOnce(() -> intake.reverse()));
+    OIConstants.operatorController.a().whileTrue(Commands.startEnd(
+      () -> intake.setOverride(true), 
+      () -> intake.setOverride(false), 
+      intake));
     OIConstants.operatorController.y().whileTrue(Commands.runOnce(() -> indexer.reverse()));
   }
 
