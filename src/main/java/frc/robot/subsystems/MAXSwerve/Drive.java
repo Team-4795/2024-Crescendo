@@ -34,7 +34,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class Drive extends SubsystemBase {
-
     private final Module m_frontLeft;
     private final Module m_frontRight;
     private final Module m_rearLeft;
@@ -148,6 +147,10 @@ public class Drive extends SubsystemBase {
         // sample in x, y, and theta based only on the modules, without
         // the gyro.
         var twist = DriveConstants.kDriveKinematics.toTwist2d(wheelDeltas);
+
+        if (!gyroInputs.connected) {
+            gyro.addOffset(Rotation2d.fromRadians(twist.dtheta));
+        }
         // Apply the twist (change since last sample) to the current pose
         pose = pose.exp(twist);
 
@@ -196,6 +199,10 @@ public class Drive extends SubsystemBase {
      * @param rateLimit     Whether to enable rate limiting for smoother control.
      */
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+
+        if (Constants.currentMode == Mode.SIM) {
+            rot *= -1.0;
+        }
 
         double xSpeedCommanded;
         double ySpeedCommanded;

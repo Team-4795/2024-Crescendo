@@ -1,7 +1,6 @@
 package frc.robot.subsystems.MAXSwerve;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class GyroIOPigeon2 implements GyroIO{
@@ -19,8 +18,9 @@ public class GyroIOPigeon2 implements GyroIO{
 
     @Override
     public void updateInputs(GyroIOInputs inputs) {
+        inputs.connected = true;
         inputs.yaw = Rotation2d.fromDegrees(pigeon.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0));
         inputs.yawVelocity = pigeon.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
     }
-    
+
 }
