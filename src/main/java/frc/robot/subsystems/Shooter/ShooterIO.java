@@ -5,7 +5,7 @@ import org.littletonrobotics.junction.AutoLog;
 public interface ShooterIO {
     @AutoLog
     public static class ShooterIOInputs {
-        public double shooterMotorVelocityRadPerSec = 0.0;
+        public double shooterMotorVelocityRPM = 0.0;
         public double shooterMotorAppliedVolts = 0.0;
         
     }
