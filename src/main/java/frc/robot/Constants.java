@@ -39,10 +39,6 @@ public final class Constants {
     REPLAY
   }
 
-  public static class OIConstants {
-    public static final CommandXboxController driverController = new CommandXboxController(0);
-  }
-
   public static final class OIConstants{
     public static final double kDriveDeadband = 0.05;
 
