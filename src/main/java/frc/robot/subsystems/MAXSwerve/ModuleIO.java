@@ -9,9 +9,9 @@ public interface ModuleIO {
     @AutoLog
     public static class ModuleIOInputs {
         public double drivePositionMeters = 0.0;
-        public double driveVelocityRadPerSec = 0.0;
+        public double driveVelocityMetersPerSec = 0.0;
 
-        public Rotation2d turnAbsolutePosition = new Rotation2d();
+        public Rotation2d turnAbsolutePosition = new Rotation2d(); //radians
         public double turnVelocityRadPerSec = 0.0;
     }
 

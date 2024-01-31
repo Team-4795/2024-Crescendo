@@ -1,5 +1,7 @@
 package frc.robot.subsystems.MAXSwerve;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -16,10 +18,11 @@ public class ModuleIOSim implements ModuleIO {
 
     private SwerveModuleState optimizedState = new SwerveModuleState();
 
-    private Rotation2d chassisAngularOffset;
+    private PIDController turnController = new PIDController(3, 0, 0);
+    private PIDController driveController = new PIDController(3, 0, 0);
 
     public ModuleIOSim(double chassisAngularOffset) {
-        this.chassisAngularOffset = Rotation2d.fromRadians(chassisAngularOffset);
+        turnController.enableContinuousInput(0, 2 * Math.PI);
     }
 
     @Override
@@ -30,20 +33,26 @@ public class ModuleIOSim implements ModuleIO {
 
     @Override
     public void setDesiredState(SwerveModuleState state) {
-        SwerveModuleState correctedDesiredState = new SwerveModuleState();
-        correctedDesiredState.speedMetersPerSecond = state.speedMetersPerSecond;
-        correctedDesiredState.angle = state.angle.plus(chassisAngularOffset);
-
         // Optimize the reference state to avoid spinning further than 90 degrees.
-        SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
+        SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(state,
                 new Rotation2d(turnSim.getAngularPositionRad()));
 
-        driveSim.setState(driveSim.getAngularPositionRad(), optimizedDesiredState.speedMetersPerSecond / ModuleConstants.kDrivingEncoderVelocityFactor);
-        turnSim.setState(state.angle.getRadians(), 0.0);
-        optimizedState = new SwerveModuleState(optimizedDesiredState.speedMetersPerSecond, optimizedDesiredState.angle.minus(chassisAngularOffset));
+        double driveVolts = driveController.calculate(driveSim.getAngularVelocityRadPerSec() * ModuleConstants.kWheelDiameterMeters / 2, optimizedDesiredState.speedMetersPerSecond);
+        double turnOutput = turnController.calculate(turnSim.getAngularPositionRad(), optimizedDesiredState.angle.getRadians());
+        
+        driveSim.setInputVoltage(MathUtil.clamp(driveVolts, -12, 12));
+        turnSim.setInputVoltage(MathUtil.clamp(turnOutput, -12, 12));
+        optimizedState = new SwerveModuleState(optimizedDesiredState.speedMetersPerSecond, optimizedDesiredState.angle);
     }
 
-    
+    public double turnWrapping(double angleRad){
+        if(angleRad >= 0){
+            return (angleRad % (2 * Math.PI));
+        } else {
+            angleRad = angleRad % (2 * Math.PI);
+            return angleRad + (2 * Math.PI);
+        }
+    }
 
     @Override
     public SwerveModuleState getOptimizedState() {
@@ -55,9 +64,9 @@ public class ModuleIOSim implements ModuleIO {
         driveSim.update(LOOP_PERIOD_SECS);
         turnSim.update(LOOP_PERIOD_SECS);
 
-        inputs.drivePositionMeters = driveSim.getAngularPositionRad() * ModuleConstants.kDrivingEncoderPositionFactor;
-        inputs.driveVelocityRadPerSec = driveSim.getAngularVelocityRadPerSec() * ModuleConstants.kDrivingEncoderVelocityFactor;
-        inputs.turnAbsolutePosition = Rotation2d.fromRadians(turnSim.getAngularPositionRad()).minus(chassisAngularOffset);
+        inputs.drivePositionMeters = driveSim.getAngularPositionRad() * ModuleConstants.kWheelDiameterMeters / 2;
+        inputs.driveVelocityMetersPerSec = driveSim.getAngularVelocityRadPerSec() * ModuleConstants.kWheelDiameterMeters / 2;
+        inputs.turnAbsolutePosition = Rotation2d.fromRadians(turnSim.getAngularPositionRad());
         inputs.turnVelocityRadPerSec = turnSim.getAngularVelocityRadPerSec();
     }
 
