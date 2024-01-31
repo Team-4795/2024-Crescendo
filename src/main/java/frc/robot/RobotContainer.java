@@ -13,14 +13,18 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.Shooter.*;
-import frc.robot.subsystems.indexer.*;
-import frc.robot.subsystems.pivot.*;
+import frc.robot.subsystems.MAXSwerve.*;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import frc.robot.commands.TurnToSpeaker;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -41,12 +45,30 @@ public class RobotContainer {
         shooter = Shooter.initialize(new ShooterIOReal());
         pivot = Pivot.initialize(new PivotIOReal());
         indexer = Indexer.initialize(new IndexerIOReal());
+        // Real robot, instantiate hardware IO implementations
+        drive =
+            new Drive(
+                new GyroIOPigeon2(),
+                new ModuleIOSparkMax(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId, DriveConstants.kFrontLeftChassisAngularOffset),
+                new ModuleIOSparkMax(DriveConstants.kFrontRightDrivingCanId, DriveConstants.kFrontRightTurningCanId, DriveConstants.kFrontRightChassisAngularOffset),
+                new ModuleIOSparkMax(DriveConstants.kRearLeftDrivingCanId, DriveConstants.kRearLeftTurningCanId, DriveConstants.kBackLeftChassisAngularOffset),
+                new ModuleIOSparkMax(DriveConstants.kRearRightDrivingCanId, DriveConstants.kRearRightTurningCanId, DriveConstants.kBackRightChassisAngularOffset));
+
         break;
 
       case SIM:
         shooter = Shooter.initialize(new ShooterIOSim());
         pivot = Pivot.initialize(new PivotIOSim());
         indexer = Indexer.initialize(new IndexerIOSim());
+        // Sim robot, instantiate physics sim IO implementations
+        drive =
+            new Drive(
+                new GyroIO() {},
+                new ModuleIOSim(DriveConstants.kFrontLeftChassisAngularOffset),
+                new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
+                new ModuleIOSim(DriveConstants.kBackLeftChassisAngularOffset),
+                new ModuleIOSim(DriveConstants.kBackRightChassisAngularOffset));
+
         break;
 
       default:
@@ -55,6 +77,16 @@ public class RobotContainer {
         indexer = Indexer.initialize(new IndexerIO() {});
         break;
     }
+
+
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+    // Set up feedforward characterization
+    // autoChooser.addOption(
+    //     "Drive FF Characterization",
+    //     new FeedForwardCharacterization(
+    //         drive, drive::runCharacterizationVolts, drive::getCharacterizationVelocity));
+
 
     // Configure the button bindings
     configureButtonBindings();
@@ -67,10 +99,27 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    OIConstants.driverController.a().onTrue(Commands.runOnce(() -> pivot.setGoal(1.2), pivot));
-    OIConstants.driverController.b().onTrue(Commands.runOnce(() -> pivot.setGoal(0.2), pivot));
-    OIConstants.driverController.x().onTrue(Commands.runOnce(() -> indexer.setIndexerSpeed(0.7), indexer));
-    OIConstants.driverController.y().onTrue(Commands.runOnce(() -> shooter.setShootingSpeed(0.7), shooter));
+    drive.setDefaultCommand(
+        DriveCommands.joystickDrive(
+            drive,
+            () -> -controller.getLeftY(),
+            () -> -controller.getLeftX(),
+            () -> -controller.getRightX()));
+    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    controller
+        .b()
+        .onTrue(
+            Commands.runOnce(
+                    () ->
+                        drive.setPose(
+                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                    drive)
+                .ignoringDisable(true));
+    controller
+        .a()
+        .whileTrue(
+            Commands.startEnd(
+                () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel));
   }
 
   /**
