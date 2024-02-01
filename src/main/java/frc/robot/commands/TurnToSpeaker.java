@@ -12,19 +12,20 @@ import frc.robot.Constants.OIConstants;
 
 public class TurnToSpeaker {
     private static Vision vision = Vision.getInstance();
-    private static PIDController rotationPID = new PIDController(1, 0, 0); // Change Values
+    private static PIDController rotationPID = new PIDController(0.1, 0, 0); // Change Values
     
     public static Command turnTowardsSpeaker(Drive drive){
         return Commands.run(
         () -> {
             double deltaY = vision.getSpeakerPos().getY() - drive.getPose().getY();
-            double angle = Math.asin(deltaY / vision.getDistancetoSpeaker(drive.getPose())) * 180/Math.PI;
+            // double angle = Math.asin(deltaY / vision.getDistancetoSpeaker(drive.getPose())) * 180/Math.PI;
+            double angle = OIConstants.m_driverController.getRightY() * Math.PI;
             Logger.recordOutput("Angle", angle);
 
             drive.drive(
                 -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftY(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-                -rotationPID.calculate(vision.getArducamYaw(), angle), 
+                rotationPID.calculate(drive.getHeading(), angle), 
                 true, true);
         }, drive);
     }
