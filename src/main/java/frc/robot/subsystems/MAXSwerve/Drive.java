@@ -26,6 +26,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.MAXSwerve.DriveConstants.AutoConstants;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.ModuleConstants;
 import frc.robot.util.LocalADStarAK;
 import frc.robot.util.SwerveUtils;
@@ -88,10 +90,8 @@ public class Drive extends SubsystemBase {
                 this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
                                                  // Constants class
-                        new PIDConstants(ModuleConstants.kDrivingP, ModuleConstants.kDrivingI,
-                                ModuleConstants.kDrivingD), // Translation PID constants
-                        new PIDConstants(ModuleConstants.kTurningP, ModuleConstants.kTurningI,
-                                ModuleConstants.kTurningD), // Rotation PID constants
+                        new PIDConstants(AutoConstants.kPDrivingController,0,0), // Translation PID constants
+                        new PIDConstants(AutoConstants.kPThetaController,0,0), // Rotation PID constants
                         4.5, // Max module speed, in m/s ***MIGHT CHANGE***
                         DriveConstants.kTrackRadius, // Drive base radius in meters. Distance from robot center to
                                                      // furthest module. ***MIGHT CHANGE***
@@ -370,13 +370,22 @@ public class Drive extends SubsystemBase {
                 m_rearLeft.getState(), m_rearRight.getState());
     }
 
-    private void driveRobotRelative(ChassisSpeeds speeds) {
-        Logger.recordOutput("Auto/Speeds", speeds);
+  /*   private void driveRobotRelative(ChassisSpeeds speeds) {
         // This takes the velocities and converts them into precentages (-1 to 1)
-        drive(speeds.vxMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond,
-                speeds.vyMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond,
-                speeds.omegaRadiansPerSecond / DriveConstants.kMaxAngularSpeed,
-                true,
+        drive(speeds.vxMetersPerSecond / AutoConstants.kMaxSpeedMetersPerSecond,
+                speeds.vyMetersPerSecond / AutoConstants.kMaxSpeedMetersPerSecond,
+                speeds.omegaRadiansPerSecond / AutoConstants.kMaxAngularSpeedRadiansPerSecond,
+                false,
                 false);
+        Logger.recordOutput("Auto/Speeds", speeds);
+        Logger.recordOutput("Auto/Speeds", speeds.omegaRadiansPerSecond/AutoConstants.kMaxAngularSpeedRadiansPerSecond);
+        
+  }*/  
+
+    
+    public void driveRobotRelative(ChassisSpeeds speeds)
+    {
+        SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+        setModuleStates(moduleStates);
     }
 }
