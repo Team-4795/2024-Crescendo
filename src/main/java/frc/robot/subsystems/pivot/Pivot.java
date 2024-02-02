@@ -19,6 +19,20 @@ public class Pivot extends SubsystemBase {
          new ArmFeedforward(PivotConstants.kS, PivotConstants.kG, PivotConstants.kV, PivotConstants.kA);
     private double goal = 0;
 
+    
+    private double torqueFromAngle(double inputs){
+        
+        double Tg = -PivotConstants.M * PivotConstants.R -9.81 * Math.cos(encoder.getAngleRads);
+        double Ts = PivotConstants.d * PivotConstants.F * Math.sin(Math.atan2(PivotConstants.d*Math.sin(encoder.getAngleRads)+PivotConstants.y, -PivotConstants.d*Math.cos(encoder.getAngleRads)+PivotConstants.x)-(Math.PI - encoder.getAngleRads));
+        return torqueFromAngle(-Tg-Ts);
+
+
+    }
+
+        
+
+    
+
     PivotVisualizer visualizer;
 
     private static Pivot instance;

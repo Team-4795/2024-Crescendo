@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ScoreSpeaker;
+import frc.robot.commands.ScoreSpeaker;
 import frc.robot.subsystems.MAXSwerve.*;
 import frc.robot.subsystems.Shooter.*;
 import frc.robot.subsystems.indexer.*;
@@ -54,7 +55,7 @@ public class RobotContainer {
         indexer = Indexer.initialize(new IndexerIOReal());
         // Real robot, instantiate hardware IO implementations
         drive =
-            new Drive(
+            Drive.initialize(
                 new GyroIOPigeon2(),
                 new ModuleIOSparkMax(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId, DriveConstants.kFrontLeftChassisAngularOffset),
                 new ModuleIOSparkMax(DriveConstants.kFrontRightDrivingCanId, DriveConstants.kFrontRightTurningCanId, DriveConstants.kFrontRightChassisAngularOffset),
@@ -69,7 +70,7 @@ public class RobotContainer {
         indexer = Indexer.initialize(new IndexerIOSim());
         // Sim robot, instantiate physics sim IO implementations
         drive =
-            new Drive(
+            Drive.initialize(
                 new GyroIO() {},
                 new ModuleIOSim(DriveConstants.kFrontLeftChassisAngularOffset),
                 new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
@@ -82,7 +83,7 @@ public class RobotContainer {
         shooter = Shooter.initialize(new ShooterIO() {});
         pivot = Pivot.initialize(new PivotIO() {});
         indexer = Indexer.initialize(new IndexerIO() {});
-        drive = new Drive(null, null, null, null, null);
+        drive = Drive.initialize(null, null, null, null, null);
         break;
     }
 
