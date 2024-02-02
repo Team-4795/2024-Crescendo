@@ -10,7 +10,6 @@ public class ShooterIOReal implements ShooterIO {
     private CANSparkMax rightShooterMotor = new CANSparkMax(ShooterConstants.rightCanID,MotorType.kBrushless);
     private CANSparkMax leftShooterMotor = new CANSparkMax(ShooterConstants.leftCanID, MotorType.kBrushless);
     private RelativeEncoder leftShooterEncoder = leftShooterMotor.getEncoder();
-    private RelativeEncoder rightShooterEncoder = rightShooterMotor.getEncoder();
     private SparkPIDController controller;
 
     public ShooterIOReal(){
@@ -21,7 +20,8 @@ public class ShooterIOReal implements ShooterIO {
         controller.setD(0);
         rightShooterMotor.setSmartCurrentLimit(30);
         leftShooterMotor.setSmartCurrentLimit(30);
-        leftShooterMotor.setInverted(true);     
+        leftShooterMotor.setInverted(true);
+        rightShooterMotor.follow(leftShooterMotor);   
         rightShooterMotor.burnFlash();
         leftShooterMotor.burnFlash();
     }
@@ -30,7 +30,6 @@ public class ShooterIOReal implements ShooterIO {
     @Override
     public void runShooterMotors(double speed) {
         leftShooterMotor.set(speed);
-        rightShooterMotor.set(speed);
     }
 
     @Override

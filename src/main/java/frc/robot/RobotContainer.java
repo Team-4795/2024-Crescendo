@@ -22,12 +22,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ScoreSpeaker;
 import frc.robot.subsystems.MAXSwerve.*;
 import frc.robot.subsystems.Shooter.*;
 import frc.robot.subsystems.indexer.*;
 import frc.robot.subsystems.pivot.*;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import frc.robot.commands.TurnToSpeaker;
+// import frc.robot.commands.TurnToSpeaker;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -105,6 +106,8 @@ public class RobotContainer {
           MathUtil.applyDeadband(OIConstants.m_driverController.getRightX(), OIConstants.kDriveDeadband),
           true, true),
       drive));
+
+      OIConstants.m_driverController.leftTrigger(0.5).whileTrue(new ScoreSpeaker());
   }
 
   /**
