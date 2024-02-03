@@ -53,6 +53,6 @@ public final class Constants {
     public static final double kDriveDeadband = 0.05;
 
     public static final CommandXboxController m_driverController = new CommandXboxController(0);
-    public static final CommandXboxController operatorController = new CommandXboxController(0);
+    public static final CommandXboxController operatorController = new CommandXboxController(1);
   }
 }

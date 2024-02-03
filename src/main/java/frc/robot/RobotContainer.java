@@ -19,6 +19,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
@@ -60,35 +61,32 @@ public class RobotContainer {
   public RobotContainer() {
     switch (Constants.currentMode) {
       case REAL:
-        //Real robot, instantiate hardware IO implementations
+        // Real robot, instantiate hardware IO implementations
         intake = Intake.initialize(new SparkMaxIO());
         shooter = Shooter.initialize(new ShooterIOReal());
         pivot = Pivot.initialize(new PivotIOReal());
         indexer = Indexer.initialize(new IndexerIOReal());
         // Real robot, instantiate hardware IO implementations
-        drive =
-            Drive.initialize(
-                new GyroIOPigeon2(),
-                new ModuleIOSparkMax(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId, DriveConstants.kFrontLeftChassisAngularOffset),
-                new ModuleIOSparkMax(DriveConstants.kFrontRightDrivingCanId, DriveConstants.kFrontRightTurningCanId, DriveConstants.kFrontRightChassisAngularOffset),
-                new ModuleIOSparkMax(DriveConstants.kRearLeftDrivingCanId, DriveConstants.kRearLeftTurningCanId, DriveConstants.kBackLeftChassisAngularOffset),
-                new ModuleIOSparkMax(DriveConstants.kRearRightDrivingCanId, DriveConstants.kRearRightTurningCanId, DriveConstants.kBackRightChassisAngularOffset));
-
+        drive = Drive.initialize(
+            new GyroIOPigeon2(),
+            new ModuleIOSparkMax(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId, DriveConstants.kFrontLeftChassisAngularOffset),
+            new ModuleIOSparkMax(DriveConstants.kFrontRightDrivingCanId, DriveConstants.kFrontRightTurningCanId, DriveConstants.kFrontRightChassisAngularOffset),
+            new ModuleIOSparkMax(DriveConstants.kRearLeftDrivingCanId, DriveConstants.kRearLeftTurningCanId, DriveConstants.kBackLeftChassisAngularOffset),
+            new ModuleIOSparkMax(DriveConstants.kRearRightDrivingCanId, DriveConstants.kRearRightTurningCanId, DriveConstants.kBackRightChassisAngularOffset));
         break;
 
       case SIM:
+        // Sim robot, instantiate physics sim IO implementations
         intake = Intake.initialize(new IntakeIOSim());
         shooter = Shooter.initialize(new ShooterIOSim());
         pivot = Pivot.initialize(new PivotIOSim());
         indexer = Indexer.initialize(new IndexerIOSim());
-        // Sim robot, instantiate physics sim IO implementations
-        drive =
-            Drive.initialize(
-                new GyroIO() {},
-                new ModuleIOSim(DriveConstants.kFrontLeftChassisAngularOffset),
-                new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
-                new ModuleIOSim(DriveConstants.kBackLeftChassisAngularOffset),
-                new ModuleIOSim(DriveConstants.kBackRightChassisAngularOffset));
+        drive = Drive.initialize(
+            new GyroIO() {},
+            new ModuleIOSim(DriveConstants.kFrontLeftChassisAngularOffset),
+            new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
+            new ModuleIOSim(DriveConstants.kBackLeftChassisAngularOffset),
+            new ModuleIOSim(DriveConstants.kBackRightChassisAngularOffset));
 
         break;
 
@@ -102,7 +100,7 @@ public class RobotContainer {
     }
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-    
+
     // Configure the button bindings
     configureButtonBindings();
 
@@ -118,22 +116,22 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     drive.setDefaultCommand(new RunCommand(
-      () -> drive.drive(
-          -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-          -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-          MathUtil.applyDeadband(OIConstants.m_driverController.getRightX(), OIConstants.kDriveDeadband),
-          true, true),
-      drive));
+        () -> drive.drive(
+            -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+            -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+            MathUtil.applyDeadband(OIConstants.m_driverController.getRightX(), OIConstants.kDriveDeadband),
+            true, true),
+        drive));
 
-      OIConstants.m_driverController.leftTrigger(0.5).whileTrue(new ScoreSpeaker());
+    OIConstants.m_driverController.leftTrigger(0.5).whileTrue(new ScoreSpeaker());
     OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
     OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
     OIConstants.operatorController.povDown().onTrue(Commands.runOnce(() -> manager.setState(State.GroundIntake)));
     OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> manager.setState(State.ScoreAmp)));
     OIConstants.operatorController.a().whileTrue(Commands.startEnd(
-      () -> intake.setOverride(true), 
-      () -> intake.setOverride(false), 
-      intake));
+        () -> intake.setOverride(true),
+        () -> intake.setOverride(false),
+        intake));
     OIConstants.operatorController.y().whileTrue(Commands.runOnce(() -> indexer.reverse()));
   }
 

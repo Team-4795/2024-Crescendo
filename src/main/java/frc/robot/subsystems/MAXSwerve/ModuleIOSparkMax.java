@@ -17,7 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.ModuleConstants;
 
 public class ModuleIOSparkMax implements ModuleIO{
-  private final CANSparkMax m_drivingSparkMax;
+  private final CANSparkFlex m_drivingSparkMax;
   private final CANSparkMax m_turningSparkMax;
 
   private final RelativeEncoder m_drivingEncoder;
@@ -32,7 +32,7 @@ public class ModuleIOSparkMax implements ModuleIO{
   private SwerveModuleState optimizedState = new SwerveModuleState(0.0, new Rotation2d());
 
   public ModuleIOSparkMax(int drivingCANId, int turningCANId, double chassisAngularOffset) {
-    m_drivingSparkMax = new CANSparkMax(drivingCANId, MotorType.kBrushless);
+    m_drivingSparkMax = new CANSparkFlex(drivingCANId, MotorType.kBrushless);
     m_turningSparkMax = new CANSparkMax(turningCANId, MotorType.kBrushless);
 
     // Factory reset, so we get the SPARKS MAX to a known state before configuring
