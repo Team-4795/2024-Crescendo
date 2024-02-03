@@ -117,13 +117,13 @@ public class RobotContainer {
   private void configureButtonBindings() {
     drive.setDefaultCommand(new RunCommand(
         () -> drive.drive(
-            -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-            -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-            MathUtil.applyDeadband(OIConstants.m_driverController.getRightX(), OIConstants.kDriveDeadband),
+            -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kDriveDeadband),
+            -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kDriveDeadband),
+            MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kDriveDeadband),
             true, true),
         drive));
 
-    OIConstants.m_driverController.leftTrigger(0.5).whileTrue(new ScoreSpeaker());
+    OIConstants.driverController.leftTrigger(0.5).whileTrue(new ScoreSpeaker());
     OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
     OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
     OIConstants.operatorController.povDown().onTrue(Commands.runOnce(() -> manager.setState(State.GroundIntake)));

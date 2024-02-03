@@ -41,8 +41,8 @@ public class ScoreSpeaker extends Command {
         Logger.recordOutput("Angle", angle);
 
         drive.drive(
-                -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kDriveDeadband),
                 -rotationPID.calculate(vision.getArducamYaw(), angle),
                 true, true);
         Shooter.getInstance().setShootingSpeed(ShooterConstants.shootSpeaker);
