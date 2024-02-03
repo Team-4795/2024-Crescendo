@@ -5,7 +5,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class SparkMaxIO implements IntakeIO {
-    private final CANSparkMax intakeMotor = new CANSparkMax(IntakeConstants.CanID, MotorType.kBrushless);
+    private final CANSparkMax intakeMotor = new CANSparkMax(IntakeConstants.canID, MotorType.kBrushless);
     private final RelativeEncoder frontEncoder = intakeMotor.getEncoder();
 
     public SparkMaxIO() {
