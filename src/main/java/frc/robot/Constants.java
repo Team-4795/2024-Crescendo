@@ -24,7 +24,17 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final Mode currentMode = Mode.REAL;
+  public static final Mode currentMode = Mode.SIM;
+
+  //shooter, indexer, intake measured in motor output, pivot measured in radians
+  public record Setpoint(double shooter, double pivot, double indexer, double intake) {}
+
+  public class StateConstants {
+    public static final Setpoint stow = new Setpoint(0, 0.52, 0, 0);
+    public static final Setpoint groundIntake = new Setpoint(0, 1.22, -0.5, -1);
+    public static final Setpoint sourceIntake = new Setpoint(-0.6, 0.96, -0.5, 0);
+    public static final Setpoint scoreAmp = new Setpoint(0, 0, 0, 0);
+  }
 
   public static enum Mode {
     /** Running on a real robot. */
@@ -37,9 +47,10 @@ public final class Constants {
     REPLAY
   }
 
-  public static final class OIConstants{
+  public static class OIConstants {
     public static final double kDriveDeadband = 0.1;
 
-    public static final CommandXboxController m_driverController = new CommandXboxController(0);
+    public static final CommandXboxController driverController = new CommandXboxController(0);
+    public static final CommandXboxController operatorController = new CommandXboxController(1);
   }
 }
