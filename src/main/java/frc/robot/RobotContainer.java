@@ -13,24 +13,26 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
 import frc.robot.StateManager.State;
+import frc.robot.commands.AutoCommands;
+import frc.robot.commands.NamedCommandManager;
 import frc.robot.subsystems.MAXSwerve.*;
 import frc.robot.subsystems.Shooter.*;
 import frc.robot.subsystems.indexer.*;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.pivot.*;
 
+import javax.naming.NameNotFoundException;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -48,7 +50,12 @@ public class RobotContainer {
   private final Pivot pivot;
   private final Indexer indexer;
   private final Intake intake;
+
+  // Managers
   private final StateManager manager = StateManager.getInstance();
+  private final AutoCommands autoCommands = new AutoCommands();
+
+  private final LoggedDashboardChooser<Command> autoChooser;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -61,7 +68,6 @@ public class RobotContainer {
         shooter = Shooter.initialize(new ShooterIOReal());
         pivot = Pivot.initialize(new PivotIOReal());
         indexer = Indexer.initialize(new IndexerIOReal());
-        // Real robot, instantiate hardware IO implementations
         drive =
             new Drive(
                 new GyroIONavx(),
@@ -69,7 +75,6 @@ public class RobotContainer {
                 new ModuleIOSparkMax(DriveConstants.kFrontRightDrivingCanId, DriveConstants.kFrontRightTurningCanId, DriveConstants.kFrontRightChassisAngularOffset),
                 new ModuleIOSparkMax(DriveConstants.kRearLeftDrivingCanId, DriveConstants.kRearLeftTurningCanId, DriveConstants.kBackLeftChassisAngularOffset),
                 new ModuleIOSparkMax(DriveConstants.kRearRightDrivingCanId, DriveConstants.kRearRightTurningCanId, DriveConstants.kBackRightChassisAngularOffset));
-
         break;
 
       case SIM:
@@ -93,8 +98,21 @@ public class RobotContainer {
         shooter = Shooter.initialize(new ShooterIO() {});
         pivot = Pivot.initialize(new PivotIO() {});
         indexer = Indexer.initialize(new IndexerIO() {});
+        drive = new Drive(
+                new GyroIOSim(),
+                new ModuleIOSim(DriveConstants.kFrontLeftChassisAngularOffset),
+                new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
+                new ModuleIOSim(DriveConstants.kBackLeftChassisAngularOffset),
+                new ModuleIOSim(DriveConstants.kBackRightChassisAngularOffset));
         break;
     }
+
+  
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    
+    NamedCommandManager.register();
+
+    autoChooser.addOption("Say Hi", new InstantCommand(autoCommands::sayHi));
 
     // Configure the button bindings
     configureButtonBindings();
