@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.MAXSwerve.*;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
+import frc.robot.commands.LimelightLookAtSpeaker;
 import frc.robot.commands.TurnToSpeaker;
 
 /**
@@ -116,6 +118,7 @@ public class RobotContainer {
 
       OIConstants.m_driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
       OIConstants.m_driverController.leftBumper().whileTrue(TurnToSpeaker.turnTowardsSpeaker(drive));
+      OIConstants.m_driverController.a().whileTrue(LimelightLookAtSpeaker.lookAtSpeaker(drive));
   }
 
   /**
