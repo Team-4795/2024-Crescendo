@@ -18,6 +18,6 @@ public class ShooterIOSim implements ShooterIO{
     public void updateInputs(ShooterIOInputs inputs) {
         motor.update(0.02);
         inputs.shooterMotorAppliedVolts = appliedVolts;
-        inputs.shooterMotorVelocityRadPerSec = motor.getAngularVelocityRadPerSec();
+        inputs.shooterMotorVelocityRPM = motor.getAngularVelocityRPM();
     }
 }

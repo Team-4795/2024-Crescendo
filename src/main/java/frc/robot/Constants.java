@@ -15,8 +15,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
+ * The Constants class provides a csonvenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
@@ -47,8 +49,10 @@ public final class Constants {
     REPLAY
   }
 
-  public static class OIConstants {
-    public static final CommandXboxController driverController = new CommandXboxController(0);
+  public static final class OIConstants{
+    public static final double kDriveDeadband = 0.05;
+
+    public static final CommandXboxController m_driverController = new CommandXboxController(0);
     public static final CommandXboxController operatorController = new CommandXboxController(0);
   }
 }

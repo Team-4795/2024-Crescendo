@@ -24,11 +24,13 @@ public class Shooter extends SubsystemBase {
         return instance;
     }
 
-    public Shooter(ShooterIO shooterIO){
+    private Shooter(ShooterIO shooterIO){
         io = shooterIO;
         io.updateInputs(inputs);
     }
 
+
+    //RPM
     public void setShootingSpeed(double speed){
         shootingSpeed = speed;
     }

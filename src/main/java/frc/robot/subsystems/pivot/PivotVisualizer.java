@@ -2,6 +2,8 @@ package frc.robot.subsystems.pivot;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -23,6 +25,9 @@ public class PivotVisualizer {
 
     public void update(double pivotAngle) {
         pivot.setAngle(pivotAngle);
-        Logger.recordOutput("Pivot/PivotMechanism2d", mechanism);
+        Logger.recordOutput("PivotMechanism2d", mechanism);
+
+        var pivotPose = new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0));
+        Logger.recordOutput("PivotMechanism3d", pivotPose);
     }
 }
