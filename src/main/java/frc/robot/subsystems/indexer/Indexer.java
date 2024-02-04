@@ -3,12 +3,15 @@ package frc.robot.subsystems.indexer;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.StateManager;
+import frc.robot.StateManager.State;
 
 public class Indexer extends SubsystemBase {
     
     private IndexerIO io;
     private final IndexerIOInputsAutoLogged inputs = new IndexerIOInputsAutoLogged(); 
     private double indexerSpeed = 0.0;
+    private boolean shouldSpin = false;
 
     private static Indexer instance;
 
@@ -32,6 +35,10 @@ public class Indexer extends SubsystemBase {
         indexerSpeed = motorValue;
     }
 
+    public void setSpin(boolean on){
+        shouldSpin = on;
+    }
+
     public void reverse() {
         indexerSpeed *= -1;
     }
@@ -40,7 +47,12 @@ public class Indexer extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Indexer", inputs);
-        io.setIndexerSpeed(indexerSpeed);
+        if(StateManager.getInstance().state == State.GroundIntake || shouldSpin){
+            io.setIndexerSpeed(indexerSpeed);
+        } else {
+            io.setIndexerSpeed(0);
+        }
+
     }
 
 }

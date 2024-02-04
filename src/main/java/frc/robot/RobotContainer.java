@@ -20,10 +20,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ScoreSpeaker;
 import frc.robot.commands.ScoreSpeaker;
 import frc.robot.subsystems.MAXSwerve.*;
 import frc.robot.StateManager.State;
@@ -124,6 +122,10 @@ public class RobotContainer {
         drive));
 
     OIConstants.driverController.leftTrigger(0.5).whileTrue(new ScoreSpeaker());
+    OIConstants.driverController.rightTrigger(0.5).whileTrue(Commands.startEnd(
+      () -> indexer.setSpin(true), 
+      () -> indexer.setSpin(false), 
+      indexer));
     OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
     OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
     OIConstants.operatorController.povDown().onTrue(Commands.runOnce(() -> manager.setState(State.GroundIntake)));

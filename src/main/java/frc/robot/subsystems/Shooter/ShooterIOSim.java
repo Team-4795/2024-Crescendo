@@ -5,7 +5,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public class ShooterIOSim implements ShooterIO{
-    DCMotorSim motor = new DCMotorSim(DCMotor.getNeoVortex(1), 4, 0.001);
+    DCMotorSim motor = new DCMotorSim(DCMotor.getKrakenX60(2), 1, 0.001);
     private double appliedVolts = 0.0;
 
     @Override

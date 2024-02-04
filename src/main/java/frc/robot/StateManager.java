@@ -19,6 +19,7 @@ public class StateManager {
         GroundIntake(StateConstants.groundIntake),
         SourceIntake(StateConstants.sourceIntake),
         ScoreAmp(StateConstants.scoreAmp);
+        
 
         Setpoint setpoint;
 
@@ -50,5 +51,4 @@ public class StateManager {
     public void periodic() {
         Logger.recordOutput("StateManager/State", state.toString());
     }
-
 }
