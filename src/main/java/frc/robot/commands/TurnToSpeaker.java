@@ -18,8 +18,8 @@ public class TurnToSpeaker {
         return Commands.run(
         () -> {
             double deltaY = vision.getSpeakerPos().getY() - drive.getPose().getY();
-            // double angle = Math.asin(deltaY / vision.getDistancetoSpeaker(drive.getPose())) * 180/Math.PI;
-            double angle = OIConstants.m_driverController.getRightY() * 30;
+            double angle = Math.asin(deltaY / vision.getDistancetoSpeaker(drive.getPose())) * 180/Math.PI;
+            // double angle = OIConstants.m_driverController.getRightY() * 30;
             double driveHeading = drive.getHeading();
             double output = rotationPID.calculate(driveHeading, angle);
             Logger.recordOutput("Vision/drive heading", driveHeading);
