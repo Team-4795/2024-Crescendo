@@ -18,7 +18,8 @@ public class StateManager {
         Stow(StateConstants.stow),
         GroundIntake(StateConstants.groundIntake),
         SourceIntake(StateConstants.sourceIntake),
-        ScoreAmp(StateConstants.scoreAmp);
+        ScoreAmp(StateConstants.scoreAmp),
+        ScoreSpeaker(StateConstants.scoreSpeaker);
 
         Setpoint setpoint;
 

@@ -112,8 +112,6 @@ public class RobotContainer {
     
     NamedCommandManager.register();
 
-    autoChooser.addOption("Say Hi", new InstantCommand(autoCommands::sayHi));
-
     // Configure the button bindings
     configureButtonBindings();
 

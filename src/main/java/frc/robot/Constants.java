@@ -34,6 +34,7 @@ public final class Constants {
     public static final Setpoint groundIntake = new Setpoint(0, 1.22, -0.5, -1);
     public static final Setpoint sourceIntake = new Setpoint(-0.6, 0.96, -0.5, 0);
     public static final Setpoint scoreAmp = new Setpoint(0, 0, 0, 0);
+    public static final Setpoint scoreSpeaker = new Setpoint(0, 0, 0, 0);
   }
 
   public static enum Mode {
