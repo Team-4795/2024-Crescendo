@@ -12,15 +12,23 @@ import frc.robot.util.LimelightHelpers;
 
 public class LimelightLookAtSpeaker {
 
-    private static PIDController rotationPID = new PIDController(0.013, 0, 0.00125); // Change values
+private static final double LLHeightOffGround = 0;
+private static final double angleOfLL = 0;
+
+private static PIDController rotationPID = new PIDController(0.013, 0, 0.00125); // Change values
 
     public static Command lookAtSpeaker(Drive drive) {
         return Commands.run(
                 () -> {
                     double x = LimelightHelpers.getTX("limelight");
                     double output = rotationPID.calculate(x, 0);
+                    double distanceToTarget = (57.125 - LLHeightOffGround) / 
+                    Math.tan(angleOfLL + (LimelightHelpers.getTY("limelight") * Math.PI / 180));
+                   
                     Logger.recordOutput("Vision/LLOutput", output);
                     Logger.recordOutput("Vision/LLX", x);
+                    Logger.recordOutput("Vision/LLDistanceToTarget", distanceToTarget);
+                    
                     drive.drive(
                             -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftY(),
                                     OIConstants.kDriveDeadband),
