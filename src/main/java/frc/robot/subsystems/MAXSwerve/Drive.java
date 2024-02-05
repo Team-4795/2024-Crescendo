@@ -19,6 +19,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -286,6 +287,16 @@ public class Drive extends SubsystemBase {
         currentState[2] = m_rearLeft.getOptimizedState();
         currentState[3] = m_rearRight.getOptimizedState();
         return currentState;
+    }
+
+    public Translation2d getTranslationVelocity(){
+        SwerveModuleState[] currentState = new SwerveModuleState[4];
+        currentState[0] = m_frontLeft.getState();
+        currentState[1] = m_frontRight.getState();
+        currentState[2] = m_rearLeft.getState();
+        currentState[3] = m_rearRight.getState();
+        ChassisSpeeds speed = DriveConstants.kDriveKinematics.toChassisSpeeds(currentState);
+        return new Translation2d(speed.vxMetersPerSecond, speed.vyMetersPerSecond);
     }
 
     /**
