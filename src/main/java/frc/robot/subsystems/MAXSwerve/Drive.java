@@ -26,6 +26,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
+import frc.robot.Constants;
+import frc.robot.Constants.Mode;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.ModuleConstants;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.util.LocalADStarAK;
@@ -35,7 +37,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class Drive extends SubsystemBase {
-
     private final Module m_frontLeft;
     private final Module m_frontRight;
     private final Module m_rearLeft;
@@ -59,6 +60,9 @@ public class Drive extends SubsystemBase {
     private EstimatedRobotPose visionPose = new EstimatedRobotPose(new Pose3d(), m_currentRotation, null, null);
 
     private Vision vision = Vision.getInstance();
+    // Odometry class for tracking robot pose
+    SwerveDriveOdometry m_odometry;
+    private Pose2d pose = new Pose2d();
 
     /** Creates a new DriveSubsystem. */
     public Drive(GyroIO gyro, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br) {
@@ -147,7 +151,26 @@ public class Drive extends SubsystemBase {
 
         Logger.recordOutput("Estimated Pose", getPose());
         Logger.recordOutput("Vision pose", visionPose.estimatedPose);
+        // Read wheel deltas from each module
+        SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
+        wheelDeltas[0] = m_frontLeft.getPositionDelta();
+        wheelDeltas[1] = m_frontRight.getPositionDelta();
+        wheelDeltas[2] = m_rearLeft.getPositionDelta();
+        wheelDeltas[3] = m_rearRight.getPositionDelta();
 
+        // The twist represents the motion of the robot since the last
+        // sample in x, y, and theta based only on the modules, without
+        // the gyro.
+        var twist = DriveConstants.kDriveKinematics.toTwist2d(wheelDeltas);
+
+        if (!gyroInputs.connected) {
+            gyro.addOffset(Rotation2d.fromRadians(twist.dtheta));
+        }
+        // Apply the twist (change since last sample) to the current pose
+        pose = pose.exp(twist);
+
+        Logger.recordOutput("Odometry", getPose());
+        Logger.recordOutput("Simulated Pose", pose);
         Logger.recordOutput("Swerve/SwerveStates", this.getModuleStates());
         Logger.recordOutput("Swerve/OptimizedStates", this.getOptimizedStates());
     }
@@ -176,6 +199,8 @@ public class Drive extends SubsystemBase {
                         m_rearRight.getPosition()
                 },
                 pose);
+
+        this.pose = pose;
     }
 
     /**
@@ -189,6 +214,10 @@ public class Drive extends SubsystemBase {
      * @param rateLimit     Whether to enable rate limiting for smoother control.
      */
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+
+        if (Constants.currentMode == Mode.SIM) {
+            rot *= -1.0;
+        }
 
         double xSpeedCommanded;
         double ySpeedCommanded;
@@ -248,10 +277,24 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput("Swerve/XspeedCommanded", xSpeedDelivered);
         Logger.recordOutput("Swerve/YspeedCommanded", ySpeedDelivered);
 
+        Rotation2d fieldRelativeRotation;
+        switch(Constants.currentMode){
+            case REAL:
+                fieldRelativeRotation = gyroInputs.yaw;
+                break;
+            case SIM:
+                fieldRelativeRotation = pose.getRotation();
+                break;
+            default:
+                fieldRelativeRotation = new Rotation2d();
+                break;
+
+        }
+
         var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
                 fieldRelative
                         ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                                gyroInputs.yaw)
+                                fieldRelativeRotation.plus(DriveConstants.kChassisAngularOffset))
                         : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
         SwerveDriveKinematics.desaturateWheelSpeeds(
                 swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
@@ -271,7 +314,7 @@ public class Drive extends SubsystemBase {
         m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
     }
 
-    public SwerveModuleState[] getModuleStates(){
+    public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] currentState = new SwerveModuleState[4];
         currentState[0] = m_frontLeft.getState();
         currentState[1] = m_frontRight.getState();
@@ -280,7 +323,7 @@ public class Drive extends SubsystemBase {
         return currentState;
     }
 
-    public SwerveModuleState[] getOptimizedStates(){
+    public SwerveModuleState[] getOptimizedStates() {
         SwerveModuleState[] currentState = new SwerveModuleState[4];
         currentState[0] = m_frontLeft.getOptimizedState();
         currentState[1] = m_frontRight.getOptimizedState();
@@ -324,6 +367,7 @@ public class Drive extends SubsystemBase {
     /** Zeroes the heading of the robot. */
     public void zeroHeading() {
         gyro.reset();
+        pose.rotateBy(pose.getRotation().times(-1)); //This may not work
     }
 
     /**
@@ -341,7 +385,7 @@ public class Drive extends SubsystemBase {
      * @return The turn rate of the robot, in degrees per second
      */
     public double getTurnRate() {
-        return gyroInputs.yawVelocity * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+        return gyroInputs.yawVelocity;
     }
 
     private ChassisSpeeds getRobotRelativeSpeeds() {

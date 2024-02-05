@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.MAXSwerve.*;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import frc.robot.commands.LimelightLookAtSpeaker;
@@ -63,7 +64,7 @@ public class RobotContainer {
         // Sim robot, instantiate physics sim IO implementations
         drive =
             new Drive(
-                new GyroIO() {},
+                new GyroIOSim(),
                 new ModuleIOSim(DriveConstants.kFrontLeftChassisAngularOffset),
                 new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
                 new ModuleIOSim(DriveConstants.kBackLeftChassisAngularOffset),
@@ -112,7 +113,7 @@ public class RobotContainer {
             () -> drive.drive(
                 -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftY(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(OIConstants.m_driverController.getRightX(), OIConstants.kDriveDeadband),
+                MathUtil.applyDeadband(OIConstants.m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true),
             drive));
 
@@ -120,7 +121,6 @@ public class RobotContainer {
       OIConstants.m_driverController.leftBumper().whileTrue(TurnToSpeaker.turnTowardsSpeaker(drive));
       OIConstants.m_driverController.a().whileTrue(LimelightLookAtSpeaker.lookAtSpeaker(drive));
   }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
