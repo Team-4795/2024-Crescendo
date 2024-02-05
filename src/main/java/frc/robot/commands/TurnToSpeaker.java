@@ -30,8 +30,10 @@ public class TurnToSpeaker {
             double output = rotationPID.calculate(driveHeading, angle);
             
             Logger.recordOutput("Vision/drive heading", driveHeading);
+            Logger.recordOutput("Speaker Position", vision.getSpeakerPos());
             Logger.recordOutput("Vision/angle", angle);
             Logger.recordOutput("Vision/output", output);
+            Logger.recordOutput("NewPose", newPose);
 
             drive.drive(
                 -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftY(), OIConstants.kDriveDeadband),

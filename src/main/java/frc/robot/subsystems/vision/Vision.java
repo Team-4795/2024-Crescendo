@@ -20,6 +20,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase{
@@ -86,8 +88,18 @@ public class Vision extends SubsystemBase{
         lifecamPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, Lifecam, lifecamRobotToCam);   
 
 
-        aprilTagFieldLayout.getTagPose(4).ifPresent(pose -> speakerPosition = pose.toPose2d()); //Get pose2d of speaker
-    }
+        Optional<Alliance> ally = DriverStation.getAlliance();
+        aprilTagFieldLayout.getTagPose(7).ifPresent(pose -> speakerPosition = pose.toPose2d());
+        if (ally.isPresent()) {
+            if (ally.get() == Alliance.Red) {
+                aprilTagFieldLayout.getTagPose(4).ifPresent(pose -> speakerPosition = pose.toPose2d()); //Get pose2d of speaker
+            }
+            else if (ally.get() == Alliance.Blue) {
+                aprilTagFieldLayout.getTagPose(7).ifPresent(pose -> speakerPosition = pose.toPose2d()); //Get pose2d of speaker
+
+            }
+        }
+        }
 
     public Optional<EstimatedRobotPose> getArducamPose(Pose2d prevEstimatedRobotPose) {
         arducamePhotonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
