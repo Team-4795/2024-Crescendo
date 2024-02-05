@@ -6,10 +6,10 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
 
-public class GyroIONavx implements GyroIO {
+public class GyroIONavX implements GyroIO {
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
 
-    public GyroIONavx() {
+    public GyroIONavX() {
         reset();
     }
 
