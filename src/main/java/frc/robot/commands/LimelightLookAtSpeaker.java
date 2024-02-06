@@ -32,13 +32,13 @@ private static PIDController rotationPID = new PIDController(0.013, 0, 0.00125);
                     Logger.recordOutput("Vision/LLY", y);
                     Logger.recordOutput("Vision/LLDistanceToTarget", distanceToTarget);
                     
-                //     drive.drive(
-                //             -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftY(),
-                //                     OIConstants.kDriveDeadband),
-                //             -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftX(),
-                //                     OIConstants.kDriveDeadband),
-                //             MathUtil.clamp(output, -1, 1),
-                //             true, true);
+                    drive.drive(
+                            -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftY(),
+                                    OIConstants.kDriveDeadband),
+                            -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftX(),
+                                    OIConstants.kDriveDeadband),
+                            MathUtil.clamp(output, -1, 1),
+                            true, true);
                 },
                 drive);
     }
