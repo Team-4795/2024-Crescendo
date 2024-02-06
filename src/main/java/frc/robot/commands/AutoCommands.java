@@ -38,7 +38,7 @@ public class AutoCommands {
 
   public AutoCommands() {}
 
-  public Command folllowTrajectory(String PathName){
+  public Command followTrajectory(String PathName){
     PathPlannerPath path = PathPlannerPath.fromPathFile(PathName);
     return AutoBuilder.followPath(path);
   }
@@ -50,7 +50,7 @@ public class AutoCommands {
     }).until(() -> pivot.atSetpoint());
 }
 
-  public Command Intake() {
+  public Command intake() {
     return new RunCommand(() -> {
     intake.setIntakeSpeed(0.5);
   });
