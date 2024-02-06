@@ -49,7 +49,7 @@ public class Pivot extends SubsystemBase {
                     OIConstants.operatorController.getLeftTriggerAxis(), PivotConstants.deadband);
 
             // double change = PivotConstants.manualSpeed * (Math.pow(up, 3) - Math.pow(down, 3));
-            double output = 0.1 * (Math.pow(up, 3) - Math.pow(down, 3));
+            double output = 0.05 * (Math.pow(up, 3) - Math.pow(down, 3));
             io.rotatePivot(output);
 
             // setGoal(goal + change);
@@ -65,8 +65,8 @@ public class Pivot extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs("Pivot", inputs);
         visualizer.update(inputs.pivotPositionRads * (180 / Math.PI));
-        io.rotatePivot(controller.calculate(inputs.pivotPositionRads, goal) +
-                pivotFeedForward.calculate(controller.getSetpoint().position, controller.getSetpoint().velocity));
+        // io.rotatePivot(controller.calculate(inputs.pivotPositionRads, goal) +
+        //         pivotFeedForward.calculate(controller.getSetpoint().position, controller.getSetpoint().velocity));
 
         Logger.recordOutput("Pivot/Goal", goal);
     }

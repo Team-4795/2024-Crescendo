@@ -8,18 +8,18 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class PivotIOReal implements PivotIO {
   private CANSparkMax pivotLeft = new CANSparkMax(PivotConstants.leftCanID, MotorType.kBrushless);
-  private CANSparkMax pivotRight = new CANSparkMax(PivotConstants.rightCanID, MotorType.kBrushless);
+  // private CANSparkMax pivotRight = new CANSparkMax(PivotConstants.rightCanID, MotorType.kBrushless);
   private RelativeEncoder encoder = pivotLeft.getEncoder();
  
  
  public PivotIOReal() {
     pivotLeft.setSmartCurrentLimit(30);
-    pivotRight.setSmartCurrentLimit(30);
-    pivotRight.setInverted(true);
+    // pivotRight.setSmartCurrentLimit(30);
+    // pivotRight.setInverted(true);
 
-    pivotRight.follow(pivotLeft);
+    // pivotRight.follow(pivotLeft);
 
-    pivotRight.burnFlash();
+    // pivotRight.burnFlash();
     pivotLeft.burnFlash();
     encoder.setPosition(0);
   }
