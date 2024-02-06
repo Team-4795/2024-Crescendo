@@ -50,12 +50,12 @@ public class RobotContainer {
   private final Pivot pivot;
   private final Indexer indexer;
   private final Intake intake;
+  AutoSelector autoSelector = new AutoSelector();
+  ;
+
 
   // Managers
   private final StateManager manager = StateManager.getInstance();
-  private final AutoCommands autoCommands = new AutoCommands();
-
-  private final LoggedDashboardChooser<Command> autoChooser;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -108,9 +108,7 @@ public class RobotContainer {
     }
 
   
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     
-    NamedCommandManager.register();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -142,6 +140,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.get();
+    return autoSelector.getSelected();
   }
 }

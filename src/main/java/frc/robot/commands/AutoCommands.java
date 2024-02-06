@@ -4,7 +4,9 @@ import java.util.HashMap;
 
 import javax.swing.GroupLayout.SequentialGroup;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,12 +37,17 @@ public class AutoCommands {
     }
 
   public AutoCommands() {}
+
+  public Command folllowTrajectory(String PathName){
+    PathPlannerPath path = PathPlannerPath.fromPathFile(PathName);
+    return AutoBuilder.followPath(path);
+  }
     
   public Command score() {
     return new RunCommand(() -> {
       indexer.setIndexerSpeed(0.2);
       shooter.setShootingSpeed(0.5);
-    });
+    }).until(() -> pivot.atSetpoint());
 }
 
   public Command Intake() {
@@ -49,19 +56,10 @@ public class AutoCommands {
   });
 }
 
+  public Command SetPivotAngle(double setpoint){
+    return new RunCommand(() -> {
+      pivot.setGoal(setpoint);
+    });
+  }
 
-    //   public Command scoreTrajectory(OutakePlace outakePlace, PathPlannerTrajectory traj) {
-    //     return Commands.parallel(
-    //             drive.followTrajectoryCommand(traj),
-    //             Commands.sequence(
-    //                     Commands.waitSeconds(AutoConstants.kIntakeDelay), score(gamepiece, height, backwards)));
-    // }
-
-    // public Command intakeTrajectory(PathPlannerTrajectory traj) {
-    //     return intakeTrajectory(traj, 0.0);
-
-    // public Command stow() {
-    //     return new ChangeStateCommand(State.Stow, intake, true, manager);
-    //   }
-    // }
 }

@@ -60,6 +60,15 @@ public class Pivot extends SubsystemBase {
         this.goal = goal;
     }
 
+    public double getPosition() {
+        return inputs.pivotPositionRads;
+    }
+
+    public boolean atSetpoint() {
+        return Math.abs(getPosition() - goal) < 0.1;
+    }
+
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);
