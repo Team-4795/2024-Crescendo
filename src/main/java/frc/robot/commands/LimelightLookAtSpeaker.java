@@ -12,8 +12,9 @@ import frc.robot.util.LimelightHelpers;
 
 public class LimelightLookAtSpeaker {
 
-private static final double LLHeightOffGround = 0;
-private static final double angleOfLL = 0;
+private static final double LLHeightOffGround = 26.5; //inches
+private static final double angleOfLL = -16.07 * Math.PI/180;
+private static double heightOfTarget = 8.5;
 
 private static PIDController rotationPID = new PIDController(0.013, 0, 0.00125); // Change values
 
@@ -21,21 +22,23 @@ private static PIDController rotationPID = new PIDController(0.013, 0, 0.00125);
         return Commands.run(
                 () -> {
                     double x = LimelightHelpers.getTX("limelight");
+                    double y = LimelightHelpers.getTY("limelight");
                     double output = rotationPID.calculate(x, 0);
-                    double distanceToTarget = (57.125 - LLHeightOffGround) / 
-                    Math.tan(angleOfLL + (LimelightHelpers.getTY("limelight") * Math.PI / 180));
+                    double distanceToTarget = (heightOfTarget - LLHeightOffGround) / 
+                    Math.tan(angleOfLL + (y * Math.PI / 180));
                    
                     Logger.recordOutput("Vision/LLOutput", output);
                     Logger.recordOutput("Vision/LLX", x);
+                    Logger.recordOutput("Vision/LLY", y);
                     Logger.recordOutput("Vision/LLDistanceToTarget", distanceToTarget);
                     
-                    drive.drive(
-                            -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftY(),
-                                    OIConstants.kDriveDeadband),
-                            -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftX(),
-                                    OIConstants.kDriveDeadband),
-                            MathUtil.clamp(output, -1, 1),
-                            true, true);
+                //     drive.drive(
+                //             -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftY(),
+                //                     OIConstants.kDriveDeadband),
+                //             -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftX(),
+                //                     OIConstants.kDriveDeadband),
+                //             MathUtil.clamp(output, -1, 1),
+                //             true, true);
                 },
                 drive);
     }
