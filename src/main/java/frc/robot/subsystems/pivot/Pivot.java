@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,8 +24,15 @@ public class Pivot extends SubsystemBase {
         double springAngle = Math.atan2(PivotConstants.d*Math.sin(angle)+PivotConstants.y, -PivotConstants.d*Math.cos(angle)+PivotConstants.x);
         double Tg = -PivotConstants.M * PivotConstants.R * PivotConstants.G * Math.cos(angle);
         double Ts = PivotConstants.d * PivotConstants.F * Math.sin(springAngle - (Math.PI - angle));
-        return -Tg-Ts;
+        return (-Tg-Ts)/PivotConstants.Gearing;
     }
+    private double pivotFeedForward (double angle, double velocity) {
+        double torque = torqueFromAngle(angle) ;        
+        return DCMotor.getNeoVortex(2).getVoltage(torque, velocity);
+    }
+
+
+
 
     PivotVisualizer visualizer;
 
@@ -60,10 +68,9 @@ public class Pivot extends SubsystemBase {
         Logger.processInputs("Pivot", inputs);
         visualizer.update(inputs.pivotPositionRads * (180 / Math.PI));
         io.rotatePivot(controller.calculate(inputs.pivotPositionRads, goal) + 
-            pivotFeedForward.calculate(controller.getSetpoint().position, controller.getSetpoint().velocity));
+            pivotFeedForward(inputs.pivotPositionRads, inputs.pivotVelocityRadPerSec));
 
         Logger.recordOutput("Goal", goal);
-
     }
     
 }

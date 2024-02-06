@@ -7,7 +7,7 @@ public final class PivotConstants {
     public static final double kG = 0;
     public static final double kV = 0;
     public static final double kS = 0;
-    public static final double kP = 4;
+    public static final double kP = 0.1;
     public static final double KI = 0;
     public static final double kD = 0;
     public static final double kDt = 0.02;
@@ -19,4 +19,5 @@ public final class PivotConstants {
     public static final double M = 9.3;
     public static final double R = 0.393;
     public static final double G = -9.81;
+    public static final double Gearing = 144;
 }
