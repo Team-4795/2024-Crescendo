@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final Mode currentMode = Mode.REAL;
+  public static final Mode currentMode = Mode.SIM;
 
   //shooter, indexer, intake measured in motor output, pivot measured in radians
   public record Setpoint(double shooter, double pivot, double indexer, double intake) {}

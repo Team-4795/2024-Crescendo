@@ -13,11 +13,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
 import frc.robot.StateManager.State;
 import frc.robot.commands.AutoCommands;
@@ -124,6 +126,13 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    drive.setDefaultCommand(new RunCommand(
+        () -> drive.drive(
+            MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kDriveDeadband),
+            MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kDriveDeadband),
+            MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kDriveDeadband),
+            true, true),
+        drive));
     OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
     OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
     OIConstants.operatorController.povDown().onTrue(Commands.runOnce(() -> manager.setState(State.GroundIntake)));
