@@ -45,20 +45,20 @@ public class AutoCommands {
     
   public Command score() {
     return new RunCommand(() -> {
-      indexer.setIndexerSpeed(0.2);
-      shooter.setShootingSpeed(0.5);
+      indexer.setIndexerSpeed(0.7);
     }).until(() -> pivot.atSetpoint());
-}
-
-  public Command intake() {
-    return new RunCommand(() -> {
-    intake.setIntakeSpeed(0.5);
-  });
 }
 
   public Command SetPivotAngle(double setpoint){
     return new RunCommand(() -> {
       pivot.setGoal(setpoint);
+    });
+  }
+
+  public Command initialize(double speed) {
+    return new RunCommand(() -> {
+      intake.setIntakeSpeed(speed);
+      shooter.setShootingSpeed(speed);
     });
   }
 

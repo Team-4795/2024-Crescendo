@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.66,
-      "y": 4.48
+      "x": 1.2392814346720042,
+      "y": 4.52825959032701
     },
     "rotation": 120.0
   },
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left 3P P1"
+            "pathName": null
           }
         },
         {
@@ -39,6 +39,12 @@
           "type": "sequential",
           "data": {
             "commands": []
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left 3P P3"
           }
         }
       ]
