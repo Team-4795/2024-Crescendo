@@ -52,8 +52,7 @@ public class RobotContainer {
   private final Pivot pivot;
   private final Indexer indexer;
   private final Intake intake;
-  AutoSelector autoSelector = new AutoSelector();
-  ;
+  AutoSelector autoSelector;
 
 
   // Managers
@@ -110,7 +109,7 @@ public class RobotContainer {
     }
 
   
-    
+    autoSelector = new AutoSelector();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -131,7 +130,7 @@ public class RobotContainer {
             MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kDriveDeadband),
             MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kDriveDeadband),
             MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kDriveDeadband),
-            true, true),
+            false, true),
         drive));
     OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
     OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));

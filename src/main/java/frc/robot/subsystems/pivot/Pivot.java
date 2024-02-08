@@ -49,7 +49,6 @@ public class Pivot extends SubsystemBase {
                     OIConstants.operatorController.getRightTriggerAxis(), PivotConstants.deadband);
             double down = MathUtil.applyDeadband(
                     OIConstants.operatorController.getLeftTriggerAxis(), PivotConstants.deadband);
-
             double change = PivotConstants.manualSpeed * (Math.pow(up, 3) - Math.pow(down, 3));
 
             setGoal(goal + change);
