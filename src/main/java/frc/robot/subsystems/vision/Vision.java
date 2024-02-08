@@ -25,36 +25,36 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase{
-    PhotonPipelineResult arducamResult;
-    PhotonPipelineResult lifecamResult;
-    double arducamYaw;
-    double lifecamYaw;
-    double arducamPitch;
-    double lifecamPitch;
-    double arducamArea;
-    double lifecamArea;
-    double arducamSkew;
-    double lifecamSkew;
+    PhotonPipelineResult saguaroResult;
+    PhotonPipelineResult barbaryFigResult;
+    double saguaroYaw;
+    double barbaryFigYaw;
+    double saguaroPitch;
+    double barbaryFigPitch;
+    double saguaroArea;
+    double barbaryFigArea;
+    double saguaroSkew;
+    double barbaryFigSkew;
     double distanceToTarget;
-    Transform3d arducamPose;
-    Transform3d lifecamPose;
-    List<TargetCorner> arducamCorners;
-    List<TargetCorner> lifecamCorners;
-    boolean arducamHasTargets;
-    boolean lifecamHasTargets;
-    List<PhotonTrackedTarget> arducamTargets;
-    List<PhotonTrackedTarget> lifecamTargets;
-    PhotonTrackedTarget arducamTarget;
-    PhotonTrackedTarget lifecamTarget;
+    Transform3d saguaroPose;
+    Transform3d barbaryFigPose;
+    List<TargetCorner> saguaroCorners;
+    List<TargetCorner> barbaryFigCorners;
+    boolean saguaroHasTargets;
+    boolean barbaryFigHasTargets;
+    List<PhotonTrackedTarget> saguaroTargets;
+    List<PhotonTrackedTarget> barbaryFigTargets;
+    PhotonTrackedTarget saguaroTarget;
+    PhotonTrackedTarget barbaryFigTarget;
 
-    PhotonCamera Arducam;
-    PhotonCamera Lifecam;
+    PhotonCamera SaguaroCam;
+    PhotonCamera BarbaryFig;
 
     AprilTagFieldLayout aprilTagFieldLayout;
-    Transform3d arducamRobotToCam;
-    Transform3d lifecamRobotToCam;
-    PhotonPoseEstimator arducamePhotonPoseEstimator;
-    PhotonPoseEstimator lifecamPhotonPoseEstimator;
+    Transform3d saguaroRobotToCam;
+    Transform3d barbaryFigRobotToCam;
+    PhotonPoseEstimator saguaroPhotonPoseEstimator;
+    PhotonPoseEstimator barbaryFigPhotonPoseEstimator;
     EstimatedRobotPose visionPose;
     Pose2d speakerPosition;
 
@@ -68,12 +68,12 @@ public class Vision extends SubsystemBase{
     }
 
     private Vision () {
-        Arducam = new PhotonCamera("Arducam_OV9281_USB_Camera");
-        Lifecam = new PhotonCamera("Microsoft_LifeCam_HD-3000");
+        SaguaroCam = new PhotonCamera("Saguaro");
+        BarbaryFig = new PhotonCamera("Barbary Fig");
 
         //Cam mounted facing forward, half a meter forward of center, half a meter up from center. Change Both Later
-        arducamRobotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); 
-        lifecamRobotToCam = new Transform3d(new Translation3d(0.152, -0.203, 0.4064), new Rotation3d(0,0, Math.PI)); 
+        saguaroRobotToCam = new Transform3d(new Translation3d(0.241, 0.0889, 0.826), new Rotation3d(0,0,0)); 
+        barbaryFigRobotToCam = new Transform3d(new Translation3d(-0.178, 0.165, 0.489), new Rotation3d(0,0, Math.PI)); 
 
         try 
         {
@@ -84,8 +84,8 @@ public class Vision extends SubsystemBase{
             e.printStackTrace();
         }
 
-        arducamePhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, Arducam, arducamRobotToCam);   
-        lifecamPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, Lifecam, lifecamRobotToCam);   
+        saguaroPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, SaguaroCam, saguaroRobotToCam);   
+        barbaryFigPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, BarbaryFig, barbaryFigRobotToCam);   
 
 
         Optional<Alliance> ally = DriverStation.getAlliance();
@@ -102,13 +102,13 @@ public class Vision extends SubsystemBase{
         }
 
     public Optional<EstimatedRobotPose> getArducamPose(Pose2d prevEstimatedRobotPose) {
-        arducamePhotonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-        return arducamePhotonPoseEstimator.update();
+        saguaroPhotonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+        return saguaroPhotonPoseEstimator.update();
     }
 
     public Optional<EstimatedRobotPose> getLifecamPose(Pose2d prevEstimatedRobotPose) {
-        lifecamPhotonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-        return lifecamPhotonPoseEstimator.update();
+        barbaryFigPhotonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+        return barbaryFigPhotonPoseEstimator.update();
     }
 
     public double getDistancetoSpeaker(Pose2d robotPose){
@@ -116,8 +116,8 @@ public class Vision extends SubsystemBase{
         return distanceToTarget;
     }
 
-    public double getArducamYaw(){
-        return arducamYaw;
+    public double getSaguaroYaw(){
+        return saguaroYaw;
     }
 
     public Pose2d getSpeakerPos() {
@@ -127,51 +127,57 @@ public class Vision extends SubsystemBase{
 
     @Override
     public void periodic() {
-        arducamResult = Arducam.getLatestResult();
-        arducamHasTargets = arducamResult.hasTargets();
+        saguaroResult = SaguaroCam.getLatestResult();
+        saguaroHasTargets = saguaroResult.hasTargets();
 
-        if (arducamHasTargets)
+        if (saguaroHasTargets)
         {
-            arducamTargets = arducamResult.getTargets();
-            arducamTarget = arducamResult.getBestTarget();
-            arducamYaw = arducamTarget.getYaw();
-            Logger.recordOutput("Arducam Yaw", arducamYaw);
+            saguaroTargets = saguaroResult.getTargets();
+            saguaroTarget = saguaroResult.getBestTarget();
 
-            arducamPitch = arducamTarget.getPitch();
-            Logger.recordOutput("Arducam Pitch", arducamPitch);
+            saguaroYaw = saguaroTarget.getYaw();
+            Logger.recordOutput("Arducam Yaw", saguaroYaw);
+
+            saguaroPitch = saguaroTarget.getPitch();
+            Logger.recordOutput("Arducam Pitch", saguaroPitch);
     
-            arducamArea = arducamTarget.getArea();
-            Logger.recordOutput("Arducam Area", arducamArea);
+            saguaroArea = saguaroTarget.getArea();
+            Logger.recordOutput("Arducam Area", saguaroArea);
 
-            arducamSkew = arducamTarget.getSkew();
-            Logger.recordOutput("Arducam Skew", arducamSkew);
+            saguaroSkew = saguaroTarget.getSkew();
+            Logger.recordOutput("Arducam Skew", saguaroSkew);
 
-            arducamPose = arducamTarget.getBestCameraToTarget();
-            arducamCorners = arducamTarget.getDetectedCorners();
+            
+
+            saguaroPose = saguaroTarget.getBestCameraToTarget();
+            saguaroCorners = saguaroTarget.getDetectedCorners();
         }
 
-        lifecamResult = Lifecam.getLatestResult();
-        lifecamHasTargets = lifecamResult.hasTargets();
+        barbaryFigResult = BarbaryFig.getLatestResult();
+        barbaryFigHasTargets = barbaryFigResult.hasTargets();
 
-        if (lifecamHasTargets)
+        if (barbaryFigHasTargets)
         {
-            lifecamTargets = lifecamResult.getTargets();
-            lifecamTarget = lifecamResult.getBestTarget();
+            barbaryFigTargets = barbaryFigResult.getTargets();
+            barbaryFigTarget = barbaryFigResult.getBestTarget();
 
-            lifecamYaw = lifecamTarget.getYaw();
-            Logger.recordOutput("Lifecam Yaw", lifecamYaw);
+            barbaryFigYaw = barbaryFigTarget.getYaw();
+            Logger.recordOutput("Lifecam Yaw", barbaryFigYaw);
 
-            lifecamPitch = lifecamTarget.getPitch();
-            Logger.recordOutput("Lifecam Pitch", lifecamPitch);
+            barbaryFigPitch = barbaryFigTarget.getPitch();
+            Logger.recordOutput("Lifecam Pitch", barbaryFigPitch);
             
-            lifecamArea = lifecamTarget.getArea();
-            Logger.recordOutput("Lifecam Area", lifecamArea);
+            barbaryFigArea = barbaryFigTarget.getArea();
+            Logger.recordOutput("Lifecam Area", barbaryFigArea);
 
-            lifecamSkew = lifecamTarget.getSkew();
-            Logger.recordOutput("Lifecam Skew", lifecamSkew);
+            barbaryFigSkew = barbaryFigTarget.getSkew();
+            Logger.recordOutput("Lifecam Skew", barbaryFigSkew);
 
-            lifecamPose = lifecamTarget.getBestCameraToTarget();
-            lifecamCorners = lifecamTarget.getDetectedCorners();
+            Logger.recordOutput("speaker pos", speakerPosition);
+
+
+            barbaryFigPose = barbaryFigTarget.getBestCameraToTarget();
+            barbaryFigCorners = barbaryFigTarget.getDetectedCorners();
         }
     }
 
