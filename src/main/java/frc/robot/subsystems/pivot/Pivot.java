@@ -72,7 +72,7 @@ public class Pivot extends SubsystemBase {
     }
 
     private double torqueFromAngle(double inputs) {
-
+        
         double Tg = -PivotConstants.M * PivotConstants.R - PivotConstants.g * Math.cos(this.inputs.pivotPositionRads);
         double Ts = PivotConstants.d * PivotConstants.F * Math.sin(
             Math.atan2(
@@ -80,6 +80,6 @@ public class Pivot extends SubsystemBase {
                 -PivotConstants.d * Math.cos(this.inputs.pivotPositionRads) + PivotConstants.x) - (Math.PI - this.inputs.pivotPositionRads
             ));
 
-        return (-Tg - Ts);
+        return (-Tg - Ts)/PivotConstants.gearing;
     }
 }

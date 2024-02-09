@@ -21,4 +21,5 @@ public final class PivotConstants {
     public static final double M = 9.3;
     public static final double R = 0.393;
     public static final double g = 9.81;
+    public static final double gearing = 144;
 }
