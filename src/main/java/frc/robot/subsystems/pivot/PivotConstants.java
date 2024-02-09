@@ -23,5 +23,5 @@ public final class PivotConstants {
     public static final double g = 9.81;
     public static final double gearing = 144;
     public static final double lowLimit = 0.285;
-    public static final double highLimit = 1.57;
+    public static final double highLimit = Math.PI/2;
 }
