@@ -20,4 +20,8 @@ public final class PivotConstants {
     public static final double d = 0.15;
     public static final double M = 9.3;
     public static final double R = 0.393;
+    public static final double g = 9.81;
+    public static final double gearing = 144;
+    public static final double lowLimit = 0.285;
+    public static final double highLimit = 1.57;
 }

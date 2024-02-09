@@ -48,16 +48,21 @@ public class Pivot extends SubsystemBase {
             double down = MathUtil.applyDeadband(
                     OIConstants.operatorController.getLeftTriggerAxis(), PivotConstants.deadband);
 
-            // double change = PivotConstants.manualSpeed * (Math.pow(up, 3) - Math.pow(down, 3));
-            double output = 0.1 * (Math.pow(up, 3) - Math.pow(down, 3));
+            double change = PivotConstants.manualSpeed * (Math.pow(up, 3) - Math.pow(down, 3));
+            double output = 0.15 * (Math.pow(up, 3) - Math.pow(down, 3));
             io.rotatePivot(output);
 
-            // setGoal(goal + change);
+            setGoal(goal + change);
         }));
     }
 
+
     public void setGoal(double goal) {
         this.goal = goal;
+    }
+
+    public void setLimit (double goal) {
+        goal = MathUtil.clamp(goal, PivotConstants.lowLimit, PivotConstants.highLimit);
     }
 
     @Override
@@ -72,14 +77,9 @@ public class Pivot extends SubsystemBase {
     }
 
     private double torqueFromAngle(double inputs) {
-
-        double Tg = -PivotConstants.M * PivotConstants.R - 9.81 * Math.cos(this.inputs.pivotPositionRads);
-        double Ts = PivotConstants.d * PivotConstants.F * Math.sin(
-            Math.atan2(
-                PivotConstants.d * Math.sin(this.inputs.pivotPositionRads) + PivotConstants.y,
-                -PivotConstants.d * Math.cos(this.inputs.pivotPositionRads) + PivotConstants.x) - (Math.PI - this.inputs.pivotPositionRads
-            ));
-
-        return torqueFromAngle(-Tg - Ts);
+        double springAngle = Math.atan2(PivotConstants.d*Math.sin(this.inputs.pivotPositionRads)+PivotConstants.y, -PivotConstants.d*Math.cos(this.inputs.pivotPositionRads)+PivotConstants.x);
+        double Tg = -PivotConstants.M * PivotConstants.R - PivotConstants.g * Math.cos(this.inputs.pivotPositionRads);
+        double Ts = PivotConstants.d * PivotConstants.F * Math.sin(springAngle - (Math.PI - this.inputs.pivotPositionRads));
+        return (-Tg - Ts)/PivotConstants.gearing;
     }
 }
