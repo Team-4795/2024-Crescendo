@@ -49,7 +49,7 @@ public class Pivot extends SubsystemBase {
                     OIConstants.operatorController.getLeftTriggerAxis(), PivotConstants.deadband);
 
             // double change = PivotConstants.manualSpeed * (Math.pow(up, 3) - Math.pow(down, 3));
-            double output = 0.15 * (Math.pow(up, 3) - Math.pow(down, 3));
+            double output = 0.1 * (Math.pow(up, 3) - Math.pow(down, 3));
             io.rotatePivot(output);
 
             // setGoal(goal + change);
@@ -65,21 +65,21 @@ public class Pivot extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs("Pivot", inputs);
         visualizer.update(inputs.pivotPositionRads * (180 / Math.PI));
-        // io.rotatePivot(controller.calculate(inputs.pivotPositionRads, goal) +
-        //         pivotFeedForward.calculate(controller.getSetpoint().position, controller.getSetpoint().velocity));
+        io.rotatePivot(controller.calculate(inputs.pivotPositionRads, goal) +
+                pivotFeedForward.calculate(controller.getSetpoint().position, controller.getSetpoint().velocity));
 
         Logger.recordOutput("Pivot/Goal", goal);
     }
 
     private double torqueFromAngle(double inputs) {
-        
-        double Tg = -PivotConstants.M * PivotConstants.R - PivotConstants.g * Math.cos(this.inputs.pivotPositionRads);
+
+        double Tg = -PivotConstants.M * PivotConstants.R - 9.81 * Math.cos(this.inputs.pivotPositionRads);
         double Ts = PivotConstants.d * PivotConstants.F * Math.sin(
             Math.atan2(
                 PivotConstants.d * Math.sin(this.inputs.pivotPositionRads) + PivotConstants.y,
                 -PivotConstants.d * Math.cos(this.inputs.pivotPositionRads) + PivotConstants.x) - (Math.PI - this.inputs.pivotPositionRads
             ));
 
-        return (-Tg - Ts)/PivotConstants.gearing;
+        return torqueFromAngle(-Tg - Ts);
     }
 }
