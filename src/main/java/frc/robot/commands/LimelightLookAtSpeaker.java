@@ -37,9 +37,9 @@ private static PIDController rotationPID = new PIDController(0.013, 0, 0.00125);
                     
                     drive.drive(
                             -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(),
-                                    OIConstants.kDriveDeadband),
+                                    OIConstants.kAxisDeadband),
                             -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(),
-                                    OIConstants.kDriveDeadband),
+                                    OIConstants.kAxisDeadband),
                             MathUtil.clamp(output, -1, 1),
                             true, true);
                 },

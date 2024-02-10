@@ -93,7 +93,7 @@ public class RobotContainer {
         shooter = Shooter.initialize(new ShooterIO() {});
         pivot = Pivot.initialize(new PivotIO() {});
         indexer = Indexer.initialize(new IndexerIO() {});
-        drive = Drive.initialize(null, null, null, null, null);
+        drive = Drive.initialize(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
         break;
     }
 
@@ -115,9 +115,9 @@ public class RobotContainer {
   private void configureButtonBindings() {
     drive.setDefaultCommand(new RunCommand(
         () -> drive.drive(
-            -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kDriveDeadband),
-            -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kDriveDeadband),
-            MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kDriveDeadband),
+            -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband),
+            -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband),
+            MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kAxisDeadband),
             true, true),
         drive));
 
