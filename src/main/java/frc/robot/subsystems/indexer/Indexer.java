@@ -5,7 +5,6 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.StateManager;
 import frc.robot.StateManager.State;
-import frc.robot.subsystems.intake.IntakeConstants;
 
 public class Indexer extends SubsystemBase {
     
@@ -54,11 +53,16 @@ public class Indexer extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs("Indexer", inputs);
         if(override){
-            io.setIndexerSpeed(IntakeConstants.overrideSpeed);
+            io.setIndexerSpeed(IndexerConstants.overrideSpeed);
         } else if(StateManager.getInstance().state == State.GroundIntake || shouldSpin) {
             io.setIndexerSpeed(indexerSpeed);
         } else {
             io.setIndexerSpeed(0);
         }
+
+        Logger.recordOutput("Indexer/Left Motor Current", io.getLeftMotorCurrent());
+        Logger.recordOutput("Indexer/Left Motor Velocity", io.getLeftMotorVelocity());
+        Logger.recordOutput("Indexer/Right Motor Current", io.getRightMotorCurrent());
+        Logger.recordOutput("Indexer/Right Motor Velocity", io.getRightMotorVelocity());
     }
 }
