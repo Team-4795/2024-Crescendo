@@ -5,16 +5,16 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class IndexerIOReal implements IndexerIO {
-    private CANSparkMax leftIndexMotor = new CANSparkMax(IndexerConstants.canId, MotorType.kBrushless);
-    private CANSparkMax rightIndexMotor = new CANSparkMax(IndexerConstants.canId, MotorType.kBrushless);
+    private CANSparkMax leftIndexMotor = new CANSparkMax(IndexerConstants.leftCanID, MotorType.kBrushless);
+    private CANSparkMax rightIndexMotor = new CANSparkMax(IndexerConstants.rightCanID, MotorType.kBrushless);
     private RelativeEncoder leftEncoder = leftIndexMotor.getEncoder();
     private RelativeEncoder rightEncoder = rightIndexMotor.getEncoder();
 
     public IndexerIOReal() {
-        rightIndexMotor.setSmartCurrentLimit(30);
-        leftIndexMotor.setSmartCurrentLimit(30);
+        rightIndexMotor.setSmartCurrentLimit(20);
+        leftIndexMotor.setSmartCurrentLimit(20);
 
-        rightEncoder.setPositionConversionFactor(IndexerConstants.kPositionConversionFactor);
+        rightEncoder.setVelocityConversionFactor(IndexerConstants.kVelocityConversionFactor);
         leftEncoder.setVelocityConversionFactor(IndexerConstants.kVelocityConversionFactor);
 
         leftEncoder.setPosition(0);
@@ -24,7 +24,6 @@ public class IndexerIOReal implements IndexerIO {
 
         rightIndexMotor.burnFlash();
         leftIndexMotor.burnFlash();
-
     }
 
     @Override
@@ -35,7 +34,6 @@ public class IndexerIOReal implements IndexerIO {
     @Override
     public void updateInputs(IndexerIOInputs inputs) {
         inputs.motorSpeed = leftEncoder.getVelocity();
-        inputs.motorPos = leftEncoder.getPosition();
         inputs.motorCurrent = leftIndexMotor.getOutputCurrent();
         inputs.motorVoltage = leftIndexMotor.getBusVoltage();
     }
@@ -49,11 +47,11 @@ public class IndexerIOReal implements IndexerIO {
         return rightIndexMotor.getOutputCurrent();
     }
     @Override
-    public double getLeftMotorVoltage() {
-        return leftIndexMotor.getBusVoltage();
+    public double getLeftMotorVelocity() {
+        return leftEncoder.getVelocity();
     }
     @Override
-    public double getRightMotorVoltage() {
-        return rightIndexMotor.getBusVoltage();
+    public double getRightMotorVelocity() {
+        return rightEncoder.getVelocity();
     }
 }
