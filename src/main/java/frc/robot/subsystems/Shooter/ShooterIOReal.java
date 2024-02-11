@@ -12,8 +12,8 @@ import edu.wpi.first.math.MathUtil;
 public class ShooterIOReal implements ShooterIO {
     
     //private CANSparkMax rightShooterMotor = new CANSparkMax(ShooterConstants.rightCanID,MotorType.kBrushless);
-    private TalonFX rightShooterMotor = new TalonFX(ShooterConstants.rightCanID);
-    private TalonFX leftShooterMotor = new TalonFX(ShooterConstants.leftCanID);
+    private TalonFX topShooterMotor = new TalonFX(ShooterConstants.rightCanID);
+    private TalonFX bottomShooterMotor = new TalonFX(ShooterConstants.leftCanID);
 
     private TalonFXConfiguration talonFXConfig = new TalonFXConfiguration();
     final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
@@ -37,25 +37,25 @@ public class ShooterIOReal implements ShooterIO {
 
         talonFXConfig.Audio.BeepOnBoot = true;
 
-        rightShooterMotor.setControl(new Follower(leftShooterMotor.getDeviceID(), true));
+    
 
-        leftShooterMotor.clearStickyFaults();
-        rightShooterMotor.clearStickyFaults();
+        bottomShooterMotor.clearStickyFaults();
+        topShooterMotor.clearStickyFaults();
 
-        StatusCode response = leftShooterMotor.getConfigurator().apply(talonFXConfig);
+        StatusCode response = bottomShooterMotor.getConfigurator().apply(talonFXConfig);
         if (!response.isOK()) {
             System.out.println(
                     "Talon ID "
-                            + leftShooterMotor.getDeviceID()
+                            + bottomShooterMotor.getDeviceID()
                             + " failed config with error "
                             + response.toString());
         }
 
-        response = rightShooterMotor.getConfigurator().apply(talonFXConfig);
+        response = topShooterMotor.getConfigurator().apply(talonFXConfig);
         if (!response.isOK()) {
             System.out.println(
                     "Talon ID "
-                            + rightShooterMotor.getDeviceID()
+                            + topShooterMotor.getDeviceID()
                             + " failed config with error "
                             + response.toString());
         }
@@ -66,12 +66,16 @@ public class ShooterIOReal implements ShooterIO {
         // set velocity to certain rps, add 0.5 V to overcome gravity
         //leftShooterMotor.setControl(m_request.withVelocity(speed).withFeedForward(0.2));
 
-        leftShooterMotor.set(MathUtil.clamp(speed, -1, 1));
+        bottomShooterMotor.set(MathUtil.clamp(speed, -1, 1));
+        topShooterMotor.set(MathUtil.clamp(speed, -1, 1));
     }
 
     @Override
     public void updateInputs(ShooterIOInputs inputs) {
-        inputs.shooterMotorAppliedVolts = leftShooterMotor.getMotorVoltage().getValueAsDouble();
-        inputs.shooterMotorVelocityRPM = leftShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM
+        inputs.shooterMotorAppliedVolts = bottomShooterMotor.getMotorVoltage().getValueAsDouble();
+        inputs.shooterMotorVelocityRPM = bottomShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM
+        inputs.shooterMotorAppliedVolts = topShooterMotor.getMotorVoltage().getValueAsDouble();
+        inputs.shooterMotorVelocityRPM = topShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM
+
     }
 }

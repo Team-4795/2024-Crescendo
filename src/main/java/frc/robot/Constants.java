@@ -27,14 +27,14 @@ public final class Constants {
   public static final Mode currentMode = Mode.SIM;
 
   //shooter, indexer, intake measured in motor output, pivot measured in radians
-  public record Setpoint(double shooter, double pivot, double indexer, double intake) {}
+  public record Setpoint(double topShooterMotor, double bottomShooterMotor, double pivot, double indexer, double intake) {}
 
   public class StateConstants {
-    public static final Setpoint stow = new Setpoint(0, 0.52, 0, 0);
-    public static final Setpoint groundIntake = new Setpoint(0, 1.22, -0.5, -1);
-    public static final Setpoint sourceIntake = new Setpoint(-0.6, 0.96, -0.5, 0);
-    public static final Setpoint scoreAmp = new Setpoint(0, 1.64, 0, 0);
-    public static final Setpoint scoreSpeaker = new Setpoint(0, 0, 0, 0);
+    public static final Setpoint stow = new Setpoint(0,0, 0.52, 0, 0);
+    public static final Setpoint groundIntake = new Setpoint(0,0, 1.22, -0.5, -1);
+    public static final Setpoint sourceIntake = new Setpoint(-0.6,0.6, 0.96, -0.5, 0);
+    public static final Setpoint scoreAmp = new Setpoint(1,-1, 1.64, 0, 0);
+    public static final Setpoint scoreSpeaker = new Setpoint(1,-1, 0, 0, 0);
   }
 
   public static enum Mode {
