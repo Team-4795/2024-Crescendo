@@ -11,6 +11,7 @@ import com.pathplanner.lib.path.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.StateManager;
 import frc.robot.StateManager.State;
@@ -56,7 +57,7 @@ public class AutoCommands {
   }
 
   public Command initialize(double speed) {
-    return new RunCommand(() -> {
+    return new InstantCommand(() -> {
       intake.setIntakeSpeed(speed);
       shooter.setShootingSpeed(speed);
     });
