@@ -26,7 +26,7 @@ public class Pivot extends SubsystemBase {
     
     private double goal = 0;
 
-    private final boolean disableArm = false;
+    private final boolean disableArm = true;
 
     PivotVisualizer visualizer = new PivotVisualizer(Color.kDarkOrange);
 
@@ -52,16 +52,16 @@ public class Pivot extends SubsystemBase {
         controller.setTolerance(Units.degreesToRadians(0.5));
 
         setDefaultCommand(run(() -> {
-            double up = MathUtil.applyDeadband(
-                    OIConstants.operatorController.getRightTriggerAxis(), OIConstants.kAxisDeadband);
-            double down = MathUtil.applyDeadband(
-                    OIConstants.operatorController.getLeftTriggerAxis(), OIConstants.kAxisDeadband);
+            // double up = MathUtil.applyDeadband(
+            //         OIConstants.operatorController.getRightTriggerAxis(), OIConstants.kAxisDeadband);
+            // double down = MathUtil.applyDeadband(
+            //         OIConstants.operatorController.getLeftTriggerAxis(), OIConstants.kAxisDeadband);
            
-            // double output = 0.15 * (Math.pow(up, 3) - Math.pow(down, 3));
-            // io.rotatePivot(output);
-            double change = PivotConstants.manualSpeed * MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), OIConstants.kAxisDeadband);
+            double output = 0.15 * OIConstants.operatorController.getLeftY();
+            io.rotatePivot(output);
+            // double change = PivotConstants.manualSpeed * MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), OIConstants.kAxisDeadband);
             // double change = PivotConstants.manualSpeed * (Math.pow(up, 3) - Math.pow(down, 3));
-            setGoal(goal + change);
+            // setGoal(goal + change);
         }));
     }
 
@@ -88,9 +88,9 @@ public class Pivot extends SubsystemBase {
             FFVolts += PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
         }
 
-        if (!disableArm) {
-            io.setVoltage(PIDVolts + FFVolts);
-        }
+        // if (!disableArm) {
+        //     io.setVoltage(PIDVolts + FFVolts);
+        // }
 
         Logger.recordOutput("Pivot/Spring Volts", springVolts);
         Logger.recordOutput("Pivot/kA Spring Volts", kASpringVolts);

@@ -4,6 +4,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class IntakeIOReal implements IntakeIO {
     private final TalonFX intakeMotor = new TalonFX(IntakeConstants.canID);
@@ -20,6 +21,10 @@ public class IntakeIOReal implements IntakeIO {
         talonFXConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         talonFXConfig.CurrentLimits.SupplyCurrentLimit = 40;
         
+        talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+        intakeMotor.clearStickyFaults();
+
          StatusCode response = intakeMotor.getConfigurator().apply(talonFXConfig);
         if (!response.isOK()) {
             System.out.println(
