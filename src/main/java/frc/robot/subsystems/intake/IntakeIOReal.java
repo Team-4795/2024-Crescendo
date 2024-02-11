@@ -21,7 +21,7 @@ public class IntakeIOReal implements IntakeIO {
         talonFXConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         talonFXConfig.CurrentLimits.SupplyCurrentLimit = 40;
         
-        talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
         intakeMotor.clearStickyFaults();
 

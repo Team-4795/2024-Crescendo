@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final Mode currentMode = Mode.SIM;
+  public static final Mode currentMode = Mode.REAL;
 
   //shooter, indexer, intake measured in motor output, pivot measured in radians
   public record Setpoint(double topShooterMotor, double bottomShooterMotor, double pivot, double indexer, double intake) {}
@@ -53,5 +53,15 @@ public final class Constants {
 
     public static final CommandXboxController driverController = new CommandXboxController(0);
     public static final CommandXboxController operatorController = new CommandXboxController(1);
+/* CAN IDs
+ * Swerve 2-9
+ * Intake 10
+ * Pivot 11-12
+ * Indexer 13-14
+ * Shooter 15-16
+ */
+
+
+
   }
 }

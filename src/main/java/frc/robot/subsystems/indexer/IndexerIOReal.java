@@ -2,6 +2,7 @@ package frc.robot.subsystems.indexer;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class IndexerIOReal implements IndexerIO {
@@ -11,6 +12,9 @@ public class IndexerIOReal implements IndexerIO {
     private RelativeEncoder rightEncoder = rightIndexMotor.getEncoder();
 
     public IndexerIOReal() {
+        rightIndexMotor.restoreFactoryDefaults();
+        leftIndexMotor.restoreFactoryDefaults();
+        
         rightIndexMotor.setSmartCurrentLimit(20);
         leftIndexMotor.setSmartCurrentLimit(20);
 
@@ -21,6 +25,9 @@ public class IndexerIOReal implements IndexerIO {
         rightEncoder.setPosition(0);
 
         rightIndexMotor.follow(leftIndexMotor, false);
+
+        rightIndexMotor.setIdleMode(IdleMode.kCoast);
+        leftIndexMotor.setIdleMode(IdleMode.kCoast);
 
         rightIndexMotor.burnFlash();
         leftIndexMotor.burnFlash();
