@@ -18,6 +18,9 @@ public class PivotIOReal implements PivotIO {
     pivotLeft.setSmartCurrentLimit(30);
     pivotRight.setSmartCurrentLimit(30);
 
+    encoder.setPositionConversionFactor(PivotConstants.positionConversionFactor);
+    encoder.setVelocityConversionFactor(PivotConstants.velocityConversionFactor);
+
     pivotLeft.setIdleMode(IdleMode.kBrake);
     pivotRight.setIdleMode(IdleMode.kBrake);
 
@@ -43,5 +46,4 @@ public class PivotIOReal implements PivotIO {
     inputs.pivotPositionRads = encoder.getPosition();
     inputs.pivotVelocityRadPerSec = encoder.getVelocity();
   }
-
 }

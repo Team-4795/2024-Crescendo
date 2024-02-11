@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
@@ -19,8 +20,9 @@ public class Pivot extends SubsystemBase {
     private ProfiledPIDController controller = new ProfiledPIDController(
         PivotConstants.kP, PivotConstants.KI, PivotConstants.kD, 
         PivotConstants.constraints);
-    private final ArmFeedforward pivotFeedForward = new ArmFeedforward(
-        PivotConstants.kS, PivotConstants.kG, PivotConstants.kV, PivotConstants.kA);
+
+    private final SimpleMotorFeedforward motorFeedforward = new SimpleMotorFeedforward(
+        PivotConstants.kS, PivotConstants.kV, PivotConstants.kA);
     
     private double goal = 0;
 
@@ -69,20 +71,26 @@ public class Pivot extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Pivot", inputs);
-        visualizer.update(Units.radiansToDegrees(inputs.pivotPositionRads));
-        double springVolts = pivotFeedForward(inputs.pivotPositionRads, inputs.pivotVelocityRadPerSec);
+        visualizer.update(Units.radiansToDegrees(inputs.pivotPositionRads + PivotConstants.angleOffset));
+
+        // Both should be similar or identical
+        double springVolts = pivotFeedForward(inputs.pivotPositionRads + PivotConstants.angleOffset, inputs.pivotVelocityRadPerSec);
+        double kASpringVolts = PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
+
         double PIDVolts = controller.calculate(inputs.pivotPositionRads, goal);
-        double FFVolts = 0.0;
+        double FFVolts = motorFeedforward.calculate(controller.getSetpoint().velocity);
 
         if(Robot.isSimulation()){
-            FFVolts = pivotFeedForward.calculate(controller.getSetpoint().position, controller.getSetpoint().velocity);
+            FFVolts += PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position) / PivotConstants.inertia;
         } else {
-            FFVolts = pivotFeedForward.calculate(controller.getSetpoint().position + PivotConstants.angleOffset, controller.getSetpoint().velocity);
+            FFVolts += PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
         }
-        
+
         io.setVoltage(PIDVolts + FFVolts);
 
         Logger.recordOutput("Pivot/Spring Volts", springVolts);
+        Logger.recordOutput("Pivot/kA Spring Volts", kASpringVolts);
+
         Logger.recordOutput("Pivot/PID Volts", PIDVolts);
         Logger.recordOutput("Pivot/FF Volts", FFVolts);
         Logger.recordOutput("Pivot/Setpoint Position", controller.getSetpoint().position);
@@ -96,11 +104,11 @@ public class Pivot extends SubsystemBase {
             -PivotConstants.d * Math.cos(angleRad) + PivotConstants.x);
         double Tg = -PivotConstants.M * PivotConstants.R - PivotConstants.g * Math.cos(angleRad);
         double Ts = PivotConstants.d * PivotConstants.F * Math.sin(springAngle - (Math.PI - angleRad));
-        return (-Tg - Ts) / PivotConstants.gearing;
+        return Tg + Ts;
     }
 
-    private double pivotFeedForward(double angle, double velocity) {
+    private double pivotFeedForward(double angle, double velocityRadPerSec) {
         double torque = torqueFromAngle(angle) ;        
-        return DCMotor.getNeoVortex(2).getVoltage(torque, velocity);
+        return DCMotor.getNeoVortex(2).getVoltage(torque, velocityRadPerSec);
     }
 }
