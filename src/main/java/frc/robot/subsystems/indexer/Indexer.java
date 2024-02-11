@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.StateManager;
 import frc.robot.StateManager.State;
+import frc.robot.subsystems.intake.IntakeConstants;
 
 public class Indexer extends SubsystemBase {
     
@@ -12,6 +13,7 @@ public class Indexer extends SubsystemBase {
     private final IndexerIOInputsAutoLogged inputs = new IndexerIOInputsAutoLogged(); 
     private double indexerSpeed = 0.0;
     private boolean shouldSpin = false;
+    private boolean override;
 
     private static Indexer instance;
 
@@ -43,16 +45,20 @@ public class Indexer extends SubsystemBase {
         indexerSpeed *= -1;
     }
 
+    public void setOverride(boolean on) {
+       override = on;
+    }
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Indexer", inputs);
-        if(StateManager.getInstance().state == State.GroundIntake || shouldSpin){
+        if(override){
+            io.setIndexerSpeed(IntakeConstants.overrideSpeed);
+        } else if(StateManager.getInstance().state == State.GroundIntake || shouldSpin) {
             io.setIndexerSpeed(indexerSpeed);
         } else {
             io.setIndexerSpeed(0);
         }
-
     }
-
 }

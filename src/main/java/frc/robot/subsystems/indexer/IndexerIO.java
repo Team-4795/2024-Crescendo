@@ -7,11 +7,16 @@ public interface IndexerIO {
     
    @AutoLog
    public static class IndexerIOInputs {
-    public double motorSpeed = 0.0;
-    public double motorPos = 0.0;
-   } 
+    public double motorSpeed;
+    public double motorPos;
+    public double motorCurrent;
+    public double motorVoltage;
+   }
 
    public default void updateInputs(IndexerIOInputs inputs) {}
    public default void setIndexerSpeed(double speed) {}
-
+   public default double getLeftMotorVoltage() { return 0; }
+   public default double getRightMotorVoltage() { return 0; }
+   public default double getLeftMotorCurrent() { return 0; }
+   public default double getRightMotorCurrent() { return 0; }
 }

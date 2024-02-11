@@ -146,7 +146,13 @@ public class RobotContainer {
         () -> intake.setOverride(true),
         () -> intake.setOverride(false),
         intake));
-    OIConstants.operatorController.y().whileTrue(Commands.runOnce(() -> indexer.reverse()));
+    OIConstants.operatorController.y().onTrue(Commands.runOnce(() -> indexer.reverse()));
+    OIConstants.operatorController.b().whileTrue(Commands.startEnd(
+        () -> indexer.setOverride(true),
+        () -> indexer.setOverride(false),
+        indexer
+      )
+    );
   }
 
   /**
