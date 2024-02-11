@@ -69,10 +69,10 @@ public class ShooterIOReal implements ShooterIO {
     @Override
     public void runShooterMotors(double speed) {
         // set velocity to certain rps, add 0.5 V to overcome gravity
-        leftShooterMotor.setControl(m_request.withVelocity(speed).withFeedForward(0.2));
+        //leftShooterMotor.setControl(m_request.withVelocity(speed).withFeedForward(0.2));
 
-        //leftShooterMotor.set(speed);
-        //rightShooterMotor.set(speed);
+        leftShooterMotor.set(speed);
+        rightShooterMotor.set(speed);
         
     }
 
