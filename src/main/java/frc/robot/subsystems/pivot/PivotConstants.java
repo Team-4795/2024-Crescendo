@@ -10,7 +10,7 @@ public final class PivotConstants {
     public static final double kG = 0;
     public static final double kV = 2.43;
     public static final double kS = 0;
-    public static final double kP = 4;
+    public static final double kP = 0;
     public static final double KI = 0;
     public static final double kD = 0;
 
