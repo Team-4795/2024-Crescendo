@@ -94,7 +94,7 @@ public class RobotContainer {
     //     new FeedForwardCharacterization(
     //         drive, drive::runCharacterizationVolts, drive::getCharacterizationVelocity));
 
-
+    TurnToSpeaker.initialize();
     // Configure the button bindings
     configureButtonBindings();
   }

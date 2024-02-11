@@ -87,9 +87,9 @@ public class Vision extends SubsystemBase{
         saguaroPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, SaguaroCam, saguaroRobotToCam);   
         barbaryFigPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, BarbaryFig, barbaryFigRobotToCam);   
 
-
+        aprilTagFieldLayout.getTagPose(4).ifPresent(pose -> speakerPosition = pose.toPose2d());
         Optional<Alliance> ally = DriverStation.getAlliance();
-        aprilTagFieldLayout.getTagPose(7).ifPresent(pose -> speakerPosition = pose.toPose2d());
+        ally.ifPresent((alliance) -> System.out.println(alliance.toString()));
         if (ally.isPresent()) {
             if (ally.get() == Alliance.Red) {
                 aprilTagFieldLayout.getTagPose(4).ifPresent(pose -> speakerPosition = pose.toPose2d()); //Get pose2d of speaker

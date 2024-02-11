@@ -370,13 +370,20 @@ public class Drive extends SubsystemBase {
         pose.rotateBy(pose.getRotation().times(-1)); //This may not work
     }
 
-    /**
-     * Returns the heading of the robot.
-     *
-     * @return the robot's heading in degrees, from -180 to 180
-     */
+
     public double getHeading() {
         return gyroInputs.yaw.getDegrees();
+    }
+
+    //between -180 and 180
+    public double getWrappedHeading(){
+        double rotation = gyroInputs.yaw.getDegrees() % 360;
+        if(rotation < -180) {
+            rotation += 360;
+        } else if (rotation > 180){
+            rotation -= 360;
+        }
+        return rotation;
     }
 
     /**
@@ -402,5 +409,15 @@ public class Drive extends SubsystemBase {
                 speeds.omegaRadiansPerSecond / DriveConstants.kMaxAngularSpeed,
                 false,
                 false);
+    }
+    public void runVelocity(ChassisSpeeds speeds) {
+        SwerveModuleState[] swerveStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+            ChassisSpeeds.fromFieldRelativeSpeeds(speeds, gyroInputs.yaw)
+        );
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveStates, DriveConstants.kMaxSpeedMetersPerSecond);
+        m_frontLeft.setDesiredState(swerveStates[0]);
+        m_frontRight.setDesiredState(swerveStates[1]);
+        m_rearLeft.setDesiredState(swerveStates[2]);
+        m_rearRight.setDesiredState(swerveStates[3]);
     }
 }
