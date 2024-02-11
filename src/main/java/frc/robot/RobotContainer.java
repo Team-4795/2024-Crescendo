@@ -61,7 +61,7 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
-        intake = Intake.initialize(new SparkMaxIO());
+        intake = Intake.initialize(new IntakeIOReal());
         shooter = Shooter.initialize(new ShooterIOReal());
         pivot = Pivot.initialize(new PivotIOReal());
         indexer = Indexer.initialize(new IndexerIOReal());
@@ -122,30 +122,33 @@ public class RobotContainer {
             true, true),
         drive));
 
-      OIConstants.driverController.leftTrigger(0.5).whileTrue(new ScoreSpeaker());
+    OIConstants.driverController.leftTrigger(0.5).whileTrue(new ScoreSpeaker());
 
-      OIConstants.driverController.rightTrigger(0.5).whileTrue(Commands.startEnd(
-        () -> shooter.setShootingSpeed(0.5),
-        () -> shooter.setShootingSpeed(0), 
-        shooter));
+    OIConstants.driverController.rightTrigger(0.5).whileTrue(Commands.startEnd(
+      () -> shooter.setShootingSpeed(0.5),
+      () -> shooter.setShootingSpeed(0), 
+      shooter));
 
-      OIConstants.operatorController.rightTrigger(0.5).whileTrue(Commands.startEnd(
-        () -> shooter.setShootingSpeed(-0.5), 
-        () -> shooter.setShootingSpeed(0), 
-        shooter));
+    OIConstants.operatorController.rightTrigger(0.5).whileTrue(Commands.startEnd(
+      () -> shooter.setShootingSpeed(-0.5), 
+      () -> shooter.setShootingSpeed(0), 
+      shooter));
 
     OIConstants.driverController.rightTrigger(0.5).whileTrue(Commands.startEnd(
       () -> indexer.setSpin(true), 
       () -> indexer.setSpin(false), 
       indexer));
+
     OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
     OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
     OIConstants.operatorController.povDown().onTrue(Commands.runOnce(() -> manager.setState(State.GroundIntake)));
     OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> manager.setState(State.ScoreAmp)));
+
     OIConstants.operatorController.a().whileTrue(Commands.startEnd(
         () -> intake.setOverride(true),
         () -> intake.setOverride(false),
         intake));
+        
     OIConstants.operatorController.y().onTrue(Commands.runOnce(() -> indexer.reverse()));
     OIConstants.operatorController.b().whileTrue(Commands.startEnd(
         () -> indexer.setOverride(true),
@@ -161,6 +164,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return autoChooser.get();
   }
 }

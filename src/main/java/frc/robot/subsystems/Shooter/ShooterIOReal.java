@@ -19,7 +19,6 @@ public class ShooterIOReal implements ShooterIO {
     final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
 
     public ShooterIOReal(){
-
         talonFXConfig.Slot0.kP = 0.05;
         talonFXConfig.Slot0.kI = 0;
         talonFXConfig.Slot0.kD = 0;
@@ -76,6 +75,4 @@ public class ShooterIOReal implements ShooterIO {
         inputs.shooterMotorAppliedVolts = leftShooterMotor.getMotorVoltage().getValueAsDouble();
         inputs.shooterMotorVelocityRPM = leftShooterMotor.getVelocity().getValueAsDouble();
     }
-
-    
 }

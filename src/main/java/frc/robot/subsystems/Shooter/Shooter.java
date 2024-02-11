@@ -1,10 +1,7 @@
 package frc.robot.subsystems.Shooter;
 
-
 import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 
 public class Shooter extends SubsystemBase {
     private ShooterIO io;
@@ -29,8 +26,7 @@ public class Shooter extends SubsystemBase {
         io.updateInputs(inputs);
     }
 
-
-    //RPM
+    // RPM
     public void setShootingSpeed(double speed){
         shootingSpeed = speed;
     }

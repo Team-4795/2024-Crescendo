@@ -20,7 +20,6 @@ public class StateManager {
         SourceIntake(StateConstants.sourceIntake),
         ScoreAmp(StateConstants.scoreAmp);
         
-
         Setpoint setpoint;
 
         State(Setpoint setpoint) {

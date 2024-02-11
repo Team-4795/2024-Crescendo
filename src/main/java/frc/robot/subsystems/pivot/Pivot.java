@@ -52,7 +52,7 @@ public class Pivot extends SubsystemBase {
             double down = MathUtil.applyDeadband(
                     OIConstants.operatorController.getLeftTriggerAxis(), OIConstants.kAxisDeadband);
            
-            double output = 0.15 * (Math.pow(up, 3) - Math.pow(down, 3));
+            // double output = 0.15 * (Math.pow(up, 3) - Math.pow(down, 3));
             // io.rotatePivot(output);
             double change = PivotConstants.manualSpeed * OIConstants.operatorController.getLeftY();
             // double change = PivotConstants.manualSpeed * (Math.pow(up, 3) - Math.pow(down, 3));
