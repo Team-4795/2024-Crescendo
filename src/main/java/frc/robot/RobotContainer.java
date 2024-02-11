@@ -36,6 +36,9 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import frc.robot.commands.LimelightLookAtSpeaker;
+import frc.robot.commands.TurnToSpeaker;
+
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -71,7 +74,7 @@ public class RobotContainer {
         indexer = Indexer.initialize(new IndexerIOReal());
         drive =
             new Drive(
-                new GyroIONavx(),
+                new GyroIONavX(),
                 new ModuleIOSparkMax(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId, DriveConstants.kFrontLeftChassisAngularOffset),
                 new ModuleIOSparkMax(DriveConstants.kFrontRightDrivingCanId, DriveConstants.kFrontRightTurningCanId, DriveConstants.kFrontRightChassisAngularOffset),
                 new ModuleIOSparkMax(DriveConstants.kRearLeftDrivingCanId, DriveConstants.kRearLeftTurningCanId, DriveConstants.kBackLeftChassisAngularOffset),
@@ -110,7 +113,7 @@ public class RobotContainer {
 
   
     autoSelector = new AutoSelector();
-
+    TurnToSpeaker.initialize();
     // Configure the button bindings
     configureButtonBindings();
 
@@ -125,22 +128,20 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    drive.setDefaultCommand(new RunCommand(
-        () -> drive.drive(
-            MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kDriveDeadband),
-            MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kDriveDeadband),
-            MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kDriveDeadband),
-            false, true),
-        drive));
-    OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
-    OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
-    OIConstants.operatorController.povDown().onTrue(Commands.runOnce(() -> manager.setState(State.GroundIntake)));
-    OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> manager.setState(State.ScoreAmp)));
-    OIConstants.operatorController.a().whileTrue(Commands.startEnd(
-      () -> intake.setOverride(true), 
-      () -> intake.setOverride(false), 
-      intake));
-    OIConstants.operatorController.y().whileTrue(Commands.runOnce(() -> indexer.reverse()));
+    drive.setDefaultCommand(
+        // The left stick controls translation of the robot.
+        // Turning is controlled by the X axis of the right stick.
+        new RunCommand(
+            () -> drive.drive(
+                -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+                MathUtil.applyDeadband(OIConstants.m_driverController.getRightX(), OIConstants.kDriveDeadband),
+                true, true),
+            drive));
+
+      OIConstants.m_driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
+      OIConstants.m_driverController.leftBumper().whileTrue(TurnToSpeaker.turnTowardsSpeaker(drive));
+      OIConstants.m_driverController.a().whileTrue(LimelightLookAtSpeaker.lookAtSpeaker(drive));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
