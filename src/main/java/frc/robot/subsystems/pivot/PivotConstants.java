@@ -14,7 +14,7 @@ public final class PivotConstants {
     public static final double KI = 0;
     public static final double kD = 0;
 
-    public static final double angleOffset = Units.degreesToRadians(30);
+    public static final double angleOffset = Units.degreesToRadians(20);
     public static final double kDt = 0.02;
     public static final Constraints constraints = new Constraints(0.5, 1.5);
     public static final double manualSpeed = 0.01;
@@ -29,6 +29,6 @@ public final class PivotConstants {
     public static final double g = 9.81;
 
     public static final double gearing = 144;
-    public static final double lowLimit = Units.degreesToRadians(30);
-    public static final double highLimit = Units.degreesToRadians(105);
+    public static final double lowLimit = Units.degreesToRadians(20);
+    public static final double highLimit = Units.degreesToRadians(100);
 }

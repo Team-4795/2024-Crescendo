@@ -17,7 +17,6 @@ public class PivotVisualizer {
     MechanismLigament2d wrist;
 
     public PivotVisualizer(Color color) {
-
         mechanism = new Mechanism2d(2, 1.5);
         mechanismRoot = mechanism.getRoot("Pivot", 0.5, 0.5);
         pivot = mechanismRoot.append(new MechanismLigament2d("Pivot", 0.68, 0, 6, new Color8Bit(color)));

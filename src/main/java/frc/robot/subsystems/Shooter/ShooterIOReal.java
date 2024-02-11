@@ -61,7 +61,6 @@ public class ShooterIOReal implements ShooterIO {
         }
     }
 
-
     @Override
     public void runShooterMotors(double speed) {
         // set velocity to certain rps, add 0.5 V to overcome gravity
@@ -73,6 +72,6 @@ public class ShooterIOReal implements ShooterIO {
     @Override
     public void updateInputs(ShooterIOInputs inputs) {
         inputs.shooterMotorAppliedVolts = leftShooterMotor.getMotorVoltage().getValueAsDouble();
-        inputs.shooterMotorVelocityRPM = leftShooterMotor.getVelocity().getValueAsDouble();
+        inputs.shooterMotorVelocityRPM = leftShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM
     }
 }

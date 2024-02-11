@@ -24,7 +24,7 @@ public class Pivot extends SubsystemBase {
     
     private double goal = 0;
 
-    PivotVisualizer visualizer;
+    PivotVisualizer visualizer = new PivotVisualizer(Color.kDarkOrange);
 
     private static Pivot instance;
 
@@ -41,11 +41,12 @@ public class Pivot extends SubsystemBase {
 
     public Pivot(PivotIO pivotIO) {
         io = pivotIO;
-        visualizer = new PivotVisualizer(Color.kDarkOrange);
         io.updateInputs(inputs);
+
         setGoal(inputs.pivotPositionRads);
         visualizer.update(360 * inputs.pivotPositionRads);
         controller.setTolerance(Units.degreesToRadians(0.5));
+
         setDefaultCommand(run(() -> {
             double up = MathUtil.applyDeadband(
                     OIConstants.operatorController.getRightTriggerAxis(), OIConstants.kAxisDeadband);
@@ -54,12 +55,11 @@ public class Pivot extends SubsystemBase {
            
             // double output = 0.15 * (Math.pow(up, 3) - Math.pow(down, 3));
             // io.rotatePivot(output);
-            double change = PivotConstants.manualSpeed * OIConstants.operatorController.getLeftY();
+            double change = PivotConstants.manualSpeed * MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), OIConstants.kAxisDeadband);
             // double change = PivotConstants.manualSpeed * (Math.pow(up, 3) - Math.pow(down, 3));
             setGoal(goal + change);
         }));
     }
-
 
     public void setGoal(double goal) {
         this.goal = MathUtil.clamp(goal, PivotConstants.lowLimit, PivotConstants.highLimit);
@@ -73,11 +73,13 @@ public class Pivot extends SubsystemBase {
         double springVolts = pivotFeedForward(inputs.pivotPositionRads, inputs.pivotVelocityRadPerSec);
         double PIDVolts = controller.calculate(inputs.pivotPositionRads, goal);
         double FFVolts = 0.0;
+
         if(Robot.isSimulation()){
             FFVolts = pivotFeedForward.calculate(controller.getSetpoint().position, controller.getSetpoint().velocity);
         } else {
             FFVolts = pivotFeedForward.calculate(controller.getSetpoint().position + PivotConstants.angleOffset, controller.getSetpoint().velocity);
         }
+        
         io.setVoltage(PIDVolts + FFVolts);
 
         Logger.recordOutput("Pivot/Spring Volts", springVolts);
