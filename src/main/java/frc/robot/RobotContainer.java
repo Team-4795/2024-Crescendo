@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ArmFeedForwardCharacterization;
 import frc.robot.commands.ScoreSpeaker;
 import frc.robot.subsystems.MAXSwerve.*;
 import frc.robot.StateManager.State;
@@ -99,6 +100,8 @@ public class RobotContainer {
     }
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+    autoChooser.addOption("Arm Characterization", new ArmFeedForwardCharacterization(pivot, pivot::runVoltage, pivot::getVelocity, pivot::getPosition));
 
     // Configure the button bindings
     configureButtonBindings();

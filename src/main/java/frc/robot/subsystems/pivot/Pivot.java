@@ -26,6 +26,8 @@ public class Pivot extends SubsystemBase {
     
     private double goal = 0;
 
+    private final boolean disableArm = false;
+
     PivotVisualizer visualizer = new PivotVisualizer(Color.kDarkOrange);
 
     private static Pivot instance;
@@ -86,7 +88,9 @@ public class Pivot extends SubsystemBase {
             FFVolts += PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
         }
 
-        io.setVoltage(PIDVolts + FFVolts);
+        if (!disableArm) {
+            io.setVoltage(PIDVolts + FFVolts);
+        }
 
         Logger.recordOutput("Pivot/Spring Volts", springVolts);
         Logger.recordOutput("Pivot/kA Spring Volts", kASpringVolts);
@@ -110,5 +114,21 @@ public class Pivot extends SubsystemBase {
     private double pivotFeedForward(double angle, double velocityRadPerSec) {
         double torque = torqueFromAngle(angle) ;        
         return DCMotor.getNeoVortex(2).getVoltage(torque, velocityRadPerSec);
+    }
+
+    public void runVoltage(double volts) {
+        if (disableArm) {
+            io.setVoltage(volts);
+        } else {
+            throw new IllegalArgumentException("Setting direct pivot voltage without disabling arm!");
+        }
+    }
+
+    public double getPosition() {
+        return inputs.pivotPositionRads + PivotConstants.angleOffset;
+    }
+
+    public double getVelocity() {
+        return inputs.pivotVelocityRadPerSec;
     }
 }
