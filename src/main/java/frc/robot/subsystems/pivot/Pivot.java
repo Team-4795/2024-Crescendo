@@ -23,6 +23,21 @@ public class Pivot extends SubsystemBase {
         PivotConstants.kS, PivotConstants.kG, PivotConstants.kV, PivotConstants.kA);
     
     private double goal = 0;
+
+    private double torqueFromAngle(double angle){
+        double springAngle = Math.atan2(PivotConstants.d*Math.sin(angle)+PivotConstants.y, -PivotConstants.d*Math.cos(angle)+PivotConstants.x);
+        double Tg = -PivotConstants.M * PivotConstants.R * PivotConstants.G * Math.cos(angle);
+        double Ts = PivotConstants.d * PivotConstants.F * Math.sin(springAngle - (Math.PI - angle));
+        return (-Tg-Ts)/PivotConstants.Gearing;
+    }
+    private double pivotFeedForward (double angle, double velocity) {
+        double torque = torqueFromAngle(angle) ;        
+        return DCMotor.getNeoVortex(2).getVoltage(torque, velocity);
+    }
+
+
+
+
     PivotVisualizer visualizer;
 
     private static Pivot instance;
