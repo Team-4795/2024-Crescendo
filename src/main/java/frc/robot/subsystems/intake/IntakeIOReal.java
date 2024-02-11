@@ -1,25 +1,39 @@
 package frc.robot.subsystems.intake;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
 
-public class SparkMaxIO implements IntakeIO {
-    private final CANSparkMax intakeMotor = new CANSparkMax(IntakeConstants.canID, MotorType.kBrushless);
-    private final RelativeEncoder frontEncoder = intakeMotor.getEncoder();
+public class IntakeIOReal implements IntakeIO {
+    private final TalonFX intakeMotor = new TalonFX(IntakeConstants.canID);
+    
+    private TalonFXConfiguration talonFXConfig = new TalonFXConfiguration();
+    
+    final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
 
-    public SparkMaxIO() {
+    public IntakeIOReal() {
         intakeMotor.setInverted(false);
 
-        intakeMotor.setSmartCurrentLimit(40);
-
-        intakeMotor.burnFlash();
+        talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+        talonFXConfig.CurrentLimits.StatorCurrentLimit = 40;
+        talonFXConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+        talonFXConfig.CurrentLimits.SupplyCurrentLimit = 40;
+        
+         StatusCode response = intakeMotor.getConfigurator().apply(talonFXConfig);
+        if (!response.isOK()) {
+            System.out.println(
+                    "Talon ID "
+                            + intakeMotor.getDeviceID()
+                            + " failed config with error "
+                            + response.toString());
+        }
     }
 
     public void updateInputs(IntakeIOInputs inputs) {
-        inputs.angularVelocityRPM = frontEncoder.getVelocity();
-        inputs.angularPositionRot = frontEncoder.getPosition();
-        inputs.voltage = intakeMotor.getOutputCurrent();
+        inputs.angularVelocityRPM = intakeMotor.getVelocity().getValueAsDouble()*60;
+        inputs.angularPositionRot = intakeMotor.getPosition().getValueAsDouble();
+        inputs.voltage = intakeMotor.getMotorVoltage().getValueAsDouble();
     }
 
     @Override
