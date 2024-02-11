@@ -7,6 +7,8 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.MathUtil;
+
 public class ShooterIOReal implements ShooterIO {
     
     //private CANSparkMax rightShooterMotor = new CANSparkMax(ShooterConstants.rightCanID,MotorType.kBrushless);
@@ -17,10 +19,6 @@ public class ShooterIOReal implements ShooterIO {
     final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
 
     public ShooterIOReal(){
-        // controller.setFeedbackDevice(leftShooterEncoder);
-        // controller.setP(ShooterConstants.shooterP);
-        // controller.setI(0);
-        // controller.setD(0);
 
         talonFXConfig.Slot0.kP = 0.05;
         talonFXConfig.Slot0.kI = 0;
@@ -41,7 +39,6 @@ public class ShooterIOReal implements ShooterIO {
         talonFXConfig.Audio.BeepOnBoot = true;
 
         rightShooterMotor.setControl(new Follower(leftShooterMotor.getDeviceID(), true));
-        //leftShooterMotor.setInverted(true);
 
         leftShooterMotor.clearStickyFaults();
         rightShooterMotor.clearStickyFaults();
@@ -71,9 +68,7 @@ public class ShooterIOReal implements ShooterIO {
         // set velocity to certain rps, add 0.5 V to overcome gravity
         //leftShooterMotor.setControl(m_request.withVelocity(speed).withFeedForward(0.2));
 
-        leftShooterMotor.set(speed);
-        rightShooterMotor.set(speed);
-        
+        leftShooterMotor.set(MathUtil.clamp(speed, -1, 1));
     }
 
     @Override

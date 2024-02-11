@@ -19,6 +19,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
@@ -102,19 +103,23 @@ public class RobotContainer {
   private void configureButtonBindings() {
     drive.setDefaultCommand(new RunCommand(
       () -> drive.drive(
-          -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-          -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-          MathUtil.applyDeadband(OIConstants.m_driverController.getRightX(), OIConstants.kDriveDeadband),
+          -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kDriveDeadband),
+          -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kDriveDeadband),
+          MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kDriveDeadband),
           true, true),
       drive));
 
-      OIConstants.m_driverController.leftTrigger(0.5).whileTrue(new ScoreSpeaker());
+      OIConstants.driverController.leftTrigger(0.5).whileTrue(new ScoreSpeaker());
 
-      OIConstants.m_driverController.leftBumper().and(OIConstants.m_driverController.rightBumper())
-      .whileFalse(new RunCommand(() -> shooter.setShootingSpeed(0)));
-      OIConstants.m_driverController.leftBumper().whileTrue(new RunCommand(() -> shooter.setShootingSpeed(-40)));
-      OIConstants.m_driverController.rightBumper().whileTrue(new RunCommand(() -> shooter.setShootingSpeed(40)));
+      OIConstants.driverController.rightTrigger(0.5).whileTrue(Commands.startEnd(
+        () -> shooter.setShootingSpeed(0.5),
+        () -> shooter.setShootingSpeed(0), 
+        shooter));
 
+      OIConstants.operatorController.rightTrigger(0.5).whileTrue(Commands.startEnd(
+        () -> shooter.setShootingSpeed(-0.5), 
+        () -> shooter.setShootingSpeed(0), 
+        shooter));
   }
 
   /**
