@@ -133,15 +133,15 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> drive.drive(
-                -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(OIConstants.m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-                MathUtil.applyDeadband(OIConstants.m_driverController.getRightX(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kDriveDeadband),
+                MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true),
             drive));
 
-      OIConstants.m_driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
-      OIConstants.m_driverController.leftBumper().whileTrue(TurnToSpeaker.turnTowardsSpeaker(drive));
-      OIConstants.m_driverController.a().whileTrue(LimelightLookAtSpeaker.lookAtSpeaker(drive));
+      OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
+      OIConstants.driverController.leftBumper().whileTrue(TurnToSpeaker.turnTowardsSpeaker(drive));
+      OIConstants.driverController.a().whileTrue(LimelightLookAtSpeaker.lookAtSpeaker(drive));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
