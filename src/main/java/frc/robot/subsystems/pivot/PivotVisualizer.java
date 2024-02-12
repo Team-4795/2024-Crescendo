@@ -26,9 +26,10 @@ public class PivotVisualizer {
 
     public void update(double pivotAngle) {
         pivot.setAngle(pivotAngle);
+        
         Logger.recordOutput("PivotMechanism2d", mechanism);
 
-        pivotPose = new Pose3d(0.25, -0.2, 0.2, new Rotation3d(0, -Math.toRadians(pivotAngle), 0));
+        pivotPose = new Pose3d(0.25, -0.2, 0.2, new Rotation3d(0, Math.toRadians(pivotAngle) - Math.PI/5, 0));
         Logger.recordOutput("PivotMechanism3d", pivotPose);
     }
 }
