@@ -57,13 +57,12 @@ public class Pivot extends SubsystemBase {
             // double down = MathUtil.applyDeadband(
             //         OIConstants.operatorController.getLeftTriggerAxis(), OIConstants.kAxisDeadband);
            
-             double output = 0.15 * OIConstants.operatorController.getLeftY();
-             io.rotatePivot(output);
-            //io.rotatePivot(0.15);
-           // double change = -PivotConstants.manualSpeed * MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), OIConstants.kDriveDeadband);
-            //io.rotatePivot(output);
+            double output = 0.15 * OIConstants.operatorController.getLeftY();
+            io.rotatePivot(output);
+            // io.rotatePivot(0.15);
+            // double change = -PivotConstants.manualSpeed * MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), OIConstants.kAxisDeadband);
             // double change = PivotConstants.manualSpeed * (Math.pow(up, 3) - Math.pow(down, 3));
-            //setGoal(goal + change);
+            // setGoal(goal + change);
         }));
     }
 
