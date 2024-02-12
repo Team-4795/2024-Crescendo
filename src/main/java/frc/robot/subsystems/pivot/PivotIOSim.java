@@ -1,19 +1,33 @@
 package frc.robot.subsystems.pivot;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import frc.robot.util.SpringArmSim;
 
 public class PivotIOSim implements PivotIO {
-    private SingleJointedArmSim pivotSim = new SingleJointedArmSim(DCMotor.getNeoVortex(2), 144, 1.79, 0.66, Units.degreesToRadians(0), Units.degreesToRadians(135), false, Units.degreesToRadians(0));
+    private SpringArmSim pivotSim = new SpringArmSim(
+        DCMotor.getNeoVortex(2), 
+        PivotConstants.gearing, 
+        PivotConstants.inertia,
+        PivotConstants.R,
+        PivotConstants.M,
+        PivotConstants.x,
+        PivotConstants.y,
+        PivotConstants.d,
+        PivotConstants.F,
+        Units.degreesToRadians(20), 
+        Units.degreesToRadians(100), 
+        Units.degreesToRadians(20));
 
     private double pivotAppliedVolts = 0.0;
 
     @Override
     public void updateInputs(PivotIOInputs inputs) {
         pivotSim.update(PivotConstants.kDt);
-        inputs.pivotPositionRads = pivotSim.getAngleRads();
+        inputs.pivotPositionRads = pivotSim.getAngleRads() - PivotConstants.angleOffset;
         inputs.pivotVelocityRadPerSec = pivotSim.getVelocityRadPerSec();
         inputs.pivotAppliedVolts = pivotAppliedVolts;
     }
@@ -27,7 +41,7 @@ public class PivotIOSim implements PivotIO {
     @Override
     public void setVoltage(double volts){
         pivotAppliedVolts = volts;
+        Logger.recordOutput("Setting output", volts);
         pivotSim.setInputVoltage(pivotAppliedVolts);
     }
-
 }

@@ -59,7 +59,8 @@ public class Pivot extends SubsystemBase {
            
             double output = 0.15 * OIConstants.operatorController.getLeftY();
             io.rotatePivot(output);
-            // double change = PivotConstants.manualSpeed * MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), OIConstants.kAxisDeadband);
+            // io.rotatePivot(0.15);
+            // double change = -PivotConstants.manualSpeed * MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), OIConstants.kAxisDeadband);
             // double change = PivotConstants.manualSpeed * (Math.pow(up, 3) - Math.pow(down, 3));
             // setGoal(goal + change);
         }));
@@ -78,19 +79,14 @@ public class Pivot extends SubsystemBase {
         // Both should be similar or identical
         double springVolts = pivotFeedForward(inputs.pivotPositionRads + PivotConstants.angleOffset, inputs.pivotVelocityRadPerSec);
         double kASpringVolts = PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
-
+                
         double PIDVolts = controller.calculate(inputs.pivotPositionRads, goal);
-        double FFVolts = motorFeedforward.calculate(controller.getSetpoint().velocity);
+        double FFVolts = motorFeedforward.calculate(inputs.pivotVelocityRadPerSec)
+            + PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
 
-        if(Robot.isSimulation()){
-            FFVolts += PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position) / PivotConstants.inertia;
-        } else {
-            FFVolts += PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
+        if (!disableArm) {
+            io.setVoltage(PIDVolts + FFVolts);
         }
-
-        // if (!disableArm) {
-        //     io.setVoltage(PIDVolts + FFVolts);
-        // }
 
         Logger.recordOutput("Pivot/Spring Volts", springVolts);
         Logger.recordOutput("Pivot/kA Spring Volts", kASpringVolts);
@@ -106,7 +102,7 @@ public class Pivot extends SubsystemBase {
         double springAngle = Math.atan2(
             PivotConstants.d * Math.sin(angleRad) + PivotConstants.y, 
             -PivotConstants.d * Math.cos(angleRad) + PivotConstants.x);
-        double Tg = -PivotConstants.M * PivotConstants.R - PivotConstants.g * Math.cos(angleRad);
+        double Tg = -PivotConstants.M * PivotConstants.R * PivotConstants.g * Math.cos(angleRad);
         double Ts = PivotConstants.d * PivotConstants.F * Math.sin(springAngle - (Math.PI - angleRad));
         return Tg + Ts;
     }
