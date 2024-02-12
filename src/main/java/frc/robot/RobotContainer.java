@@ -125,22 +125,22 @@ public class RobotContainer {
             true, true),
         drive));
 
-    OIConstants.driverController.leftTrigger(0.5).whileTrue(new ScoreSpeaker());
+    // OIConstants.driverController.leftBumper(0.5).whileTrue(new ScoreSpeaker());
 
-    // OIConstants.driverController.rightTrigger(0.5).whileTrue(Commands.startEnd(
-    //   () -> shooter.setShootingSpeed(0.5),
-    //   () -> shooter.setShootingSpeed(0), 
-    //   shooter));
+    OIConstants.operatorController.rightBumper().whileTrue(Commands.startEnd(
+      () -> shooter.setShootingSpeed(-0.15),
+      () -> shooter.setShootingSpeed(0), 
+      shooter));
 
     // OIConstants.operatorController.rightTrigger(0.5).whileTrue(Commands.startEnd(
     //   () -> shooter.setShootingSpeed(-0.5), 
     //   () -> shooter.setShootingSpeed(0), 
     //   shooter));
 
-    OIConstants.driverController.rightTrigger(0.5).whileTrue(Commands.startEnd(
-      () -> indexer.setSpin(true), 
-      () -> indexer.setSpin(false), 
-      indexer));
+    // OIConstants.driverController.leftTrigger(0.5).whileTrue(Commands.startEnd(
+    //   () -> indexer.setSpin(true), 
+    //   () -> indexer.setSpin(false), 
+    //   indexer));
 
     OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
     OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));

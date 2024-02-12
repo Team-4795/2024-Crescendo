@@ -8,6 +8,6 @@ public final class IndexerConstants {
     public static final double kPositionConversionFactor = 1.0;
     public static final double kVelocityConversionFactor = 1.0;
 
-    public static final double overrideSpeed = 0.8;
+    public static final double overrideSpeed = 1.0;
     public static final double manualSpeed = -.5;
 }

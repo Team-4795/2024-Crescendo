@@ -15,16 +15,14 @@ public class IndexerIOReal implements IndexerIO {
         rightIndexMotor.restoreFactoryDefaults();
         leftIndexMotor.restoreFactoryDefaults();
         
-        rightIndexMotor.setSmartCurrentLimit(20);
-        leftIndexMotor.setSmartCurrentLimit(20);
+        rightIndexMotor.setSmartCurrentLimit(25);
+        leftIndexMotor.setSmartCurrentLimit(25);
 
         rightEncoder.setVelocityConversionFactor(IndexerConstants.kVelocityConversionFactor);
         leftEncoder.setVelocityConversionFactor(IndexerConstants.kVelocityConversionFactor);
 
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
-
-        rightIndexMotor.follow(leftIndexMotor, false);
 
         rightIndexMotor.setIdleMode(IdleMode.kCoast);
         leftIndexMotor.setIdleMode(IdleMode.kCoast);
@@ -36,6 +34,7 @@ public class IndexerIOReal implements IndexerIO {
     @Override
     public void setIndexerSpeed(double speed) {
         leftIndexMotor.set(speed);
+        rightIndexMotor.set(speed);
     }
 
     @Override

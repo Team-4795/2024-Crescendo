@@ -26,18 +26,14 @@ public class ShooterIOReal implements ShooterIO {
         talonFXConfig.Slot0.kV = 0;
 
         talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-        talonFXConfig.CurrentLimits.StatorCurrentLimit = 30;
-        talonFXConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-        talonFXConfig.CurrentLimits.SupplyCurrentLimit = 30;    
+        talonFXConfig.CurrentLimits.StatorCurrentLimit = 60;
 
-        talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
         // talonFXConfig.MotionMagic.MotionMagicAcceleration = 100;
         // talonFXConfig.MotionMagic.MotionMagicCruiseVelocity = 10;
 
         talonFXConfig.Audio.BeepOnBoot = true;
-
-    
 
         bottomShooterMotor.clearStickyFaults();
         topShooterMotor.clearStickyFaults();
@@ -66,8 +62,8 @@ public class ShooterIOReal implements ShooterIO {
         // set velocity to certain rps, add 0.5 V to overcome gravity
         //leftShooterMotor.setControl(m_request.withVelocity(speed).withFeedForward(0.2));
 
-        bottomShooterMotor.set(MathUtil.clamp(speed, -1, 1));
-        topShooterMotor.set(MathUtil.clamp(speed, -1, 1));
+        bottomShooterMotor.set(-MathUtil.clamp(speed, -1, 1));
+        topShooterMotor.set(-MathUtil.clamp(speed, -1, 1));
     }
 
     @Override
