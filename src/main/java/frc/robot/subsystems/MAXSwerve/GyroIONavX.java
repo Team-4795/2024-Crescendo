@@ -1,20 +1,23 @@
 package frc.robot.subsystems.MAXSwerve;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.SPI;
 
-public class GyroIONavX implements GyroIO {
+public class GyroIONavx implements GyroIO {
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
 
-    public GyroIONavX() {
+    public GyroIONavx() {
         reset();
     }
 
     public void updateInputs(GyroIOInputs inputs) {
        //inputs.rollPositionRad = gyro.getRoll();
         //inputs.pitchPositionRad = gyro.getPitch();
-        inputs.yaw = gyro.getRotation2d();
+        inputs.yaw = Rotation2d.fromDegrees(-gyro.getAngle());
         inputs.yawVelocity = gyro.getRate();
     }
 

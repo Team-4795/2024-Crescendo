@@ -11,8 +11,8 @@ import frc.robot.commands.AutoCommands;
 public class Close3PAuto extends AutoPath {
     public Command load(AutoCommands autoCommands) {
         return Commands.sequence(
-            autoCommands.initialize(1),
-            autoCommands.score(),
+        //    autoCommands.initialize(1),
+          //  autoCommands.score(),
             autoCommands.followTrajectory("Left 3P P2"),
             autoCommands.followTrajectory("3GP middle P2")
            // autoCommands.SetPivotAngle(0.2),//insert proper angle here later
