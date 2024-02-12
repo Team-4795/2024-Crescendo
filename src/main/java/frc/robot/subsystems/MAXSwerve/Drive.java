@@ -78,6 +78,19 @@ public class Drive extends SubsystemBase {
         return instance;
     }
 
+    private static Drive instance;
+
+    public static Drive getInstance(){
+        return instance;
+    }
+
+    public static Drive initialize(GyroIO gyro, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br){
+        if(instance == null){
+            instance = new Drive(gyro, fl, fr, bl, br);
+        }
+        return instance;
+    }
+
     /** Creates a new DriveSubsystem. */
     public Drive(GyroIO gyro, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br) {
         this.gyro = gyro;

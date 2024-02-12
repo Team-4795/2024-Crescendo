@@ -18,7 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.ModuleConstants;
 
 public class ModuleIOSparkMax implements ModuleIO{
-  private final CANSparkMax m_drivingSparkMax;
+  private final CANSparkFlex m_drivingSpark;
   private final CANSparkMax m_turningSparkMax;
 
   private final RelativeEncoder m_drivingEncoder;
@@ -33,18 +33,18 @@ public class ModuleIOSparkMax implements ModuleIO{
   private SwerveModuleState optimizedState = new SwerveModuleState(0.0, new Rotation2d());
 
   public ModuleIOSparkMax(int drivingCANId, int turningCANId, double chassisAngularOffset) {
-    m_drivingSparkMax = new CANSparkMax(drivingCANId, MotorType.kBrushless);
+    m_drivingSpark = new CANSparkFlex(drivingCANId, MotorType.kBrushless);
     m_turningSparkMax = new CANSparkMax(turningCANId, MotorType.kBrushless);
 
     // Factory reset, so we get the SPARKS MAX to a known state before configuring
     // them. This is useful in case a SPARK MAX is swapped out.
-    m_drivingSparkMax.restoreFactoryDefaults();
+    m_drivingSpark.restoreFactoryDefaults();
     m_turningSparkMax.restoreFactoryDefaults();
 
     // Setup encoders and PID controllers for the driving and turning SPARKS MAX.
-    m_drivingEncoder = m_drivingSparkMax.getEncoder();
+    m_drivingEncoder = m_drivingSpark.getEncoder();
     m_turningEncoder = m_turningSparkMax.getAbsoluteEncoder(Type.kDutyCycle);
-    m_drivingPIDController = m_drivingSparkMax.getPIDController();
+    m_drivingPIDController = m_drivingSpark.getPIDController();
     m_turningPIDController = m_turningSparkMax.getPIDController();
     m_drivingPIDController.setFeedbackDevice(m_drivingEncoder);
     m_turningPIDController.setFeedbackDevice(m_turningEncoder);
@@ -91,16 +91,16 @@ public class ModuleIOSparkMax implements ModuleIO{
     m_turningPIDController.setOutputRange(ModuleConstants.kTurningMinOutput,
         ModuleConstants.kTurningMaxOutput);
 
-    m_drivingSparkMax.setIdleMode(ModuleConstants.kDrivingMotorIdleMode);
+    m_drivingSpark.setIdleMode(ModuleConstants.kDrivingMotorIdleMode);
     m_turningSparkMax.setIdleMode(ModuleConstants.kTurningMotorIdleMode);
-    m_drivingSparkMax.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
+    m_drivingSpark.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
     m_turningSparkMax.setSmartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
 
     m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
     // Save the SPARK MAX configurations. If a SPARK MAX browns out during
     // operation, it will maintain the above configurations.
-    m_drivingSparkMax.burnFlash();
+    m_drivingSpark.burnFlash();
     m_turningSparkMax.burnFlash();
 
     m_chassisAngularOffset = Rotation2d.fromRadians(chassisAngularOffset);

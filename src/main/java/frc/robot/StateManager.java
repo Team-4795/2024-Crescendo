@@ -18,9 +18,8 @@ public class StateManager {
         Stow(StateConstants.stow),
         GroundIntake(StateConstants.groundIntake),
         SourceIntake(StateConstants.sourceIntake),
-        ScoreAmp(StateConstants.scoreAmp),
-        ScoreSpeaker(StateConstants.scoreSpeaker);
-
+        ScoreAmp(StateConstants.scoreAmp);
+        
         Setpoint setpoint;
 
         State(Setpoint setpoint) {
@@ -34,7 +33,7 @@ public class StateManager {
     }
 
     public void setSetpoints() {
-        Shooter.getInstance().setShootingSpeed(this.state.setpoint.shooter());
+        Shooter.getInstance().setShootingSpeed(this.state.setpoint.topShooterMotor());
         Pivot.getInstance().setGoal(this.state.setpoint.pivot());
         Intake.getInstance().setIntakeSpeed(this.state.setpoint.intake());
         Indexer.getInstance().setIndexerSpeed(this.state.setpoint.indexer());
@@ -51,5 +50,4 @@ public class StateManager {
     public void periodic() {
         Logger.recordOutput("StateManager/State", state.toString());
     }
-
 }

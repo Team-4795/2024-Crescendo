@@ -4,8 +4,6 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -20,7 +18,6 @@ public class PivotVisualizer {
     Pose3d pivotPose;
 
     public PivotVisualizer(Color color) {
-
         mechanism = new Mechanism2d(2, 1.5);
         mechanismRoot = mechanism.getRoot("Pivot", 0.5, 0.5);
         pivot = mechanismRoot.append(new MechanismLigament2d("Pivot", 0.68, 0, 6, new Color8Bit(color)));

@@ -3,12 +3,16 @@ package frc.robot.subsystems.indexer;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.StateManager;
+import frc.robot.StateManager.State;
 
 public class Indexer extends SubsystemBase {
     
     private IndexerIO io;
     private final IndexerIOInputsAutoLogged inputs = new IndexerIOInputsAutoLogged(); 
     private double indexerSpeed = 0.0;
+    private boolean shouldSpin = false;
+    private boolean override;
 
     private static Indexer instance;
 
@@ -32,15 +36,33 @@ public class Indexer extends SubsystemBase {
         indexerSpeed = motorValue;
     }
 
+    public void setSpin(boolean on){
+        shouldSpin = on;
+    }
+
     public void reverse() {
         indexerSpeed *= -1;
+    }
+
+    public void setOverride(boolean on) {
+       override = on;
     }
 
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Indexer", inputs);
-        io.setIndexerSpeed(indexerSpeed);
-    }
+        if(override){
+            io.setIndexerSpeed(IndexerConstants.overrideSpeed);
+        } else if(StateManager.getInstance().state == State.GroundIntake || shouldSpin) {
+            io.setIndexerSpeed(indexerSpeed);
+        } else {
+            io.setIndexerSpeed(0);
+        }
 
+        Logger.recordOutput("Indexer/Left Motor Current", io.getLeftMotorCurrent());
+        Logger.recordOutput("Indexer/Left Motor Velocity", io.getLeftMotorVelocity());
+        Logger.recordOutput("Indexer/Right Motor Current", io.getRightMotorCurrent());
+        Logger.recordOutput("Indexer/Right Motor Velocity", io.getRightMotorVelocity());
+    }
 }

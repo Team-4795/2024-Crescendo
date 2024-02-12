@@ -16,7 +16,6 @@ public class IndexerIOSim implements IndexerIO{
     @Override
     public void updateInputs(IndexerIOInputs inputs) {
         motor.update(0.02);
-        inputs.motorPos = motor.getAngularPositionRotations();
         inputs.motorSpeed = motor.getAngularVelocityRPM();
     }
 
