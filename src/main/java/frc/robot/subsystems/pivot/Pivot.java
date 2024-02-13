@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -29,6 +30,8 @@ public class Pivot extends SubsystemBase {
 
     private final SimpleMotorFeedforward motorFeedforward = new SimpleMotorFeedforward(
             PivotConstants.kS, PivotConstants.kV, PivotConstants.kA);
+
+    private final DutyCycleEncoder encoder = new DutyCycleEncoder(0);
 
     private double goal = 0;
 
@@ -110,6 +113,9 @@ public class Pivot extends SubsystemBase {
         Logger.recordOutput("Pivot/Setpoint Position", controller.getSetpoint().position);
         Logger.recordOutput("Pivot/Setpoint Velocity", controller.getSetpoint().velocity);
         Logger.recordOutput("Pivot/Goal", goal);
+
+        Logger.recordOutput("Pivot/Encoder", encoder.getAbsolutePosition());
+        Logger.recordOutput("Pivot/DistancePerRotation", encoder.getDistancePerRotation());
 
         Logger.recordOutput("Pivot/Testing state", testing);
     }
