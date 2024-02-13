@@ -1,5 +1,7 @@
 package frc.robot.subsystems.pivot;
 
+import java.util.Map;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
@@ -8,6 +10,10 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -18,17 +24,24 @@ public class Pivot extends SubsystemBase {
     private PivotIOInputsAutoLogged inputs = new PivotIOInputsAutoLogged();
 
     private ProfiledPIDController controller = new ProfiledPIDController(
-        PivotConstants.kP, PivotConstants.KI, PivotConstants.kD, 
-        PivotConstants.constraints);
+            PivotConstants.kP, PivotConstants.KI, PivotConstants.kD,
+            PivotConstants.constraints);
 
     private final SimpleMotorFeedforward motorFeedforward = new SimpleMotorFeedforward(
-        PivotConstants.kS, PivotConstants.kV, PivotConstants.kA);
-    
+            PivotConstants.kS, PivotConstants.kV, PivotConstants.kA);
+
     private double goal = 0;
 
     private final boolean disableArm = true;
 
     PivotVisualizer visualizer = new PivotVisualizer(Color.kDarkOrange);
+
+    private ShuffleboardTab tab = Shuffleboard.getTab("Pivot Testing");
+    private GenericEntry voltage = tab.add("Voltage", 0)
+            .withWidget(BuiltInWidgets.kNumberSlider)
+            .withProperties(Map.of("min", 0, "max", 12))
+            .getEntry();
+    private boolean testing = false;
 
     private static Pivot instance;
 
@@ -56,13 +69,16 @@ public class Pivot extends SubsystemBase {
                     OIConstants.driverController.getRightTriggerAxis(), OIConstants.kAxisDeadband);
             double down = MathUtil.applyDeadband(
                     OIConstants.driverController.getLeftTriggerAxis(), OIConstants.kAxisDeadband);
-           
+
             // double output = 0.15 * OIConstants.operatorController.getLeftY();
             // io.rotatePivot(0.15);
-            // double change = -PivotConstants.manualSpeed * MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), OIConstants.kAxisDeadband);
-            double output = 0.15 * (Math.pow(up, 3) - Math.pow(down, 3));
-            io.rotatePivot(output);
-            
+            // double change = -PivotConstants.manualSpeed *
+            // MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(),
+            // OIConstants.kAxisDeadband);
+            if (!testing) {
+                double output = 0.15 * (Math.pow(up, 3) - Math.pow(down, 3));
+                io.rotatePivot(output);
+            }
             // setGoal(goal + change);
         }));
     }
@@ -78,14 +94,20 @@ public class Pivot extends SubsystemBase {
         visualizer.update(Units.radiansToDegrees(inputs.pivotPositionRads + PivotConstants.angleOffset));
 
         // Both should be similar or identical
-        double springVolts = pivotFeedForward(inputs.pivotPositionRads + PivotConstants.angleOffset, inputs.pivotVelocityRadPerSec);
-        double kASpringVolts = PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
-                
+        double springVolts = pivotFeedForward(inputs.pivotPositionRads + PivotConstants.angleOffset,
+                inputs.pivotVelocityRadPerSec);
+        double kASpringVolts = PivotConstants.kA
+                * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset)
+                / PivotConstants.inertia;
+
         double PIDVolts = controller.calculate(inputs.pivotPositionRads, goal);
         double FFVolts = motorFeedforward.calculate(inputs.pivotVelocityRadPerSec)
-            + PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
+                + PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset)
+                        / PivotConstants.inertia;
 
-        if (!disableArm) {
+        if(testing) {
+            io.setVoltage(voltage.getDouble(0));
+        } else if (!disableArm) {
             io.setVoltage(PIDVolts + FFVolts);
         }
 
@@ -97,19 +119,21 @@ public class Pivot extends SubsystemBase {
         Logger.recordOutput("Pivot/Setpoint Position", controller.getSetpoint().position);
         Logger.recordOutput("Pivot/Setpoint Velocity", controller.getSetpoint().velocity);
         Logger.recordOutput("Pivot/Goal", goal);
+
+        Logger.recordOutput("Pivot/Testing state", testing);
     }
 
     private double torqueFromAngle(double angleRad) {
         double springAngle = Math.atan2(
-            PivotConstants.d * Math.sin(angleRad) + PivotConstants.y, 
-            -PivotConstants.d * Math.cos(angleRad) + PivotConstants.x);
+                PivotConstants.d * Math.sin(angleRad) + PivotConstants.y,
+                -PivotConstants.d * Math.cos(angleRad) + PivotConstants.x);
         double Tg = -PivotConstants.M * PivotConstants.R * PivotConstants.g * Math.cos(angleRad);
         double Ts = PivotConstants.d * PivotConstants.F * Math.sin(springAngle - (Math.PI - angleRad));
         return Tg + Ts;
     }
 
     private double pivotFeedForward(double angle, double velocityRadPerSec) {
-        double torque = torqueFromAngle(angle) ;        
+        double torque = torqueFromAngle(angle);
         return DCMotor.getNeoVortex(2).getVoltage(torque, velocityRadPerSec);
     }
 
@@ -127,5 +151,13 @@ public class Pivot extends SubsystemBase {
 
     public double getVelocity() {
         return inputs.pivotVelocityRadPerSec;
+    }
+
+    public boolean isTestingState(){
+        return testing;
+    }
+
+    public void setTestingState(boolean test){
+        testing = test;
     }
 }

@@ -137,15 +137,10 @@ public class RobotContainer {
       () -> shooter.setShootingSpeedRPM(0, 0), 
       shooter));  
 
-    // OIConstants.operatorController.rightTrigger(0.5).whileTrue(Commands.startEnd(
-    //   () -> shooter.setShootingSpeed(-0.5), 
-    //   () -> shooter.setShootingSpeed(0), 
-    //   shooter));
-
-    // OIConstants.driverController.leftTrigger(0.5).whileTrue(Commands.startEnd(
-    //   () -> indexer.setSpin(true), 
-    //   () -> indexer.setSpin(false), 
-    //   indexer));
+    OIConstants.driverController.leftTrigger(0.5).whileTrue(Commands.startEnd(
+      () -> indexer.setSpin(true), 
+      () -> indexer.setSpin(false), 
+      indexer));
 
     OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
     OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
@@ -158,6 +153,8 @@ public class RobotContainer {
         intake));
 
     OIConstants.operatorController.y().onTrue(Commands.runOnce(() -> indexer.reverse()));
+    OIConstants.operatorController.x().onTrue(Commands.runOnce(() -> pivot.setTestingState(!pivot.isTestingState())));
+
     OIConstants.operatorController.b().whileTrue(Commands.startEnd(
         () -> indexer.setOverride(true),
         () -> indexer.setOverride(false),

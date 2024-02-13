@@ -5,7 +5,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public class IndexerIOSim implements IndexerIO{
-    DCMotorSim motor = new DCMotorSim(DCMotor.getNeoVortex(1), 4, 0.001);
+    DCMotorSim motor = new DCMotorSim(DCMotor.getNeo550(1), 5, 0.001);
 
 
     @Override
@@ -17,6 +17,11 @@ public class IndexerIOSim implements IndexerIO{
     public void updateInputs(IndexerIOInputs inputs) {
         motor.update(0.02);
         inputs.motorSpeed = motor.getAngularVelocityRPM();
+    }
+
+    @Override
+    public double getLeftMotorCurrent(){
+        return motor.getCurrentDrawAmps();
     }
 
 }
