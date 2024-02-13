@@ -33,9 +33,9 @@ public final class Constants {
   public class StateConstants {
     public static final Setpoint stow = new Setpoint(0,0, 0.52, 0, 0);
     public static final Setpoint groundIntake = new Setpoint(0,0, 1.22, 1.0, -0.7);
-    public static final Setpoint sourceIntake = new Setpoint(-0.6,0.6, 0.96, -0.5, 0);
-    public static final Setpoint scoreAmp = new Setpoint(0.8,0.8, 1.64, 0, 0);
-    public static final Setpoint scoreSpeaker = new Setpoint(0.8,0.8, 0, 0, 0);
+    public static final Setpoint sourceIntake = new Setpoint(0,0, 0.96, -0.5, 0);
+    public static final Setpoint scoreAmp = new Setpoint(750,750, 1.64, 0, 0);
+    public static final Setpoint scoreSpeaker = new Setpoint(-3000,3000, 0, 0, 0);
   }
 
   public static enum Mode {
@@ -59,15 +59,15 @@ public final class Constants {
 
   public static final class OIConstants{
     public static final double kAxisDeadband = 0.1;
-
     public static final CommandXboxController driverController = new CommandXboxController(0);
     public static final CommandXboxController operatorController = new CommandXboxController(1);
-/* CAN IDs
- * Swerve 2-9
- * Intake 10
- * Pivot 11-12
- * Indexer 13-14
- * Shooter 15-16
- */
+    
+    /* CAN IDs (for 2 motor subsystems lower id is on left facing robot forward)
+    * Swerve 2-9
+    * Intake 10
+    * Pivot 11-12
+    * Indexer 13-14 
+    * Shooter 15-16
+    */
   }
 }

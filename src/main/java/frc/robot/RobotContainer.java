@@ -128,13 +128,13 @@ public class RobotContainer {
     // OIConstants.driverController.leftBumper(0.5).whileTrue(new ScoreSpeaker());
 
     OIConstants.operatorController.rightBumper().whileTrue(Commands.startEnd(
-      () -> shooter.setShootingSpeed(0.15, 0.15),
-      () -> shooter.setShootingSpeed(0, 0), 
+      () -> shooter.setShootingSpeedRPM(750, 750),
+      () -> shooter.setShootingSpeedRPM(0, 0), 
       shooter));  
 
     OIConstants.operatorController.leftBumper().whileTrue(Commands.startEnd(
-      () -> shooter.setShootingSpeed(-0.6, 0.6),
-      () -> shooter.setShootingSpeed(0, 0), 
+      () -> shooter.setShootingSpeedRPM(-3000, 3000),
+      () -> shooter.setShootingSpeedRPM(0, 0), 
       shooter));  
 
     // OIConstants.operatorController.rightTrigger(0.5).whileTrue(Commands.startEnd(
@@ -156,7 +156,7 @@ public class RobotContainer {
         () -> intake.setOverride(true),
         () -> intake.setOverride(false),
         intake));
-        
+
     OIConstants.operatorController.y().onTrue(Commands.runOnce(() -> indexer.reverse()));
     OIConstants.operatorController.b().whileTrue(Commands.startEnd(
         () -> indexer.setOverride(true),

@@ -18,7 +18,7 @@ public class ShooterIOReal implements ShooterIO {
     final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
 
     public ShooterIOReal(){
-        talonFXConfig.Slot0.kP = 0.05;
+        talonFXConfig.Slot0.kP = ShooterConstants.kP;
         talonFXConfig.Slot0.kI = 0;
         talonFXConfig.Slot0.kD = 0;
         talonFXConfig.Slot0.kS = 0;
@@ -59,8 +59,8 @@ public class ShooterIOReal implements ShooterIO {
     @Override
     public void runShooterMotors(double topSpeed, double bottomSpeed) {
         // set velocity to certain rps, add 0.5 V to overcome gravity
-        topShooterMotor.setControl(m_request.withVelocity(topSpeed).withFeedForward(0.2));
-        bottomShooterMotor.setControl(m_request.withVelocity(bottomSpeed).withFeedForward(0.2));
+        topShooterMotor.setControl(m_request.withVelocity(topSpeed).withFeedForward(ShooterConstants.kFF));
+        bottomShooterMotor.setControl(m_request.withVelocity(bottomSpeed).withFeedForward(ShooterConstants.kFF));
 
         // bottomShooterMotor.set(MathUtil.clamp(bottomSpeed, -1, 1));
         // topShooterMotor.set(MathUtil.clamp(topSpeed, -1, 1));
@@ -72,6 +72,5 @@ public class ShooterIOReal implements ShooterIO {
         inputs.bottomShooterMotorVelocityRPM = bottomShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM
         inputs.topShooterMotorAppliedVolts = topShooterMotor.getMotorVoltage().getValueAsDouble();
         inputs.topShooterMotorVelocityRPM = topShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM
-
     }
 }

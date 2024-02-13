@@ -27,8 +27,7 @@ public class Shooter extends SubsystemBase {
         io.updateInputs(inputs);
     }
 
-    // Input 0-1
-    public void setShootingSpeed(double topSpeed, double bottomSpeed){
+    public void setShootingSpeedRPM(double topSpeed, double bottomSpeed){
         topShootingSpeed = topSpeed;
         bottomSootingSpeed = bottomSpeed;
     }
