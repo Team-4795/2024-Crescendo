@@ -128,9 +128,14 @@ public class RobotContainer {
     // OIConstants.driverController.leftBumper(0.5).whileTrue(new ScoreSpeaker());
 
     OIConstants.operatorController.rightBumper().whileTrue(Commands.startEnd(
-      () -> shooter.setShootingSpeed(-0.15),
-      () -> shooter.setShootingSpeed(0), 
-      shooter));
+      () -> shooter.setShootingSpeed(0.15, 0.15),
+      () -> shooter.setShootingSpeed(0, 0), 
+      shooter));  
+
+    OIConstants.operatorController.leftBumper().whileTrue(Commands.startEnd(
+      () -> shooter.setShootingSpeed(-0.6, 0.6),
+      () -> shooter.setShootingSpeed(0, 0), 
+      shooter));  
 
     // OIConstants.operatorController.rightTrigger(0.5).whileTrue(Commands.startEnd(
     //   () -> shooter.setShootingSpeed(-0.5), 

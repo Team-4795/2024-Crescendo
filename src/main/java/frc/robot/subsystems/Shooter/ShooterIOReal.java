@@ -58,20 +58,20 @@ public class ShooterIOReal implements ShooterIO {
     }
 
     @Override
-    public void runShooterMotors(double speed) {
+    public void runShooterMotors(double topSpeed, double bottomSpeed) {
         // set velocity to certain rps, add 0.5 V to overcome gravity
         //leftShooterMotor.setControl(m_request.withVelocity(speed).withFeedForward(0.2));
 
-        bottomShooterMotor.set(-MathUtil.clamp(speed, -1, 1));
-        topShooterMotor.set(-MathUtil.clamp(speed, -1, 1));
+        bottomShooterMotor.set(MathUtil.clamp(bottomSpeed, -1, 1));
+        topShooterMotor.set(MathUtil.clamp(topSpeed, -1, 1));
     }
 
     @Override
     public void updateInputs(ShooterIOInputs inputs) {
-        inputs.shooterMotorAppliedVolts = bottomShooterMotor.getMotorVoltage().getValueAsDouble();
-        inputs.shooterMotorVelocityRPM = bottomShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM
-        inputs.shooterMotorAppliedVolts = topShooterMotor.getMotorVoltage().getValueAsDouble();
-        inputs.shooterMotorVelocityRPM = topShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM
+        inputs.bottomShooterMotorAppliedVolts = bottomShooterMotor.getMotorVoltage().getValueAsDouble();
+        inputs.bottomShooterMotorVelocityRPM = bottomShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM
+        inputs.topShooterMotorAppliedVolts = topShooterMotor.getMotorVoltage().getValueAsDouble();
+        inputs.topShooterMotorVelocityRPM = topShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM
 
     }
 }

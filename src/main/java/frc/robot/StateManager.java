@@ -33,7 +33,8 @@ public class StateManager {
     }
 
     public void setSetpoints() {
-        Shooter.getInstance().setShootingSpeed(this.state.setpoint.topShooterMotor());
+        Shooter.getInstance().setShootingSpeed(
+            this.state.setpoint.topShooterMotor(), this.state.setpoint.bottomShooterMotor());
         // Pivot.getInstance().setGoal(this.state.setpoint.pivot());
         Intake.getInstance().setIntakeSpeed(this.state.setpoint.intake());
         Indexer.getInstance().setIndexerSpeed(this.state.setpoint.indexer());

@@ -45,7 +45,7 @@ public class ScoreSpeaker extends Command {
                 -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband),
                 -rotationPID.calculate(vision.getArducamYaw(), angle),
                 true, true);
-        Shooter.getInstance().setShootingSpeed(ShooterConstants.shootSpeaker);
+        // Shooter.getInstance().setShootingSpeed(ShooterConstants.shootSpeaker);
     }
 
     @Override
