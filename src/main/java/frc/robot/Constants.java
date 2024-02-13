@@ -13,6 +13,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /**
@@ -53,5 +55,10 @@ public final class Constants {
 
     public static final CommandXboxController driverController = new CommandXboxController(0);
     public static final CommandXboxController operatorController = new CommandXboxController(1);
+  }
+
+  public static class PathFindingConstants {
+    public static final Pose2d blueAmp = new Pose2d(7.5,4.5, new Rotation2d());
+    public static final Pose2d redAmp = new Pose2d(7.5, 4.5, new Rotation2d());
   }
 }

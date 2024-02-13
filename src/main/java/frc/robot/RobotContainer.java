@@ -42,6 +42,7 @@ import frc.robot.commands.TurnToSpeaker;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AlignToAmp;
 import frc.robot.commands.ArmFeedForwardCharacterization;
 import frc.robot.commands.ScoreSpeaker;
 import frc.robot.subsystems.MAXSwerve.*;
@@ -71,6 +72,7 @@ public class RobotContainer {
   private final Indexer indexer;
   private final Intake intake;
   AutoSelector autoSelector;
+  AlignToAmp align;
 
 
   // Managers
@@ -89,7 +91,7 @@ public class RobotContainer {
         indexer = Indexer.initialize(new IndexerIOReal());
         drive =
             new Drive(
-                new GyroIONavX(),
+                new GyroIONavx(),
                 new ModuleIOSparkMax(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId, DriveConstants.kFrontLeftChassisAngularOffset),
                 new ModuleIOSparkMax(DriveConstants.kFrontRightDrivingCanId, DriveConstants.kFrontRightTurningCanId, DriveConstants.kFrontRightChassisAngularOffset),
                 new ModuleIOSparkMax(DriveConstants.kRearLeftDrivingCanId, DriveConstants.kRearLeftTurningCanId, DriveConstants.kBackLeftChassisAngularOffset),
@@ -121,6 +123,7 @@ public class RobotContainer {
         break;
     }
     autoSelector = new AutoSelector();
+    align = new AlignToAmp();
     NoteVisualizer.setRobotPoseSupplier(drive::getPose);
 
     // Configure the button bindings
@@ -151,8 +154,9 @@ public class RobotContainer {
       OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
       OIConstants.driverController.leftBumper().whileTrue(TurnToSpeaker.turnTowardsSpeaker(drive));
       //OIConstants.driverController.a().whileTrue(LimelightLookAtSpeaker.lookAtSpeaker(drive));
-      OIConstants.driverController.a().onTrue(NoteVisualizer.shoot());
-     // OIConstants.driverController.leftTrigger(0.5).whileTrue(new ScoreSpeaker());
+      //OIConstants.driverController.a().onTrue(NoteVisualizer.shoot());
+      OIConstants.driverController.a().whileTrue(align.pathfindingCommand);
+     //OIConstants.driverController.leftTrigger(0.5).whileTrue(new ScoreSpeaker());
 
     // OIConstants.driverController.rightTrigger(0.5).whileTrue(Commands.startEnd(
     //   () -> shooter.setShootingSpeed(0.5),
