@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 
 public class ArmFeedForwardCharacterization extends Command {
   private static final double START_DELAY_SECS = 2.0;
-  private static final double RAMP_VOLTS_PER_SEC = 0.1;
+  private static final double RAMP_VOLTS_PER_SEC = 0.2;
 
   private FeedForwardCharacterizationData data;
   private final Consumer<Double> voltageConsumer;
@@ -92,9 +92,13 @@ public class ArmFeedForwardCharacterization extends Command {
     }
 
     public void print() {
-      if (velocityData.size() == 0 || voltageData.size() == 0) {
+      if (velocityData.size() == 0 || voltageData.size() == 0 || positionData.size() == 0) {
         return;
       }
+
+      System.out.println(voltageData);
+      System.out.println(positionData);
+      System.out.println(velocityData);
 
       PolynomialRegression regression =
           new PolynomialRegression(

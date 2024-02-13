@@ -24,7 +24,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final Mode currentMode = Mode.REAL;
+  // Mode of the robot, set to Mode.REPLAY for replay
+  public static final Mode currentMode = Mode.fromState();
 
   //shooter, indexer, intake measured in motor output, pivot measured in radians
   public record Setpoint(double topShooterMotor, double bottomShooterMotor, double pivot, double indexer, double intake) {}
@@ -45,7 +46,15 @@ public final class Constants {
     SIM,
 
     /** Replaying from a log file. */
-    REPLAY
+    REPLAY;
+
+    static Mode fromState() {
+      if (Robot.isReal()) {
+        return REAL;
+      } else {
+        return SIM;
+      }
+    }
   }
 
   public static final class OIConstants{
@@ -60,8 +69,5 @@ public final class Constants {
  * Indexer 13-14
  * Shooter 15-16
  */
-
-
-
   }
 }
