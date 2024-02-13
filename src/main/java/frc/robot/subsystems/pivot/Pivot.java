@@ -32,7 +32,7 @@ public class Pivot extends SubsystemBase {
 
     private double goal = 0;
 
-    private final boolean disableArm = true;
+    private final boolean disableArm = false;
 
     PivotVisualizer visualizer = new PivotVisualizer(Color.kDarkOrange);
 
@@ -93,17 +93,10 @@ public class Pivot extends SubsystemBase {
         Logger.processInputs("Pivot", inputs);
         visualizer.update(Units.radiansToDegrees(inputs.pivotPositionRads + PivotConstants.angleOffset));
 
-        // Both should be similar or identical
-        double springVolts = pivotFeedForward(inputs.pivotPositionRads + PivotConstants.angleOffset,
-                inputs.pivotVelocityRadPerSec);
-        double kASpringVolts = PivotConstants.kA
-                * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset)
-                / PivotConstants.inertia;
-
+        double kASpringVolts = PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
+                
         double PIDVolts = controller.calculate(inputs.pivotPositionRads, goal);
-        double FFVolts = motorFeedforward.calculate(inputs.pivotVelocityRadPerSec)
-                + PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset)
-                        / PivotConstants.inertia;
+        double FFVolts = motorFeedforward.calculate(inputs.pivotVelocityRadPerSec) + kASpringVolts;
 
         if(testing) {
             io.setVoltage(voltage.getDouble(0));
@@ -111,9 +104,7 @@ public class Pivot extends SubsystemBase {
             io.setVoltage(PIDVolts + FFVolts);
         }
 
-        Logger.recordOutput("Pivot/Spring Volts", springVolts);
         Logger.recordOutput("Pivot/kA Spring Volts", kASpringVolts);
-
         Logger.recordOutput("Pivot/PID Volts", PIDVolts);
         Logger.recordOutput("Pivot/FF Volts", FFVolts);
         Logger.recordOutput("Pivot/Setpoint Position", controller.getSetpoint().position);
@@ -123,7 +114,7 @@ public class Pivot extends SubsystemBase {
         Logger.recordOutput("Pivot/Testing state", testing);
     }
 
-    private double torqueFromAngle(double angleRad) {
+    public double torqueFromAngle(double angleRad) {
         double springAngle = Math.atan2(
                 PivotConstants.d * Math.sin(angleRad) + PivotConstants.y,
                 -PivotConstants.d * Math.cos(angleRad) + PivotConstants.x);
@@ -132,10 +123,10 @@ public class Pivot extends SubsystemBase {
         return Tg + Ts;
     }
 
-    private double pivotFeedForward(double angle, double velocityRadPerSec) {
-        double torque = torqueFromAngle(angle);
-        return DCMotor.getNeoVortex(2).getVoltage(torque, velocityRadPerSec);
-    }
+    // private double pivotFeedForward(double angle, double velocityRadPerSec) {
+    //     double torque = torqueFromAngle(angle) ;        
+    //     return DCMotor.getNeoVortex(2).getVoltage(torque, velocityRadPerSec);
+    // }
 
     public void runVoltage(double volts) {
         if (disableArm) {

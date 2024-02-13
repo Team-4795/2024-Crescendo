@@ -101,11 +101,16 @@ public class RobotContainer {
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    autoChooser.addOption("Arm Characterization", new ArmFeedForwardCharacterization(pivot, pivot::runVoltage, pivot::getVelocity, pivot::getPosition));
+    autoChooser.addOption("Arm Characterization", 
+      new ArmFeedForwardCharacterization(
+        pivot, 
+        pivot::runVoltage, 
+        pivot::getVelocity, 
+        pivot::getPosition, 
+        pivot::torqueFromAngle));
 
     // Configure the button bindings
     configureButtonBindings();
-
   }
 
   /**
