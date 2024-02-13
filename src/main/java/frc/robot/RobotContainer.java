@@ -29,6 +29,7 @@ import frc.robot.subsystems.Shooter.*;
 import frc.robot.subsystems.indexer.*;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.pivot.*;
+import frc.robot.util.NoteVisualizer;
 
 import javax.naming.NameNotFoundException;
 
@@ -120,6 +121,8 @@ public class RobotContainer {
         break;
     }
     autoSelector = new AutoSelector();
+    NoteVisualizer.setRobotPoseSupplier(drive::getPose);
+
     // Configure the button bindings
     configureButtonBindings();
 
@@ -147,7 +150,8 @@ public class RobotContainer {
 
       OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
       OIConstants.driverController.leftBumper().whileTrue(TurnToSpeaker.turnTowardsSpeaker(drive));
-      OIConstants.driverController.a().whileTrue(LimelightLookAtSpeaker.lookAtSpeaker(drive));
+      //OIConstants.driverController.a().whileTrue(LimelightLookAtSpeaker.lookAtSpeaker(drive));
+      OIConstants.driverController.a().onTrue(NoteVisualizer.shoot());
      // OIConstants.driverController.leftTrigger(0.5).whileTrue(new ScoreSpeaker());
 
     // OIConstants.driverController.rightTrigger(0.5).whileTrue(Commands.startEnd(

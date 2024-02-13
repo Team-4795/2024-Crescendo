@@ -16,8 +16,8 @@ public class AutoSelector {
     public AutoSelector() {
         autoCommands = new AutoCommands();
 
-        chooser.addDefaultOption("Close3PAuto", new Close3PAuto());
-        chooser.addOption("Testing auto", new testingPath());
+        chooser.addOption("Close3PAuto", new Close3PAuto());
+        chooser.addDefaultOption("Testing auto", new testingPath());
     }
 
     public Command getSelected() {

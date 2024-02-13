@@ -80,7 +80,7 @@ public class Pivot extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Pivot", inputs);
-        visualizer.update(Units.radiansToDegrees(inputs.pivotPositionRads + PivotConstants.angleOffset));
+        visualizer.update((inputs.pivotPositionRads + PivotConstants.angleOffset));
 
         // Both should be similar or identical
         double springVolts = pivotFeedForward(inputs.pivotPositionRads + PivotConstants.angleOffset, inputs.pivotVelocityRadPerSec);
