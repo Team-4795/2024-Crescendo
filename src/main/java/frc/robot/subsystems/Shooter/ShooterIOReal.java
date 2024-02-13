@@ -11,7 +11,6 @@ import edu.wpi.first.math.MathUtil;
 
 public class ShooterIOReal implements ShooterIO {
     
-    //private CANSparkMax rightShooterMotor = new CANSparkMax(ShooterConstants.rightCanID,MotorType.kBrushless);
     private TalonFX topShooterMotor = new TalonFX(ShooterConstants.rightCanID);
     private TalonFX bottomShooterMotor = new TalonFX(ShooterConstants.leftCanID);
 
@@ -60,10 +59,11 @@ public class ShooterIOReal implements ShooterIO {
     @Override
     public void runShooterMotors(double topSpeed, double bottomSpeed) {
         // set velocity to certain rps, add 0.5 V to overcome gravity
-        //leftShooterMotor.setControl(m_request.withVelocity(speed).withFeedForward(0.2));
+        topShooterMotor.setControl(m_request.withVelocity(topSpeed).withFeedForward(0.2));
+        bottomShooterMotor.setControl(m_request.withVelocity(bottomSpeed).withFeedForward(0.2));
 
-        bottomShooterMotor.set(MathUtil.clamp(bottomSpeed, -1, 1));
-        topShooterMotor.set(MathUtil.clamp(topSpeed, -1, 1));
+        // bottomShooterMotor.set(MathUtil.clamp(bottomSpeed, -1, 1));
+        // topShooterMotor.set(MathUtil.clamp(topSpeed, -1, 1));
     }
 
     @Override
