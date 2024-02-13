@@ -2,6 +2,7 @@ package frc.robot.subsystems.indexer;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -10,11 +11,14 @@ public class IndexerIOReal implements IndexerIO {
     private CANSparkMax rightIndexMotor = new CANSparkMax(IndexerConstants.rightCanID, MotorType.kBrushless);
     private RelativeEncoder leftEncoder = leftIndexMotor.getEncoder();
     private RelativeEncoder rightEncoder = rightIndexMotor.getEncoder();
+    private SparkLimitSwitch noteSensor = leftIndexMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
 
     public IndexerIOReal() {
         rightIndexMotor.restoreFactoryDefaults();
         leftIndexMotor.restoreFactoryDefaults();
         
+        noteSensor.enableLimitSwitch(false);
+
         rightIndexMotor.setSmartCurrentLimit(25);
         leftIndexMotor.setSmartCurrentLimit(25);
 
@@ -41,6 +45,7 @@ public class IndexerIOReal implements IndexerIO {
     public void updateInputs(IndexerIOInputs inputs) {
         inputs.motorSpeed = leftEncoder.getVelocity();
         inputs.motorCurrent = leftIndexMotor.getOutputCurrent();
+        inputs.sensorActivated = noteSensor.isPressed();
         inputs.motorVoltage = leftIndexMotor.getBusVoltage();
     }
 

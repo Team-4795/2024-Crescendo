@@ -10,6 +10,7 @@ public interface IndexerIO {
     public double motorSpeed = 0.0;
     public double motorCurrent = 0.0;
     public double motorVoltage = 0.0;
+    public boolean sensorActivated = false;
    }
 
    public default void updateInputs(IndexerIOInputs inputs) {}

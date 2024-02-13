@@ -22,7 +22,7 @@ public class ShooterIOReal implements ShooterIO {
         talonFXConfig.Slot0.kI = 0;
         talonFXConfig.Slot0.kD = 0;
         talonFXConfig.Slot0.kS = 0;
-        talonFXConfig.Slot0.kV = 0;
+        talonFXConfig.Slot0.kV = 0.002;
 
         talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         talonFXConfig.CurrentLimits.StatorCurrentLimit = 60;

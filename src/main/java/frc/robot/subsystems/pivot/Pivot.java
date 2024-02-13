@@ -31,11 +31,9 @@ public class Pivot extends SubsystemBase {
     private final SimpleMotorFeedforward motorFeedforward = new SimpleMotorFeedforward(
             PivotConstants.kS, PivotConstants.kV, PivotConstants.kA);
 
-    private final DutyCycleEncoder encoder = new DutyCycleEncoder(0);
-
     private double goal = 0;
 
-    private final boolean disableArm = false;
+    private final boolean disableArm = true;
 
     PivotVisualizer visualizer = new PivotVisualizer(Color.kDarkOrange);
 
@@ -104,7 +102,7 @@ public class Pivot extends SubsystemBase {
         if(testing) {
             io.setVoltage(voltage.getDouble(0));
         } else if (!disableArm) {
-            io.setVoltage(PIDVolts + FFVolts);
+            // io.setVoltage(PIDVolts + FFVolts);
         }
 
         Logger.recordOutput("Pivot/kA Spring Volts", kASpringVolts);
@@ -114,8 +112,8 @@ public class Pivot extends SubsystemBase {
         Logger.recordOutput("Pivot/Setpoint Velocity", controller.getSetpoint().velocity);
         Logger.recordOutput("Pivot/Goal", goal);
 
-        Logger.recordOutput("Pivot/Encoder", encoder.getAbsolutePosition());
-        Logger.recordOutput("Pivot/DistancePerRotation", encoder.getDistancePerRotation());
+        // Logger.recordOutput("Pivot/Encoder", encoder.getAbsolutePosition());
+        // Logger.recordOutput("Pivot/DistancePerRotation", encoder.getDistancePerRotation());
 
         Logger.recordOutput("Pivot/Testing state", testing);
     }

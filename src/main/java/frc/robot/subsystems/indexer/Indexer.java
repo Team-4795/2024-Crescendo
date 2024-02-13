@@ -2,6 +2,8 @@ package frc.robot.subsystems.indexer;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.revrobotics.SparkLimitSwitch;
+
 import edu.wpi.first.util.CircularBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.StateManager;
@@ -14,6 +16,7 @@ public class Indexer extends SubsystemBase {
     private double indexerSpeed = 0.0;
     private boolean shouldSpin = false;
     private boolean override;
+
 
     private boolean currentStoring = false;
     private CircularBuffer<Double> currents = new CircularBuffer<>(IndexerConstants.bufferSize);
