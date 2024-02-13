@@ -57,7 +57,17 @@ public class ShooterIOReal implements ShooterIO {
     }
 
     @Override
-    public void runShooterMotors(double topSpeed, double bottomSpeed) {
+    public void runVoltageTop(double volts) {
+        topShooterMotor.setVoltage(volts);
+    }
+
+    @Override
+    public void runVoltageBottom(double volts) {
+        bottomShooterMotor.setVoltage(volts);
+    }
+
+    @Override
+    public void runShooterMotorsRPM(double topSpeed, double bottomSpeed) {
         // set velocity to certain rps, add 0.5 V to overcome gravity
         topShooterMotor.setControl(m_request.withVelocity(topSpeed / 60).withFeedForward(ShooterConstants.kFF));
         bottomShooterMotor.setControl(m_request.withVelocity(bottomSpeed / 60).withFeedForward(ShooterConstants.kFF));

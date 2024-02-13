@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArmFeedForwardCharacterization;
+import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.ScoreSpeaker;
 import frc.robot.subsystems.MAXSwerve.*;
 import frc.robot.StateManager.State;
@@ -108,6 +109,9 @@ public class RobotContainer {
         pivot::getVelocity, 
         pivot::getPosition, 
         pivot::torqueFromAngle));
+
+    autoChooser.addOption("Shooter Characterization",
+      new FeedForwardCharacterization(shooter, shooter::runVoltage, shooter::getVelocityTop));
 
     // Configure the button bindings
     configureButtonBindings();

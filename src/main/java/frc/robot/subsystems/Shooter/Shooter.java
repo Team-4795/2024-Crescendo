@@ -32,11 +32,23 @@ public class Shooter extends SubsystemBase {
         bottomSootingSpeed = bottomSpeed;
     }
 
+    public void runVoltage(double volts) {
+        io.runVoltageTop(volts);
+    }
+
+    public double getVelocityTop() {
+        return inputs.topShooterMotorVelocityRPM * Math.PI / 30.0;
+    }
+
+    public double getVelocityBottom() {
+        return inputs.bottomShooterMotorVelocityRPM * Math.PI / 30.0;
+    }
+
     @Override
     public void periodic(){
         io.updateInputs(inputs);
         Logger.processInputs("Shooter", inputs);
-        io.runShooterMotors(topShootingSpeed, bottomSootingSpeed);
+        io.runShooterMotorsRPM(topShootingSpeed, bottomSootingSpeed);
     }
 }
 

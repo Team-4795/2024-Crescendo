@@ -13,5 +13,9 @@ public interface ShooterIO {
 
     public default void updateInputs(ShooterIOInputs inputs) {}
 
-    public default void runShooterMotors(double topSpeed, double bottomSpeed) {}
+    public default void runShooterMotorsRPM(double topSpeed, double bottomSpeed) {}
+
+    public default void runVoltageTop(double volts) {}
+
+    public default void runVoltageBottom(double volts) {}
 }

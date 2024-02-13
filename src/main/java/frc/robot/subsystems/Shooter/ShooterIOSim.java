@@ -9,9 +9,9 @@ public class ShooterIOSim implements ShooterIO{
     private double appliedVolts = 0.0;
 
     @Override
-    public void runShooterMotors(double topSpeed, double bottomShooterMotor) {
-        appliedVolts = MathUtil.clamp(12 * topSpeed, -12, 12);
-        motor.setInputVoltage(appliedVolts);
+    public void runShooterMotorsRPM(double topSpeed, double bottomShooterMotor) {
+        // appliedVolts = MathUtil.clamp(12 * topSpeed, -12, 12);
+        // motor.setInputVoltage(appliedVolts);
     }
 
     @Override
