@@ -17,6 +17,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -170,6 +171,12 @@ public class RobotContainer {
         indexer
       )
     );
+
+    OIConstants.operatorController.start().whileTrue(Commands.runOnce(() -> manager.setState(State.Back)));
+        Timer.delay(0.5);
+        Commands.runOnce(() -> manager.setState(State.RampUp));
+        Timer.delay(0.5);
+        Commands.runOnce(()->manager.setState(State.Out));
   }
 
   /**

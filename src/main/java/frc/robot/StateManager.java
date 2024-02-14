@@ -18,7 +18,10 @@ public class StateManager {
         Stow(StateConstants.stow),
         GroundIntake(StateConstants.groundIntake),
         SourceIntake(StateConstants.sourceIntake),
-        ScoreAmp(StateConstants.scoreAmp);
+        ScoreAmp(StateConstants.scoreAmp),
+        Back(StateConstants.back),
+        RampUp(StateConstants.rampUp),
+        Out(StateConstants.out);
         
         Setpoint setpoint;
 
