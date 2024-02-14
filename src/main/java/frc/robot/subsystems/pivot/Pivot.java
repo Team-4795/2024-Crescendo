@@ -40,7 +40,7 @@ public class Pivot extends SubsystemBase {
     private ShuffleboardTab tab = Shuffleboard.getTab("Pivot Testing");
     private GenericEntry voltage = tab.add("Voltage", 0)
             .withWidget(BuiltInWidgets.kNumberSlider)
-            .withProperties(Map.of("min", 0, "max", 12))
+            .withProperties(Map.of("min", -2, "max", 2))
             .getEntry();
     private boolean testing = false;
 
@@ -77,8 +77,10 @@ public class Pivot extends SubsystemBase {
             // MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(),
             // OIConstants.kAxisDeadband);
             if (!testing) {
-                double output = 0.15 * (Math.pow(up, 3) - Math.pow(down, 3));
-                io.rotatePivot(output);
+                double output = 0.15 * (Math.pow(up, 3) - Math.pow(down, 3)) * 12;
+                double torque = torqueFromAngle(inputs.pivotMotorPositionRads + PivotConstants.angleOffset);
+                double ffVolts = PivotConstants.kA * -torque / PivotConstants.inertia;
+                io.setVoltage(output + ffVolts);
             }
             // setGoal(goal + change);
         }));

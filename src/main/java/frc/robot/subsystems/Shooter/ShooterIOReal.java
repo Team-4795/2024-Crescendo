@@ -22,7 +22,7 @@ public class ShooterIOReal implements ShooterIO {
         talonFXConfig.Slot0.kI = 0;
         talonFXConfig.Slot0.kD = 0;
         talonFXConfig.Slot0.kS = 0;
-        talonFXConfig.Slot0.kV = 0.002;
+        talonFXConfig.Slot0.kV = 0.12;
 
         talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         talonFXConfig.CurrentLimits.StatorCurrentLimit = 60;
@@ -80,7 +80,9 @@ public class ShooterIOReal implements ShooterIO {
     public void updateInputs(ShooterIOInputs inputs) {
         inputs.bottomShooterMotorAppliedVolts = bottomShooterMotor.getMotorVoltage().getValueAsDouble();
         inputs.bottomShooterMotorVelocityRPM = bottomShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM
+        inputs.bottomShooterCurrent = bottomShooterMotor.getStatorCurrent().getValueAsDouble();
         inputs.topShooterMotorAppliedVolts = topShooterMotor.getMotorVoltage().getValueAsDouble();
         inputs.topShooterMotorVelocityRPM = topShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM
+        inputs.topShooterCurrent = topShooterMotor.getStatorCurrent().getValueAsDouble();
     }
 }

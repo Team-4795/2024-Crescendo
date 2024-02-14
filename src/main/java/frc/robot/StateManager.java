@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 
 import frc.robot.Constants.Setpoint;
 import frc.robot.Constants.StateConstants;
+import frc.robot.commands.ScoreSpeaker;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
@@ -19,9 +20,10 @@ public class StateManager {
         GroundIntake(StateConstants.groundIntake),
         SourceIntake(StateConstants.sourceIntake),
         ScoreAmp(StateConstants.scoreAmp),
+        ScoreSpeaker(StateConstants.scoreSpeaker),
         Back(StateConstants.back),
-        RampUp(StateConstants.rampUp),
-        Out(StateConstants.out);
+        RampUp(StateConstants.rampUp);
+        
         
         Setpoint setpoint;
 

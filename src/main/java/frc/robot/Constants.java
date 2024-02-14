@@ -39,10 +39,9 @@ public final class Constants {
     public static final Setpoint groundIntake = new Setpoint(0,0, 1.22, 1.0, -0.7);
     public static final Setpoint sourceIntake = new Setpoint(0,0, 0.96, -0.5, 0);
     public static final Setpoint scoreAmp = new Setpoint(750,750, 1.64, 0, 0);
-    public static final Setpoint scoreSpeaker = new Setpoint(-3000,3000, 0, 0, 0);  
-    public static final Setpoint back = new Setpoint(700, -700, 0, -0.3, 0);
+    public static final Setpoint scoreSpeaker = new Setpoint(-3000,3000, 0, 1, 0);  
+    public static final Setpoint back = new Setpoint(0, 0, 0, -0.3, 0);
     public static final Setpoint rampUp = new Setpoint(-3000, 3000, 0, 0, 0);
-    public static final Setpoint out = new Setpoint(-3000, 3000, 0, 1, 0);
   }
 
 

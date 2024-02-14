@@ -36,6 +36,11 @@ public class Shooter extends SubsystemBase {
         io.runVoltageTop(volts);
     }
 
+    public boolean atSetpoint(){
+        return (Math.abs(inputs.bottomShooterMotorVelocityRPM - bottomSootingSpeed) < 50) && 
+            (Math.abs(inputs.topShooterMotorVelocityRPM - topShootingSpeed) < 50);
+    }
+
     public double getVelocityTop() {
         return inputs.topShooterMotorVelocityRPM * Math.PI / 30.0;
     }

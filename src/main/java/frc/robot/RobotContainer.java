@@ -176,8 +176,8 @@ public class RobotContainer {
       Commands.runOnce(() -> manager.setState(State.Back)),
       Commands.waitSeconds(0.3),
       Commands.runOnce(() -> manager.setState(State.RampUp)),
-      Commands.waitSeconds(0.5),
-      Commands.runOnce(() -> manager.setState(State.Out))
+      Commands.waitUntil(shooter::atSetpoint),
+      Commands.runOnce(() -> manager.setState(State.ScoreSpeaker))
     ));
 
   }
