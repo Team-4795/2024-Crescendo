@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": " AS GP1234 P1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS GP1234 P2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS GP1234 P3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS GP1234 P4"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

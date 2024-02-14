@@ -61,4 +61,8 @@ public final class Constants {
     public static final Pose2d blueAmp = new Pose2d(7.5,4.5, new Rotation2d());
     public static final Pose2d redAmp = new Pose2d(7.5, 4.5, new Rotation2d());
   }
+
+  public static class AutoConstants {
+    public static final double closePivotSetpoint = 0 //tune later
+  }
 }

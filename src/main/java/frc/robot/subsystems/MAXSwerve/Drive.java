@@ -429,6 +429,8 @@ public class Drive extends SubsystemBase {
     {
         SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
         setModuleStates(moduleStates);
+
+        Logger.recordOutput("movement???", moduleStates);
     }
     
     public void runVelocity(ChassisSpeeds speeds) {
