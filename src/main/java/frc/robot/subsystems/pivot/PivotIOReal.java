@@ -35,6 +35,9 @@ public class PivotIOReal implements PivotIO {
     pivotLeft.burnFlash();
     pivotRight.burnFlash();
 
+    encoder.setDistancePerRotation(-Math.PI * 2);
+    encoder.setPositionOffset(4.185);
+
     motorEncoder.setPositionConversionFactor(Math.PI * 2 / PivotConstants.gearing);
     motorEncoder.setVelocityConversionFactor(Math.PI * 2 / 60 / PivotConstants.gearing);
     motorEncoder.setPosition(encoder.getAbsolutePosition());
