@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkFlex;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
@@ -13,7 +14,8 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 public class PivotIOReal implements PivotIO {
   private CANSparkFlex pivotLeft = new CANSparkFlex(PivotConstants.leftCanID, MotorType.kBrushless);
   private CANSparkFlex pivotRight = new CANSparkFlex(PivotConstants.rightCanID, MotorType.kBrushless);
-  private final DutyCycleEncoder encoder = new DutyCycleEncoder(9);
+  private DutyCycleEncoder encoder = new DutyCycleEncoder(9);
+  private RelativeEncoder motorEncoder = pivotLeft.getEncoder();
 
   public PivotIOReal() {
     pivotRight.restoreFactoryDefaults();
@@ -32,6 +34,10 @@ public class PivotIOReal implements PivotIO {
 
     pivotLeft.burnFlash();
     pivotRight.burnFlash();
+
+    motorEncoder.setPositionConversionFactor(Math.PI * 2 / PivotConstants.gearing);
+    motorEncoder.setVelocityConversionFactor(Math.PI * 2 / 60 / PivotConstants.gearing);
+    motorEncoder.setPosition(encoder.getAbsolutePosition());
   }
 
   @Override
@@ -46,11 +52,10 @@ public class PivotIOReal implements PivotIO {
 
   @Override
   public void updateInputs(PivotIOInputs inputs) {
-    Logger.recordOutput("Pivot/DistancePerRotation", encoder.getDistancePerRotation());
-
-    inputs.pivotAppliedVolts = pivotRight.getBusVoltage();
+    inputs.pivotAppliedVolts = pivotLeft.getAppliedOutput();
     inputs.pivotPositionRads = encoder.getAbsolutePosition();
-    // inputs.pivotPositionRads = encoder.getPosition();
-    // inputs.pivotVelocityRadPerSec = encoder.getVelocity();
+
+    inputs.pivotMotorPositionRads = motorEncoder.getPosition();
+    inputs.pivotMotorVelocityRadPerSec = motorEncoder.getVelocity();
   }
 }

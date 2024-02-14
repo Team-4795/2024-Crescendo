@@ -97,7 +97,7 @@ public class Pivot extends SubsystemBase {
         double kASpringVolts = PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
                 
         double PIDVolts = controller.calculate(inputs.pivotPositionRads, goal);
-        double FFVolts = motorFeedforward.calculate(inputs.pivotVelocityRadPerSec) + kASpringVolts;
+        double FFVolts = motorFeedforward.calculate(inputs.pivotMotorVelocityRadPerSec) + kASpringVolts;
 
         if(testing) {
             io.setVoltage(voltage.getDouble(0));
@@ -145,7 +145,7 @@ public class Pivot extends SubsystemBase {
     }
 
     public double getVelocity() {
-        return inputs.pivotVelocityRadPerSec;
+        return inputs.pivotMotorVelocityRadPerSec;
     }
 
     public boolean isTestingState(){

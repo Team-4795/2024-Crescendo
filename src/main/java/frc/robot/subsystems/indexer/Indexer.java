@@ -64,7 +64,7 @@ public class Indexer extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs("Indexer", inputs);
         double averageCurrent = this.averageCurrent();
-        currents.addLast(Double.valueOf(io.getLeftMotorCurrent()));
+        currents.addLast(Double.valueOf(inputs.leftMotorCurrent));
 
         if(override){
             io.setIndexerSpeed(IndexerConstants.overrideSpeed);
@@ -79,11 +79,7 @@ public class Indexer extends SubsystemBase {
         } else {
             currentStoring = false;
         }
-        
-        Logger.recordOutput("Indexer/Left Motor Current", io.getLeftMotorCurrent());
-        Logger.recordOutput("Indexer/Left Motor Velocity", io.getLeftMotorVelocity());
-        Logger.recordOutput("Indexer/Right Motor Current", io.getRightMotorCurrent());
-        Logger.recordOutput("Indexer/Right Motor Velocity", io.getRightMotorVelocity());
+
         Logger.recordOutput("Indexer/Average current", averageCurrent);
         Logger.recordOutput("Indexer/Storing (based on current)", currentStoring);
     }

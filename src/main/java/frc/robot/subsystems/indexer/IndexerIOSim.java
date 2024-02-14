@@ -16,12 +16,6 @@ public class IndexerIOSim implements IndexerIO{
     @Override
     public void updateInputs(IndexerIOInputs inputs) {
         motor.update(0.02);
-        inputs.motorSpeed = motor.getAngularVelocityRPM();
+        inputs.leftMotorSpeed = motor.getAngularVelocityRPM();
     }
-
-    @Override
-    public double getLeftMotorCurrent(){
-        return motor.getCurrentDrawAmps();
-    }
-
 }

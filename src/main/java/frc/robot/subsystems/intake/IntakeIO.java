@@ -10,8 +10,6 @@ public interface IntakeIO {
         public double angularPositionRot = 0.0;
         public double angularVelocityRPM = 0.0;
         public double currentAmps = 0.0;
-        
-        
     }
     public default void updateInputs(IntakeIOInputs inputs) {}
     

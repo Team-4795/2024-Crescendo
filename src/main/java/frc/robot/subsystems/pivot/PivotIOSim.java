@@ -28,7 +28,8 @@ public class PivotIOSim implements PivotIO {
     public void updateInputs(PivotIOInputs inputs) {
         pivotSim.update(PivotConstants.kDt);
         inputs.pivotPositionRads = pivotSim.getAngleRads() - PivotConstants.angleOffset;
-        inputs.pivotVelocityRadPerSec = pivotSim.getVelocityRadPerSec();
+        inputs.pivotMotorPositionRads = pivotSim.getAngleRads() - PivotConstants.angleOffset;
+        inputs.pivotMotorVelocityRadPerSec = pivotSim.getVelocityRadPerSec();
         inputs.pivotAppliedVolts = pivotAppliedVolts;
     }
     

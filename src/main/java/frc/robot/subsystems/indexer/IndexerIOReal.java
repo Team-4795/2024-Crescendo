@@ -42,27 +42,15 @@ public class IndexerIOReal implements IndexerIO {
     }
 
     @Override
-    public void updateInputs(IndexerIOInputs inputs) {
-        inputs.motorSpeed = leftEncoder.getVelocity();
-        inputs.motorCurrent = leftIndexMotor.getOutputCurrent();
-        inputs.sensorActivated = noteSensor.isPressed();
-        inputs.motorVoltage = leftIndexMotor.getBusVoltage();
-    }
+    public void updateInputs(IndexerIOInputs inputs) {    
+        inputs.leftMotorSpeed = leftEncoder.getVelocity();
+        inputs.leftMotorCurrent = leftIndexMotor.getOutputCurrent();
+        inputs.leftMotorVoltage = leftIndexMotor.getAppliedOutput();
 
-    @Override
-    public double getLeftMotorCurrent() {
-        return leftIndexMotor.getOutputCurrent();
-    }
-    @Override
-    public double getRightMotorCurrent() {
-        return rightIndexMotor.getOutputCurrent();
-    }
-    @Override
-    public double getLeftMotorVelocity() {
-        return leftEncoder.getVelocity();
-    }
-    @Override
-    public double getRightMotorVelocity() {
-        return rightEncoder.getVelocity();
+        inputs.leftMotorSpeed = leftEncoder.getVelocity();
+        inputs.leftMotorCurrent = leftIndexMotor.getOutputCurrent();
+        inputs.leftMotorVoltage = leftIndexMotor.getAppliedOutput();
+
+        inputs.sensorActivated = noteSensor.isPressed();
     }
 }
