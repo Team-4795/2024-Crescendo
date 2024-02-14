@@ -172,11 +172,14 @@ public class RobotContainer {
       )
     );
 
-    OIConstants.operatorController.start().whileTrue(Commands.runOnce(() -> manager.setState(State.Back)));
-        Timer.delay(0.5);
-        Commands.runOnce(() -> manager.setState(State.RampUp));
-        Timer.delay(0.5);
-        Commands.runOnce(()->manager.setState(State.Out));
+    OIConstants.operatorController.leftTrigger(0.5).whileTrue(Commands.sequence(
+      Commands.runOnce(() -> manager.setState(State.Back)),
+      Commands.waitSeconds(0.3),
+      Commands.runOnce(() -> manager.setState(State.RampUp)),
+      Commands.waitSeconds(0.5),
+      Commands.runOnce(() -> manager.setState(State.Out))
+    ));
+
   }
 
   /**
