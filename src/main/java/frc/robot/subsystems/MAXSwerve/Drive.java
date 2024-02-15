@@ -78,18 +78,6 @@ public class Drive extends SubsystemBase {
         return instance;
     }
 
-    private static Drive instance;
-
-    public static Drive getInstance(){
-        return instance;
-    }
-
-    public static Drive initialize(GyroIO gyro, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br){
-        if(instance == null){
-            instance = new Drive(gyro, fl, fr, bl, br);
-        }
-        return instance;
-    }
 
     /** Creates a new DriveSubsystem. */
     public Drive(GyroIO gyro, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br) {
@@ -427,23 +415,24 @@ public class Drive extends SubsystemBase {
                 m_rearLeft.getState(), m_rearRight.getState());
     }
 
-  /*   private void driveRobotRelative(ChassisSpeeds speeds) {
+     /*private void driveRobotRelative(ChassisSpeeds speeds) {
         // This takes the velocities and converts them into precentages (-1 to 1)
         drive(speeds.vxMetersPerSecond / AutoConstants.kMaxSpeedMetersPerSecond,
                 speeds.vyMetersPerSecond / AutoConstants.kMaxSpeedMetersPerSecond,
                 speeds.omegaRadiansPerSecond / AutoConstants.kMaxAngularSpeedRadiansPerSecond,
                 false,
-                false);
-        Logger.recordOutput("Auto/Speeds", speeds);
-        Logger.recordOutput("Auto/Speeds", speeds.omegaRadiansPerSecond/AutoConstants.kMaxAngularSpeedRadiansPerSecond);
-        
-  }*/  
+                true);
+       
+  }  */
 
     public void driveRobotRelative(ChassisSpeeds speeds)
     {
         SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
         setModuleStates(moduleStates);
+
+        Logger.recordOutput("movement???", moduleStates);
     }
+    
     public void runVelocity(ChassisSpeeds speeds) {
         SwerveModuleState[] swerveStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
             ChassisSpeeds.fromFieldRelativeSpeeds(speeds, gyroInputs.yaw)
