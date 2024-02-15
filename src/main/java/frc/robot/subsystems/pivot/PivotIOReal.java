@@ -1,13 +1,9 @@
 package frc.robot.subsystems.pivot;
 
-import org.littletonrobotics.junction.Logger;
-
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
@@ -32,16 +28,14 @@ public class PivotIOReal implements PivotIO {
 
     pivotRight.follow(pivotLeft, true);
 
-    encoder.setDistancePerRotation(-Math.PI * 2);
-    encoder.setPositionOffset(-0.66);
+    encoder.reset();
 
     motorEncoder.setPositionConversionFactor(Math.PI * 2 / PivotConstants.gearing);
     motorEncoder.setVelocityConversionFactor(Math.PI * 2 / 60 / PivotConstants.gearing);
-    motorEncoder.setPosition(encoder.getAbsolutePosition());
+    motorEncoder.setPosition(getAbsolutePosition());
 
     pivotLeft.burnFlash();
     pivotRight.burnFlash();
-
   }
 
   @Override
@@ -54,12 +48,27 @@ public class PivotIOReal implements PivotIO {
     pivotLeft.setVoltage(volts);
   }
 
+  private double getAbsolutePosition() {
+    return encoder.get() * -Math.PI * 2;
+  }
+
   @Override
   public void updateInputs(PivotIOInputs inputs) {
-    inputs.pivotAppliedVolts = pivotLeft.getAppliedOutput();
-    inputs.pivotPositionRads = encoder.getDistance();
+    inputs.pivotAppliedVolts = pivotLeft.getAppliedOutput() * pivotLeft.getBusVoltage();
+    inputs.pivotPositionRads = getAbsolutePosition();
 
     inputs.pivotMotorPositionRads = motorEncoder.getPosition();
     inputs.pivotMotorVelocityRadPerSec = motorEncoder.getVelocity();
+  }
+  
+  @Override
+  public void setIdleMode(boolean idleMode) {
+    if (idleMode) {
+      pivotLeft.setIdleMode(IdleMode.kBrake);
+      pivotRight.setIdleMode(IdleMode.kBrake);
+    } else {
+      pivotLeft.setIdleMode(IdleMode.kCoast);
+      pivotRight.setIdleMode(IdleMode.kCoast);
+    }
   }
 }

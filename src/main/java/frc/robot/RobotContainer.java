@@ -89,7 +89,6 @@ public class RobotContainer {
             new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
             new ModuleIOSim(DriveConstants.kBackLeftChassisAngularOffset),
             new ModuleIOSim(DriveConstants.kBackRightChassisAngularOffset));
-
         break;
 
       default:
@@ -108,7 +107,7 @@ public class RobotContainer {
         pivot, 
         pivot::runVoltage, 
         pivot::getVelocity, 
-        pivot::getPosition, 
+        pivot::getTruePosition, 
         pivot::torqueFromAngle));
 
     autoChooser.addOption("Shooter Characterization",
@@ -144,13 +143,11 @@ public class RobotContainer {
 
     OIConstants.operatorController.leftBumper().whileTrue(Commands.startEnd(
       () -> shooter.setShootingSpeedRPM(-3000, 3000),
-      () -> shooter.setShootingSpeedRPM(0, 0), 
-      shooter));  
+      () -> shooter.setShootingSpeedRPM(0, 0)));  
 
     OIConstants.driverController.leftTrigger(0.5).whileTrue(Commands.startEnd(
       () -> indexer.setSpin(true), 
-      () -> indexer.setSpin(false), 
-      indexer));
+      () -> indexer.setSpin(false)));
 
     OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
     OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
@@ -159,18 +156,18 @@ public class RobotContainer {
 
     OIConstants.operatorController.a().whileTrue(Commands.startEnd(
         () -> intake.setOverride(true),
-        () -> intake.setOverride(false),
-        intake));
+        () -> intake.setOverride(false)));
 
     OIConstants.operatorController.y().onTrue(Commands.runOnce(() -> indexer.reverse()));
     OIConstants.operatorController.x().onTrue(Commands.runOnce(() -> pivot.setTestingState(!pivot.isTestingState())));
 
     OIConstants.operatorController.b().whileTrue(Commands.startEnd(
         () -> indexer.setOverride(true),
-        () -> indexer.setOverride(false),
-        indexer
+        () -> indexer.setOverride(false)
       )
     );
+
+    OIConstants.driverController.a().whileTrue(Commands.startEnd(pivot::toggleIdleMode, pivot::toggleIdleMode));
 
     OIConstants.operatorController.leftTrigger(0.5).whileTrue(Commands.sequence(
       Commands.runOnce(() -> manager.setState(State.Back)),
@@ -179,7 +176,6 @@ public class RobotContainer {
       Commands.waitUntil(shooter::atSetpoint),
       Commands.runOnce(() -> manager.setState(State.ScoreSpeaker))
     ));
-
   }
 
   /**

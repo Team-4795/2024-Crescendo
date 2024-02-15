@@ -24,7 +24,6 @@ public class StateManager {
         Back(StateConstants.back),
         RampUp(StateConstants.rampUp);
         
-        
         Setpoint setpoint;
 
         State(Setpoint setpoint) {

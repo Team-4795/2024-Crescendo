@@ -16,6 +16,9 @@ public interface PivotIO {
 
     public default void rotatePivot(double speed) {}
 
-    public default void setVoltage(double volts) {}        
+    public default void setVoltage(double volts) {}   
+    
+    // True is brake, false is coast
+    public default void setIdleMode(boolean mode) {}
 } 
 

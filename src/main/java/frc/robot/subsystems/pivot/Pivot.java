@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.revrobotics.CANSparkBase.IdleMode;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -32,8 +34,8 @@ public class Pivot extends SubsystemBase {
             PivotConstants.kS, PivotConstants.kV, PivotConstants.kA);
 
     private double goal = 0;
-
     private final boolean disableArm = true;
+    private boolean idleMode = true;
 
     PivotVisualizer visualizer = new PivotVisualizer(Color.kDarkOrange);
 
@@ -62,7 +64,7 @@ public class Pivot extends SubsystemBase {
         io.updateInputs(inputs);
 
         setGoal(inputs.pivotPositionRads);
-        visualizer.update(360 * inputs.pivotPositionRads);
+        visualizer.update(360 * getPosition() / (2 * Math.PI));
         controller.setTolerance(Units.degreesToRadians(0.5));
 
         setDefaultCommand(run(() -> {
@@ -78,8 +80,9 @@ public class Pivot extends SubsystemBase {
             // OIConstants.kAxisDeadband);
             if (!testing) {
                 double output = 0.15 * (Math.pow(up, 3) - Math.pow(down, 3)) * 12;
-                double torque = torqueFromAngle(inputs.pivotMotorPositionRads + PivotConstants.angleOffset);
-                double ffVolts = PivotConstants.kA * -torque / PivotConstants.inertia;
+                // double torque = torqueFromAngle(inputs.pivotMotorPositionRads + PivotConstants.angleOffset);
+                // double ffVolts = PivotConstants.kA * -torque / PivotConstants.inertia;
+                double ffVolts = linearFF(getTruePosition());
                 io.setVoltage(output + ffVolts);
             }
             // setGoal(goal + change);
@@ -94,11 +97,11 @@ public class Pivot extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Pivot", inputs);
-        visualizer.update(Units.radiansToDegrees(inputs.pivotPositionRads + PivotConstants.angleOffset));
+        visualizer.update(Units.radiansToDegrees(getPosition() + PivotConstants.angleOffset));
 
         double kASpringVolts = PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
                 
-        double PIDVolts = controller.calculate(inputs.pivotPositionRads, goal);
+        double PIDVolts = controller.calculate(getPosition(), goal);
         double FFVolts = motorFeedforward.calculate(inputs.pivotMotorVelocityRadPerSec) + kASpringVolts;
 
         if(testing) {
@@ -119,6 +122,10 @@ public class Pivot extends SubsystemBase {
 
         Logger.recordOutput("Pivot/Testing state", testing);
     }
+    
+    public void toggleIdleMode() {
+        idleMode = !idleMode;
+    }
 
     public double torqueFromAngle(double angleRad) {
         double springAngle = Math.atan2(
@@ -127,6 +134,10 @@ public class Pivot extends SubsystemBase {
         double Tg = -PivotConstants.M * PivotConstants.R * PivotConstants.g * Math.cos(angleRad);
         double Ts = PivotConstants.d * PivotConstants.F * Math.sin(springAngle - (Math.PI - angleRad));
         return Tg + Ts;
+    }
+
+    public double linearFF(double angle) {
+        return -0.24 * angle - 0.01;
     }
 
     // private double pivotFeedForward(double angle, double velocityRadPerSec) {
@@ -142,8 +153,13 @@ public class Pivot extends SubsystemBase {
         }
     }
 
+    // Choose between motor position or absolute encoder position 
     public double getPosition() {
-        return inputs.pivotPositionRads + PivotConstants.angleOffset;
+        return inputs.pivotMotorPositionRads;
+    }
+
+    public double getTruePosition() {
+        return inputs.pivotMotorPositionRads + PivotConstants.angleOffset;
     }
 
     public double getVelocity() {
