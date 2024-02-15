@@ -21,17 +21,26 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Constants.OIConstants;
+import frc.robot.util.LoggedTunableNumber;
 
 public class Pivot extends SubsystemBase {
     private PivotIO io;
     private PivotIOInputsAutoLogged inputs = new PivotIOInputsAutoLogged();
 
+    LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", PivotConstants.kP);
+    LoggedTunableNumber kI = new LoggedTunableNumber("Pivot/kI", PivotConstants.kI);
+    LoggedTunableNumber kD = new LoggedTunableNumber("Pivot/kD", PivotConstants.kD);
+
+    LoggedTunableNumber kV = new LoggedTunableNumber("Pivot/kV", PivotConstants.kV);
+    LoggedTunableNumber kA = new LoggedTunableNumber("Pivot/kA", PivotConstants.kA);
+    LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", PivotConstants.kS);
+
     private ProfiledPIDController controller = new ProfiledPIDController(
-            PivotConstants.kP, PivotConstants.KI, PivotConstants.kD,
+            kP.get(), kI.get(), kD.get(),
             PivotConstants.constraints);
 
-    private final SimpleMotorFeedforward motorFeedforward = new SimpleMotorFeedforward(
-            PivotConstants.kS, PivotConstants.kV, PivotConstants.kA);
+    private SimpleMotorFeedforward motorFeedforward = new SimpleMotorFeedforward(
+            kS.get(), kV.get(), kA.get());
 
     private double goal = 0;
     private final boolean disableArm = true;
@@ -98,6 +107,9 @@ public class Pivot extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs("Pivot", inputs);
         visualizer.update(Units.radiansToDegrees(getPosition() + PivotConstants.angleOffset));
+
+        LoggedTunableNumber.ifChanged(hashCode(), () -> controller.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
+        LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);
 
         double kASpringVolts = PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
                 
