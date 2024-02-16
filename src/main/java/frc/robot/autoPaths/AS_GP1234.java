@@ -21,7 +21,7 @@ public class AS_GP1234 extends AutoPath{
             autoCommands.SetPivotAngle(AutoConstants.closePivotSetpoint),
             autoCommands.score(),
             autoCommands.followTrajectory("AS GP1234 P4"),
-            autoCommands.SetPivotAngle(0.2)
+            autoCommands.SetPivotAngle(0.2),
             autoCommands.score()
         );
     }
