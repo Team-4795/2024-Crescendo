@@ -43,7 +43,7 @@ public class Pivot extends SubsystemBase {
             kS.get(), kV.get(), kA.get());
 
     private double goal = 0;
-    private final boolean disableArm = true;
+    private final boolean disableArm = false;
     private boolean idleMode = true;
 
     PivotVisualizer visualizer = new PivotVisualizer(Color.kDarkOrange);
@@ -72,7 +72,7 @@ public class Pivot extends SubsystemBase {
         io = pivotIO;
         io.updateInputs(inputs);
 
-        setGoal(inputs.pivotPositionRads);
+        setGoal(getPosition());
         visualizer.update(360 * getPosition() / (2 * Math.PI));
         controller.setTolerance(Units.degreesToRadians(0.5));
 
@@ -91,8 +91,8 @@ public class Pivot extends SubsystemBase {
                 double output = 0.15 * (Math.pow(up, 3) - Math.pow(down, 3)) * 12;
                 // double torque = torqueFromAngle(inputs.pivotMotorPositionRads + PivotConstants.angleOffset);
                 // double ffVolts = PivotConstants.kA * -torque / PivotConstants.inertia;
-                double ffVolts = linearFF(getTruePosition());
-                io.setVoltage(output + ffVolts);
+                double ffVolts = linearFF(getPosition());
+                // io.setVoltage(output + ffVolts);
             }
             // setGoal(goal + change);
         }));
@@ -111,18 +111,18 @@ public class Pivot extends SubsystemBase {
         LoggedTunableNumber.ifChanged(hashCode(), () -> controller.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
         LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);
 
-        double kASpringVolts = PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
+        // double kASpringVolts = PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
                 
         double PIDVolts = controller.calculate(getPosition(), goal);
-        double FFVolts = motorFeedforward.calculate(inputs.pivotMotorVelocityRadPerSec) + kASpringVolts;
+        double FFVolts = motorFeedforward.calculate(controller.getSetpoint().velocity);
 
         if(testing) {
             io.setVoltage(voltage.getDouble(0));
         } else if (!disableArm) {
-            // io.setVoltage(PIDVolts + FFVolts);
+            io.setVoltage(FFVolts + linearFF(getPosition()));
         }
 
-        Logger.recordOutput("Pivot/kA Spring Volts", kASpringVolts);
+        // Logger.recordOutput("Pivot/kA Spring Volts", kASpringVolts);
         Logger.recordOutput("Pivot/PID Volts", PIDVolts);
         Logger.recordOutput("Pivot/FF Volts", FFVolts);
         Logger.recordOutput("Pivot/Setpoint Position", controller.getSetpoint().position);
@@ -137,6 +137,7 @@ public class Pivot extends SubsystemBase {
     
     public void toggleIdleMode() {
         idleMode = !idleMode;
+        io.setIdleMode(idleMode);
     }
 
     public double torqueFromAngle(double angleRad) {

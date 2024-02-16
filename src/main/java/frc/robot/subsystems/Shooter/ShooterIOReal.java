@@ -8,7 +8,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.MathUtil;
-import frc.robot.KrakenLogger;
+import frc.robot.util.KrakenLogger;
 
 public class ShooterIOReal implements ShooterIO {
     private TalonFX topShooterMotor = new TalonFX(ShooterConstants.rightCanID);
@@ -81,8 +81,8 @@ public class ShooterIOReal implements ShooterIO {
 
     @Override
     public void updateInputs(ShooterIOInputs inputs) {
-        topMotorLogger.update();
-        bottomMotorLogger.update();
+        // topMotorLogger.update();
+        // bottomMotorLogger.update();
         
         inputs.bottomShooterMotorAppliedVolts = bottomShooterMotor.getMotorVoltage().getValueAsDouble();
         inputs.bottomShooterMotorVelocityRPM = bottomShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM

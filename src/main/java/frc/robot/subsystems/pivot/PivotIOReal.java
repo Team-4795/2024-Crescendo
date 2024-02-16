@@ -28,11 +28,11 @@ public class PivotIOReal implements PivotIO {
 
     pivotRight.follow(pivotLeft, true);
 
-    encoder.reset();
+    // encoder.reset();
 
     motorEncoder.setPositionConversionFactor(Math.PI * 2 / PivotConstants.gearing);
     motorEncoder.setVelocityConversionFactor(Math.PI * 2 / 60 / PivotConstants.gearing);
-    motorEncoder.setPosition(getAbsolutePosition());
+    motorEncoder.setPosition(0);
 
     pivotLeft.burnFlash();
     pivotRight.burnFlash();
@@ -49,7 +49,7 @@ public class PivotIOReal implements PivotIO {
   }
 
   private double getAbsolutePosition() {
-    return encoder.get() * -Math.PI * 2;
+    return encoder.get() * -Math.PI * 2 + 4.18;
   }
 
   @Override

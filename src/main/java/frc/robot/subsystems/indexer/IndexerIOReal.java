@@ -28,7 +28,7 @@ public class IndexerIOReal implements IndexerIO {
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
 
-        rightIndexMotor.setIdleMode(IdleMode.kCoast);
+        rightIndexMotor.setIdleMode(IdleMode.kBrake);
         leftIndexMotor.setIdleMode(IdleMode.kCoast);
 
         rightIndexMotor.burnFlash();
@@ -47,9 +47,9 @@ public class IndexerIOReal implements IndexerIO {
         inputs.leftMotorCurrent = leftIndexMotor.getOutputCurrent();
         inputs.leftMotorVoltage = leftIndexMotor.getAppliedOutput();
 
-        inputs.leftMotorSpeed = leftEncoder.getVelocity();
-        inputs.leftMotorCurrent = leftIndexMotor.getOutputCurrent();
-        inputs.leftMotorVoltage = leftIndexMotor.getAppliedOutput();
+        inputs.rightMotorSpeed = rightEncoder.getVelocity();
+        inputs.rightMotorCurrent = rightIndexMotor.getOutputCurrent();
+        inputs.rightMotorVoltage = rightIndexMotor.getAppliedOutput();
 
         inputs.sensorActivated = noteSensor.isPressed();
     }

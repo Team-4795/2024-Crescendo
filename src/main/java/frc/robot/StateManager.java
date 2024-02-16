@@ -53,6 +53,7 @@ public class StateManager {
     }
 
     public void periodic() {
+        
         Logger.recordOutput("StateManager/State", state.toString());
     }
 }

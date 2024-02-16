@@ -1,8 +1,8 @@
 package frc.robot.subsystems.indexer;
 
-import org.littletonrobotics.junction.Logger;
+import java.beans.Statement;
 
-import com.revrobotics.SparkLimitSwitch;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.util.CircularBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,7 +16,6 @@ public class Indexer extends SubsystemBase {
     private double indexerSpeed = 0.0;
     private boolean shouldSpin = false;
     private boolean override;
-
 
     private boolean currentStoring = false;
     private CircularBuffer<Double> currents = new CircularBuffer<>(IndexerConstants.bufferSize);
@@ -59,6 +58,8 @@ public class Indexer extends SubsystemBase {
        override = on;
     }
 
+    // public void isStoring()
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);
@@ -66,12 +67,14 @@ public class Indexer extends SubsystemBase {
         double averageCurrent = this.averageCurrent();
         currents.addLast(Double.valueOf(inputs.leftMotorCurrent));
 
+        if(inputs.sensorActivated && StateManager.getInstance().state == State.GroundIntake){
+            StateManager.getInstance().setState(State.Stow);
+        }
+
         if(override){
             io.setIndexerSpeed(IndexerConstants.overrideSpeed);
-        } else if(StateManager.getInstance().state == State.GroundIntake || shouldSpin) {
-            io.setIndexerSpeed(indexerSpeed);
         } else {
-            io.setIndexerSpeed(0);
+            io.setIndexerSpeed(indexerSpeed);
         }
 
         if(averageCurrent > IndexerConstants.currentThreshold){

@@ -64,10 +64,10 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
-        intake = Intake.initialize(new IntakeIOReal());
-        shooter = Shooter.initialize(new ShooterIOReal());
+        intake = Intake.initialize(new IntakeIOSim());
+        shooter = Shooter.initialize(new ShooterIOSim());
         pivot = Pivot.initialize(new PivotIOReal());
-        indexer = Indexer.initialize(new IndexerIOReal());
+        indexer = Indexer.initialize(new IndexerIOSim());
         // Real robot, instantiate hardware IO implementations
         drive = Drive.initialize(
             new GyroIOPigeon2(),
@@ -167,7 +167,8 @@ public class RobotContainer {
       )
     );
 
-    OIConstants.driverController.a().whileTrue(Commands.startEnd(pivot::toggleIdleMode, pivot::toggleIdleMode));
+    OIConstants.driverController.a().onTrue(Commands.runOnce(pivot::toggleIdleMode))
+                                    .onFalse(Commands.runOnce(pivot::toggleIdleMode));
 
     OIConstants.operatorController.leftTrigger(0.5).whileTrue(Commands.sequence(
       Commands.runOnce(() -> manager.setState(State.Back)),
@@ -176,6 +177,23 @@ public class RobotContainer {
       Commands.waitUntil(shooter::atSetpoint),
       Commands.runOnce(() -> manager.setState(State.ScoreSpeaker))
     ));
+
+    OIConstants.operatorController.rightTrigger().whileTrue(Commands.sequence(
+      Commands.runOnce(() -> manager.setState(State.ScoreAmp))
+    ));
+
+    // OIConstants.operatorController.rightTrigger(0.5).whileTrue(Commands.sequence(
+    //   // Commands.runOnce(() -> manager.setState(State.Back)),
+    //   // Commands.waitSeconds(0.3),
+    //   Commands.runOnce(() -> manager.setState(State.RampUp)),
+    //   Commands.waitUntil(shooter::atSetpoint),
+    //   Commands.runOnce(() -> manager.setState(State.ScoreSpeaker))
+    // ));
+  }
+
+  public void teleopInit() {
+    manager.setState(State.Stow);
+    pivot.setGoal(pivot.getPosition());
   }
 
   /**
