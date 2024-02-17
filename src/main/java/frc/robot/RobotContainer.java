@@ -13,9 +13,15 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -29,6 +35,7 @@ import frc.robot.subsystems.pivot.*;
 import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AlignToAmp;
+import frc.robot.commands.AutoCommands;
 import frc.robot.commands.ScoreSpeaker;
 
 
@@ -49,12 +56,11 @@ public class RobotContainer {
   private final Indexer indexer;
   private final Intake intake;
   AutoSelector autoSelector;
-  AlignToAmp align;
-
 
   // Managers
   private final StateManager manager = StateManager.getInstance();
 
+  LoggedDashboardChooser<Command> autoChooser;
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -64,11 +70,11 @@ public class RobotContainer {
         // Real robot, instantiate hardware IO implementations
         intake = Intake.initialize(new IntakeIOSim());
         shooter = Shooter.initialize(new ShooterIOSim());
-        pivot = Pivot.initialize(new PivotIOReal());
+        pivot = Pivot.initialize(new PivotIOSim());
         indexer = Indexer.initialize(new IndexerIOSim());
         // Real robot, instantiate hardware IO implementations
         drive = Drive.initialize(
-            new GyroIOPigeon2(),
+            new GyroIONavX(),
             new ModuleIOSparkMax(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId, DriveConstants.kFrontLeftChassisAngularOffset),
             new ModuleIOSparkMax(DriveConstants.kFrontRightDrivingCanId, DriveConstants.kFrontRightTurningCanId, DriveConstants.kFrontRightChassisAngularOffset),
             new ModuleIOSparkMax(DriveConstants.kRearLeftDrivingCanId, DriveConstants.kRearLeftTurningCanId, DriveConstants.kBackLeftChassisAngularOffset),
@@ -99,15 +105,24 @@ public class RobotContainer {
         drive = Drive.initialize(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
         break;
     }
+    NamedCommands.registerCommand("Score", AutoCommands.score(0.7));
+    NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.2));
+    NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
+    NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(1));
+
+
 
     manager.setState(State.Init);
 
     autoSelector = new AutoSelector();
-    align = new AlignToAmp();
     NoteVisualizer.setRobotPoseSupplier(drive::getPose);
+    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("AS GP 123"));
+
+ 
 
     // Configure the button bindings
     configureButtonBindings();
+    
   }
 
   /**
@@ -134,7 +149,7 @@ public class RobotContainer {
       // OIConstants.driverController.leftBumper().whileTrue(new ScoreSpeaker());
       //OIConstants.driverController.a().whileTrue(LimelightLookAtSpeaker.lookAtSpeaker(drive));
       //OIConstants.driverController.a().onTrue(NoteVisualizer.shoot());
-      OIConstants.driverController.a().whileTrue(align.pathfindingCommand);
+      //OIConstants.driverController.a().whileTrue(AlignToAmp.generatePath());
 
     OIConstants.operatorController.rightBumper().whileTrue(Commands.startEnd(
       () -> shooter.setShootingSpeedRPM(750, 750),
@@ -190,6 +205,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoSelector.getSelected();
+    return autoChooser.get();
   }
 }

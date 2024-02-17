@@ -3,6 +3,7 @@ package frc.robot;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.autoPaths.AS_GP123;
 import frc.robot.autoPaths.AS_GP1234;
 import frc.robot.autoPaths.AutoPath;
 import frc.robot.autoPaths.Close3PAuto;
@@ -20,6 +21,7 @@ public class AutoSelector {
         chooser.addOption("Close3PAuto", new Close3PAuto());
         chooser.addDefaultOption("Testing auto", new testingPath());
         chooser.addOption("AS GP1234", new AS_GP1234());
+        chooser.addOption("As GP123", new AS_GP123());
     }
 
     public Command getSelected() {

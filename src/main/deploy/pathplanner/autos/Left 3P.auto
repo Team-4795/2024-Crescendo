@@ -10,44 +10,7 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": [
-        {
-          "type": "sequential",
-          "data": {
-            "commands": []
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": null
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": []
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Left 3P P2"
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": []
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Left 3P P3"
-          }
-        }
-      ]
+      "commands": []
     }
   },
   "folder": null,

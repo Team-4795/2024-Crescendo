@@ -10,8 +10,8 @@ public class ShooterIOSim implements ShooterIO{
 
     @Override
     public void runShooterMotorsRPM(double topSpeed, double bottomShooterMotor) {
-        // appliedVolts = MathUtil.clamp(12 * topSpeed, -12, 12);
-        // motor.setInputVoltage(appliedVolts);
+        appliedVolts = MathUtil.clamp(12 * topSpeed, -12, 12);
+        motor.setInputVoltage(appliedVolts);
     }
 
     @Override

@@ -16,6 +16,7 @@ public class Indexer extends SubsystemBase {
     private double indexerSpeed = 0.0;
     private boolean shouldSpin = false;
     private boolean override;
+    private boolean isAuto = false;
 
     private boolean currentStoring = false;
     private CircularBuffer<Double> currents = new CircularBuffer<>(IndexerConstants.bufferSize);
@@ -58,6 +59,10 @@ public class Indexer extends SubsystemBase {
        override = on;
     }
 
+    public void setAutoMode(boolean on){
+        isAuto = on;
+    }
+
     // public void isStoring()
 
     @Override
@@ -73,7 +78,7 @@ public class Indexer extends SubsystemBase {
 
         if(override){
             io.setIndexerSpeed(IndexerConstants.overrideSpeed);
-        } else if (shouldSpin || StateManager.getInstance().state == State.GroundIntake){
+        } else if (isAuto || shouldSpin || StateManager.getInstance().state == State.GroundIntake){
             io.setIndexerSpeed(indexerSpeed);
         } else {
             io.setIndexerSpeed(0);
