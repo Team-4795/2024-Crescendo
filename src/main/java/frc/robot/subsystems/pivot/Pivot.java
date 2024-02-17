@@ -48,6 +48,7 @@ public class Pivot extends SubsystemBase {
         io.updateInputs(inputs);
 
         setGoal(inputs.pivotPositionRads);
+        atSetpoint();
         visualizer.update(360 * inputs.pivotPositionRads);
         controller.setTolerance(Units.degreesToRadians(0.5));
 

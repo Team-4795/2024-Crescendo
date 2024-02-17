@@ -9,6 +9,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.cscore.raw.RawSource;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -18,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.StateManager;
 import frc.robot.StateManager.State;
+import frc.robot.autoPaths.left3PAuto;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.AutoConstants;
 import frc.robot.subsystems.Shooter.Shooter;
@@ -79,5 +81,11 @@ public class AutoCommands {
       indexer.setIndexerSpeed(0.7);
     });
   }
+
+  public Command runEverything(double speed) {
+    return Commands.parallel(
+      runIndexer(speed),
+      initialize(speed));
+}
 
 }
