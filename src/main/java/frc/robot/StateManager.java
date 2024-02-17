@@ -12,8 +12,9 @@ import frc.robot.subsystems.pivot.Pivot;
 
 public class StateManager {
     private static StateManager mInstance;
-    
+
     public State state = State.Stow;
+    private boolean enabled = true;
 
     public enum State {
         Stow(StateConstants.stow),
@@ -24,7 +25,7 @@ public class StateManager {
         Back(StateConstants.back),
         RampUp(StateConstants.rampUp),
         Init(StateConstants.init);
-        
+
         Setpoint setpoint;
 
         State(Setpoint setpoint) {
@@ -33,16 +34,18 @@ public class StateManager {
     }
 
     public void setState(State state) {
-        this.state = state;
-        this.setSetpoints();
+        if (enabled) {
+            this.state = state;
+            this.setSetpoints();
+        }
     }
 
     public void setSetpoints() {
         Shooter.getInstance().setShootingSpeedRPM(
-            this.state.setpoint.topShooterMotor(), this.state.setpoint.bottomShooterMotor());
+                this.state.setpoint.topShooterMotor(), this.state.setpoint.bottomShooterMotor());
         Intake.getInstance().setIntakeSpeed(this.state.setpoint.intake());
         Indexer.getInstance().setIndexerSpeed(this.state.setpoint.indexer());
-        if(state == State.Init){
+        if (state == State.Init) {
             Pivot.getInstance().reset();
         } else {
             Pivot.getInstance().setGoal(this.state.setpoint.pivot());
@@ -50,15 +53,19 @@ public class StateManager {
     }
 
     public static StateManager getInstance() {
-        if (mInstance == null) { 
+        if (mInstance == null) {
             mInstance = new StateManager();
         }
-        
+
         return mInstance;
     }
 
+    public void setMutable(boolean on) {
+        this.enabled = on;
+    }
+
     public void periodic() {
-        
+
         Logger.recordOutput("StateManager/State", state.toString());
     }
 }

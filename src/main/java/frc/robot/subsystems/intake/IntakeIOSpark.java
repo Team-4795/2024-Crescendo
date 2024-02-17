@@ -4,11 +4,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-public class TalonFXIO implements IntakeIO {
+public class IntakeIOSpark implements IntakeIO {
     private final CANSparkMax intakeMotor = new CANSparkMax(IntakeConstants.canID, MotorType.kBrushless);
     private final RelativeEncoder frontEncoder = intakeMotor.getEncoder();
 
-    public TalonFXIO() {
+    public IntakeIOSpark() {
         intakeMotor.setInverted(false);
 
         intakeMotor.setSmartCurrentLimit(40);

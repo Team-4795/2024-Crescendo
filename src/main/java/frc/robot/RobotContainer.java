@@ -27,10 +27,9 @@ import frc.robot.subsystems.indexer.*;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.pivot.*;
 import frc.robot.util.NoteVisualizer;
-
-import frc.robot.commands.TurnToSpeaker;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AlignToAmp;
+import frc.robot.commands.ScoreSpeaker;
 
 
 /**
@@ -132,11 +131,10 @@ public class RobotContainer {
             drive));
 
       OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
-      OIConstants.driverController.leftBumper().whileTrue(TurnToSpeaker.turnTowardsSpeaker(drive));
+      OIConstants.driverController.leftBumper().whileTrue(new ScoreSpeaker());
       //OIConstants.driverController.a().whileTrue(LimelightLookAtSpeaker.lookAtSpeaker(drive));
       //OIConstants.driverController.a().onTrue(NoteVisualizer.shoot());
       OIConstants.driverController.a().whileTrue(align.pathfindingCommand);
-     //OIConstants.driverController.leftTrigger(0.5).whileTrue(new ScoreSpeaker());
 
     OIConstants.operatorController.rightBumper().whileTrue(Commands.startEnd(
       () -> shooter.setShootingSpeedRPM(750, 750),
