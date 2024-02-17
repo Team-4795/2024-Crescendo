@@ -11,7 +11,8 @@ public abstract class left3PAuto extends AutoPath{
         autoCommands.score(0.5),
         autoCommands.alignTrajectory("Left GP3 P1", 0),
         autoCommands.score(0.5),
-        autoCommands.alignTrajectory("Left GP3 P2", 0)
+        autoCommands.alignTrajectory("Left GP3 P2", 0),
+        autoCommands.score(0.5)
         );
     }
 }

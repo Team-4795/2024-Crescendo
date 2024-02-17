@@ -62,7 +62,7 @@ public class AutoCommands {
   public Command initialize(double speed) {
     return new InstantCommand(() -> {
       intake.setIntakeSpeed(speed);
-      shooter.setShootingSpeedRPM(-speed, speed);
+      shooter.setShootingSpeedRPM(-3000 * speed, 3000 * speed);
     });
   }
 

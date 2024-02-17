@@ -131,7 +131,7 @@ public class RobotContainer {
             drive));
 
       OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
-      OIConstants.driverController.leftBumper().whileTrue(new ScoreSpeaker());
+      // OIConstants.driverController.leftBumper().whileTrue(new ScoreSpeaker());
       //OIConstants.driverController.a().whileTrue(LimelightLookAtSpeaker.lookAtSpeaker(drive));
       //OIConstants.driverController.a().onTrue(NoteVisualizer.shoot());
       OIConstants.driverController.a().whileTrue(align.pathfindingCommand);
