@@ -73,8 +73,10 @@ public class Indexer extends SubsystemBase {
 
         if(override){
             io.setIndexerSpeed(IndexerConstants.overrideSpeed);
-        } else {
+        } else if (shouldSpin || StateManager.getInstance().state == State.GroundIntake){
             io.setIndexerSpeed(indexerSpeed);
+        } else {
+            io.setIndexerSpeed(0);
         }
 
         if(averageCurrent > IndexerConstants.currentThreshold){
