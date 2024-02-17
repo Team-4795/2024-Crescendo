@@ -2,26 +2,16 @@ package frc.robot.commands;
 
 import java.util.HashMap;
 
-import javax.swing.GroupLayout.SequentialGroup;
-
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.cscore.raw.RawSource;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.StateManager;
-import frc.robot.StateManager.State;
-import frc.robot.autoPaths.left3PAuto;
 import frc.robot.subsystems.MAXSwerve.Drive;
-import frc.robot.subsystems.MAXSwerve.DriveConstants.AutoConstants;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
@@ -72,7 +62,7 @@ public class AutoCommands {
   public Command initialize(double speed) {
     return new InstantCommand(() -> {
       intake.setIntakeSpeed(speed);
-      shooter.setShootingSpeed(speed);
+      shooter.setShootingSpeedRPM(-speed, speed);
     });
   }
 

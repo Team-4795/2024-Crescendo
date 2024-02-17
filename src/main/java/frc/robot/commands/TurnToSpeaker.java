@@ -50,8 +50,8 @@ public class TurnToSpeaker {
             Logger.recordOutput("Vision/omega", omega);
 
             drive.runVelocity(new ChassisSpeeds(
-                -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kDriveDeadband) * DriveConstants.kMaxSpeedMetersPerSecond,
-                -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kDriveDeadband) * DriveConstants.kMaxSpeedMetersPerSecond,
+                -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband) * DriveConstants.kMaxSpeedMetersPerSecond,
+                -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband) * DriveConstants.kMaxSpeedMetersPerSecond,
                 MathUtil.clamp(omega - output, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed)
             ));
         }, drive);

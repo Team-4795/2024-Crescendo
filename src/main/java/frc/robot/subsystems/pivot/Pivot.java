@@ -80,7 +80,7 @@ public class Pivot extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return Math.abs(getPosition() - goal) < 0.1;
+        return controller.atGoal();
     }
 
 

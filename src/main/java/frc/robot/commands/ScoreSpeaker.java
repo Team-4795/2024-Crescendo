@@ -5,7 +5,9 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.StateManager;
 import frc.robot.Constants.OIConstants;
+import frc.robot.StateManager.State;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.vision.Vision;
@@ -25,7 +27,7 @@ public class ScoreSpeaker extends Command {
 
     public ScoreSpeaker() {
         addRequirements(Pivot.getInstance(), drive, vision, Shooter.getInstance());
-    
+        StateManager.getInstance().setState(State.ScoreSpeaker);
 
     }
 
@@ -43,9 +45,9 @@ public class ScoreSpeaker extends Command {
         drive.drive(
                 -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband),
                 -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband),
-                -rotationPID.calculate(vision.getArducamYaw(), angle),
+                -rotationPID.calculate(drive.getHeading(), angle),
                 true, true);
-        // Shooter.getInstance().setShootingSpeed(ShooterConstants.shootSpeaker);
+    
     }
 
     @Override

@@ -21,8 +21,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
 import frc.robot.StateManager.State;
-import frc.robot.commands.AutoCommands;
-import frc.robot.commands.NamedCommandManager;
 import frc.robot.subsystems.MAXSwerve.*;
 import frc.robot.subsystems.Shooter.*;
 import frc.robot.subsystems.indexer.*;
@@ -30,28 +28,9 @@ import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.pivot.*;
 import frc.robot.util.NoteVisualizer;
 
-import javax.naming.NameNotFoundException;
-
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-
-import frc.robot.commands.LimelightLookAtSpeaker;
 import frc.robot.commands.TurnToSpeaker;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAmp;
-import frc.robot.commands.ArmFeedForwardCharacterization;
-import frc.robot.commands.FeedForwardCharacterization;
-import frc.robot.subsystems.MAXSwerve.*;
-import frc.robot.StateManager.State;
-import frc.robot.subsystems.Shooter.*;
-import frc.robot.subsystems.indexer.*;
-import frc.robot.subsystems.pivot.*;
-
-import frc.robot.subsystems.intake.*;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 
 /**
@@ -123,18 +102,7 @@ public class RobotContainer {
     }
 
     manager.setState(State.Init);
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    autoChooser.addOption("Arm Characterization", 
-      new ArmFeedForwardCharacterization(
-        pivot, 
-        pivot::runVoltage, 
-        pivot::getVelocity, 
-        pivot::getTruePosition, 
-        pivot::torqueFromAngle));
-
-    autoChooser.addOption("Shooter Characterization",
-      new FeedForwardCharacterization(shooter, shooter::runVoltage, shooter::getVelocityTop));
     autoSelector = new AutoSelector();
     align = new AlignToAmp();
     NoteVisualizer.setRobotPoseSupplier(drive::getPose);
@@ -157,9 +125,9 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> drive.drive(
-                -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kDriveDeadband),
-                MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband),
+                -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband),
+                MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kAxisDeadband),
                 false, true),
             drive));
 
