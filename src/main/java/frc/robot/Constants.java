@@ -43,6 +43,7 @@ public final class Constants {
     public static final Setpoint scoreSpeaker = new Setpoint(-3000,3000, 0, 1, 0);  
     public static final Setpoint back = new Setpoint(0, 0, 0, -1, 0);
     public static final Setpoint rampUp = new Setpoint(-3000, 3000, 0, 0, 0);
+    public static final Setpoint init = new Setpoint(0, 0, 0, 0, 0);
   }
 
 

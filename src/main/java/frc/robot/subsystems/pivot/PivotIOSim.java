@@ -18,17 +18,17 @@ public class PivotIOSim implements PivotIO {
         PivotConstants.y,
         PivotConstants.d,
         PivotConstants.F,
-        Units.degreesToRadians(20), 
-        Units.degreesToRadians(100), 
-        Units.degreesToRadians(20));
+        Units.degreesToRadians(0), 
+        Units.degreesToRadians(75), 
+        Units.degreesToRadians(5));
 
     private double pivotAppliedVolts = 0.0;
 
     @Override
     public void updateInputs(PivotIOInputs inputs) {
         pivotSim.update(PivotConstants.kDt);
-        inputs.pivotPositionRads = pivotSim.getAngleRads() - PivotConstants.angleOffset;
-        inputs.pivotMotorPositionRads = pivotSim.getAngleRads() - PivotConstants.angleOffset;
+        inputs.pivotPositionRads = pivotSim.getAngleRads();
+        inputs.pivotMotorPositionRads = pivotSim.getAngleRads();
         inputs.pivotMotorVelocityRadPerSec = pivotSim.getVelocityRadPerSec();
         inputs.pivotAppliedVolts = pivotAppliedVolts;
     }

@@ -22,7 +22,8 @@ public class StateManager {
         ScoreAmp(StateConstants.scoreAmp),
         ScoreSpeaker(StateConstants.scoreSpeaker),
         Back(StateConstants.back),
-        RampUp(StateConstants.rampUp);
+        RampUp(StateConstants.rampUp),
+        Init(StateConstants.init);
         
         Setpoint setpoint;
 
@@ -39,9 +40,13 @@ public class StateManager {
     public void setSetpoints() {
         Shooter.getInstance().setShootingSpeedRPM(
             this.state.setpoint.topShooterMotor(), this.state.setpoint.bottomShooterMotor());
-        // Pivot.getInstance().setGoal(this.state.setpoint.pivot());
         Intake.getInstance().setIntakeSpeed(this.state.setpoint.intake());
         Indexer.getInstance().setIndexerSpeed(this.state.setpoint.indexer());
+        if(state == State.Init){
+            Pivot.getInstance().reset();
+        } else {
+            Pivot.getInstance().setGoal(this.state.setpoint.pivot());
+        }
     }
 
     public static StateManager getInstance() {

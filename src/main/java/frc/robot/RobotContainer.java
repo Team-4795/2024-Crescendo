@@ -17,16 +17,13 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArmFeedForwardCharacterization;
 import frc.robot.commands.FeedForwardCharacterization;
-import frc.robot.commands.ScoreSpeaker;
 import frc.robot.subsystems.MAXSwerve.*;
 import frc.robot.StateManager.State;
 import frc.robot.subsystems.Shooter.*;
@@ -35,7 +32,7 @@ import frc.robot.subsystems.pivot.*;
 
 import frc.robot.subsystems.intake.*;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-// import frc.robot.commands.TurnToSpeaker;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -100,6 +97,7 @@ public class RobotContainer {
         break;
     }
 
+    manager.setState(State.Init);
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     autoChooser.addOption("Arm Characterization", 
@@ -159,8 +157,6 @@ public class RobotContainer {
         () -> intake.setOverride(false)));
 
     OIConstants.operatorController.y().onTrue(Commands.runOnce(() -> indexer.reverse()));
-    OIConstants.operatorController.x().onTrue(Commands.runOnce(() -> pivot.setTestingState(!pivot.isTestingState())));
-
     OIConstants.operatorController.b().whileTrue(Commands.startEnd(
         () -> indexer.setOverride(true),
         () -> indexer.setOverride(false)
@@ -181,19 +177,10 @@ public class RobotContainer {
     OIConstants.operatorController.rightTrigger().whileTrue(Commands.sequence(
       Commands.runOnce(() -> manager.setState(State.ScoreAmp))
     ));
-
-    // OIConstants.operatorController.rightTrigger(0.5).whileTrue(Commands.sequence(
-    //   // Commands.runOnce(() -> manager.setState(State.Back)),
-    //   // Commands.waitSeconds(0.3),
-    //   Commands.runOnce(() -> manager.setState(State.RampUp)),
-    //   Commands.waitUntil(shooter::atSetpoint),
-    //   Commands.runOnce(() -> manager.setState(State.ScoreSpeaker))
-    // ));
   }
 
   public void teleopInit() {
-    manager.setState(State.Stow);
-    pivot.setGoal(pivot.getPosition());
+    manager.setState(State.Init);
   }
 
   /**
