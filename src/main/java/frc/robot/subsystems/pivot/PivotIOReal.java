@@ -33,7 +33,7 @@ public class PivotIOReal implements PivotIO {
 
     motorEncoder.setPositionConversionFactor(Math.PI * 2 / PivotConstants.gearing);
     motorEncoder.setVelocityConversionFactor(Math.PI * 2 / 60 / PivotConstants.gearing);
-    motorEncoder.setPosition(0);
+    motorEncoder.setPosition(encoder.get() * -Math.PI * 2 + 0.18);
 
     pivotLeft.burnFlash();
     pivotRight.burnFlash();
@@ -52,7 +52,7 @@ public class PivotIOReal implements PivotIO {
   }
 
   private double getAbsolutePosition() {
-    return encoder.get() * -Math.PI * 2 + 4.18;
+    return encoder.get() * -Math.PI * 2 + 4.175;
   }
 
   @Override

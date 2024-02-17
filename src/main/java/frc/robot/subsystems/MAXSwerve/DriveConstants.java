@@ -57,7 +57,7 @@ public final class DriveConstants {
 
     public static final int kPigeonCanId = 10;
 
-    public static final boolean kGyroReversed = false;
+    public static final boolean kGyroReversed = true;
 
     public static final class ModuleConstants {
         // The MAXSwerve module can be configured with one of three pinion gears: 12T,
@@ -110,7 +110,7 @@ public final class DriveConstants {
         public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
         public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
-        public static final int kDrivingMotorCurrentLimit = 30; // amps
+        public static final int kDrivingMotorCurrentLimit = 60; // amps
         public static final int kTurningMotorCurrentLimit = 20; // amps
     }
 

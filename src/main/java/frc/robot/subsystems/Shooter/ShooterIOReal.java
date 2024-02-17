@@ -33,7 +33,7 @@ public class ShooterIOReal implements ShooterIO {
         talonFXConfig.Slot0.kV = 0.12;
 
         talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-        talonFXConfig.CurrentLimits.StatorCurrentLimit = 60;
+        talonFXConfig.CurrentLimits.StatorCurrentLimit = 80;
 
         talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 

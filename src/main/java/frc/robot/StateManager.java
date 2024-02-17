@@ -45,9 +45,10 @@ public class StateManager {
                 this.state.setpoint.topShooterMotor(), this.state.setpoint.bottomShooterMotor());
         Intake.getInstance().setIntakeSpeed(this.state.setpoint.intake());
         Indexer.getInstance().setIndexerSpeed(this.state.setpoint.indexer());
+
         if (state == State.Init) {
             Pivot.getInstance().reset();
-        } else {
+        } else if (!(state == State.RampUp || state == State.Back)) {
             Pivot.getInstance().setGoal(this.state.setpoint.pivot());
         }
     }

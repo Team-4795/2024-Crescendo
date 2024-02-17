@@ -8,6 +8,7 @@ import edu.wpi.first.util.CircularBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.StateManager;
 import frc.robot.StateManager.State;
+import frc.robot.subsystems.pivot.Pivot;
 
 public class Indexer extends SubsystemBase {
     
@@ -74,6 +75,12 @@ public class Indexer extends SubsystemBase {
 
         if(inputs.sensorActivated && StateManager.getInstance().state == State.GroundIntake){
             StateManager.getInstance().setState(State.Stow);
+        }
+
+        if (Pivot.getInstance().getPosition() < 1.0) {
+            io.canSpinBottom(true);
+        } else {
+            io.canSpinBottom(false);
         }
 
         if(override){

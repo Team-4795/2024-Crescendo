@@ -10,7 +10,44 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": []
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": []
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS GP123 P2"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": []
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left 3P P2"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": []
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left 3P P3"
+          }
+        }
+      ]
     }
   },
   "folder": null,

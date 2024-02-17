@@ -7,15 +7,15 @@ public final class PivotConstants {
     public static final int leftCanID = 11;
     public static final int rightCanID = 12;
     public static final double kA = 0.02;
-    public static final double kV = 2.39;
-    public static final double kS = 0;
-    public static final double kP = 0.0;
+    public static final double kV = 2.3;
+    public static final double kS = 0.2;
+    public static final double kP = 2;
     public static final double kI = 0;
     public static final double kD = 0;
 
     public static final double angleOffset = 0.26;
     public static final double kDt = 0.02;
-    public static final Constraints constraints = new Constraints(0.5, 1);
+    public static final Constraints constraints = new Constraints(2, 2);
     public static final double manualSpeed = 0.01;
     
     public static final double F = 178;

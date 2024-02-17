@@ -55,22 +55,22 @@ public class Pivot extends SubsystemBase {
         io.updateInputs(inputs);
 
         visualizer.update(360 * getPosition());
-        controller.setTolerance(Units.degreesToRadians(0.5));
+        controller.setTolerance(Units.degreesToRadians(2));
 
         setDefaultCommand(run(() -> {
             double up = MathUtil.applyDeadband(
-                    OIConstants.driverController.getRightTriggerAxis(), OIConstants.kAxisDeadband);
+                    OIConstants.operatorController.getRightTriggerAxis(), OIConstants.kAxisDeadband);
             double down = MathUtil.applyDeadband(
-                    OIConstants.driverController.getLeftTriggerAxis(), OIConstants.kAxisDeadband);
+                    OIConstants.operatorController.getLeftTriggerAxis(), OIConstants.kAxisDeadband);
             
-            manualVolts = 0.15 * (Math.pow(up, 3) - Math.pow(down, 3)) * 12;
+            double change = PivotConstants.manualSpeed * (Math.pow(up, 3) - Math.pow(down, 3));
             // double change = PivotConstants.manualSpeed * (Math.pow(up, 3) - Math.pow(down, 3));
             
             // double change = -PivotConstants.manualSpeed *
             // MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(),
             // OIConstants.kAxisDeadband);
 
-            // setGoal(goal + change);
+            setGoal(goal + change);
         }));
     }
 
@@ -97,7 +97,7 @@ public class Pivot extends SubsystemBase {
         double FFVolts = motorFeedforward.calculate(controller.getSetpoint().velocity);
 
         if (!disableArm) {
-            io.setVoltage(manualVolts + FFVolts + linearFF(getPosition()));
+            io.setVoltage(PIDVolts + manualVolts + FFVolts + linearFF(getPosition()));
         }
 
         Logger.recordOutput("Pivot/PID Volts", PIDVolts);
@@ -136,11 +136,11 @@ public class Pivot extends SubsystemBase {
 
     // Choose between motor position or absolute encoder position 
     public double getPosition() {
-        return inputs.pivotMotorPositionRads;
+        return inputs.pivotPositionRads;
     }
 
     public double getTruePosition() {
-        return inputs.pivotMotorPositionRads + PivotConstants.angleOffset;
+        return getPosition() + PivotConstants.angleOffset;
     }
 
     public double getVelocity() {

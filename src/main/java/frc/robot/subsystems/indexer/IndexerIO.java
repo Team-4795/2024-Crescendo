@@ -17,6 +17,7 @@ public interface IndexerIO {
      public boolean sensorActivated = false;
    }
 
+   public default void canSpinBottom(boolean spin) {}
    public default void updateInputs(IndexerIOInputs inputs) {}
    public default void setIndexerSpeed(double speed) {}
 }

@@ -12,6 +12,7 @@ public class IndexerIOReal implements IndexerIO {
     private RelativeEncoder leftEncoder = leftIndexMotor.getEncoder();
     private RelativeEncoder rightEncoder = rightIndexMotor.getEncoder();
     private SparkLimitSwitch noteSensor = leftIndexMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+    private boolean spinBottom = true;
 
     public IndexerIOReal() {
         rightIndexMotor.restoreFactoryDefaults();
@@ -37,8 +38,15 @@ public class IndexerIOReal implements IndexerIO {
 
     @Override
     public void setIndexerSpeed(double speed) {
-        leftIndexMotor.set(speed);
+        if (spinBottom) {
+            leftIndexMotor.set(speed);
+        }
         rightIndexMotor.set(speed);
+    }
+
+    @Override
+    public void canSpinBottom(boolean spin) {
+        spinBottom = spin;
     }
 
     @Override

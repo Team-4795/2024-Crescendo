@@ -38,15 +38,14 @@ public final class Constants {
   //shooter, indexer, intake measured in motor output, pivot measured in radians
   public record Setpoint(double topShooterMotor, double bottomShooterMotor, double pivot, double indexer, double intake) {}
 
-
   public class StateConstants {
-    public static final Setpoint stow = new Setpoint(0,0, 0.52, 0, 0);
-    public static final Setpoint groundIntake = new Setpoint(0,0, 1.22, 1.0, -0.7);
+    public static final Setpoint stow = new Setpoint(0,0, 0.08, 0, 0);
+    public static final Setpoint groundIntake = new Setpoint(0,0, 0.08, 1.0, -0.7);
     public static final Setpoint sourceIntake = new Setpoint(0,0, 0.96, -0.5, 0);
-    public static final Setpoint scoreAmp = new Setpoint(500,500, 1.0, 1.0, 0);
-    public static final Setpoint scoreSpeaker = new Setpoint(-3000,3000, 0, 1, 0);  
+    public static final Setpoint scoreAmp = new Setpoint(600,600, 1.0, 1.0, 0);
+    public static final Setpoint scoreSpeaker = new Setpoint(-5000,5000,0.6, 1, 0);  
     public static final Setpoint back = new Setpoint(0, 0, 0, -1, 0);
-    public static final Setpoint rampUp = new Setpoint(-3000, 3000, 0, 0, 0);
+    public static final Setpoint rampUp = new Setpoint(-5000, 5000, 0, 0, 0);
     public static final Setpoint init = new Setpoint(0, 0, 0, 0, 0);
   }
 

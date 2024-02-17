@@ -68,10 +68,10 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
-        intake = Intake.initialize(new IntakeIOSim());
-        shooter = Shooter.initialize(new ShooterIOSim());
-        pivot = Pivot.initialize(new PivotIOSim());
-        indexer = Indexer.initialize(new IndexerIOSim());
+        intake = Intake.initialize(new IntakeIOReal());
+        shooter = Shooter.initialize(new ShooterIOReal());
+        pivot = Pivot.initialize(new PivotIOReal());
+        indexer = Indexer.initialize(new IndexerIOReal());
         // Real robot, instantiate hardware IO implementations
         drive = Drive.initialize(
             new GyroIONavX(),
@@ -141,9 +141,10 @@ public class RobotContainer {
             () -> drive.drive(
                 -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband),
                 -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband),
-                MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kAxisDeadband),
-                false, true),
+                -MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kAxisDeadband),
+                true, true),
             drive));
+
 
       OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
       // OIConstants.driverController.leftBumper().whileTrue(new ScoreSpeaker());
@@ -151,18 +152,22 @@ public class RobotContainer {
       //OIConstants.driverController.a().onTrue(NoteVisualizer.shoot());
       //OIConstants.driverController.a().whileTrue(AlignToAmp.generatePath());
 
-    OIConstants.operatorController.rightBumper().whileTrue(Commands.startEnd(
-      () -> shooter.setShootingSpeedRPM(750, 750),
-      () -> shooter.setShootingSpeedRPM(0, 0), 
-      shooter));  
+    // OIConstants.operatorController.rightBumper().whileTrue(Commands.startEnd(
+    //   () -> shooter.setShootingSpeedRPM(750, 750),
+    //   () -> shooter.setShootingSpeedRPM(0, 0), 
+    //   shooter));  
 
-    OIConstants.operatorController.leftBumper().whileTrue(Commands.startEnd(
-      () -> shooter.setShootingSpeedRPM(-3000, 3000),
-      () -> shooter.setShootingSpeedRPM(0, 0)));  
+    // OIConstants.operatorController.leftBumper().whileTrue(Commands.startEnd(
+    //   () -> shooter.setShootingSpeedRPM(-3000, 3000),
+    //   () -> shooter.setShootingSpeedRPM(0, 0)));  
 
     OIConstants.driverController.leftTrigger(0.5).whileTrue(Commands.startEnd(
       () -> indexer.setSpin(true), 
-      () -> indexer.setSpin(false)));
+      () -> {
+        indexer.setSpin(false);
+        manager.setState(State.Stow);
+      }
+      ));
 
     OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
     OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
@@ -183,15 +188,15 @@ public class RobotContainer {
     OIConstants.driverController.a().onTrue(Commands.runOnce(pivot::toggleIdleMode))
                                     .onFalse(Commands.runOnce(pivot::toggleIdleMode));
 
-    OIConstants.operatorController.leftTrigger(0.5).whileTrue(Commands.sequence(
+    OIConstants.operatorController.x().onTrue(Commands.sequence(
       Commands.runOnce(() -> manager.setState(State.Back)),
-      Commands.waitSeconds(0.3),
-      Commands.runOnce(() -> manager.setState(State.RampUp)),
-      Commands.waitUntil(shooter::atSetpoint),
+      Commands.waitSeconds(0.05),
       Commands.runOnce(() -> manager.setState(State.ScoreSpeaker))
     ));
 
-    OIConstants.operatorController.rightTrigger().whileTrue(Commands.sequence(
+    OIConstants.driverController.rightTrigger().whileTrue(Commands.sequence(
+      Commands.runOnce(() -> pivot.setGoal(1.0)),
+      Commands.waitUntil(pivot::atSetpoint),
       Commands.runOnce(() -> manager.setState(State.ScoreAmp))
     ));
   }
