@@ -22,8 +22,8 @@ public class ShooterIOReal implements ShooterIO {
     private boolean isEnabled;
     private boolean hasPlayed;
 
-    KrakenLogger topMotorLogger = new KrakenLogger(topShooterMotor, ShooterConstants.rightCanID);
-    KrakenLogger bottomMotorLogger = new KrakenLogger(bottomShooterMotor, ShooterConstants.leftCanID);
+    KrakenLogger topMotorLogger = new KrakenLogger(topShooterMotor, "Top shooter - ID " + ShooterConstants.rightCanID);
+    KrakenLogger bottomMotorLogger = new KrakenLogger(bottomShooterMotor, "Bottom shooter - ID " + ShooterConstants.leftCanID);
 
     public ShooterIOReal() {
         talonFXConfig.Slot0.kP = ShooterConstants.kP;

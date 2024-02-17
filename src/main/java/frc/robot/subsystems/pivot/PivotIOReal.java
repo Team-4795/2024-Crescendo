@@ -12,6 +12,7 @@ public class PivotIOReal implements PivotIO {
   private CANSparkFlex pivotRight = new CANSparkFlex(PivotConstants.rightCanID, MotorType.kBrushless);
   private DutyCycleEncoder encoder = new DutyCycleEncoder(9);
   private RelativeEncoder motorEncoder = pivotLeft.getEncoder();
+  private double inputVolts = 0.0;
 
   public PivotIOReal() {
     pivotRight.restoreFactoryDefaults();
@@ -40,11 +41,13 @@ public class PivotIOReal implements PivotIO {
 
   @Override
   public void rotatePivot(double speed) {
+    inputVolts = speed * 12;
     pivotLeft.set(speed);
   }
 
   @Override
   public void setVoltage(double volts) {
+    inputVolts = volts;
     pivotLeft.setVoltage(volts);
   }
 
@@ -54,6 +57,7 @@ public class PivotIOReal implements PivotIO {
 
   @Override
   public void updateInputs(PivotIOInputs inputs) {
+    inputs.pivotInputVolts = inputVolts;
     inputs.pivotAppliedVolts = pivotLeft.getAppliedOutput() * pivotLeft.getBusVoltage();
     inputs.pivotPositionRads = getAbsolutePosition();
 

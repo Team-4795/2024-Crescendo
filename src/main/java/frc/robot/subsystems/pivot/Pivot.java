@@ -54,7 +54,7 @@ public class Pivot extends SubsystemBase {
         io = pivotIO;
         io.updateInputs(inputs);
 
-        visualizer.update(360 * getPosition() / (2 * Math.PI));
+        visualizer.update(360 * getPosition());
         controller.setTolerance(Units.degreesToRadians(0.5));
 
         setDefaultCommand(run(() -> {
@@ -93,13 +93,12 @@ public class Pivot extends SubsystemBase {
         LoggedTunableNumber.ifChanged(hashCode(), () -> controller.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
         LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);
                 
-        double PIDVolts = controller.calculate(getPosition());  
+        double PIDVolts = controller.calculate(getPosition());
         double FFVolts = motorFeedforward.calculate(controller.getSetpoint().velocity);
 
         if (!disableArm) {
             io.setVoltage(manualVolts + FFVolts + linearFF(getPosition()));
         }
-
 
         Logger.recordOutput("Pivot/PID Volts", PIDVolts);
         Logger.recordOutput("Pivot/FF Volts", FFVolts);

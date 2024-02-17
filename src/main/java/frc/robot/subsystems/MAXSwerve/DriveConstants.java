@@ -55,8 +55,6 @@ public final class DriveConstants {
     public static final int kFrontRightTurningCanId = 5;
     public static final int kRearRightTurningCanId = 9;
 
-    public static final Rotation2d kChassisAngularOffset = Rotation2d.fromDegrees(0);
-
     public static final int kPigeonCanId = 10;
 
     public static final boolean kGyroReversed = false;
@@ -131,6 +129,6 @@ public final class DriveConstants {
     }
 
     public static final class NeoMotorConstants {
-        public static final double kFreeSpeedRpm = 5676;
+        public static final double kFreeSpeedRpm = 6784;
     }
 }
