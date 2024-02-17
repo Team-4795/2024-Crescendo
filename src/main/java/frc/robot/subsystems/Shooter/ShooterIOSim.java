@@ -9,15 +9,17 @@ public class ShooterIOSim implements ShooterIO{
     private double appliedVolts = 0.0;
 
     @Override
-    public void runShooterMotors(double speed) {
-        appliedVolts = MathUtil.clamp(12 * speed, -12, 12);
-        motor.setInputVoltage(appliedVolts);
+    public void runShooterMotorsRPM(double topSpeed, double bottomShooterMotor) {
+        // appliedVolts = MathUtil.clamp(12 * topSpeed, -12, 12);
+        // motor.setInputVoltage(appliedVolts);
     }
 
     @Override
     public void updateInputs(ShooterIOInputs inputs) {
         motor.update(0.02);
-        inputs.shooterMotorAppliedVolts = appliedVolts;
-        inputs.shooterMotorVelocityRPM = motor.getAngularVelocityRPM();
+        inputs.topShooterMotorAppliedVolts = appliedVolts;
+        inputs.topShooterMotorVelocityRPM = motor.getAngularVelocityRPM();
+        inputs.bottomShooterMotorAppliedVolts = appliedVolts;
+        inputs.bottomShooterMotorVelocityRPM = motor.getAngularVelocityRPM();
     }
 }

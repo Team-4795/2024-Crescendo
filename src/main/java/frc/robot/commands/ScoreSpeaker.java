@@ -40,6 +40,12 @@ public class ScoreSpeaker extends Command {
         double angle = Math.asin(deltaY / distanceToSpeaker) * 180 / Math.PI;
         Logger.recordOutput("Angle", angle);
 
+        drive.drive(
+                -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband),
+                -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband),
+                -rotationPID.calculate(vision.getArducamYaw(), angle),
+                true, true);
+        // Shooter.getInstance().setShootingSpeed(ShooterConstants.shootSpeaker);
     }
 
     @Override

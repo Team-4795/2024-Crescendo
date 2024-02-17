@@ -1,7 +1,10 @@
 package frc.robot.subsystems.indexer;
 
+import java.beans.Statement;
+
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.util.CircularBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.StateManager;
 import frc.robot.StateManager.State;
@@ -13,6 +16,9 @@ public class Indexer extends SubsystemBase {
     private double indexerSpeed = 0.0;
     private boolean shouldSpin = false;
     private boolean override;
+
+    private boolean currentStoring = false;
+    private CircularBuffer<Double> currents = new CircularBuffer<>(IndexerConstants.bufferSize);
 
     private static Indexer instance;
 
@@ -30,6 +36,10 @@ public class Indexer extends SubsystemBase {
     private Indexer(IndexerIO IndexIo) {
         io = IndexIo;
         io.updateInputs(inputs);
+
+        for(int i = 0; i < IndexerConstants.bufferSize; i++){
+            currents.addLast(Double.valueOf(0));
+        }
     }
 
     public void setIndexerSpeed(double motorValue) {
@@ -48,21 +58,42 @@ public class Indexer extends SubsystemBase {
        override = on;
     }
 
+    // public void isStoring()
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Indexer", inputs);
+        double averageCurrent = this.averageCurrent();
+        currents.addLast(Double.valueOf(inputs.leftMotorCurrent));
+
+        if(inputs.sensorActivated && StateManager.getInstance().state == State.GroundIntake){
+            StateManager.getInstance().setState(State.Stow);
+        }
+
         if(override){
             io.setIndexerSpeed(IndexerConstants.overrideSpeed);
-        } else if(StateManager.getInstance().state == State.GroundIntake || shouldSpin) {
+        } else if (shouldSpin || StateManager.getInstance().state == State.GroundIntake){
             io.setIndexerSpeed(indexerSpeed);
         } else {
             io.setIndexerSpeed(0);
         }
 
-        Logger.recordOutput("Indexer/Left Motor Current", io.getLeftMotorCurrent());
-        Logger.recordOutput("Indexer/Left Motor Velocity", io.getLeftMotorVelocity());
-        Logger.recordOutput("Indexer/Right Motor Current", io.getRightMotorCurrent());
-        Logger.recordOutput("Indexer/Right Motor Velocity", io.getRightMotorVelocity());
+        if(averageCurrent > IndexerConstants.currentThreshold){
+            currentStoring = true;
+        } else {
+            currentStoring = false;
+        }
+
+        Logger.recordOutput("Indexer/Average current", averageCurrent);
+        Logger.recordOutput("Indexer/Storing (based on current)", currentStoring);
+    }
+
+    private double averageCurrent(){
+        double sum = 0;
+        for(int i = 0; i < IndexerConstants.bufferSize; i++){
+            sum += currents.get(i);
+        }
+        return (sum / IndexerConstants.bufferSize);
     }
 }

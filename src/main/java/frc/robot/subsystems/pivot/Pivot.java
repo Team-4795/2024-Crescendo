@@ -3,30 +3,37 @@ package frc.robot.subsystems.pivot;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
 import frc.robot.Constants.OIConstants;
+import frc.robot.util.LoggedTunableNumber;
 
 public class Pivot extends SubsystemBase {
     private PivotIO io;
     private PivotIOInputsAutoLogged inputs = new PivotIOInputsAutoLogged();
 
+    LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", PivotConstants.kP);
+    LoggedTunableNumber kI = new LoggedTunableNumber("Pivot/kI", PivotConstants.kI);
+    LoggedTunableNumber kD = new LoggedTunableNumber("Pivot/kD", PivotConstants.kD);
+
+    LoggedTunableNumber kV = new LoggedTunableNumber("Pivot/kV", PivotConstants.kV);
+    LoggedTunableNumber kA = new LoggedTunableNumber("Pivot/kA", PivotConstants.kA);
+    LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", PivotConstants.kS);
+
     private ProfiledPIDController controller = new ProfiledPIDController(
-        PivotConstants.kP, PivotConstants.KI, PivotConstants.kD, 
-        PivotConstants.constraints);
+            kP.get(), kI.get(), kD.get(),
+            PivotConstants.constraints);
 
-    private final SimpleMotorFeedforward motorFeedforward = new SimpleMotorFeedforward(
-        PivotConstants.kS, PivotConstants.kV, PivotConstants.kA);
-    
+    private SimpleMotorFeedforward motorFeedforward = new SimpleMotorFeedforward(
+            kS.get(), kV.get(), kA.get());
+
     private double goal = 0;
-
-    private final boolean disableArm = true;
+    private final boolean disableArm = false;
+    private boolean idleMode = true;
+    private double manualVolts = 0; //temporary, will change to setting setpoint instead later
 
     PivotVisualizer visualizer = new PivotVisualizer(Color.kDarkOrange);
 
@@ -47,29 +54,29 @@ public class Pivot extends SubsystemBase {
         io = pivotIO;
         io.updateInputs(inputs);
 
-        setGoal(inputs.pivotPositionRads);
-        atSetpoint();
-        visualizer.update(360 * inputs.pivotPositionRads);
+        visualizer.update(360 * getPosition() / (2 * Math.PI));
         controller.setTolerance(Units.degreesToRadians(0.5));
 
         setDefaultCommand(run(() -> {
             double up = MathUtil.applyDeadband(
-                OIConstants.driverController.getRightTriggerAxis(), OIConstants.kDriveDeadband);
+                    OIConstants.driverController.getRightTriggerAxis(), OIConstants.kAxisDeadband);
             double down = MathUtil.applyDeadband(
-                     OIConstants.driverController.getLeftTriggerAxis(), OIConstants.kDriveDeadband);
-           
-            //double output = 0.15 * OIConstants.driverController.getRightY();
-            //io.rotatePivot(output);
-            // io.rotatePivot(0.15);
-            // double change = -PivotConstants.manualSpeed * MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), OIConstants.kAxisDeadband);
-            double change = PivotConstants.manualSpeed * (Math.pow(up, 3) - Math.pow(down, 3));
-            io.rotatePivot(change * 700);
+                    OIConstants.driverController.getLeftTriggerAxis(), OIConstants.kAxisDeadband);
+            
+            manualVolts = 0.15 * (Math.pow(up, 3) - Math.pow(down, 3)) * 12;
+            // double change = PivotConstants.manualSpeed * (Math.pow(up, 3) - Math.pow(down, 3));
+            
+            // double change = -PivotConstants.manualSpeed *
+            // MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(),
+            // OIConstants.kAxisDeadband);
+
             // setGoal(goal + change);
         }));
     }
 
     public void setGoal(double goal) {
         this.goal = MathUtil.clamp(goal, PivotConstants.lowLimit, PivotConstants.highLimit);
+        controller.setGoal(goal);
     }
 
     public boolean atSetpoint() {
@@ -81,42 +88,43 @@ public class Pivot extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Pivot", inputs);
-        visualizer.update((inputs.pivotPositionRads + PivotConstants.angleOffset));
+        visualizer.update(Units.radiansToDegrees(getPosition() + PivotConstants.angleOffset));
 
-        // Both should be similar or identical
-        double springVolts = pivotFeedForward(inputs.pivotPositionRads + PivotConstants.angleOffset, inputs.pivotVelocityRadPerSec);
-        double kASpringVolts = PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
+        LoggedTunableNumber.ifChanged(hashCode(), () -> controller.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
+        LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);
                 
-        double PIDVolts = controller.calculate(inputs.pivotPositionRads, goal);
-        double FFVolts = motorFeedforward.calculate(inputs.pivotVelocityRadPerSec)
-            + PivotConstants.kA * -torqueFromAngle(controller.getSetpoint().position + PivotConstants.angleOffset) / PivotConstants.inertia;
+        double PIDVolts = controller.calculate(getPosition());  
+        double FFVolts = motorFeedforward.calculate(controller.getSetpoint().velocity);
 
         if (!disableArm) {
-            io.setVoltage(PIDVolts + FFVolts);
+            io.setVoltage(manualVolts + FFVolts + linearFF(getPosition()));
         }
 
-        Logger.recordOutput("Pivot/Spring Volts", springVolts);
-        Logger.recordOutput("Pivot/kA Spring Volts", kASpringVolts);
 
         Logger.recordOutput("Pivot/PID Volts", PIDVolts);
         Logger.recordOutput("Pivot/FF Volts", FFVolts);
         Logger.recordOutput("Pivot/Setpoint Position", controller.getSetpoint().position);
         Logger.recordOutput("Pivot/Setpoint Velocity", controller.getSetpoint().velocity);
         Logger.recordOutput("Pivot/Goal", goal);
+
+    }
+    
+    public void toggleIdleMode() {
+        idleMode = !idleMode;
+        io.setIdleMode(idleMode);
     }
 
-    private double torqueFromAngle(double angleRad) {
+    public double torqueFromAngle(double angleRad) {
         double springAngle = Math.atan2(
-            PivotConstants.d * Math.sin(angleRad) + PivotConstants.y, 
-            -PivotConstants.d * Math.cos(angleRad) + PivotConstants.x);
+                PivotConstants.d * Math.sin(angleRad) + PivotConstants.y,
+                -PivotConstants.d * Math.cos(angleRad) + PivotConstants.x);
         double Tg = -PivotConstants.M * PivotConstants.R * PivotConstants.g * Math.cos(angleRad);
         double Ts = PivotConstants.d * PivotConstants.F * Math.sin(springAngle - (Math.PI - angleRad));
         return Tg + Ts;
     }
 
-    private double pivotFeedForward(double angle, double velocityRadPerSec) {
-        double torque = torqueFromAngle(angle) ;        
-        return DCMotor.getNeoVortex(2).getVoltage(torque, velocityRadPerSec);
+    public double linearFF(double angle) {
+        return -0.24 * angle - 0.01;
     }
 
     public void runVoltage(double volts) {
@@ -127,11 +135,21 @@ public class Pivot extends SubsystemBase {
         }
     }
 
+    // Choose between motor position or absolute encoder position 
     public double getPosition() {
-        return inputs.pivotPositionRads + PivotConstants.angleOffset;
+        return inputs.pivotMotorPositionRads;
+    }
+
+    public double getTruePosition() {
+        return inputs.pivotMotorPositionRads + PivotConstants.angleOffset;
     }
 
     public double getVelocity() {
-        return inputs.pivotVelocityRadPerSec;
+        return inputs.pivotMotorVelocityRadPerSec;
+    }
+
+    public void reset() {
+        controller.reset(getPosition());
+        this.setGoal(getPosition());
     }
 }

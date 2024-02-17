@@ -2,6 +2,7 @@ package frc.robot.subsystems.indexer;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -10,13 +11,16 @@ public class IndexerIOReal implements IndexerIO {
     private CANSparkMax rightIndexMotor = new CANSparkMax(IndexerConstants.rightCanID, MotorType.kBrushless);
     private RelativeEncoder leftEncoder = leftIndexMotor.getEncoder();
     private RelativeEncoder rightEncoder = rightIndexMotor.getEncoder();
+    private SparkLimitSwitch noteSensor = leftIndexMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
 
     public IndexerIOReal() {
         rightIndexMotor.restoreFactoryDefaults();
         leftIndexMotor.restoreFactoryDefaults();
         
-        rightIndexMotor.setSmartCurrentLimit(20);
-        leftIndexMotor.setSmartCurrentLimit(20);
+        noteSensor.enableLimitSwitch(false);
+
+        rightIndexMotor.setSmartCurrentLimit(25);
+        leftIndexMotor.setSmartCurrentLimit(25);
 
         rightEncoder.setVelocityConversionFactor(IndexerConstants.kVelocityConversionFactor);
         leftEncoder.setVelocityConversionFactor(IndexerConstants.kVelocityConversionFactor);
@@ -24,9 +28,7 @@ public class IndexerIOReal implements IndexerIO {
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
 
-        rightIndexMotor.follow(leftIndexMotor, false);
-
-        rightIndexMotor.setIdleMode(IdleMode.kCoast);
+        rightIndexMotor.setIdleMode(IdleMode.kBrake);
         leftIndexMotor.setIdleMode(IdleMode.kCoast);
 
         rightIndexMotor.burnFlash();
@@ -36,29 +38,19 @@ public class IndexerIOReal implements IndexerIO {
     @Override
     public void setIndexerSpeed(double speed) {
         leftIndexMotor.set(speed);
+        rightIndexMotor.set(speed);
     }
 
     @Override
-    public void updateInputs(IndexerIOInputs inputs) {
-        inputs.motorSpeed = leftEncoder.getVelocity();
-        inputs.motorCurrent = leftIndexMotor.getOutputCurrent();
-        inputs.motorVoltage = leftIndexMotor.getBusVoltage();
-    }
+    public void updateInputs(IndexerIOInputs inputs) {    
+        inputs.leftMotorSpeed = leftEncoder.getVelocity();
+        inputs.leftMotorCurrent = leftIndexMotor.getOutputCurrent();
+        inputs.leftMotorVoltage = leftIndexMotor.getAppliedOutput();
 
-    @Override
-    public double getLeftMotorCurrent() {
-        return leftIndexMotor.getOutputCurrent();
-    }
-    @Override
-    public double getRightMotorCurrent() {
-        return rightIndexMotor.getOutputCurrent();
-    }
-    @Override
-    public double getLeftMotorVelocity() {
-        return leftEncoder.getVelocity();
-    }
-    @Override
-    public double getRightMotorVelocity() {
-        return rightEncoder.getVelocity();
+        inputs.rightMotorSpeed = rightEncoder.getVelocity();
+        inputs.rightMotorCurrent = rightIndexMotor.getOutputCurrent();
+        inputs.rightMotorVoltage = rightIndexMotor.getAppliedOutput();
+
+        inputs.sensorActivated = noteSensor.isPressed();
     }
 }

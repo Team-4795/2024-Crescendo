@@ -17,7 +17,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
@@ -44,7 +43,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAmp;
 import frc.robot.commands.ArmFeedForwardCharacterization;
-import frc.robot.commands.ScoreSpeaker;
+import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.subsystems.MAXSwerve.*;
 import frc.robot.StateManager.State;
 import frc.robot.subsystems.Shooter.*;
@@ -53,7 +52,7 @@ import frc.robot.subsystems.pivot.*;
 
 import frc.robot.subsystems.intake.*;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-// import frc.robot.commands.TurnToSpeaker;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -85,17 +84,17 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
-        intake = Intake.initialize(new IntakeIOReal());
-        shooter = Shooter.initialize(new ShooterIOReal());
+        intake = Intake.initialize(new IntakeIOSim());
+        shooter = Shooter.initialize(new ShooterIOSim());
         pivot = Pivot.initialize(new PivotIOReal());
-        indexer = Indexer.initialize(new IndexerIOReal());
-        drive =
-            new Drive(
-                new GyroIONavX(),
-                new ModuleIOSparkMax(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId, DriveConstants.kFrontLeftChassisAngularOffset),
-                new ModuleIOSparkMax(DriveConstants.kFrontRightDrivingCanId, DriveConstants.kFrontRightTurningCanId, DriveConstants.kFrontRightChassisAngularOffset),
-                new ModuleIOSparkMax(DriveConstants.kRearLeftDrivingCanId, DriveConstants.kRearLeftTurningCanId, DriveConstants.kBackLeftChassisAngularOffset),
-                new ModuleIOSparkMax(DriveConstants.kRearRightDrivingCanId, DriveConstants.kRearRightTurningCanId, DriveConstants.kBackRightChassisAngularOffset));
+        indexer = Indexer.initialize(new IndexerIOSim());
+        // Real robot, instantiate hardware IO implementations
+        drive = Drive.initialize(
+            new GyroIOPigeon2(),
+            new ModuleIOSparkMax(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId, DriveConstants.kFrontLeftChassisAngularOffset),
+            new ModuleIOSparkMax(DriveConstants.kFrontRightDrivingCanId, DriveConstants.kFrontRightTurningCanId, DriveConstants.kFrontRightChassisAngularOffset),
+            new ModuleIOSparkMax(DriveConstants.kRearLeftDrivingCanId, DriveConstants.kRearLeftTurningCanId, DriveConstants.kBackLeftChassisAngularOffset),
+            new ModuleIOSparkMax(DriveConstants.kRearRightDrivingCanId, DriveConstants.kRearRightTurningCanId, DriveConstants.kBackRightChassisAngularOffset));
         break;
 
       case SIM:
@@ -122,13 +121,26 @@ public class RobotContainer {
         drive = Drive.initialize(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
         break;
     }
+
+    manager.setState(State.Init);
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+    autoChooser.addOption("Arm Characterization", 
+      new ArmFeedForwardCharacterization(
+        pivot, 
+        pivot::runVoltage, 
+        pivot::getVelocity, 
+        pivot::getTruePosition, 
+        pivot::torqueFromAngle));
+
+    autoChooser.addOption("Shooter Characterization",
+      new FeedForwardCharacterization(shooter, shooter::runVoltage, shooter::getVelocityTop));
     autoSelector = new AutoSelector();
     align = new AlignToAmp();
     NoteVisualizer.setRobotPoseSupplier(drive::getPose);
 
     // Configure the button bindings
     configureButtonBindings();
-
   }
 
   /**
@@ -158,20 +170,18 @@ public class RobotContainer {
       OIConstants.driverController.a().whileTrue(align.pathfindingCommand);
      //OIConstants.driverController.leftTrigger(0.5).whileTrue(new ScoreSpeaker());
 
-    // OIConstants.driverController.rightTrigger(0.5).whileTrue(Commands.startEnd(
-    //   () -> shooter.setShootingSpeed(0.5),
-    //   () -> shooter.setShootingSpeed(0), 
-    //   shooter));
+    OIConstants.operatorController.rightBumper().whileTrue(Commands.startEnd(
+      () -> shooter.setShootingSpeedRPM(750, 750),
+      () -> shooter.setShootingSpeedRPM(0, 0), 
+      shooter));  
 
-    // OIConstants.operatorController.rightTrigger(0.5).whileTrue(Commands.startEnd(
-    //   () -> shooter.setShootingSpeed(-0.5), 
-    //   () -> shooter.setShootingSpeed(0), 
-    //   shooter));
+    OIConstants.operatorController.leftBumper().whileTrue(Commands.startEnd(
+      () -> shooter.setShootingSpeedRPM(-3000, 3000),
+      () -> shooter.setShootingSpeedRPM(0, 0)));  
 
-    OIConstants.driverController.rightTrigger(0.5).whileTrue(Commands.startEnd(
+    OIConstants.driverController.leftTrigger(0.5).whileTrue(Commands.startEnd(
       () -> indexer.setSpin(true), 
-      () -> indexer.setSpin(false), 
-      indexer));
+      () -> indexer.setSpin(false)));
 
     OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
     OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
@@ -180,16 +190,33 @@ public class RobotContainer {
 
     OIConstants.operatorController.a().whileTrue(Commands.startEnd(
         () -> intake.setOverride(true),
-        () -> intake.setOverride(false),
-        intake));
-        
+        () -> intake.setOverride(false)));
+
     OIConstants.operatorController.y().onTrue(Commands.runOnce(() -> indexer.reverse()));
     OIConstants.operatorController.b().whileTrue(Commands.startEnd(
         () -> indexer.setOverride(true),
-        () -> indexer.setOverride(false),
-        indexer
+        () -> indexer.setOverride(false)
       )
     );
+
+    OIConstants.driverController.a().onTrue(Commands.runOnce(pivot::toggleIdleMode))
+                                    .onFalse(Commands.runOnce(pivot::toggleIdleMode));
+
+    OIConstants.operatorController.leftTrigger(0.5).whileTrue(Commands.sequence(
+      Commands.runOnce(() -> manager.setState(State.Back)),
+      Commands.waitSeconds(0.3),
+      Commands.runOnce(() -> manager.setState(State.RampUp)),
+      Commands.waitUntil(shooter::atSetpoint),
+      Commands.runOnce(() -> manager.setState(State.ScoreSpeaker))
+    ));
+
+    OIConstants.operatorController.rightTrigger().whileTrue(Commands.sequence(
+      Commands.runOnce(() -> manager.setState(State.ScoreAmp))
+    ));
+  }
+
+  public void teleopInit() {
+    manager.setState(State.Init);
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

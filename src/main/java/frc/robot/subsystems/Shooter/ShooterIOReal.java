@@ -2,21 +2,16 @@ package frc.robot.subsystems.Shooter;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.util.KrakenLogger;
 
 public class ShooterIOReal implements ShooterIO {
-    
-    //private CANSparkMax rightShooterMotor = new CANSparkMax(ShooterConstants.rightCanID,MotorType.kBrushless);
     private TalonFX topShooterMotor = new TalonFX(ShooterConstants.rightCanID);
     private TalonFX bottomShooterMotor = new TalonFX(ShooterConstants.leftCanID);
 
@@ -27,19 +22,20 @@ public class ShooterIOReal implements ShooterIO {
     private boolean isEnabled;
     private boolean hasPlayed;
 
-    public ShooterIOReal(){
-        talonFXConfig.Slot0.kP = 0.05;
+    KrakenLogger topMotorLogger = new KrakenLogger(topShooterMotor, ShooterConstants.rightCanID);
+    KrakenLogger bottomMotorLogger = new KrakenLogger(bottomShooterMotor, ShooterConstants.leftCanID);
+
+    public ShooterIOReal() {
+        talonFXConfig.Slot0.kP = ShooterConstants.kP;
         talonFXConfig.Slot0.kI = 0;
         talonFXConfig.Slot0.kD = 0;
         talonFXConfig.Slot0.kS = 0;
-        talonFXConfig.Slot0.kV = 0;
+        talonFXConfig.Slot0.kV = 0.12;
 
         talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-        talonFXConfig.CurrentLimits.StatorCurrentLimit = 30;
-        talonFXConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-        talonFXConfig.CurrentLimits.SupplyCurrentLimit = 30;    
+        talonFXConfig.CurrentLimits.StatorCurrentLimit = 60;
 
-        talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
         // talonFXConfig.MotionMagic.MotionMagicAcceleration = 100;
         // talonFXConfig.MotionMagic.MotionMagicCruiseVelocity = 10;
@@ -76,28 +72,40 @@ public class ShooterIOReal implements ShooterIO {
     }
 
     @Override
-    public void runShooterMotors(double speed) {
-        // set velocity to certain rps, add 0.5 V to overcome gravity
-        //leftShooterMotor.setControl(m_request.withVelocity(speed).withFeedForward(0.2));
+    public void runVoltageTop(double volts) {
+        topShooterMotor.setVoltage(volts);
+    }
 
-        bottomShooterMotor.set(MathUtil.clamp(speed, -1, 1));
-        topShooterMotor.set(MathUtil.clamp(speed, -1, 1));
+    @Override
+    public void runVoltageBottom(double volts) {
+        bottomShooterMotor.setVoltage(volts);
+    }
+
+    @Override
+    public void runShooterMotorsRPM(double topSpeed, double bottomSpeed) {
+        // set velocity to certain rps, add 0.5 V to overcome gravity
+        topShooterMotor.setControl(m_request.withVelocity(topSpeed / 60));
+        bottomShooterMotor.setControl(m_request.withVelocity(bottomSpeed / 60));
+
+        // bottomShooterMotor.set(MathUtil.clamp(bottomSpeed, -1, 1));
+        // topShooterMotor.set(MathUtil.clamp(topSpeed, -1, 1));
     }
 
     @Override
     public void updateInputs(ShooterIOInputs inputs) {
-        inputs.shooterMotorAppliedVolts = bottomShooterMotor.getMotorVoltage().getValueAsDouble();
-        inputs.shooterMotorVelocityRPM = bottomShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM
-        inputs.shooterMotorAppliedVolts = topShooterMotor.getMotorVoltage().getValueAsDouble();
-        inputs.shooterMotorVelocityRPM = topShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM
+        inputs.bottomShooterMotorAppliedVolts = bottomShooterMotor.getMotorVoltage().getValueAsDouble();
+        inputs.bottomShooterMotorVelocityRPM = bottomShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM
+        inputs.bottomShooterCurrent = bottomShooterMotor.getStatorCurrent().getValueAsDouble();
+        inputs.topShooterMotorAppliedVolts = topShooterMotor.getMotorVoltage().getValueAsDouble();
+        inputs.topShooterMotorVelocityRPM = topShooterMotor.getVelocity().getValueAsDouble() * 60.0; // RPS to RPM
+        inputs.topShooterCurrent = topShooterMotor.getStatorCurrent().getValueAsDouble();
 
         isEnabled = DriverStation.isEnabled();
 
         if (isEnabled && !hasPlayed && !DriverStation.isFMSAttached()) {
             m_orchestra.play();
             hasPlayed = true;
-        }
-        else {
+        } else {
             m_orchestra.stop();
         }
     }
