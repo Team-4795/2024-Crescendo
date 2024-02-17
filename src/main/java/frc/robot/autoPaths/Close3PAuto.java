@@ -12,7 +12,7 @@ public class Close3PAuto extends AutoPath {
     public Command load(AutoCommands autoCommands) {
         return Commands.sequence(
             autoCommands.initialize(1),
-            autoCommands.score(),
+            autoCommands.score(0.5),
             autoCommands.followTrajectory(""),
             autoCommands.followTrajectory(""),
             autoCommands.SetPivotAngle(0.2)//insert proper angle here later

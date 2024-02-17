@@ -12,8 +12,7 @@ public class testingPath extends AutoPath {
     public Command load(AutoCommands autoCommands) {
         return Commands.sequence(
             autoCommands.initialize(1),
-            autoCommands.followTrajectory("Go forward")
-           // autoCommands.SetPivotAngle(0.2),//insert proper angle here later
+            autoCommands.alignTrajectory("Go forward", 0)
         );
     }
 }

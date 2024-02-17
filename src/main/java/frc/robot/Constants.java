@@ -63,6 +63,6 @@ public final class Constants {
   }
 
   public static class AutoConstants {
-    public static final double closePivotSetpoint = 0; //tune later
+    public static final double closePivotSetpoint = 3; //tune later
   }
 }

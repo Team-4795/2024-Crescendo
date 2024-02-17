@@ -9,9 +9,12 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 
+import edu.wpi.first.cscore.raw.RawSource;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.StateManager;
 import frc.robot.StateManager.State;
@@ -44,22 +47,36 @@ public class AutoCommands {
     return AutoBuilder.followPath(path);
   }
     
-  public Command score() {
+  public Command score(double speed) {
     return new RunCommand(() -> {
-      indexer.setIndexerSpeed(0.7);
-    }).until(() -> pivot.atSetpoint());
+      indexer.setIndexerSpeed(speed);
+    }).withTimeout(0.5);
 }
 
   public Command SetPivotAngle(double setpoint){
-    return new RunCommand(() -> {
+    return new InstantCommand(() -> {
       pivot.setGoal(setpoint);
     });
   }
+
+    public Command alignTrajectory(String PathName, double setpoint){
+    return Commands.parallel(
+      followTrajectory(PathName),
+      SetPivotAngle(setpoint)
+    );
+    };
+  
 
   public Command initialize(double speed) {
     return new InstantCommand(() -> {
       intake.setIntakeSpeed(speed);
       shooter.setShootingSpeed(speed);
+    });
+  }
+
+  public Command runIndexer(double speed) {
+    return new RunCommand(() -> {
+      indexer.setIndexerSpeed(0.7);
     });
   }
 

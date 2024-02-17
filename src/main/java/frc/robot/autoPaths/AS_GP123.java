@@ -11,17 +11,13 @@ public class AS_GP123 extends AutoPath{
     public Command load(AutoCommands autoCommands) {
         return Commands.sequence(
             autoCommands.initialize(1),
-            autoCommands.score(),
-            autoCommands.followTrajectory("AS GP123 P1"),
-            //change pivot angles later
-            autoCommands.SetPivotAngle(AutoConstants.closePivotSetpoint), //same angles for everything
-            autoCommands.score(),
-            autoCommands.followTrajectory("AS GP123 P2"),
-            autoCommands.SetPivotAngle(AutoConstants.closePivotSetpoint),
-            autoCommands.score(),
-            autoCommands.followTrajectory("AS GP123 P3"),
-            autoCommands.SetPivotAngle(AutoConstants.closePivotSetpoint),
-            autoCommands.score()
+            autoCommands.score(0.5),
+            autoCommands.alignTrajectory("AS GP123 P1", AutoConstants.closePivotSetpoint),
+            autoCommands.score(0.5),
+            autoCommands.alignTrajectory("AS GP123 P2", AutoConstants.closePivotSetpoint),
+            autoCommands.score(0.5),
+            autoCommands.alignTrajectory("AS GP123 P3", AutoConstants.closePivotSetpoint),
+            autoCommands.score(0.5)
         );
     }
 }
