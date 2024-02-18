@@ -17,7 +17,7 @@ public class IntakeIOReal implements IntakeIO {
         intakeMotor.setInverted(false);
 
         talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-        talonFXConfig.CurrentLimits.StatorCurrentLimit = 60;
+        talonFXConfig.CurrentLimits.StatorCurrentLimit = 80;
         // talonFXConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         // talonFXConfig.CurrentLimits.SupplyCurrentLimit = 60;
 

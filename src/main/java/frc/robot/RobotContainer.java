@@ -74,7 +74,7 @@ public class RobotContainer {
         indexer = Indexer.initialize(new IndexerIOReal());
         // Real robot, instantiate hardware IO implementations
         drive = Drive.initialize(
-            new GyroIONavX(),
+            new GyroIOPigeon2(),
             new ModuleIOSparkMax(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId, DriveConstants.kFrontLeftChassisAngularOffset),
             new ModuleIOSparkMax(DriveConstants.kFrontRightDrivingCanId, DriveConstants.kFrontRightTurningCanId, DriveConstants.kFrontRightChassisAngularOffset),
             new ModuleIOSparkMax(DriveConstants.kRearLeftDrivingCanId, DriveConstants.kRearLeftTurningCanId, DriveConstants.kBackLeftChassisAngularOffset),
@@ -106,7 +106,7 @@ public class RobotContainer {
         break;
     }
     NamedCommands.registerCommand("Score", AutoCommands.score(0.7));
-    NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.2));
+    NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.4));
     NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
     NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(1));
 
