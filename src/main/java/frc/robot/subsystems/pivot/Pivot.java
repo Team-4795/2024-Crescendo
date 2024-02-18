@@ -33,7 +33,6 @@ public class Pivot extends SubsystemBase {
     private double goal = 0;
     private final boolean disableArm = false;
     private boolean idleMode = true;
-    private double manualVolts = 0; //temporary, will change to setting setpoint instead later
 
     PivotVisualizer visualizer = new PivotVisualizer(Color.kDarkOrange);
 
@@ -54,7 +53,7 @@ public class Pivot extends SubsystemBase {
         io = pivotIO;
         io.updateInputs(inputs);
 
-        visualizer.update(360 * getPosition());
+        visualizer.update(360 * getTruePosition() / (Math.PI * 2));
         controller.setTolerance(Units.degreesToRadians(2));
 
         setDefaultCommand(run(() -> {
@@ -97,7 +96,7 @@ public class Pivot extends SubsystemBase {
         double FFVolts = motorFeedforward.calculate(controller.getSetpoint().velocity);
 
         if (!disableArm) {
-            io.setVoltage(PIDVolts + manualVolts + FFVolts + linearFF(getPosition()));
+            io.setVoltage(PIDVolts + FFVolts + linearFF(getPosition()));
         }
 
         Logger.recordOutput("Pivot/PID Volts", PIDVolts);

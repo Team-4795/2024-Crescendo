@@ -84,10 +84,10 @@ public class Robot extends LoggedRobot {
 
       case REPLAY:
         // Replaying a log, set up replay source
-        setUseTiming(true); // Run as fast as possible
+        setUseTiming(false); // Run as fast as possible
         String logPath = LogFileUtil.findReplayLog();
         Logger.setReplaySource(new WPILOGReader(logPath));
-        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"), 0.001));
         break;
     }
 
