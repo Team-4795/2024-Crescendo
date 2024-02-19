@@ -175,7 +175,7 @@ public class RobotContainer {
     );
 
     OIConstants.driverController.a().onTrue(Commands.runOnce(pivot::toggleIdleMode))
-                                    .onFalse(Commands.runOnce(pivot::toggleIdleMode));
+                                     .onFalse(Commands.runOnce(pivot::toggleIdleMode));
 
     OIConstants.operatorController.x().onTrue(Commands.sequence(
       Commands.runOnce(() -> manager.setState(State.Load)),
@@ -188,7 +188,9 @@ public class RobotContainer {
       Commands.waitUntil(pivot::atSetpoint),
       Commands.runOnce(() -> manager.setState(State.ScoreAmp))
     ));
-  }
+
+      OIConstants.driverController.a().whileTrue(AlignToAmp.pathfindingCommand);
+    }
 
   public void teleopInit() {
     manager.setState(State.Init);
