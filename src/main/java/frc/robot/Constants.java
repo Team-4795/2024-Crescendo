@@ -36,17 +36,17 @@ public final class Constants {
   public static final int tryConfigCount = 5;
   public static final double configDelay = 0.1;
   //shooter, indexer, intake measured in motor output, pivot measured in radians
-  public record Setpoint(double topShooterMotor, double bottomShooterMotor, double pivot, double indexer, double intake) {}
+  public record Setpoint(Double topShooterMotor, Double bottomShooterMotor, Double pivot, Double indexer, Double intake) {}
 
   public class StateConstants {
-    public static final Setpoint stow = new Setpoint(0,0, 0.08, 0, 0);
-    public static final Setpoint groundIntake = new Setpoint(0,0, 0.08, 1.0, -0.7);
-    public static final Setpoint sourceIntake = new Setpoint(0,0, 0.96, -0.5, 0);
-    public static final Setpoint scoreAmp = new Setpoint(600,600, 1.0, 1.0, 0);
-    public static final Setpoint scoreSpeaker = new Setpoint(-5000,5000,0.6, 1, 0);  
-    public static final Setpoint back = new Setpoint(0, 0, 0, -1, 0);
-    public static final Setpoint rampUp = new Setpoint(-5000, 5000, 0, 0, 0);
-    public static final Setpoint init = new Setpoint(0, 0, 0, 0, 0);
+    public static final Setpoint stow = new Setpoint(0.0,0.0, 0.08, 0.0, 0.0);
+    public static final Setpoint groundIntake = new Setpoint(0.0,0.0, 0.16, 1.0, -0.7);
+    public static final Setpoint sourceIntake = new Setpoint(750.0, -750.0, 0.96, -0.5, 0.0);
+    public static final Setpoint scoreAmp = new Setpoint(600.0,600.0, 1.0, 1.0, 0.0);
+    public static final Setpoint scoreSpeaker = new Setpoint(-5000.0,5000.0,0.6, 1.0, 0.0);  
+    public static final Setpoint load = new Setpoint(null, null, null, -1.0, 0.0);
+    public static final Setpoint reverse = new Setpoint(1000.0, -1000.0, null, -1.0, 0.7);
+    public static final Setpoint init = new Setpoint(0.0, 0.0, 0.0, 0.0, 0.0);
   }
 
 

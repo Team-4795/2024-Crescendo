@@ -143,21 +143,7 @@ public class RobotContainer {
                 true, true),
             drive));
 
-
       OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
-      // OIConstants.driverController.leftBumper().whileTrue(new ScoreSpeaker());
-      //OIConstants.driverController.a().whileTrue(LimelightLookAtSpeaker.lookAtSpeaker(drive));
-      //OIConstants.driverController.a().onTrue(NoteVisualizer.shoot());
-      //OIConstants.driverController.a().whileTrue(AlignToAmp.generatePath());
-
-    // OIConstants.operatorController.rightBumper().whileTrue(Commands.startEnd(
-    //   () -> shooter.setShootingSpeedRPM(750, 750),
-    //   () -> shooter.setShootingSpeedRPM(0, 0), 
-    //   shooter));  
-
-    // OIConstants.operatorController.leftBumper().whileTrue(Commands.startEnd(
-    //   () -> shooter.setShootingSpeedRPM(-3000, 3000),
-    //   () -> shooter.setShootingSpeedRPM(0, 0)));  
 
     OIConstants.driverController.leftTrigger(0.5).whileTrue(Commands.startEnd(
       () -> indexer.setSpin(true), 
@@ -172,11 +158,16 @@ public class RobotContainer {
     OIConstants.operatorController.povDown().onTrue(Commands.runOnce(() -> manager.setState(State.GroundIntake)));
     OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> manager.setState(State.ScoreAmp)));
 
+    OIConstants.operatorController.y().onTrue(Commands.runOnce(() -> {
+      manager.setOverride(true);
+      manager.setOverrideState(State.Reverse);
+    }));
+    OIConstants.operatorController.y().onFalse(Commands.runOnce(() -> manager.setOverride(false)));
+
     OIConstants.operatorController.a().whileTrue(Commands.startEnd(
         () -> intake.setOverride(true),
         () -> intake.setOverride(false)));
 
-    OIConstants.operatorController.y().onTrue(Commands.runOnce(() -> indexer.reverse()));
     OIConstants.operatorController.b().whileTrue(Commands.startEnd(
         () -> indexer.setOverride(true),
         () -> indexer.setOverride(false)
@@ -187,7 +178,7 @@ public class RobotContainer {
                                     .onFalse(Commands.runOnce(pivot::toggleIdleMode));
 
     OIConstants.operatorController.x().onTrue(Commands.sequence(
-      Commands.runOnce(() -> manager.setState(State.Back)),
+      Commands.runOnce(() -> manager.setState(State.Load)),
       Commands.waitSeconds(0.05),
       Commands.runOnce(() -> manager.setState(State.ScoreSpeaker))
     ));

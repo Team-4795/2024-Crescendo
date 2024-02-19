@@ -14,6 +14,8 @@ public class StateManager {
     private static StateManager mInstance;
 
     public State state = State.Stow;
+    private State overrideState = null;
+    private boolean override = false;
     private boolean enabled = true;
 
     public enum State {
@@ -22,8 +24,8 @@ public class StateManager {
         SourceIntake(StateConstants.sourceIntake),
         ScoreAmp(StateConstants.scoreAmp),
         ScoreSpeaker(StateConstants.scoreSpeaker),
-        Back(StateConstants.back),
-        RampUp(StateConstants.rampUp),
+        Load(StateConstants.load),
+        Reverse(StateConstants.reverse),
         Init(StateConstants.init);
 
         Setpoint setpoint;
@@ -34,22 +36,49 @@ public class StateManager {
     }
 
     public void setState(State state) {
-        if (enabled) {
+        if (enabled && !override) {
             this.state = state;
             this.setSetpoints();
         }
     }
 
     public void setSetpoints() {
-        Shooter.getInstance().setShootingSpeedRPM(
-                this.state.setpoint.topShooterMotor(), this.state.setpoint.bottomShooterMotor());
-        Intake.getInstance().setIntakeSpeed(this.state.setpoint.intake());
-        Indexer.getInstance().setIndexerSpeed(this.state.setpoint.indexer());
+        Setpoint desiredSetpoint;
+        if(override){
+            desiredSetpoint = this.overrideState.setpoint;
+        } else {
+            desiredSetpoint = this.state.setpoint;
+        }
 
+        if(desiredSetpoint.topShooterMotor() != null && desiredSetpoint.bottomShooterMotor() != null){
+            Shooter.getInstance().setShootingSpeedRPM(
+                desiredSetpoint.topShooterMotor(), desiredSetpoint.bottomShooterMotor());
+        }
+        
+        if(desiredSetpoint.intake() != null) {
+            Intake.getInstance().setIntakeSpeed(desiredSetpoint.intake());
+        }
+        
+        if(desiredSetpoint.indexer() != null){
+            Indexer.getInstance().setIndexerSpeed(desiredSetpoint.indexer());
+        }
+        
         if (state == State.Init) {
             Pivot.getInstance().reset();
-        } else if (!(state == State.RampUp || state == State.Back)) {
-            Pivot.getInstance().setGoal(this.state.setpoint.pivot());
+        } else if (desiredSetpoint.pivot() != null) {
+            Pivot.getInstance().setGoal(desiredSetpoint.pivot());
+        }
+    }
+
+    public void setOverrideState(State state){
+        this.overrideState = state;
+        this.setSetpoints();
+    }
+
+    public void setOverride(boolean override){
+        this.override = override;
+        if(this.override = false){
+            this.setSetpoints();
         }
     }
 
@@ -61,12 +90,11 @@ public class StateManager {
         return mInstance;
     }
 
-    public void setMutable(boolean on) {
-        this.enabled = on;
+    public void setMutable(boolean mutable) {
+        this.enabled = mutable;
     }
 
     public void periodic() {
-
         Logger.recordOutput("StateManager/State", state.toString());
     }
 }
