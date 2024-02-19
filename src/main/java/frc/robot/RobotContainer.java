@@ -164,6 +164,13 @@ public class RobotContainer {
     }));
     OIConstants.operatorController.y().onFalse(Commands.runOnce(() -> manager.setOverride(false)));
 
+    OIConstants.operatorController.x().onTrue(Commands.runOnce(() -> {
+      manager.setOverride(true);
+      manager.setOverrideState(State.Counter);
+    }));
+    OIConstants.operatorController.x().onFalse(Commands.runOnce(() -> manager.setOverride(false)));
+
+
     OIConstants.operatorController.a().whileTrue(Commands.startEnd(
         () -> intake.setOverride(true),
         () -> intake.setOverride(false)));
@@ -177,7 +184,7 @@ public class RobotContainer {
     OIConstants.driverController.a().onTrue(Commands.runOnce(pivot::toggleIdleMode))
                                     .onFalse(Commands.runOnce(pivot::toggleIdleMode));
 
-    OIConstants.operatorController.x().onTrue(Commands.sequence(
+    OIConstants.operatorController.leftBumper().onTrue(Commands.sequence(
       Commands.runOnce(() -> manager.setState(State.Load)),
       Commands.waitSeconds(0.05),
       Commands.runOnce(() -> manager.setState(State.ScoreSpeaker))
