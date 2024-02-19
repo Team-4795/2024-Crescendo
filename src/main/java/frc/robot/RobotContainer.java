@@ -110,8 +110,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
     NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(1));
 
-
-
     manager.setState(State.Init);
 
     autoSelector = new AutoSelector();

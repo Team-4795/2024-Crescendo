@@ -5,6 +5,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
 public class IndexerIOReal implements IndexerIO {
     private CANSparkMax leftIndexMotor = new CANSparkMax(IndexerConstants.leftCanID, MotorType.kBrushless);
@@ -31,6 +32,16 @@ public class IndexerIOReal implements IndexerIO {
 
         rightIndexMotor.setIdleMode(IdleMode.kBrake);
         leftIndexMotor.setIdleMode(IdleMode.kCoast);
+
+        rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
+        rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+        rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
+        rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
+
+        leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
+        leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+        leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
+        leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
 
         rightIndexMotor.burnFlash();
         leftIndexMotor.burnFlash();

@@ -32,9 +32,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public final class Constants {
   // Mode of the robot, set to Mode.REPLAY for replay
   public static final Mode currentMode = Mode.fromState();
-
   public static final boolean tuningMode = true;
-
+  public static final int tryConfigCount = 5;
+  public static final double configDelay = 0.1;
   //shooter, indexer, intake measured in motor output, pivot measured in radians
   public record Setpoint(double topShooterMotor, double bottomShooterMotor, double pivot, double indexer, double intake) {}
 
