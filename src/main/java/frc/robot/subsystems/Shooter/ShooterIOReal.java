@@ -105,8 +105,6 @@ public class ShooterIOReal implements ShooterIO {
         if (isEnabled && !hasPlayed && !DriverStation.isFMSAttached()) {
             m_orchestra.play();
             hasPlayed = true;
-        } else {
-            m_orchestra.stop();
         }
     }
 }

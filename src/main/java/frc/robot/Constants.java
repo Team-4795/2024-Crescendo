@@ -46,6 +46,7 @@ public final class Constants {
     public static final Setpoint scoreSpeaker = new Setpoint(-5000.0,5000.0,0.6, 1.0, 0.0);  
     public static final Setpoint load = new Setpoint(null, null, null, -1.0, 0.0);
     public static final Setpoint reverse = new Setpoint(1000.0, -1000.0, null, -1.0, 0.7);
+    public static final Setpoint counter = new Setpoint(null, null, null, 1.0, 0.6);
     public static final Setpoint init = new Setpoint(0.0, 0.0, 0.0, 0.0, 0.0);
   }
 

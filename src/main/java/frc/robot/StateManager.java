@@ -26,6 +26,7 @@ public class StateManager {
         ScoreSpeaker(StateConstants.scoreSpeaker),
         Load(StateConstants.load),
         Reverse(StateConstants.reverse),
+        Counter(StateConstants.counter),
         Init(StateConstants.init);
 
         Setpoint setpoint;
