@@ -1,7 +1,10 @@
 package frc.robot.subsystems.Shooter;
 
 import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ShooterSetpoints;
 
 public class Shooter extends SubsystemBase {
     private ShooterIO io;
@@ -47,6 +50,34 @@ public class Shooter extends SubsystemBase {
 
     public double getVelocityBottom() {
         return inputs.bottomShooterMotorVelocityRPM * Math.PI / 30.0;
+    }
+
+    public Command revSpeaker() {
+        return startEnd(
+            () -> setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom),
+            () -> setShootingSpeedRPM(0, 0)
+        );
+    }
+
+    public Command revAmp() {
+        return startEnd(
+            () -> setShootingSpeedRPM(ShooterSetpoints.ampTop, ShooterSetpoints.ampBottom),
+            () -> setShootingSpeedRPM(0, 0)
+        );
+    }
+
+    public Command reverse() {
+        return startEnd(
+            () -> setShootingSpeedRPM(ShooterSetpoints.reverseTop, ShooterSetpoints.reverseBottom),
+            () -> setShootingSpeedRPM(0, 0)
+        );
+    }
+
+    public Command slowReverse() {
+        return startEnd(
+            () -> setShootingSpeedRPM(ShooterSetpoints.slowReverseTop, ShooterSetpoints.slowReverseBottom),
+            () -> setShootingSpeedRPM(0, 0)
+        );
     }
 
     @Override

@@ -14,8 +14,8 @@ public class StateManager {
     private static StateManager mInstance;
 
     public State state = State.Stow;
-    private State overrideState = null;
-    private boolean override = false;
+    // private State overrideState = null;
+    // private boolean override = false;
     private boolean enabled = true;
 
     public enum State {
@@ -37,19 +37,20 @@ public class StateManager {
     }
 
     public void setState(State state) {
-        if (enabled && !override) {
+        if (enabled) {
             this.state = state;
             this.setSetpoints();
         }
     }
 
     public void setSetpoints() {
-        Setpoint desiredSetpoint;
-        if(override){
-            desiredSetpoint = this.overrideState.setpoint;
-        } else {
-            desiredSetpoint = this.state.setpoint;
-        }
+        Setpoint desiredSetpoint = this.state.setpoint;
+        // desiredSetpoint = this.state.setpoint;
+        // if(override){
+        //     desiredSetpoint = this.overrideState.setpoint;
+        // } else {
+        //     desiredSetpoint = this.state.setpoint;
+        // }
 
         if(desiredSetpoint.topShooterMotor() != null && desiredSetpoint.bottomShooterMotor() != null){
             Shooter.getInstance().setShootingSpeedRPM(
@@ -71,17 +72,17 @@ public class StateManager {
         }
     }
 
-    public void setOverrideState(State state){
-        this.overrideState = state;
-        this.setSetpoints();
-    }
+    // public void setOverrideState(State state){
+    //     this.overrideState = state;
+    //     this.setSetpoints();
+    // }
 
-    public void setOverride(boolean override){
-        this.override = override;
-        if(this.override = false){
-            this.setSetpoints();
-        }
-    }
+    // public void setOverride(boolean override){
+    //     this.override = override;
+    //     if(this.override = false){
+    //         this.setSetpoints();
+    //     }
+    // }
 
     public static StateManager getInstance() {
         if (mInstance == null) {

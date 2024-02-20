@@ -13,6 +13,8 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -21,10 +23,12 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.StateManager.State;
 import frc.robot.subsystems.MAXSwerve.*;
@@ -116,7 +120,7 @@ public class RobotContainer {
     NoteVisualizer.setRobotPoseSupplier(drive::getPose);
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("AS GP 123"));
 
- 
+
 
     // Configure the button bindings
     configureButtonBindings();
@@ -143,61 +147,129 @@ public class RobotContainer {
                 true, true),
             drive));
 
-      OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
+    // Zero drive heading
+    OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
 
-    OIConstants.driverController.leftTrigger(0.5).whileTrue(Commands.startEnd(
-      () -> indexer.setSpin(true), 
-      () -> {
-        indexer.setSpin(false);
-        manager.setState(State.Stow);
-      }
-      ));
+    // OIConstants.driverController.leftTrigger(0.5).whileTrue(Commands.startEnd(
+    //   () -> indexer.setSpin(true), 
+    //   () -> {
+    //     indexer.setSpin(false);
+    //     manager.setState(State.Stow);
+    //   }
+    //   ));
 
-    OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
-    OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
-    OIConstants.operatorController.povDown().onTrue(Commands.runOnce(() -> manager.setState(State.GroundIntake)));
-    OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> manager.setState(State.ScoreAmp)));
+    // OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
+    // OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
+    // OIConstants.operatorController.povDown().onTrue(Commands.runOnce(() -> manager.setState(State.GroundIntake)));
+    // OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> manager.setState(State.ScoreAmp)));
 
-    OIConstants.operatorController.y().onTrue(Commands.runOnce(() -> {
-      manager.setOverride(true);
-      manager.setOverrideState(State.Reverse);
-    }));
-    OIConstants.operatorController.y().onFalse(Commands.runOnce(() -> manager.setOverride(false)));
+    // OIConstants.operatorController.y().onTrue(Commands.runOnce(() -> {
+    //   manager.setOverride(true);
+    //   manager.setOverrideState(State.Reverse);
+    // }));
+    // OIConstants.operatorController.y().onFalse(Commands.runOnce(() -> manager.setOverride(false)));
 
-    OIConstants.operatorController.x().onTrue(Commands.runOnce(() -> {
-      manager.setOverride(true);
-      manager.setOverrideState(State.Counter);
-    }));
-    OIConstants.operatorController.x().onFalse(Commands.runOnce(() -> manager.setOverride(false)));
+    // OIConstants.operatorController.x().onTrue(Commands.runOnce(() -> {
+    //   manager.setOverride(true);
+    //   manager.setOverrideState(State.Counter);
+    // }));
+    // OIConstants.operatorController.x().onFalse(Commands.runOnce(() -> manager.setOverride(false)));
 
 
-    OIConstants.operatorController.a().whileTrue(Commands.startEnd(
-        () -> intake.setOverride(true),
-        () -> intake.setOverride(false)));
+    // OIConstants.operatorController.a().whileTrue(Commands.startEnd(
+    //     () -> intake.setOverride(true),
+    //     () -> intake.setOverride(false)));
 
-    OIConstants.operatorController.b().whileTrue(Commands.startEnd(
-        () -> indexer.setOverride(true),
-        () -> indexer.setOverride(false)
+    // OIConstants.operatorController.b().whileTrue(Commands.startEnd(
+    //     () -> indexer.setOverride(true),
+    //     () -> indexer.setOverride(false)
+    //   )
+    // );
+
+
+    // Switch pivot motor idle mode
+    OIConstants.driverController.b().onTrue(Commands.runOnce(pivot::toggleIdleMode))
+                                     .onFalse(Commands.runOnce(pivot::toggleIdleMode));
+
+    // OIConstants.operatorController.leftBumper().onTrue(Commands.sequence(
+    //   Commands.runOnce(() -> manager.setState(State.Load)),
+    //   Commands.waitSeconds(0.05),
+    //   Commands.runOnce(() -> manager.setState(State.ScoreSpeaker))
+    // ));
+
+    // Speaker aim and rev up
+    OIConstants.operatorController.leftBumper().whileTrue(
+      pivot.aimSpeaker().alongWith(shooter.revSpeaker())
+    );
+
+    // Amp aim and rev up
+    OIConstants.operatorController.rightBumper().whileTrue(
+      pivot.aimAmp().alongWith(shooter.revAmp())
+    );
+
+    Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint());
+
+    // Rumble controllers at setpoint
+    // Maybe only rumber drivers?
+    isReady.debounce(0.3)
+      .onTrue(rumble(0.5).withTimeout(1.0))
+      .whileTrue(Commands.startEnd(() -> Logger.recordOutput("Ready to shoot", true), () -> Logger.recordOutput("Ready to shoot", false)));
+
+    // Slow reverse
+    OIConstants.driverController
+      .leftTrigger(0.3)
+      .whileTrue(
+        Commands.parallel(
+          indexer.slowReverse(),
+          shooter.slowReverse()
+        )
+      );
+
+    // Shoot
+    OIConstants.driverController
+      .rightTrigger(0.3)
+      .and(isReady)
+      .whileTrue(
+        Commands.sequence(
+          indexer.reverse().withTimeout(0.3),
+          indexer.forwards()
+        )
+      );
+
+    // Intake
+    OIConstants.operatorController.a().whileTrue(
+      Commands.parallel(
+        pivot.aimIntake(),
+        intake.intake(),
+        indexer.forwards()
+      ).until(indexer::isStoring)
+    );
+
+    // Evacuate notes
+    OIConstants.operatorController.b().whileTrue(
+      Commands.parallel(
+        intake.reverse(),
+        indexer.reverse(),
+        shooter.reverse()
       )
     );
 
-    OIConstants.driverController.a().onTrue(Commands.runOnce(pivot::toggleIdleMode))
-                                     .onFalse(Commands.runOnce(pivot::toggleIdleMode));
+    // Auto drive align
+    OIConstants.driverController.a().whileTrue(AlignToAmp.pathfindingCommand);
 
-    OIConstants.operatorController.leftBumper().onTrue(Commands.sequence(
-      Commands.runOnce(() -> manager.setState(State.Load)),
-      Commands.waitSeconds(0.05),
-      Commands.runOnce(() -> manager.setState(State.ScoreSpeaker))
-    ));
+    // Override storing (flips it)
+    OIConstants.operatorController.x().whileTrue(indexer.overrideStoring());
+  }
 
-    OIConstants.driverController.rightTrigger().whileTrue(Commands.sequence(
-      Commands.runOnce(() -> pivot.setGoal(1.0)),
-      Commands.waitUntil(pivot::atSetpoint),
-      Commands.runOnce(() -> manager.setState(State.ScoreAmp))
-    ));
+  private void setBothRumble(double amount) {
+    OIConstants.operatorController.getHID().setRumble(RumbleType.kBothRumble, amount);
+    OIConstants.operatorController.getHID().setRumble(RumbleType.kBothRumble, amount);
+  }
 
-      OIConstants.driverController.a().whileTrue(AlignToAmp.pathfindingCommand);
-    }
+  public Command rumble(double amount) {
+    return Commands.run(() -> setBothRumble(amount)).finallyDo(() -> setBothRumble(0));
+    // return Commands.startEnd(() -> setBothRumble(amount), () -> setBothRumble(0));
+  }
 
   public void teleopInit() {
     manager.setState(State.Init);

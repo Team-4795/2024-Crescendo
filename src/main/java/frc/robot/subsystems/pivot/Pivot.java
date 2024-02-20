@@ -7,8 +7,12 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.PivotSetpoints;
 import frc.robot.util.LoggedTunableNumber;
 
 public class Pivot extends SubsystemBase {
@@ -78,10 +82,30 @@ public class Pivot extends SubsystemBase {
         controller.setGoal(goal);
     }
 
+    public Command aimSpeaker() {
+        return Commands.startEnd(
+            () -> setGoal(PivotSetpoints.speaker),
+            () -> setGoal(PivotSetpoints.stow)
+        );
+    }
+
+    public Command aimAmp() {
+        return Commands.startEnd(
+            () -> setGoal(PivotSetpoints.amp),
+            () -> setGoal(PivotSetpoints.stow)
+        );
+    }
+
+    public Command aimIntake() {
+        return Commands.startEnd(
+            () -> setGoal(PivotSetpoints.intake),
+            () -> setGoal(PivotSetpoints.stow)
+        );
+    }
+
     public boolean atSetpoint() {
         return controller.atGoal();
     }
-
 
     @Override
     public void periodic() {
@@ -104,7 +128,6 @@ public class Pivot extends SubsystemBase {
         Logger.recordOutput("Pivot/Setpoint Position", controller.getSetpoint().position);
         Logger.recordOutput("Pivot/Setpoint Velocity", controller.getSetpoint().velocity);
         Logger.recordOutput("Pivot/Goal", goal);
-
     }
     
     public void toggleIdleMode() {
