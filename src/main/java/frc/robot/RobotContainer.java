@@ -13,7 +13,6 @@
 
 package frc.robot;
 
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -24,7 +23,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -40,7 +38,6 @@ import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AlignToAmp;
 import frc.robot.commands.AutoCommands;
-import frc.robot.commands.ScoreSpeaker;
 
 
 /**
@@ -150,52 +147,9 @@ public class RobotContainer {
     // Zero drive heading
     OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
 
-    // OIConstants.driverController.leftTrigger(0.5).whileTrue(Commands.startEnd(
-    //   () -> indexer.setSpin(true), 
-    //   () -> {
-    //     indexer.setSpin(false);
-    //     manager.setState(State.Stow);
-    //   }
-    //   ));
-
-    // OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
-    // OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
-    // OIConstants.operatorController.povDown().onTrue(Commands.runOnce(() -> manager.setState(State.GroundIntake)));
-    // OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> manager.setState(State.ScoreAmp)));
-
-    // OIConstants.operatorController.y().onTrue(Commands.runOnce(() -> {
-    //   manager.setOverride(true);
-    //   manager.setOverrideState(State.Reverse);
-    // }));
-    // OIConstants.operatorController.y().onFalse(Commands.runOnce(() -> manager.setOverride(false)));
-
-    // OIConstants.operatorController.x().onTrue(Commands.runOnce(() -> {
-    //   manager.setOverride(true);
-    //   manager.setOverrideState(State.Counter);
-    // }));
-    // OIConstants.operatorController.x().onFalse(Commands.runOnce(() -> manager.setOverride(false)));
-
-
-    // OIConstants.operatorController.a().whileTrue(Commands.startEnd(
-    //     () -> intake.setOverride(true),
-    //     () -> intake.setOverride(false)));
-
-    // OIConstants.operatorController.b().whileTrue(Commands.startEnd(
-    //     () -> indexer.setOverride(true),
-    //     () -> indexer.setOverride(false)
-    //   )
-    // );
-
-
     // Switch pivot motor idle mode
     OIConstants.driverController.b().onTrue(Commands.runOnce(pivot::toggleIdleMode))
                                      .onFalse(Commands.runOnce(pivot::toggleIdleMode));
-
-    // OIConstants.operatorController.leftBumper().onTrue(Commands.sequence(
-    //   Commands.runOnce(() -> manager.setState(State.Load)),
-    //   Commands.waitSeconds(0.05),
-    //   Commands.runOnce(() -> manager.setState(State.ScoreSpeaker))
-    // ));
 
     // Speaker aim and rev up
     OIConstants.operatorController.leftBumper().whileTrue(
@@ -245,7 +199,6 @@ public class RobotContainer {
       ).until(indexer::isStoring)
     );
 
-    // Evacuate notes
     OIConstants.operatorController.b().whileTrue(
       Commands.parallel(
         intake.reverse(),
@@ -253,12 +206,19 @@ public class RobotContainer {
         shooter.reverse()
       )
     );
+    // Override storing (flips it)
+    OIConstants.operatorController.x().whileTrue(indexer.overrideStoring());
+
+    OIConstants.operatorController.y().whileTrue(
+      Commands.parallel(
+        intake.slowReverse(),
+        indexer.forwards()
+      )
+    );
 
     // Auto drive align
     OIConstants.driverController.a().whileTrue(AlignToAmp.pathfindingCommand);
 
-    // Override storing (flips it)
-    OIConstants.operatorController.x().whileTrue(indexer.overrideStoring());
   }
 
   private void setBothRumble(double amount) {
@@ -268,7 +228,6 @@ public class RobotContainer {
 
   public Command rumble(double amount) {
     return Commands.run(() -> setBothRumble(amount)).finallyDo(() -> setBothRumble(0));
-    // return Commands.startEnd(() -> setBothRumble(amount), () -> setBothRumble(0));
   }
 
   public void teleopInit() {

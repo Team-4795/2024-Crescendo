@@ -67,6 +67,7 @@ public final class Constants {
   public static final class IntakeSetpoints {
     public static final double intake = -0.7;
     public static final double reverse = 0.7;
+    public static final double slowReverse = 0.4;
   }
 
   //shooter, indexer, intake measured in motor output, pivot measured in radians

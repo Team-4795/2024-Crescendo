@@ -46,6 +46,10 @@ public class Intake extends SubsystemBase{
         return startEnd(() -> setIntakeSpeed(IntakeSetpoints.reverse), () -> setIntakeSpeed(0));
     }
 
+    public Command slowReverse() {
+        return startEnd(() -> setIntakeSpeed(IntakeSetpoints.slowReverse), () -> setIntakeSpeed(0));
+    }
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);
