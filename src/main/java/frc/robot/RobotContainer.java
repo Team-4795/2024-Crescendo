@@ -163,12 +163,6 @@ public class RobotContainer {
 
     Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint());
 
-    // Rumble controllers at setpoint
-    // Maybe only rumber drivers?
-    isReady.debounce(0.3)
-      .onTrue(rumble(0.5).withTimeout(0.5))
-      .whileTrue(Commands.startEnd(() -> Logger.recordOutput("Ready to shoot", true), () -> Logger.recordOutput("Ready to shoot", false)));
-
     // Slow reverse
     OIConstants.driverController
       .leftTrigger(0.3)
@@ -182,7 +176,8 @@ public class RobotContainer {
     // Shoot
     OIConstants.driverController
       .rightTrigger(0.3)
-      .and(isReady)
+      .and(isReady.debounce(0.3))
+      .whileTrue(rumble(0.5))
       .whileTrue(
         Commands.sequence(
           indexer.reverse().withTimeout(0.05),
@@ -197,6 +192,7 @@ public class RobotContainer {
         intake.intake(),
         indexer.forwards()
       ).until(indexer::isStoring)
+      .andThen(rumble(0.1).withTimeout(0.2))
     );
 
     OIConstants.operatorController.b().whileTrue(
