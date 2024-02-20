@@ -105,16 +105,22 @@ public class RobotContainer {
         drive = Drive.initialize(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
         break;
     }
-    NamedCommands.registerCommand("Score", AutoCommands.score(0.7));
-    NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.4));
+    NamedCommands.registerCommand("Score", AutoCommands.score(1));
+    NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.4)); //change later
     NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
     NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(1));
+    NamedCommands.registerCommand("StopIndexer", AutoCommands.runIndexer(0));
+
+
 
     manager.setState(State.Init);
 
     autoSelector = new AutoSelector();
     NoteVisualizer.setRobotPoseSupplier(drive::getPose);
-    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("AS GP 123"));
+    autoChooser = new LoggedDashboardChooser<>("AS GP 123", AutoBuilder.buildAutoChooser("AS GP 123"));
+    autoChooser = new LoggedDashboardChooser<>("AS GP 1234", AutoBuilder.buildAutoChooser("AS GP 1234"));
+
+
 
  
 

@@ -6,9 +6,28 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "AS GP1234 P1"
+            "name": "RunEverything"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AS GP1234 P1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align"
+                }
+              }
+            ]
           }
         },
         {
@@ -24,9 +43,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "StopIndexer"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "AS GP1234 P4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
           }
         }
       ]
