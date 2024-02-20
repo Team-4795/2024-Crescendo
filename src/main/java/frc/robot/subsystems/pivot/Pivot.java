@@ -58,7 +58,7 @@ public class Pivot extends SubsystemBase {
         io.updateInputs(inputs);
 
         visualizer.update(360 * getTruePosition() / (Math.PI * 2));
-        controller.setTolerance(Units.degreesToRadians(2));
+        controller.setTolerance(Units.degreesToRadians(3));
 
         setDefaultCommand(run(() -> {
             double up = MathUtil.applyDeadband(
