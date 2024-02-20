@@ -68,7 +68,7 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
-        intake = Intake.initialize(new IntakeIOReal());
+        intake = Intake.initialize(new IntakeIOSpark());
         shooter = Shooter.initialize(new ShooterIOReal());
         pivot = Pivot.initialize(new PivotIOReal());
         indexer = Indexer.initialize(new IndexerIOReal());
@@ -161,8 +161,8 @@ public class RobotContainer {
     OIConstants.operatorController.y().onTrue(Commands.runOnce(() -> {
       manager.setOverride(true);
       manager.setOverrideState(State.Reverse);
-    }));
-    OIConstants.operatorController.y().onFalse(Commands.runOnce(() -> manager.setOverride(false)));
+    }))
+      .onFalse(Commands.runOnce(() -> manager.setOverride(false)));
 
     OIConstants.operatorController.x().onTrue(Commands.runOnce(() -> {
       manager.setOverride(true);
