@@ -166,7 +166,7 @@ public class RobotContainer {
     // Rumble controllers at setpoint
     // Maybe only rumber drivers?
     isReady.debounce(0.3)
-      .onTrue(rumble(0.5).withTimeout(1.0))
+      .onTrue(rumble(0.5).withTimeout(0.5))
       .whileTrue(Commands.startEnd(() -> Logger.recordOutput("Ready to shoot", true), () -> Logger.recordOutput("Ready to shoot", false)));
 
     // Slow reverse
@@ -185,7 +185,7 @@ public class RobotContainer {
       .and(isReady)
       .whileTrue(
         Commands.sequence(
-          indexer.reverse().withTimeout(0.3),
+          indexer.reverse().withTimeout(0.05),
           indexer.forwards()
         )
       );
@@ -222,12 +222,13 @@ public class RobotContainer {
   }
 
   private void setBothRumble(double amount) {
-    OIConstants.operatorController.getHID().setRumble(RumbleType.kBothRumble, amount);
+    OIConstants.driverController.getHID().setRumble(RumbleType.kBothRumble, amount);
     OIConstants.operatorController.getHID().setRumble(RumbleType.kBothRumble, amount);
   }
 
   public Command rumble(double amount) {
-    return Commands.run(() -> setBothRumble(amount)).finallyDo(() -> setBothRumble(0));
+    // return Commands.run(() -> setBothRumble(amount)).finallyDo(() -> setBothRumble(0));
+    return Commands.startEnd(() -> setBothRumble(amount), () -> setBothRumble(0));
   }
 
   public void teleopInit() {
