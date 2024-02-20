@@ -20,7 +20,7 @@ public class ShooterIOReal implements ShooterIO {
     private TalonFXConfiguration talonFXConfig = new TalonFXConfiguration();
     final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
     private boolean isEnabled;
-    private boolean hasPlayed;
+    private boolean hasPlayed = false;
 
     KrakenLogger topMotorLogger = new KrakenLogger(topShooterMotor, "Top shooter - ID " + ShooterConstants.rightCanID);
     KrakenLogger bottomMotorLogger = new KrakenLogger(bottomShooterMotor, "Bottom shooter - ID " + ShooterConstants.leftCanID);
@@ -54,6 +54,7 @@ public class ShooterIOReal implements ShooterIO {
                             + response.toString());
         }
 
+        
         response = topShooterMotor.getConfigurator().apply(talonFXConfig);
         if (!response.isOK()) {
             System.out.println(
@@ -63,12 +64,13 @@ public class ShooterIOReal implements ShooterIO {
                             + response.toString());
         }
 
-        hasPlayed = false;
-
         m_orchestra.addInstrument(bottomShooterMotor);
         m_orchestra.addInstrument(topShooterMotor);
 
-        m_orchestra.loadMusic("chirpWindowsXPFX.chrp");
+        var status = m_orchestra.loadMusic("chirp1Up.chrp");
+        if (!status.isOK()) {
+            System.out.println("Orchestra failed with " + status.toString());
+        }
     }
 
     @Override
