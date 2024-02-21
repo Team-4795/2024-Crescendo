@@ -38,6 +38,7 @@ import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AlignToAmp;
 import frc.robot.commands.AutoCommands;
+import frc.robot.commands.ScoreSpeaker;
 
 
 /**
@@ -89,7 +90,7 @@ public class RobotContainer {
         indexer = Indexer.initialize(new IndexerIOSim());
         // Sim robot, instantiate physics sim IO implementations
         drive =
-            new Drive(
+            Drive.initialize(
                 new GyroIOSim(),
                 new ModuleIOSim(DriveConstants.kFrontLeftChassisAngularOffset),
                 new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
@@ -218,6 +219,8 @@ public class RobotContainer {
 
     // Auto drive align
     OIConstants.driverController.a().whileTrue(AlignToAmp.pathfindingCommand);
+
+    OIConstants.driverController.x().whileTrue(new ScoreSpeaker());
 
   }
 

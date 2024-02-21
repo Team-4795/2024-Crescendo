@@ -15,7 +15,7 @@ public class Shooter extends SubsystemBase {
     private double topShootingSpeed = 0.0;
 
     @AutoLogOutput
-    private double bottomSootingSpeed = 0.0;
+    private double bottomShootingSpeed = 0.0;
 
     private static Shooter instance;
     
@@ -37,7 +37,7 @@ public class Shooter extends SubsystemBase {
 
     public void setShootingSpeedRPM(double topSpeed, double bottomSpeed){
         topShootingSpeed = topSpeed;
-        bottomSootingSpeed = bottomSpeed;
+        bottomShootingSpeed = bottomSpeed;
     }
 
     public void runVoltage(double volts) {
@@ -45,7 +45,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean atSetpoint(){
-        return (Math.abs(inputs.bottomShooterMotorVelocityRPM - bottomSootingSpeed) < ShooterConstants.RPMTolerance) && 
+        return (Math.abs(inputs.bottomShooterMotorVelocityRPM - bottomShootingSpeed) < ShooterConstants.RPMTolerance) && 
             (Math.abs(inputs.topShooterMotorVelocityRPM - topShootingSpeed) < ShooterConstants.RPMTolerance);
     }
 
@@ -90,7 +90,7 @@ public class Shooter extends SubsystemBase {
         io.updateInputs(inputs);
         Logger.processInputs("Shooter", inputs);
 
-        io.runShooterMotorsRPM(topShootingSpeed, bottomSootingSpeed);
+        io.runShooterMotorsRPM(topShootingSpeed, bottomShootingSpeed);
     }
 }
 

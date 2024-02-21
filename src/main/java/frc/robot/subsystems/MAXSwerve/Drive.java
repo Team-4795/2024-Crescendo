@@ -80,7 +80,7 @@ public class Drive extends SubsystemBase {
 
 
     /** Creates a new DriveSubsystem. */
-    public Drive(GyroIO gyro, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br) {
+    private Drive(GyroIO gyro, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br) {
         this.gyro = gyro;
         m_frontLeft = new Module(fl, 0);
         m_frontRight = new Module(fr, 1);
