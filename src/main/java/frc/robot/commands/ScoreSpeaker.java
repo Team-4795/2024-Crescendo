@@ -36,8 +36,8 @@ public class ScoreSpeaker extends Command {
     public ScoreSpeaker() {
         addRequirements(pivot, drive, vision);
         rotationPID.enableContinuousInput(-180, 180);
-        StateManager.getInstance().setState(State.ScoreSpeaker);
-        StateManager.getInstance().setMutable(false);
+        // StateManager.getInstance().setState(State.ScoreSpeaker);
+        // StateManager.getInstance().setMutable(false);
     }
 
     @Override

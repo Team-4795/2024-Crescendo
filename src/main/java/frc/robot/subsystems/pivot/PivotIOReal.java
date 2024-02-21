@@ -1,5 +1,6 @@
 package frc.robot.subsystems.pivot;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -11,8 +12,8 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 public class PivotIOReal implements PivotIO {
   private CANSparkFlex pivotLeft = new CANSparkFlex(PivotConstants.leftCanID, MotorType.kBrushless);
   private CANSparkFlex pivotRight = new CANSparkFlex(PivotConstants.rightCanID, MotorType.kBrushless);
-  private DutyCycleEncoder encoder = new DutyCycleEncoder(9);
   private RelativeEncoder motorEncoder = pivotLeft.getEncoder();
+  private AbsoluteEncoder encoder = pivotRight.getAbsoluteEncoder();
   private double inputVolts = 0.0;
 
   public PivotIOReal() {
@@ -22,8 +23,8 @@ public class PivotIOReal implements PivotIO {
     pivotLeft.setSmartCurrentLimit(30);
     pivotRight.setSmartCurrentLimit(30);
 
-    // encoder.setPositionConversionFactor(PivotConstants.positionConversionFactor);
-    // encoder.setVelocityConversionFactor(PivotConstants.velocityConversionFactor);
+    encoder.setPositionConversionFactor(PivotConstants.positionConversionFactor);
+    encoder.setVelocityConversionFactor(PivotConstants.velocityConversionFactor);
 
     pivotLeft.setIdleMode(IdleMode.kBrake);
     pivotRight.setIdleMode(IdleMode.kBrake);
@@ -34,16 +35,18 @@ public class PivotIOReal implements PivotIO {
 
     motorEncoder.setPositionConversionFactor(Math.PI * 2 / PivotConstants.gearing);
     motorEncoder.setVelocityConversionFactor(Math.PI * 2 / 60 / PivotConstants.gearing);
-    motorEncoder.setPosition(encoder.get() * -Math.PI * 2 + 0.18);
+    // motorEncoder.setPosition(encoder.get() * -Math.PI * 2 + 0.18);
 
+    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
-    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
+    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
 
+    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
     pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
     pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
-    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
+    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
     pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
 
     pivotLeft.burnFlash();
@@ -63,7 +66,7 @@ public class PivotIOReal implements PivotIO {
   }
 
   private double getAbsolutePosition() {
-    return encoder.get() * -Math.PI * 2 + 4.175;
+    return encoder.getPosition();
   }
 
   @Override

@@ -31,6 +31,12 @@ public class IntakeIOReal implements IntakeIO {
 
         intakeMotor.clearStickyFaults();
 
+        intakeMotor.getVelocity().setUpdateFrequency(50);
+        intakeMotor.getMotorVoltage().setUpdateFrequency(50);
+        intakeMotor.getPosition().setUpdateFrequency(50);
+
+        intakeMotor.optimizeBusUtilization();
+
          StatusCode response = intakeMotor.getConfigurator().apply(talonFXConfig);
         if (!response.isOK()) {
             System.out.println(

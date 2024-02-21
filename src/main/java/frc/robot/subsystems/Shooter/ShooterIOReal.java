@@ -1,7 +1,7 @@
 package frc.robot.subsystems.Shooter;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -42,6 +42,19 @@ public class ShooterIOReal implements ShooterIO {
 
         talonFXConfig.Audio.BeepOnBoot = true;
 
+        bottomShooterMotor.getMotorVoltage().setUpdateFrequency(50);
+        bottomShooterMotor.getVelocity().setUpdateFrequency(50);
+        bottomShooterMotor.getStatorCurrent().setUpdateFrequency(50);
+        bottomShooterMotor.getMotorVoltage().setUpdateFrequency(50);
+
+        topShooterMotor.getMotorVoltage().setUpdateFrequency(50);
+        topShooterMotor.getVelocity().setUpdateFrequency(50);
+        topShooterMotor.getStatorCurrent().setUpdateFrequency(50);
+        topShooterMotor.getMotorVoltage().setUpdateFrequency(50);
+
+        topShooterMotor.optimizeBusUtilization();
+        bottomShooterMotor.optimizeBusUtilization();
+
         bottomShooterMotor.clearStickyFaults();
         topShooterMotor.clearStickyFaults();
 
@@ -65,10 +78,10 @@ public class ShooterIOReal implements ShooterIO {
 
         hasPlayed = false;
 
-        m_orchestra.addInstrument(bottomShooterMotor);
-        m_orchestra.addInstrument(topShooterMotor);
+        // m_orchestra.addInstrument(bottomShooterMotor);
+        // m_orchestra.addInstrument(topShooterMotor);
 
-        m_orchestra.loadMusic("chirpWindowsXPFX.chrp");
+        // m_orchestra.loadMusic("chirpWindowsXPFX.chrp");
     }
 
     @Override
@@ -101,9 +114,9 @@ public class ShooterIOReal implements ShooterIO {
 
         isEnabled = DriverStation.isEnabled();
 
-        if (isEnabled && !hasPlayed && !DriverStation.isFMSAttached()) {
-            m_orchestra.play();
-            hasPlayed = true;
-        }
+        // if (isEnabled && !hasPlayed && !DriverStation.isFMSAttached()) {
+        //     m_orchestra.play();
+        //     hasPlayed = true;
+        // }
     }
 }

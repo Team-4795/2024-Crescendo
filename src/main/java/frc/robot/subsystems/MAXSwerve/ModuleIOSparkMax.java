@@ -49,6 +49,9 @@ public class ModuleIOSparkMax implements ModuleIO {
     m_drivingPIDController = m_drivingSpark.getPIDController();
     m_turningPIDController = m_turningSparkMax.getPIDController();
 
+    m_drivingSpark.setCANTimeout(150);
+    m_turningSparkMax.setCANTimeout(150);
+
     for (int i = 0; i < Constants.tryConfigCount; i++) {
 
       m_drivingPIDController.setFeedbackDevice(m_drivingEncoder);
@@ -111,6 +114,9 @@ public class ModuleIOSparkMax implements ModuleIO {
 
       Timer.delay(Constants.configDelay);
     }
+
+    m_drivingSpark.setCANTimeout(0);
+    m_turningSparkMax.setCANTimeout(0);
 
     // Save the SPARK MAX configurations. If a SPARK MAX browns out during
     // operation, it will maintain the above configurations.
