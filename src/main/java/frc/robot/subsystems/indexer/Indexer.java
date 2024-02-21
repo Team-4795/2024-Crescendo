@@ -1,6 +1,7 @@
 package frc.robot.subsystems.indexer;
 
 import java.beans.Statement;
+import java.util.function.DoubleSupplier;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -98,7 +99,7 @@ public class Indexer extends SubsystemBase {
         // Flip the value if overrideStoring is true
         return inputs.sensorActivated ^ overrideStoring;
     }
-
+    
     @Override
     public void periodic() {
         io.updateInputs(inputs);

@@ -191,10 +191,12 @@ public class RobotContainer {
         pivot.aimIntake(),
         intake.intake(),
         indexer.forwards()
-      ).until(indexer::isStoring)
-      .andThen(rumble(0.1).withTimeout(0.2))
+      )
+        .until(indexer::isStoring)
+        .andThen(rumble(0.1).withTimeout(0.2))
     );
 
+    // Full reverse
     OIConstants.operatorController.b().whileTrue(
       Commands.parallel(
         intake.reverse(),
@@ -202,9 +204,11 @@ public class RobotContainer {
         shooter.reverse()
       )
     );
+
     // Override storing (flips it)
     OIConstants.operatorController.x().whileTrue(indexer.overrideStoring());
 
+    // Other reverse
     OIConstants.operatorController.y().whileTrue(
       Commands.parallel(
         intake.slowReverse(),

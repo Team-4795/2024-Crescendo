@@ -1,5 +1,6 @@
 package frc.robot.subsystems.Shooter;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -9,7 +10,11 @@ import frc.robot.Constants.ShooterSetpoints;
 public class Shooter extends SubsystemBase {
     private ShooterIO io;
     private ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
+
+    @AutoLogOutput
     private double topShootingSpeed = 0.0;
+
+    @AutoLogOutput
     private double bottomSootingSpeed = 0.0;
 
     private static Shooter instance;
@@ -40,8 +45,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean atSetpoint(){
-        return (Math.abs(inputs.bottomShooterMotorVelocityRPM - bottomSootingSpeed) < 50) && 
-            (Math.abs(inputs.topShooterMotorVelocityRPM - topShootingSpeed) < 50);
+        return (Math.abs(inputs.bottomShooterMotorVelocityRPM - bottomSootingSpeed) < ShooterConstants.RPMTolerance) && 
+            (Math.abs(inputs.topShooterMotorVelocityRPM - topShootingSpeed) < ShooterConstants.RPMTolerance);
     }
 
     public double getVelocityTop() {
@@ -84,6 +89,7 @@ public class Shooter extends SubsystemBase {
     public void periodic(){
         io.updateInputs(inputs);
         Logger.processInputs("Shooter", inputs);
+
         io.runShooterMotorsRPM(topShootingSpeed, bottomSootingSpeed);
     }
 }
