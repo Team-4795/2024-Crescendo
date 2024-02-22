@@ -19,7 +19,7 @@ public class Indexer extends SubsystemBase {
     private boolean override;
     private boolean isAuto = false;
 
-    private boolean currentStoring = false;
+    public static boolean currentStoring = false;
     private CircularBuffer<Double> currents = new CircularBuffer<>(IndexerConstants.bufferSize);
 
     private static Indexer instance;
@@ -64,7 +64,9 @@ public class Indexer extends SubsystemBase {
         isAuto = on;
     }
 
-    // public void isStoring()
+    public boolean isStoring() {
+        return inputs.sensorActivated;
+    }
 
     @Override
     public void periodic() {

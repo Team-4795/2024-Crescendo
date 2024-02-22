@@ -43,9 +43,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "SensingPiece"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "AS GP123 P2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SensingPiece"
           }
         },
         {

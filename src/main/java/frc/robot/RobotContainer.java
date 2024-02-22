@@ -110,6 +110,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
     NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(1));
     NamedCommands.registerCommand("StopIndexer", AutoCommands.runIndexer(0));
+    NamedCommands.registerCommand("SensePiece", AutoCommands.sensingPiece());
 
 
 
@@ -117,8 +118,8 @@ public class RobotContainer {
 
     autoSelector = new AutoSelector();
     NoteVisualizer.setRobotPoseSupplier(drive::getPose);
-    autoChooser = new LoggedDashboardChooser<>("AS GP 123", AutoBuilder.buildAutoChooser("AS GP 123"));
-    autoChooser = new LoggedDashboardChooser<>("AS GP 1234", AutoBuilder.buildAutoChooser("AS GP 1234"));
+    autoChooser = new LoggedDashboardChooser<>("AS GP 123", AutoBuilder.buildAutoChooser("AS GP123"));
+    autoChooser = new LoggedDashboardChooser<>("AS GP 1234", AutoBuilder.buildAutoChooser("AS GP1234"));
 
 
 

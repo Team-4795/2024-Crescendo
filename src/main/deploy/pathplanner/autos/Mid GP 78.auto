@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.3171869760109631,
+      "y": 4.070564534960625
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Initialize"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Mid GP78 P1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Mid GP78 P2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Mid GP78 P3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Mid GP78 P4"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
