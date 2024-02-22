@@ -49,8 +49,8 @@ public class ModuleIOSparkMax implements ModuleIO {
     m_drivingPIDController = m_drivingSpark.getPIDController();
     m_turningPIDController = m_turningSparkMax.getPIDController();
 
-    m_drivingSpark.setCANTimeout(150);
-    m_turningSparkMax.setCANTimeout(150);
+    m_drivingSpark.setCANTimeout(250);
+    m_turningSparkMax.setCANTimeout(250);
 
     for (int i = 0; i < Constants.tryConfigCount; i++) {
 
