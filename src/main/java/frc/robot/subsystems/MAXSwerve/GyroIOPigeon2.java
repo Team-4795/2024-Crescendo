@@ -1,14 +1,21 @@
 package frc.robot.subsystems.MAXSwerve;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class GyroIOPigeon2 implements GyroIO{
-
     private Pigeon2 pigeon = new Pigeon2(DriveConstants.kPigeonCanId);
+    private final StatusSignal<Double> yaw = pigeon.getYaw();
+    // private final StatusSignal<Double> rate = pigeon.getAngularVelocityZDevice();
 
     public GyroIOPigeon2(){
         pigeon.reset();
+
+        BaseStatusSignal.setUpdateFrequencyForAll(50, yaw);
+
+        pigeon.optimizeBusUtilization(1.0);
     }
 
     @Override
@@ -18,8 +25,8 @@ public class GyroIOPigeon2 implements GyroIO{
 
     @Override
     public void updateInputs(GyroIOInputs inputs) {
-        inputs.connected = true;
-        inputs.yaw = Rotation2d.fromDegrees(pigeon.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0));
+        inputs.connected = BaseStatusSignal.refreshAll(yaw).isOK();
+        inputs.yaw = Rotation2d.fromDegrees(yaw.getValueAsDouble() * (DriveConstants.kGyroReversed ? -1.0 : 1.0));
         inputs.yawVelocity = pigeon.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
     }
 

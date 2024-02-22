@@ -57,6 +57,11 @@ public class ModuleIOSparkMax implements ModuleIO {
       m_drivingPIDController.setFeedbackDevice(m_drivingEncoder);
       m_turningPIDController.setFeedbackDevice(m_turningEncoder);
 
+      m_turningEncoder.setAverageDepth(2);
+
+      m_drivingEncoder.setMeasurementPeriod(10);
+      m_drivingEncoder.setAverageDepth(2);
+
       // in meters and meters per second
       m_drivingEncoder.setPositionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
       m_drivingEncoder.setVelocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
@@ -115,13 +120,13 @@ public class ModuleIOSparkMax implements ModuleIO {
       Timer.delay(Constants.configDelay);
     }
 
-    m_drivingSpark.setCANTimeout(0);
-    m_turningSparkMax.setCANTimeout(0);
-
     // Save the SPARK MAX configurations. If a SPARK MAX browns out during
     // operation, it will maintain the above configurations.
     m_drivingSpark.burnFlash();
     m_turningSparkMax.burnFlash();
+
+    m_drivingSpark.setCANTimeout(0);
+    m_turningSparkMax.setCANTimeout(0);
 
     m_chassisAngularOffset = Rotation2d.fromRadians(chassisAngularOffset);
     m_desiredState.angle = new Rotation2d(m_turningEncoder.getPosition());

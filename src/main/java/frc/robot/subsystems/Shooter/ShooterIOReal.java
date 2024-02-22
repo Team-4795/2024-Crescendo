@@ -47,6 +47,9 @@ public class ShooterIOReal implements ShooterIO {
             topRPM,
             bottomRPM);
 
+        topShooterMotor.optimizeBusUtilization(1.0);
+        bottomShooterMotor.optimizeBusUtilization(1.0);
+
         bottomShooterMotor.clearStickyFaults();
         topShooterMotor.clearStickyFaults();
 

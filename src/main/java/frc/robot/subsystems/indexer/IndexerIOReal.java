@@ -1,5 +1,6 @@
 package frc.robot.subsystems.indexer;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkLimitSwitch;
