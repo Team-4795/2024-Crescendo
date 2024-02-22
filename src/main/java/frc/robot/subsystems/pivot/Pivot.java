@@ -96,6 +96,13 @@ public class Pivot extends SubsystemBase {
         );
     }
 
+    public Command aimSource() {
+        return Commands.startEnd(
+            () -> setGoal(PivotSetpoints.source),
+            () -> setGoal(PivotSetpoints.stow)
+        );
+    }
+
     public Command aimIntake() {
         return Commands.startEnd(
             () -> setGoal(PivotSetpoints.intake),

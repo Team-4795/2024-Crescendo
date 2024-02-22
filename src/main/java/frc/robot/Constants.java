@@ -46,13 +46,14 @@ public final class Constants {
     public static final double amp = 1.1;
     public static final double stow = 0.08;
     public static final double intake = 0.15;
+    public static final double source = 0.96;
   }
 
   public static final class IndexerSetpoints {
     public static final double shoot = 1.0;
     // public static final double amp = 1.0;
     public static final double reverse = -1.0;
-    public static final double slowReverse = 0.2;
+    public static final double slowReverse = -0.2;
   }
 
   public static final class ShooterSetpoints {
