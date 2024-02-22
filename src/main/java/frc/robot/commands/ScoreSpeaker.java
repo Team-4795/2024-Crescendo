@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.StateManager;
 import frc.robot.Constants.OIConstants;
 import frc.robot.StateManager.State;
@@ -28,13 +29,17 @@ public class ScoreSpeaker extends Command {
 
     private double previousAngle;
 
-    private Vision vision = Vision.getInstance();
+    private Vision vision;
     private Drive drive = Drive.getInstance();
     private Pivot pivot = Pivot.getInstance();
     private PIDController rotationPID = new PIDController(0.09, 0, 0); // 0.09, 0, 0
 
     public ScoreSpeaker() {
-        addRequirements(pivot, drive, vision);
+        addRequirements(pivot, drive);
+        if(Constants.hasVision){
+            vision = Vision.getInstance();
+            addRequirements(vision);
+        }
         rotationPID.enableContinuousInput(-180, 180);
         // StateManager.getInstance().setState(State.ScoreSpeaker);
         // StateManager.getInstance().setMutable(false);

@@ -34,11 +34,17 @@ public class IndexerIOReal implements IndexerIO {
         rightIndexMotor.setIdleMode(IdleMode.kBrake);
         leftIndexMotor.setIdleMode(IdleMode.kCoast);
 
+        rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+        rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200);
+        rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 65535);
         rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
         rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
         rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
         rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
 
+        leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+        leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200);
+        leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 65535);
         leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
         leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
         leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);

@@ -108,10 +108,15 @@ public class ModuleIOSparkMax implements ModuleIO {
       m_drivingSpark.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
       m_turningSparkMax.setSmartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
 
-      m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+
+      m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+      m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 1000);
+      m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 65535);
       m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
       m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+      m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
+      m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
       m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
       m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
       m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);

@@ -37,17 +37,19 @@ public class PivotIOReal implements PivotIO {
     motorEncoder.setVelocityConversionFactor(Math.PI * 2 / 60 / PivotConstants.gearing);
     // motorEncoder.setPosition(encoder.get() * -Math.PI * 2 + 0.18);
 
-    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200);
+    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
-    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
 
-    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200);
+    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
     pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
     pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
     pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
-    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
 
     pivotLeft.burnFlash();
     pivotRight.burnFlash();

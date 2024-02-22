@@ -17,6 +17,10 @@ package frc.robot;
 
 
 
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
+import org.photonvision.proto.Photon;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -33,6 +37,7 @@ public final class Constants {
   // Mode of the robot, set to Mode.REPLAY for replay
   public static final Mode currentMode = Mode.fromState();
   public static final boolean tuningMode = true;
+  public static final boolean hasVision = false;
   public static final int tryConfigCount = 5;
   public static final double configDelay = 0.1;
 

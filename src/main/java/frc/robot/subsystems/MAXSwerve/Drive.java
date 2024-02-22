@@ -61,7 +61,7 @@ public class Drive extends SubsystemBase {
     SwerveDrivePoseEstimator m_poseEstimator;
     private EstimatedRobotPose visionPose = new EstimatedRobotPose(new Pose3d(), m_currentRotation, null, null);
 
-    private Vision vision = Vision.getInstance();
+    private Vision vision;;
     // Odometry class for tracking robot pose
     SwerveDriveOdometry m_odometry;
     private Pose2d pose = new Pose2d();
@@ -91,6 +91,10 @@ public class Drive extends SubsystemBase {
         m_frontRight.updateInputs();
         m_rearLeft.updateInputs();
         m_rearRight.updateInputs();
+
+        if(Constants.hasVision){
+            vision = Vision.getInstance();
+        }
 
           // Odometry class for tracking robot pose
         m_poseEstimator = new SwerveDrivePoseEstimator(
@@ -157,7 +161,7 @@ public class Drive extends SubsystemBase {
                     m_rearRight.getPosition()
                 });
         
-        if (Constants.currentMode == Mode.REAL) {
+        if (Constants.currentMode == Mode.REAL && Constants.hasVision) {
             vision.getArducamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> m_poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
             vision.getLifecamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> m_poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
             
