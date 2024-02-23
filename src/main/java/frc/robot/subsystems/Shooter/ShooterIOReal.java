@@ -83,10 +83,10 @@ public class ShooterIOReal implements ShooterIO {
 
         hasPlayed = false;
 
-        // m_orchestra.addInstrument(bottomShooterMotor);
-        // m_orchestra.addInstrument(topShooterMotor);
+        m_orchestra.addInstrument(bottomShooterMotor);
+        m_orchestra.addInstrument(topShooterMotor);
 
-        // m_orchestra.loadMusic("chirpWindowsXPFX.chrp");
+        m_orchestra.loadMusic("chirp1Up.chrp");
     }
 
     @Override
@@ -121,9 +121,13 @@ public class ShooterIOReal implements ShooterIO {
 
         isEnabled = DriverStation.isEnabled();
 
-        // if (isEnabled && !hasPlayed && !DriverStation.isFMSAttached()) {
-        //     m_orchestra.play();
-        //     hasPlayed = true;
-        // }
+        if (isEnabled && !hasPlayed && !DriverStation.isFMSAttached()) {
+            m_orchestra.play();
+            hasPlayed = true;
+        } 
+
+        if (hasPlayed && m_orchestra.isPlaying() && m_orchestra.getCurrentTime() > 1) {
+            m_orchestra.stop();
+        }
     }
-}
+} 

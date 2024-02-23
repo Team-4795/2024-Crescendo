@@ -19,7 +19,8 @@ public class IntakeIOReal implements IntakeIO {
 
     // KrakenLogger intakeLogger = new KrakenLogger(intakeMotor, "Intake - ID " + IntakeConstants.canID);
 
-    private final StatusSignal<Double> voltage = intakeMotor.getStatorCurrent();
+    private final StatusSignal<Double> current = intakeMotor.getStatorCurrent();
+    private final StatusSignal<Double> voltage = intakeMotor.getMotorVoltage();
     private final StatusSignal<Double> velocity = intakeMotor.getVelocity();
 
     public IntakeIOReal() {
@@ -59,6 +60,7 @@ public class IntakeIOReal implements IntakeIO {
         
         inputs.angularVelocityRPM = velocity.getValueAsDouble()*60;
         // inputs.angularPositionRot = intakeMotor.getPosition().getValueAsDouble();
+        inputs.currentAmps = current.getValueAsDouble();
         inputs.voltage = voltage.getValueAsDouble();
     }
 

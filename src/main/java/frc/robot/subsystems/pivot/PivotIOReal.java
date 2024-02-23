@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.PWM.PeriodMultiplier;
 
 public class PivotIOReal implements PivotIO {
   private CANSparkFlex pivotLeft = new CANSparkFlex(PivotConstants.leftCanID, MotorType.kBrushless);
@@ -19,6 +20,9 @@ public class PivotIOReal implements PivotIO {
   public PivotIOReal() {
     pivotRight.restoreFactoryDefaults();
     pivotLeft.restoreFactoryDefaults();
+
+    pivotLeft.setCANTimeout(250);
+    pivotRight.setCANTimeout(250);
 
     pivotLeft.setSmartCurrentLimit(30);
     pivotRight.setSmartCurrentLimit(30);
@@ -37,6 +41,7 @@ public class PivotIOReal implements PivotIO {
     motorEncoder.setVelocityConversionFactor(Math.PI * 2 / 60 / PivotConstants.gearing);
     // motorEncoder.setPosition(encoder.get() * -Math.PI * 2 + 0.18);
 
+    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200);
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
@@ -44,7 +49,7 @@ public class PivotIOReal implements PivotIO {
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
 
-    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+    // pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
     pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200);
     pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
     pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
@@ -53,6 +58,9 @@ public class PivotIOReal implements PivotIO {
 
     pivotLeft.burnFlash();
     pivotRight.burnFlash();
+
+    pivotLeft.setCANTimeout(0);
+    pivotRight.setCANTimeout(0);
   }
 
   @Override
@@ -75,7 +83,10 @@ public class PivotIOReal implements PivotIO {
   public void updateInputs(PivotIOInputs inputs) {
     inputs.pivotInputVolts = inputVolts;
     inputs.pivotAppliedVolts = pivotLeft.getAppliedOutput() * pivotLeft.getBusVoltage();
-    inputs.pivotPositionRads = getAbsolutePosition();
+
+    if (Math.abs(inputs.pivotPositionRads - getAbsolutePosition()) < 0.1) {
+      inputs.pivotPositionRads = getAbsolutePosition();
+    }
 
     // Cut off weird jumps
     if (Math.abs(motorEncoder.getPosition()) < 2.0) {

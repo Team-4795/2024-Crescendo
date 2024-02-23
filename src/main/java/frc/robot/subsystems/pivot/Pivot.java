@@ -111,10 +111,10 @@ public class Pivot extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Pivot", inputs);
-        visualizer.update(Units.radiansToDegrees(getPosition() + PivotConstants.angleOffset));
+        // visualizer.update(Units.radiansToDegrees(getPosition() + PivotConstants.angleOffset));
 
-        LoggedTunableNumber.ifChanged(hashCode(), () -> controller.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
-        LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);
+        // LoggedTunableNumber.ifChanged(hashCode(), () -> controller.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
+        // LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);
                 
         double PIDVolts = controller.calculate(getPosition());
         double FFVolts = motorFeedforward.calculate(controller.getSetpoint().velocity);
