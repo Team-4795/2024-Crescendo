@@ -217,6 +217,14 @@ public class RobotContainer {
       )
     );
 
+    OIConstants.operatorController.povUp().onTrue(
+      Commands.parallel(
+        shooter.slowReverse(),
+        indexer.slowReverse(),
+        pivot.aimSource()
+      )
+    );
+
     // Auto drive align
     OIConstants.driverController.a().whileTrue(AlignToAmp.pathfindingCommand);
 
