@@ -113,6 +113,7 @@ public class CANSpark {
         }
 
         motor.restoreFactoryDefaults();
+        motor.setCANTimeout(100);
 
         motor.setSmartCurrentLimit(build.currentLimit);
         motor.setIdleMode(build.mode);
@@ -149,6 +150,8 @@ public class CANSpark {
         
         motor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
         motor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+
+        motor.setCANTimeout(0);
     }
 
     public void set(double speed){

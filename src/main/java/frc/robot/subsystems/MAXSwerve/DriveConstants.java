@@ -31,7 +31,7 @@ public final class DriveConstants {
     public static final double kWheelBase = Units.inchesToMeters(20.75);
     // Distance between front and back wheels on robot
     
-    public static final double kTrackRadius = Units.inchesToMeters(29.34); //MUST CHANGE - ALSO IT'S IN METERS
+    public static final double kTrackRadius = Units.inchesToMeters(29.34/2); 
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
             new Translation2d(kWheelBase / 2, kTrackWidth / 2),
             new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
@@ -39,10 +39,10 @@ public final class DriveConstants {
             new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
     // Angular offsets of the modules relative to the chassis in radians
-    public static final double kFrontLeftChassisAngularOffset = Math.PI / 2;
-    public static final double kFrontRightChassisAngularOffset = Math.PI;
-    public static final double kBackLeftChassisAngularOffset = 0;
-    public static final double kBackRightChassisAngularOffset = -Math.PI / 2;
+    public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
+    public static final double kFrontRightChassisAngularOffset = 0;
+    public static final double kBackLeftChassisAngularOffset = Math.PI;
+    public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
     // SPARK MAX CAN IDs
     public static final int kFrontLeftDrivingCanId = 2;
@@ -55,9 +55,7 @@ public final class DriveConstants {
     public static final int kFrontRightTurningCanId = 5;
     public static final int kRearRightTurningCanId = 9;
 
-    public static final Rotation2d kChassisAngularOffset = Rotation2d.fromDegrees(0);
-
-    public static final int kPigeonCanId = 10;
+    public static final int kPigeonCanId = 20;
 
     public static final boolean kGyroReversed = true;
 
@@ -102,7 +100,7 @@ public final class DriveConstants {
         public static final double kDrivingMinOutput = -1;
         public static final double kDrivingMaxOutput = 1;
 
-        public static final double kTurningP = 0.5;
+        public static final double kTurningP = 1;
         public static final double kTurningI = 0;
         public static final double kTurningD = 0;
         public static final double kTurningFF = 0;
@@ -112,27 +110,18 @@ public final class DriveConstants {
         public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
         public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
-        public static final int kDrivingMotorCurrentLimit = 30; // amps
+        public static final int kDrivingMotorCurrentLimit = 60; // amps
         public static final int kTurningMotorCurrentLimit = 20; // amps
     }
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxSpeedMetersPerSecond = 4.8;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+        public static final double kMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-        public static final double kPXController = 1;
-        public static final double kPYController = 1;
-        public static final double kPThetaController = 1;
-
-        public static final HolonomicPathFollowerConfig follower = new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                        new PIDConstants(ModuleConstants.kDrivingP, ModuleConstants.kDrivingI, ModuleConstants.kDrivingD), // Translation PID constants
-                        new PIDConstants(ModuleConstants.kTurningP, ModuleConstants.kTurningI, ModuleConstants.kTurningD), // Rotation PID constants
-                        4.5, // Max module speed, in m/s ***MIGHT CHANGE***
-                        0.4, // Drive base radius in meters. Distance from robot center to furthest module. ***MIGHT CHANGE***
-                        new ReplanningConfig() // Default path replanning config. See the API for the options here
-                );
+        public static final double kPDrivingController = 2;
+        public static final double kPThetaController = 3;
 
         // Constraint for the motion profiled robot angle controller
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
@@ -140,6 +129,6 @@ public final class DriveConstants {
     }
 
     public static final class NeoMotorConstants {
-        public static final double kFreeSpeedRpm = 5676;
+        public static final double kFreeSpeedRpm = 6784;
     }
 }

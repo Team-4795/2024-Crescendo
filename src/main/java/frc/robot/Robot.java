@@ -13,8 +13,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.util.LocalADStarAK;
+
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -22,6 +28,8 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
+
+import com.pathplanner.lib.pathfinding.Pathfinding;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -39,6 +47,9 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
+
+    Pathfinding.setPathfinder(new LocalADStarAK());
+
     // Record metadata
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -61,7 +72,8 @@ public class Robot extends LoggedRobot {
     switch (Constants.currentMode) {
       case REAL:
         // Running on a real robot, log to a USB stick ("/U/logs")
-        // Logger.addDataReceiver(new WPILOGWriter());
+        new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+        Logger.addDataReceiver(new WPILOGWriter());
         Logger.addDataReceiver(new NT4Publisher());
         break;
 
@@ -75,7 +87,7 @@ public class Robot extends LoggedRobot {
         setUseTiming(false); // Run as fast as possible
         String logPath = LogFileUtil.findReplayLog();
         Logger.setReplaySource(new WPILOGReader(logPath));
-        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"), 0.0001));
         break;
     }
 
@@ -85,7 +97,6 @@ public class Robot extends LoggedRobot {
     // Start AdvantageKit logger & URCL
     Logger.registerURCL(URCL.startExternal());
     Logger.start();
-
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
@@ -99,7 +110,11 @@ public class Robot extends LoggedRobot {
     // finished or interrupted commands, and running subsystem periodic() methods.
     // This must be called from the robot's periodic block in order for anything in
     // the Command-based framework to work.
+    Threads.setCurrentThreadPriority(true, 99);
     CommandScheduler.getInstance().run();
+
+    StateManager.getInstance().periodic();
+    Threads.setCurrentThreadPriority(true, 10);
   }
 
   /** This function is called once when the robot is disabled. */
@@ -113,6 +128,7 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    Indexer.getInstance().setAutoMode(true);
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -128,6 +144,7 @@ public class Robot extends LoggedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+    Indexer.getInstance().setAutoMode(false);
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -135,6 +152,8 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+
+    robotContainer.teleopInit();
   }
 
   /** This function is called periodically during operator control. */

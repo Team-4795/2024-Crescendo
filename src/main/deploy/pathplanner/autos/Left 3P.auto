@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.66,
-      "y": 4.48
+      "x": 1.2392814346720042,
+      "y": 4.52825959032701
     },
     "rotation": 120.0
   },
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left to GP3"
+            "pathName": "AS GP123 P2"
           }
         },
         {
@@ -32,13 +32,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "GP3 to GP8"
+            "pathName": "Left 3P P2"
           }
         },
         {
           "type": "sequential",
           "data": {
             "commands": []
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left 3P P3"
           }
         }
       ]
