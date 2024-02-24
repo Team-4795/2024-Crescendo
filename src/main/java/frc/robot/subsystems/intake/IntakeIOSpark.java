@@ -1,11 +1,12 @@
 package frc.robot.subsystems.intake;
 
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class IntakeIOSpark implements IntakeIO {
-    private final CANSparkMax intakeMotor = new CANSparkMax(IntakeConstants.canID, MotorType.kBrushless);
+    private final CANSparkFlex intakeMotor = new CANSparkFlex(IntakeConstants.canID, MotorType.kBrushless);
     private final RelativeEncoder frontEncoder = intakeMotor.getEncoder();
 
     public IntakeIOSpark() {
