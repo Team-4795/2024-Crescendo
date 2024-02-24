@@ -9,7 +9,7 @@ public class IntakeIOSpark implements IntakeIO {
     private final RelativeEncoder frontEncoder = intakeMotor.getEncoder();
 
     public IntakeIOSpark() {
-        intakeMotor.setInverted(false);
+        intakeMotor.setInverted(true);
 
         intakeMotor.setSmartCurrentLimit(40);
 
