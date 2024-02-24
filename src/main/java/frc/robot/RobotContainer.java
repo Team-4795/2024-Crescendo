@@ -13,7 +13,6 @@
 
 package frc.robot;
 
-import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -154,7 +153,7 @@ public class RobotContainer {
 
     // Speaker aim and rev up
     OIConstants.operatorController.leftBumper().whileTrue(
-      pivot.aimSpeaker().alongWith(shooter.revSpeaker())
+      pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker())
     );
 
     // Amp aim and rev up

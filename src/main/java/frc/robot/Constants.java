@@ -37,7 +37,7 @@ public final class Constants {
   // Mode of the robot, set to Mode.REPLAY for replay
   public static final Mode currentMode = Mode.fromState();
   public static final boolean tuningMode = true;
-  public static final boolean hasVision = false;
+  public static final boolean hasVision = true;
   public static final int tryConfigCount = 5;
   public static final double configDelay = 0.1;
 
@@ -115,6 +115,10 @@ public final class Constants {
     public static final double kAxisDeadband = 0.1;
     public static final CommandXboxController driverController = new CommandXboxController(0);
     public static final CommandXboxController operatorController = new CommandXboxController(1);
+  }
+
+  public static final class FieldConstants {
+    public static final double speakerHeight = 2.05; //meters
   }
 
   public static class PathFindingConstants {

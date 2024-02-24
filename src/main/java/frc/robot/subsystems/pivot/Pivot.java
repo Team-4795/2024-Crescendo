@@ -11,8 +11,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PivotSetpoints;
+import frc.robot.subsystems.MAXSwerve.Drive;
+import frc.robot.subsystems.vision.Vision;
 import frc.robot.util.LoggedTunableNumber;
 
 public class Pivot extends SubsystemBase {
@@ -87,6 +90,14 @@ public class Pivot extends SubsystemBase {
             () -> setGoal(PivotSetpoints.speaker),
             () -> setGoal(PivotSetpoints.stow)
         );
+    }
+
+    public Command aimSpeakerDynamic(){
+        return Commands.run(() -> {
+            double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
+            double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / distanceToSpeaker);
+            this.setGoal(angleCalc - PivotConstants.angleOffset);
+        }).finallyDo(() -> setGoal(PivotSetpoints.stow));
     }
 
     public Command aimAmp() {
