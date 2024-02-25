@@ -199,8 +199,11 @@ public class RobotContainer {
     OIConstants.operatorController.povDown().whileTrue(
         Commands.parallel(
             pivot.aimIntake(),
-            intake.intake().until(indexer::handoff).andThen(rumble(0.1).withTimeout(0.2)),
-            indexer.forwards()));
+            intake.intake().until(indexer::handoff),
+            indexer.forwards())
+        .until(indexer::isStoring)
+        .andThen(rumble(0.5).withTimeout(0.5))
+    );
 
     // Slow reverse
     OIConstants.operatorController.a().whileTrue(
