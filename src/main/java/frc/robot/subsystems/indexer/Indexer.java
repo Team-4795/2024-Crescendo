@@ -99,17 +99,18 @@ public class Indexer extends SubsystemBase {
         // Flip the value if overrideStoring is true
         return inputs.sensorActivated ^ overrideStoring;
     }
+
+    public boolean handoff(){
+        return currentStoring;
+    }
     
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Indexer", inputs);
         double averageCurrent = this.averageCurrent();
-        currents.addLast(Double.valueOf(inputs.leftMotorCurrent));
+        currents.addLast(Double.valueOf(inputs.bottomMotorCurrent));
 
-        // if(inputs.sensorActivated && StateManager.getInstance().state == State.GroundIntake){
-        //     StateManager.getInstance().setState(State.Stow);
-        // }
 
         if (Pivot.getInstance().getPosition() < 1.0) {
             io.canSpinBottom(true);
@@ -118,14 +119,6 @@ public class Indexer extends SubsystemBase {
         }
 
         io.setIndexerSpeed(indexerSpeed);
-
-        // if(override){
-        //     io.setIndexerSpeed(IndexerConstants.overrideSpeed);
-        // } else if (isAuto || shouldSpin || StateManager.getInstance().state == State.GroundIntake){
-        //     io.setIndexerSpeed(indexerSpeed);
-        // } else {
-        //     io.setIndexerSpeed(0);
-        // }
 
         if(averageCurrent > IndexerConstants.currentThreshold){
             currentStoring = true;

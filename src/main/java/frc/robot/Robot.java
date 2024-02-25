@@ -21,6 +21,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.util.LocalADStarAK;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
+
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -97,6 +101,24 @@ public class Robot extends LoggedRobot {
     // Start AdvantageKit logger & URCL
     Logger.registerURCL(URCL.startExternal());
     Logger.start();
+
+    Map<String, Integer> commandCounts = new HashMap<>();
+        BiConsumer<Command, Boolean> logCommandFunction = (Command command, Boolean active) -> {
+            String name = command.getName();
+            int count = commandCounts.getOrDefault(name, 0) + (active ? 1 : -1);
+            commandCounts.put(name, count);
+            Logger.recordOutput("CommandsUnique/" + name + "_" + Integer.toHexString(command.hashCode()), active);
+            Logger.recordOutput("CommandsAll/" + name, count > 0);
+        };
+        CommandScheduler.getInstance().onCommandInitialize((Command command) -> {
+            logCommandFunction.accept(command, true);
+        });
+        CommandScheduler.getInstance().onCommandFinish((Command command) -> {
+            logCommandFunction.accept(command, false);
+        });
+        CommandScheduler.getInstance().onCommandInterrupt((Command command) -> {
+            logCommandFunction.accept(command, false);
+        });
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();

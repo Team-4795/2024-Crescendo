@@ -189,11 +189,9 @@ public class RobotContainer {
     OIConstants.operatorController.a().whileTrue(
       Commands.parallel(
         pivot.aimIntake(),
-        intake.intake(),
+        intake.intake().until(indexer::handoff).andThen(rumble(0.1).withTimeout(0.2)),
         indexer.forwards()
       )
-        .until(indexer::isStoring)
-        .andThen(rumble(0.1).withTimeout(0.2))
     );
 
     // Full reverse
