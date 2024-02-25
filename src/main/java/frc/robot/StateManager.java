@@ -14,8 +14,8 @@ public class StateManager {
     private static StateManager mInstance;
 
     public State state = State.Stow;
-    private State overrideState = null;
-    private boolean override = false;
+    // private State overrideState = null;
+    // private boolean override = false;
     private boolean enabled = true;
 
     public enum State {
@@ -24,9 +24,6 @@ public class StateManager {
         SourceIntake(StateConstants.sourceIntake),
         ScoreAmp(StateConstants.scoreAmp),
         ScoreSpeaker(StateConstants.scoreSpeaker),
-        Load(StateConstants.load),
-        Reverse(StateConstants.reverse),
-        Counter(StateConstants.counter),
         Init(StateConstants.init);
 
         Setpoint setpoint;
@@ -37,19 +34,14 @@ public class StateManager {
     }
 
     public void setState(State state) {
-        if (enabled && !override) {
+        if (enabled) {
             this.state = state;
             this.setSetpoints();
         }
     }
 
     public void setSetpoints() {
-        Setpoint desiredSetpoint;
-        if(override){
-            desiredSetpoint = this.overrideState.setpoint;
-        } else {
-            desiredSetpoint = this.state.setpoint;
-        }
+        Setpoint desiredSetpoint = this.state.setpoint;
 
         if(desiredSetpoint.topShooterMotor() != null && desiredSetpoint.bottomShooterMotor() != null){
             Shooter.getInstance().setShootingSpeedRPM(
@@ -68,18 +60,6 @@ public class StateManager {
             Pivot.getInstance().reset();
         } else if (desiredSetpoint.pivot() != null) {
             Pivot.getInstance().setGoal(desiredSetpoint.pivot());
-        }
-    }
-
-    public void setOverrideState(State state){
-        this.overrideState = state;
-        this.setSetpoints();
-    }
-
-    public void setOverride(boolean override){
-        this.override = override;
-        if(this.override = false){
-            this.setSetpoints();
         }
     }
 

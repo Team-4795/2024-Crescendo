@@ -49,10 +49,18 @@ public class ModuleIOSparkMax implements ModuleIO {
     m_drivingPIDController = m_drivingSpark.getPIDController();
     m_turningPIDController = m_turningSparkMax.getPIDController();
 
+    m_drivingSpark.setCANTimeout(250);
+    m_turningSparkMax.setCANTimeout(250);
+
     for (int i = 0; i < Constants.tryConfigCount; i++) {
 
       m_drivingPIDController.setFeedbackDevice(m_drivingEncoder);
       m_turningPIDController.setFeedbackDevice(m_turningEncoder);
+
+      m_turningEncoder.setAverageDepth(2);
+
+      m_drivingEncoder.setMeasurementPeriod(10);
+      m_drivingEncoder.setAverageDepth(2);
 
       // in meters and meters per second
       m_drivingEncoder.setPositionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
@@ -100,10 +108,15 @@ public class ModuleIOSparkMax implements ModuleIO {
       m_drivingSpark.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
       m_turningSparkMax.setSmartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
 
-      m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+
+      m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+      m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 1000);
+      m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 65535);
       m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
       m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+      m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
+      m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
       m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
       m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
       m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
@@ -116,6 +129,9 @@ public class ModuleIOSparkMax implements ModuleIO {
     // operation, it will maintain the above configurations.
     m_drivingSpark.burnFlash();
     m_turningSparkMax.burnFlash();
+
+    m_drivingSpark.setCANTimeout(0);
+    m_turningSparkMax.setCANTimeout(0);
 
     m_chassisAngularOffset = Rotation2d.fromRadians(chassisAngularOffset);
     m_desiredState.angle = new Rotation2d(m_turningEncoder.getPosition());

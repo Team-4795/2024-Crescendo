@@ -17,8 +17,6 @@ package frc.robot;
 
 
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /**
@@ -33,8 +31,45 @@ public final class Constants {
   // Mode of the robot, set to Mode.REPLAY for replay
   public static final Mode currentMode = Mode.fromState();
   public static final boolean tuningMode = true;
+  public static final boolean hasVision = false;
   public static final int tryConfigCount = 5;
   public static final double configDelay = 0.1;
+
+  public static final class PivotSetpoints {
+    public static final double speaker = 0.6;
+    public static final double amp = 1.1;
+    public static final double stow = 0.08;
+    public static final double intake = 0.15;
+    public static final double source = 0.96;
+  }
+
+  public static final class IndexerSetpoints {
+    public static final double shoot = 1.0;
+    // public static final double amp = 1.0;
+    public static final double reverse = -1.0;
+    public static final double slowReverse = -0.2;
+  }
+
+  public static final class ShooterSetpoints {
+    public static final double speakerTop = -5000;
+    public static final double speakerBottom = 5000;
+
+    public static final double ampTop = 600;
+    public static final double ampBottom = 600;
+
+    public static final double reverseTop = 1000;
+    public static final double reverseBottom = -1000;
+
+    public static final double slowReverseTop = 150;
+    public static final double slowReverseBottom = -150;
+  }
+
+  public static final class IntakeSetpoints {
+    public static final double intake = -0.7;
+    public static final double reverse = 0.7;
+    public static final double slowReverse = 0.4;
+  }
+
   //shooter, indexer, intake measured in motor output, pivot measured in radians
   public record Setpoint(Double topShooterMotor, Double bottomShooterMotor, Double pivot, Double indexer, Double intake) {}
 

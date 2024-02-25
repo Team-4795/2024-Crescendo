@@ -15,15 +15,15 @@ public class AS_GP123 extends AutoPath{
         PathPlannerPath path1 = PathPlannerPath.fromPathFile("AS GP123 P1");
         
         return Commands.sequence(
-            autoCommands.initialize(1),
-            autoCommands.resetOdometry(path1.getPreviewStartingHolonomicPose()),
-            autoCommands.score(0.5),
-            autoCommands.alignTrajectory("AS GP123 P1", AutoConstants.closePivotSetpoint),
-            autoCommands.score(0.5),
-            autoCommands.alignTrajectory("AS GP123 P2", AutoConstants.closePivotSetpoint),
-            autoCommands.score(0.5),
-            autoCommands.alignTrajectory("AS GP123 P3", AutoConstants.closePivotSetpoint),
-            autoCommands.score(0.5)
+            AutoCommands.initialize(1),
+            AutoCommands.resetOdometry(path1.getPreviewStartingHolonomicPose()),
+            AutoCommands.score(),
+            AutoCommands.alignTrajectory("AS GP123 P1", AutoConstants.closePivotSetpoint),
+            AutoCommands.score(),
+            AutoCommands.alignTrajectory("AS GP123 P2", AutoConstants.closePivotSetpoint),
+            AutoCommands.score(),
+            AutoCommands.alignTrajectory("AS GP123 P3", AutoConstants.closePivotSetpoint),
+            AutoCommands.score()
         );
     }
 }

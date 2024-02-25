@@ -13,6 +13,7 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -21,10 +22,11 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.StateManager.State;
 import frc.robot.subsystems.MAXSwerve.*;
@@ -55,7 +57,6 @@ public class RobotContainer {
   private final Pivot pivot;
   private final Indexer indexer;
   private final Intake intake;
-  AutoSelector autoSelector;
 
   // Managers
   private final StateManager manager = StateManager.getInstance();
@@ -88,7 +89,7 @@ public class RobotContainer {
         indexer = Indexer.initialize(new IndexerIOSim());
         // Sim robot, instantiate physics sim IO implementations
         drive =
-            new Drive(
+            Drive.initialize(
                 new GyroIOSim(),
                 new ModuleIOSim(DriveConstants.kFrontLeftChassisAngularOffset),
                 new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
@@ -105,7 +106,7 @@ public class RobotContainer {
         drive = Drive.initialize(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
         break;
     }
-    NamedCommands.registerCommand("Score", AutoCommands.score(1));
+    NamedCommands.registerCommand("Score", AutoCommands.score());
     NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.4)); //change later
     NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
     NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(1));
@@ -116,14 +117,12 @@ public class RobotContainer {
 
     manager.setState(State.Init);
 
-    autoSelector = new AutoSelector();
     NoteVisualizer.setRobotPoseSupplier(drive::getPose);
-    autoChooser = new LoggedDashboardChooser<>("AS GP 123", AutoBuilder.buildAutoChooser("AS GP123"));
-    autoChooser = new LoggedDashboardChooser<>("AS GP 1234", AutoBuilder.buildAutoChooser("AS GP1234"));
+    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("AS GP123"));
 
 
 
- 
+
 
     // Configure the button bindings
     configureButtonBindings();
@@ -150,61 +149,102 @@ public class RobotContainer {
                 true, true),
             drive));
 
-      OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
+    // Zero drive heading
+    OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
 
-    OIConstants.driverController.leftTrigger(0.5).whileTrue(Commands.startEnd(
-      () -> indexer.setSpin(true), 
-      () -> {
-        indexer.setSpin(false);
-        manager.setState(State.Stow);
-      }
-      ));
+    // Switch pivot motor idle mode
+    OIConstants.driverController.b().onTrue(Commands.runOnce(pivot::toggleIdleMode))
+                                     .onFalse(Commands.runOnce(pivot::toggleIdleMode));
 
-    OIConstants.operatorController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
-    OIConstants.operatorController.povLeft().onTrue(Commands.runOnce(() -> manager.setState(State.SourceIntake)));
-    OIConstants.operatorController.povDown().onTrue(Commands.runOnce(() -> manager.setState(State.GroundIntake)));
-    OIConstants.operatorController.povUp().onTrue(Commands.runOnce(() -> manager.setState(State.ScoreAmp)));
+    // Speaker aim and rev up
+    OIConstants.operatorController.leftBumper().whileTrue(
+      pivot.aimSpeaker().alongWith(shooter.revSpeaker())
+    );
 
-    OIConstants.operatorController.y().onTrue(Commands.runOnce(() -> {
-      manager.setOverride(true);
-      manager.setOverrideState(State.Reverse);
-    }))
-      .onFalse(Commands.runOnce(() -> manager.setOverride(false)));
+    // Amp aim and rev up
+    OIConstants.operatorController.rightBumper().whileTrue(
+      pivot.aimAmp().alongWith(shooter.revAmp())
+    );
 
-    OIConstants.operatorController.x().onTrue(Commands.runOnce(() -> {
-      manager.setOverride(true);
-      manager.setOverrideState(State.Counter);
-    }));
-    OIConstants.operatorController.x().onFalse(Commands.runOnce(() -> manager.setOverride(false)));
+    Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint());
 
+    // Slow reverse
+    OIConstants.driverController
+      .leftTrigger(0.3)
+      .whileTrue(
+        Commands.parallel(
+          indexer.slowReverse(),
+          shooter.slowReverse()
+        )
+      );
 
-    OIConstants.operatorController.a().whileTrue(Commands.startEnd(
-        () -> intake.setOverride(true),
-        () -> intake.setOverride(false)));
+    // Shoot
+    OIConstants.driverController
+      .rightTrigger(0.3)
+      .and(isReady.debounce(0.3))
+      .whileTrue(rumble(0.5))
+      .whileTrue(
+        Commands.sequence(
+          indexer.reverse().withTimeout(0.05),
+          indexer.forwards()
+        )
+      );
 
-    OIConstants.operatorController.b().whileTrue(Commands.startEnd(
-        () -> indexer.setOverride(true),
-        () -> indexer.setOverride(false)
+    // Intake
+    OIConstants.operatorController.a().whileTrue(
+      Commands.parallel(
+        pivot.aimIntake(),
+        intake.intake(),
+        indexer.forwards()
+      )
+        .until(indexer::isStoring)
+        .andThen(rumble(0.1).withTimeout(0.2))
+    );
+
+    // Full reverse
+    OIConstants.operatorController.b().whileTrue(
+      Commands.parallel(
+        intake.reverse(),
+        indexer.reverse(),
+        shooter.reverse()
       )
     );
 
-    OIConstants.driverController.a().onTrue(Commands.runOnce(pivot::toggleIdleMode))
-                                     .onFalse(Commands.runOnce(pivot::toggleIdleMode));
+    // Override storing (flips it)
+    OIConstants.operatorController.x().whileTrue(indexer.overrideStoring());
 
-    OIConstants.operatorController.leftBumper().onTrue(Commands.sequence(
-      Commands.runOnce(() -> manager.setState(State.Load)),
-      Commands.waitSeconds(0.05),
-      Commands.runOnce(() -> manager.setState(State.ScoreSpeaker))
-    ));
+    // Other reverse
+    OIConstants.operatorController.y().whileTrue(
+      Commands.parallel(
+        intake.slowReverse(),
+        indexer.forwards()
+      )
+    );
 
-    OIConstants.driverController.rightTrigger().whileTrue(Commands.sequence(
-      Commands.runOnce(() -> pivot.setGoal(1.0)),
-      Commands.waitUntil(pivot::atSetpoint),
-      Commands.runOnce(() -> manager.setState(State.ScoreAmp))
-    ));
+    OIConstants.operatorController.povUp().onTrue(
+      Commands.parallel(
+        shooter.slowReverse(),
+        indexer.slowReverse(),
+        pivot.aimSource()
+      )
+    );
 
-      OIConstants.driverController.a().whileTrue(AlignToAmp.pathfindingCommand);
-    }
+    // Auto drive align
+    OIConstants.driverController.a().whileTrue(AlignToAmp.pathfindingCommand);
+
+    OIConstants.driverController.x().whileTrue(new ScoreSpeaker());
+
+  }
+
+  private void setBothRumble(double amount) {
+    OIConstants.driverController.getHID().setRumble(RumbleType.kBothRumble, amount);
+    OIConstants.operatorController.getHID().setRumble(RumbleType.kBothRumble, amount);
+  }
+
+  public Command rumble(double amount) {
+    // return Commands.run(() -> setBothRumble(amount)).finallyDo(() -> setBothRumble(0));
+    return Commands.startEnd(() -> setBothRumble(amount), () -> setBothRumble(0));
+  }
 
   public void teleopInit() {
     manager.setState(State.Init);
