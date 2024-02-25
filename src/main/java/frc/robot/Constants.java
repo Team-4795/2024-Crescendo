@@ -23,6 +23,7 @@ import org.photonvision.proto.Photon;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /**
@@ -113,7 +114,7 @@ public final class Constants {
 
   public static final class OIConstants{
     public static final double kAxisDeadband = 0.1;
-    public static final CommandXboxController driverController = new CommandXboxController(0);
+    public static final CommandPS4Controller driverController = new CommandPS4Controller(0);
     public static final CommandXboxController operatorController = new CommandXboxController(1);
   }
 

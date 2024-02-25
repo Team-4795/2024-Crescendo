@@ -15,7 +15,7 @@ import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.MAXSwerve.DriveConstants;
 import frc.robot.subsystems.vision.Vision;
 
-public class ScoreSpeaker extends Command {
+public class AlignSpeaker extends Command {
 
     public final double speakerHeight = 1.98;
     public final double pivotHeight = 0.2794;
@@ -28,7 +28,7 @@ public class ScoreSpeaker extends Command {
     private Drive drive = Drive.getInstance();
     private PIDController rotationPID = new PIDController(0.09, 0, 0); // 0.09, 0, 0
 
-    public ScoreSpeaker() {
+    public AlignSpeaker() {
         addRequirements(drive);
         if(Constants.hasVision){
             vision = Vision.getInstance();

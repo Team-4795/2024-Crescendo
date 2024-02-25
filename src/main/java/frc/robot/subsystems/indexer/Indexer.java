@@ -1,15 +1,10 @@
 package frc.robot.subsystems.indexer;
 
-import java.beans.Statement;
-import java.util.function.DoubleSupplier;
-
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.util.CircularBuffer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.StateManager;
-import frc.robot.StateManager.State;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.Constants.IndexerSetpoints;
 
@@ -18,9 +13,7 @@ public class Indexer extends SubsystemBase {
     private IndexerIO io;
     private final IndexerIOInputsAutoLogged inputs = new IndexerIOInputsAutoLogged(); 
     private double indexerSpeed = 0.0;
-    private boolean shouldSpin = false;
     private boolean overrideStoring = false;
-    private boolean isAuto = false;
 
     private boolean currentStoring = false;
     private CircularBuffer<Double> currents = new CircularBuffer<>(IndexerConstants.bufferSize);
@@ -49,22 +42,6 @@ public class Indexer extends SubsystemBase {
 
     public void setIndexerSpeed(double motorValue) {
         indexerSpeed = motorValue;
-    }
-
-    public void setSpin(boolean on){
-        shouldSpin = on;
-    }
-
-    // public void reverse() {
-    //     indexerSpeed *= -1;
-    // }
-
-    // public void setOverrideStoring(boolean on) {
-    //    override = on;
-    // }
-
-    public void setAutoMode(boolean on){
-        isAuto = on;
     }
 
     public Command reverse() {
