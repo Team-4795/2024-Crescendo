@@ -55,7 +55,7 @@ public final class DriveConstants {
     public static final int kFrontRightTurningCanId = 5;
     public static final int kRearRightTurningCanId = 9;
 
-    public static final int kPigeonCanId = 10;
+    public static final int kPigeonCanId = 20;
 
     public static final boolean kGyroReversed = true;
 

@@ -16,6 +16,7 @@ import org.photonvision.PhotonUtils;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -24,7 +25,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Vision extends SubsystemBase{
+public class Vision extends SubsystemBase {
     PhotonPipelineResult saguaroResult;
     PhotonPipelineResult barbaryFigResult;
     double saguaroYaw;
@@ -60,46 +61,33 @@ public class Vision extends SubsystemBase{
 
     public static Vision instance;
 
-    public static Vision getInstance(){
-        if(instance == null){
+    public static Vision getInstance() {
+        if (instance == null) {
             instance = new Vision();
         }
         return instance;
     }
 
-    private Vision () {
+    private Vision() {
         SaguaroCam = new PhotonCamera("Saguaro");
         BarbaryFig = new PhotonCamera("Barbary Fig");
 
-        //Cam mounted facing forward, half a meter forward of center, half a meter up from center. Change Both Later
-        saguaroRobotToCam = new Transform3d(new Translation3d(0.241, 0.0889, 0.826), new Rotation3d(0,0,0)); 
-        barbaryFigRobotToCam = new Transform3d(new Translation3d(-0.178, 0.165, 0.489), new Rotation3d(0,0, Math.PI)); 
+        // Cam mounted facing forward, half a meter forward of center, half a meter up
+        // from center. Change Both Later
+        saguaroRobotToCam = new Transform3d(new Translation3d(0.241, 0.0889, 0.826), new Rotation3d(0, 0, 0));
+        barbaryFigRobotToCam = new Transform3d(new Translation3d(-0.178, 0.165, 0.489), new Rotation3d(0, 0, Math.PI));
 
-        try 
-        {
+        try {
             aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
-        } 
-        catch (IOException e) 
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        saguaroPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, SaguaroCam, saguaroRobotToCam);   
-        barbaryFigPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, BarbaryFig, barbaryFigRobotToCam);   
-
-        aprilTagFieldLayout.getTagPose(4).ifPresent(pose -> speakerPosition = pose.toPose2d());
-        Optional<Alliance> ally = DriverStation.getAlliance();
-        ally.ifPresent((alliance) -> System.out.println(alliance.toString()));
-        if (ally.isPresent()) {
-            if (ally.get() == Alliance.Red) {
-                aprilTagFieldLayout.getTagPose(4).ifPresent(pose -> speakerPosition = pose.toPose2d()); //Get pose2d of speaker
-            }
-            else if (ally.get() == Alliance.Blue) {
-                aprilTagFieldLayout.getTagPose(7).ifPresent(pose -> speakerPosition = pose.toPose2d()); //Get pose2d of speaker
-
-            }
-        }
-        }
+        saguaroPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
+                PoseStrategy.CLOSEST_TO_REFERENCE_POSE, SaguaroCam, saguaroRobotToCam);
+        barbaryFigPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
+                PoseStrategy.CLOSEST_TO_REFERENCE_POSE, BarbaryFig, barbaryFigRobotToCam);
+    }
 
     public Optional<EstimatedRobotPose> getArducamPose(Pose2d prevEstimatedRobotPose) {
         saguaroPhotonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
@@ -111,27 +99,37 @@ public class Vision extends SubsystemBase{
         return barbaryFigPhotonPoseEstimator.update();
     }
 
-    public double getDistancetoSpeaker(Pose2d robotPose){
+    public double getDistancetoSpeaker(Pose2d robotPose) {
         distanceToTarget = PhotonUtils.getDistanceToPose(robotPose, speakerPosition);
         return distanceToTarget;
     }
 
-    public double getSaguaroYaw(){
+    public double getSaguaroYaw() {
         return saguaroYaw;
     }
 
     public Pose2d getSpeakerPos() {
+        Optional<Alliance> ally = DriverStation.getAlliance();
+        if (ally.isPresent()) {
+            if (ally.get() == Alliance.Red) {
+                aprilTagFieldLayout.setOrigin(OriginPosition.kRedAllianceWallRightSide);
+                aprilTagFieldLayout.getTagPose(4).ifPresent(pose -> speakerPosition = pose.toPose2d());
+            } else if (ally.get() == Alliance.Blue) {
+                aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
+                aprilTagFieldLayout.getTagPose(7).ifPresent(pose -> speakerPosition = pose.toPose2d());
+            }
+        } else {
+            speakerPosition = new Pose2d();
+        }
         return speakerPosition;
     }
-
 
     @Override
     public void periodic() {
         saguaroResult = SaguaroCam.getLatestResult();
         saguaroHasTargets = saguaroResult.hasTargets();
 
-        if (saguaroHasTargets)
-        {
+        if (saguaroHasTargets) {
             saguaroTargets = saguaroResult.getTargets();
             saguaroTarget = saguaroResult.getBestTarget();
 
@@ -140,14 +138,12 @@ public class Vision extends SubsystemBase{
 
             saguaroPitch = saguaroTarget.getPitch();
             Logger.recordOutput("Arducam Pitch", saguaroPitch);
-    
+
             saguaroArea = saguaroTarget.getArea();
             Logger.recordOutput("Arducam Area", saguaroArea);
 
             saguaroSkew = saguaroTarget.getSkew();
             Logger.recordOutput("Arducam Skew", saguaroSkew);
-
-            
 
             saguaroPose = saguaroTarget.getBestCameraToTarget();
             saguaroCorners = saguaroTarget.getDetectedCorners();
@@ -156,8 +152,7 @@ public class Vision extends SubsystemBase{
         barbaryFigResult = BarbaryFig.getLatestResult();
         barbaryFigHasTargets = barbaryFigResult.hasTargets();
 
-        if (barbaryFigHasTargets)
-        {
+        if (barbaryFigHasTargets) {
             barbaryFigTargets = barbaryFigResult.getTargets();
             barbaryFigTarget = barbaryFigResult.getBestTarget();
 
@@ -166,7 +161,7 @@ public class Vision extends SubsystemBase{
 
             barbaryFigPitch = barbaryFigTarget.getPitch();
             Logger.recordOutput("Lifecam Pitch", barbaryFigPitch);
-            
+
             barbaryFigArea = barbaryFigTarget.getArea();
             Logger.recordOutput("Lifecam Area", barbaryFigArea);
 
@@ -174,7 +169,6 @@ public class Vision extends SubsystemBase{
             Logger.recordOutput("Lifecam Skew", barbaryFigSkew);
 
             Logger.recordOutput("speaker pos", speakerPosition);
-
 
             barbaryFigPose = barbaryFigTarget.getBestCameraToTarget();
             barbaryFigCorners = barbaryFigTarget.getDetectedCorners();

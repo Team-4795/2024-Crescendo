@@ -2,7 +2,9 @@ package frc.robot.subsystems.intake;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.IntakeSetpoints;
 
 public class Intake extends SubsystemBase{
     private IntakeIO io;
@@ -36,15 +38,22 @@ public class Intake extends SubsystemBase{
         reverseIntake = override;
     }
 
+    public Command intake() {
+        return startEnd(() -> setIntakeSpeed(IntakeSetpoints.intake), () -> setIntakeSpeed(0));
+    }
+
+    public Command reverse() {
+        return startEnd(() -> setIntakeSpeed(IntakeSetpoints.reverse), () -> setIntakeSpeed(0));
+    }
+
+    public Command slowReverse() {
+        return startEnd(() -> setIntakeSpeed(IntakeSetpoints.slowReverse), () -> setIntakeSpeed(0));
+    }
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Intake", inputs);
-        if (reverseIntake) {
-            io.setMotorSpeed(IntakeConstants.overrideSpeed);
-        }
-        else{
-            io.setMotorSpeed(intakeSpeed);
-        }
+        io.setMotorSpeed(intakeSpeed);
     }
 }
