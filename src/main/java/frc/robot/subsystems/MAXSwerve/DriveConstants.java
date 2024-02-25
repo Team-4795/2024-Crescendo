@@ -31,7 +31,7 @@ public final class DriveConstants {
     public static final double kWheelBase = Units.inchesToMeters(21.5);
     // Distance between front and back wheels on robot
     
-    public static final double kTrackRadius = Units.inchesToMeters(20.406 / 2); 
+    public static final double kTrackRadius = Units.inchesToMeters(21.5 * Math.sqrt(2)/2); 
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
             new Translation2d(kWheelBase / 2, kTrackWidth / 2),
             new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
