@@ -24,7 +24,7 @@
         { "axis": "y", "degrees": 0},
         { "axis": "z", "degrees": 0}
       ],
-      "zeroedPosition": [0.0, -0.254, -0.14605]
+      "zeroedPosition": [0.0, 0, -0.14605]
     }
   ]  
 }
