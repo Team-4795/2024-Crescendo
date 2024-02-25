@@ -106,7 +106,7 @@ public class RobotContainer {
         drive = Drive.initialize(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
         break;
     }
-    NamedCommands.registerCommand("Score", AutoCommands.score(1));
+    NamedCommands.registerCommand("Score", AutoCommands.score());
     NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.4)); //change later
     NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
     NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(1));

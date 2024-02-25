@@ -91,6 +91,10 @@ public class Indexer extends SubsystemBase {
         // Flip the value if overrideStoring is true
         return inputs.sensorActivated ^ overrideStoring;
     }
+
+    public boolean handoff() {
+        return currentStoring;
+    }
     
     @Override
     public void periodic() {

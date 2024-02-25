@@ -7,11 +7,11 @@ import frc.robot.commands.AutoCommands;
 public abstract class TestingAuto extends AutoPath{
     public Command load(AutoCommands autoCommands) {
         return Commands.sequence(
-        autoCommands.initialize(1),
+        AutoCommands.initialize(1),
         Commands.waitSeconds(2),
-        autoCommands.score(0.5),
-        autoCommands.alignTrajectory("Testing Auto", 0),
-        autoCommands.alignTrajectory("Testing Auto P2", 0)
+        AutoCommands.score(),
+        AutoCommands.alignTrajectory("Testing Auto", 0),
+        AutoCommands.alignTrajectory("Testing Auto P2", 0)
         );
     }
 }
