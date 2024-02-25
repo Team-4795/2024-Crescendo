@@ -57,7 +57,6 @@ public class RobotContainer {
   private final Pivot pivot;
   private final Indexer indexer;
   private final Intake intake;
-  AutoSelector autoSelector;
 
   // Managers
   private final StateManager manager = StateManager.getInstance();
@@ -118,10 +117,8 @@ public class RobotContainer {
 
     manager.setState(State.Init);
 
-    autoSelector = new AutoSelector();
     NoteVisualizer.setRobotPoseSupplier(drive::getPose);
-    autoChooser = new LoggedDashboardChooser<>("AS GP 123", AutoBuilder.buildAutoChooser("AS GP123"));
-    autoChooser = new LoggedDashboardChooser<>("AS GP 1234", AutoBuilder.buildAutoChooser("AS GP1234"));
+    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("AS GP123"));
 
 
 
