@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -74,8 +75,8 @@ public class Vision extends SubsystemBase {
 
         // Cam mounted facing forward, half a meter forward of center, half a meter up
         // from center. Change Both Later
-        saguaroRobotToCam = new Transform3d(new Translation3d(0.241, 0.0889, 0.826), new Rotation3d(0, 0, 0));
-        barbaryFigRobotToCam = new Transform3d(new Translation3d(-0.178, 0.165, 0.489), new Rotation3d(0, 0, Math.PI));
+        saguaroRobotToCam = new Transform3d(new Translation3d(Units.inchesToMeters(8), Units.inchesToMeters(6.5), Units.inchesToMeters(10.5)), new Rotation3d(0, Units.degreesToRadians(20), Units.degreesToRadians(90)));
+        barbaryFigRobotToCam = new Transform3d(new Translation3d(Units.inchesToMeters(10.5), Units.inchesToMeters(5), Units.inchesToMeters(11)), new Rotation3d(0, Units.degreesToRadians(20), 0));
 
         try {
             aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
