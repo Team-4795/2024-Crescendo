@@ -103,20 +103,11 @@ public class RobotContainer {
         break;
 
       default:
-        intake = Intake.initialize(new IntakeIO() {
-        });
-        shooter = Shooter.initialize(new ShooterIO() {
-        });
-        pivot = Pivot.initialize(new PivotIO() {
-        });
-        indexer = Indexer.initialize(new IndexerIO() {
-        });
-        drive = Drive.initialize(new GyroIO() {
-        }, new ModuleIO() {
-        }, new ModuleIO() {
-        }, new ModuleIO() {
-        }, new ModuleIO() {
-        });
+        intake = Intake.initialize(new IntakeIO() {});
+        shooter = Shooter.initialize(new ShooterIO() {});
+        pivot = Pivot.initialize(new PivotIO() {});
+        indexer = Indexer.initialize(new IndexerIO() {});
+        drive = Drive.initialize(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
         break;
     }
     NamedCommands.registerCommand("Score", AutoCommands.score(0.7));
@@ -145,7 +136,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    Trigger isReady = new Trigger(() -> (pivot.atSetpoint() && indexer.isStoring()));
+    Trigger isReady = new Trigger(() -> (pivot.atSetpoint()));
 
     isReady.whileTrue(rumble(0.4));
 
@@ -161,12 +152,11 @@ public class RobotContainer {
             drive));
 
     // Zero drive heading
-    OIConstants.driverController.R1().onTrue(new InstantCommand(drive::zeroHeading));
-    OIConstants.driverController.L1().whileTrue(new AlignSpeaker());
+    OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
+    OIConstants.driverController.leftBumper().whileTrue(new AlignSpeaker());
 
     // Shoot
-    OIConstants.driverController.R2().or(OIConstants.driverController.L2())
-        .and(isReady.debounce(0.3))
+    OIConstants.driverController.rightTrigger(0.3).or(OIConstants.driverController.leftTrigger(0.3))
         .whileTrue(
             Commands.sequence(
                 indexer.reverse().withTimeout(0.05),
@@ -176,10 +166,10 @@ public class RobotContainer {
     OIConstants.driverController.povRight().whileTrue(AlignToAmp.pathfindingCommand);
     OIConstants.driverController.povLeft().whileTrue(new AlignSpeaker());
 
-    OIConstants.driverController.triangle().whileTrue(AlignHeading.align(0));
-    OIConstants.driverController.square().whileTrue(AlignHeading.align(90));
-    OIConstants.driverController.cross().whileTrue(AlignHeading.align(180));
-    OIConstants.driverController.circle().whileTrue(AlignHeading.align(270));
+    OIConstants.driverController.y().whileTrue(AlignHeading.align(0));
+    OIConstants.driverController.x().whileTrue(AlignHeading.align(90));
+    OIConstants.driverController.a().whileTrue(AlignHeading.align(180));
+    OIConstants.driverController.b().whileTrue(AlignHeading.align(270));
 
     // Speaker aim and rev up
     OIConstants.operatorController.leftBumper().whileTrue(

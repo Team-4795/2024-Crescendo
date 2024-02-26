@@ -41,6 +41,8 @@ public final class Constants {
   public static final boolean hasVision = false;
   public static final int tryConfigCount = 5;
   public static final double configDelay = 0.1;
+  public static final int paramApplyAttemptLimit = 5;
+  public static final double paramApplyTimemout = 0.05;
 
   public static final class PivotSetpoints {
     public static final double speaker = 0.6;
@@ -114,7 +116,7 @@ public final class Constants {
 
   public static final class OIConstants{
     public static final double kAxisDeadband = 0.1;
-    public static final CommandPS4Controller driverController = new CommandPS4Controller(0);
+    public static final CommandXboxController driverController = new CommandXboxController(0);
     public static final CommandXboxController operatorController = new CommandXboxController(1);
   }
 

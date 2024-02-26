@@ -58,8 +58,6 @@ public class ModuleIOSparkMax implements ModuleIO {
       m_turningPIDController.setFeedbackDevice(m_turningEncoder);
 
       m_turningEncoder.setAverageDepth(2);
-
-      m_drivingEncoder.setMeasurementPeriod(10);
       m_drivingEncoder.setAverageDepth(2);
 
       // in meters and meters per second
