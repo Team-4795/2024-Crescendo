@@ -13,7 +13,7 @@ public class ModuleIOSim implements ModuleIO {
     public static final double TURN_GEAR_RATIO = 9424.0 / 203.0;
     private static final double LOOP_PERIOD_SECS = 0.02;
 
-    private DCMotorSim driveSim = new DCMotorSim(DCMotor.getNEO(1), DRIVE_GEAR_RATIO, 0.02);
+    private DCMotorSim driveSim = new DCMotorSim(DCMotor.getNeoVortex(1), DRIVE_GEAR_RATIO, 0.02);
     private DCMotorSim turnSim = new DCMotorSim(DCMotor.getNeo550(1), TURN_GEAR_RATIO, 0.003);
 
     private SwerveModuleState optimizedState = new SwerveModuleState();

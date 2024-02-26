@@ -120,7 +120,7 @@ public final class DriveConstants {
         public static final double kMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-        public static final double kPDrivingController = 2;
+        public static final double kPDrivingController = 3;
         public static final double kPThetaController = 3;
 
         // Constraint for the motion profiled robot angle controller

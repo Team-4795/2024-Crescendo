@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.StateManager;
+import frc.robot.Constants.IndexerSetpoints;
 import frc.robot.Constants.IntakeSetpoints;
+import frc.robot.Constants.PivotSetpoints;
 import frc.robot.Constants.ShooterSetpoints;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
@@ -86,13 +88,11 @@ public class AutoCommands {
 
   public static Command intake() {
     return Commands.parallel(
-      intake.intake().until(indexer::handoff),
-      indexer.forwards()
+      Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
+      Commands.runOnce(() -> pivot.setGoal(PivotSetpoints.intake))
     ).until(indexer::isStoring)
-     .andThen(indexer.reverse().withTimeout(0.1)
-    );
+     .andThen(indexer.reverse().withTimeout(0.1));
   }
-
 
   public static Command sensingPiece() {
     return Commands.waitUntil(() -> indexer.isStoring());

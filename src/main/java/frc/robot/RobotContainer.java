@@ -108,12 +108,13 @@ public class RobotContainer {
         break;
     }
     NamedCommands.registerCommand("Score", AutoCommands.score());
-    NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.08)); //change later
+    NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.2)); //change later
     NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
     NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(1));
     NamedCommands.registerCommand("StopIndexer", AutoCommands.runIndexer(0));
     NamedCommands.registerCommand("SensePiece", AutoCommands.sensingPiece());
-    NamedCommands.registerCommand("Wait", new WaitCommand(2));
+    NamedCommands.registerCommand("Intake", AutoCommands.intake());
+    NamedCommands.registerCommand("Jostle Pivot", AutoCommands.SetPivotAngle(0.08));
 
 
     manager.setState(State.Init);

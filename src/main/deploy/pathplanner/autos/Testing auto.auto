@@ -16,6 +16,18 @@
           "data": {
             "pathName": "Go forward"
           }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Mid GP78 P3"
+          }
         }
       ]
     }
