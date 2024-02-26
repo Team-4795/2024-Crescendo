@@ -163,8 +163,8 @@ public class RobotContainer {
                 indexer.forwards()));
 
     // Auto drive align
-    OIConstants.driverController.povRight().whileTrue(AlignToAmp.pathfindingCommand);
-    OIConstants.driverController.povLeft().whileTrue(new AlignSpeaker());
+    OIConstants.driverController.povDown().whileTrue(AlignToAmp.pathfindingCommand);
+    OIConstants.driverController.povUp().whileTrue(new AlignSpeaker());
 
     OIConstants.driverController.y().whileTrue(AlignHeading.align(0));
     OIConstants.driverController.x().whileTrue(AlignHeading.align(90));
