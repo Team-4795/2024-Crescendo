@@ -15,7 +15,8 @@ public class PivotIOReal implements PivotIO {
   private CANSparkFlex pivotLeft = new CANSparkFlex(PivotConstants.leftCanID, MotorType.kBrushless);
   private CANSparkFlex pivotRight = new CANSparkFlex(PivotConstants.rightCanID, MotorType.kBrushless);
   private RelativeEncoder motorEncoder = pivotLeft.getEncoder(SparkRelativeEncoder.Type.kQuadrature, 7168);
-  private AbsoluteEncoder encoder = pivotRight.getAbsoluteEncoder();
+  // private AbsoluteEncoder encoder = pivotRight.getAbsoluteEncoder();
+  private DutyCycleEncoder encoder = new DutyCycleEncoder(9);
   private double inputVolts = 0.0;
 
   public PivotIOReal() {
@@ -28,8 +29,8 @@ public class PivotIOReal implements PivotIO {
     pivotLeft.setSmartCurrentLimit(30);
     pivotRight.setSmartCurrentLimit(30);
 
-    encoder.setPositionConversionFactor(PivotConstants.positionConversionFactor);
-    encoder.setVelocityConversionFactor(PivotConstants.velocityConversionFactor);
+    // encoder.setPositionConversionFactor(PivotConstants.positionConversionFactor);
+    // encoder.setVelocityConversionFactor(PivotConstants.velocityConversionFactor);
 
     pivotLeft.setIdleMode(IdleMode.kBrake);
     pivotRight.setIdleMode(IdleMode.kBrake);
@@ -77,7 +78,7 @@ public class PivotIOReal implements PivotIO {
   }
 
   private double getAbsolutePosition() {
-    return encoder.getPosition();
+    return encoder.getAbsolutePosition() * PivotConstants.positionConversionFactor;
   }
 
   @Override
