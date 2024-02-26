@@ -75,8 +75,8 @@ public class Vision extends SubsystemBase {
 
         // Cam mounted facing forward, half a meter forward of center, half a meter up
         // from center. Change Both Later
-        saguaroRobotToCam = new Transform3d(new Translation3d(Units.inchesToMeters(8), Units.inchesToMeters(6.5), Units.inchesToMeters(10.5)), new Rotation3d(0, Units.degreesToRadians(20), Units.degreesToRadians(90)));
-        barbaryFigRobotToCam = new Transform3d(new Translation3d(Units.inchesToMeters(10.5), Units.inchesToMeters(5), Units.inchesToMeters(11)), new Rotation3d(0, Units.degreesToRadians(20), 0));
+        saguaroRobotToCam = new Transform3d(new Translation3d(Units.inchesToMeters(-8), Units.inchesToMeters(-6.5), Units.inchesToMeters(10.5)), new Rotation3d(0, Units.degreesToRadians(20), Units.degreesToRadians(-90)));
+        barbaryFigRobotToCam = new Transform3d(new Translation3d(Units.inchesToMeters(-10.5), Units.inchesToMeters(5), Units.inchesToMeters(11)), new Rotation3d(0, Units.degreesToRadians(20), Math.PI));
 
         try {
             aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
@@ -90,6 +90,7 @@ public class Vision extends SubsystemBase {
                 PoseStrategy.CLOSEST_TO_REFERENCE_POSE, BarbaryFig, barbaryFigRobotToCam);
 
         aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
+        getSpeakerPos();
     }
 
     public Optional<EstimatedRobotPose> getArducamPose(Pose2d prevEstimatedRobotPose) {

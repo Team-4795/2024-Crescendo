@@ -138,8 +138,6 @@ public class RobotContainer {
 
     Trigger isReady = new Trigger(() -> (pivot.atSetpoint()));
 
-    isReady.whileTrue(rumble(0.4));
-
     drive.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
@@ -172,9 +170,12 @@ public class RobotContainer {
     OIConstants.driverController.b().whileTrue(AlignHeading.align(270));
 
     // Speaker aim and rev up
-    OIConstants.operatorController.leftBumper().whileTrue(
-        pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker()));
+    // OIConstants.operatorController.leftBumper().whileTrue(
+    //     pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker()));
 
+      OIConstants.operatorController.leftBumper().whileTrue(
+        shooter.revSpeaker()
+      );
     // Amp aim and rev up
     OIConstants.operatorController.rightBumper().whileTrue(
         pivot.aimAmp().alongWith(shooter.revAmp()));
@@ -189,7 +190,7 @@ public class RobotContainer {
     OIConstants.operatorController.povDown().whileTrue(
         Commands.parallel(
             pivot.aimIntake(),
-            intake.intake().until(indexer::handoff),
+            intake.intake(),
             indexer.forwards())
         .until(indexer::isStoring)
         .andThen(rumble(0.5).withTimeout(0.5))

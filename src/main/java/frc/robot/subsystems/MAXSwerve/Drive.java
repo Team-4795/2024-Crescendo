@@ -14,6 +14,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -25,6 +26,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
@@ -162,8 +164,16 @@ public class Drive extends SubsystemBase {
                 });
         
         if (Constants.currentMode == Mode.REAL && Constants.hasVision) {
-            vision.getArducamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> m_poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
-            vision.getLifecamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> m_poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
+            vision.getArducamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> 
+            m_poseEstimator.addVisionMeasurement(
+                pose.estimatedPose.toPose2d(), 
+                pose.timestampSeconds,
+                VecBuilder.fill(1,1,Units.degreesToRadians(20))));
+            vision.getLifecamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> 
+            m_poseEstimator.addVisionMeasurement(
+                pose.estimatedPose.toPose2d(), 
+                pose.timestampSeconds,
+                VecBuilder.fill(1,1,Units.degreesToRadians(20))));
             
             vision.getLifecamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> visionPose = pose);
         }
