@@ -87,6 +87,8 @@ public class Vision extends SubsystemBase {
                 PoseStrategy.CLOSEST_TO_REFERENCE_POSE, SaguaroCam, saguaroRobotToCam);
         barbaryFigPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
                 PoseStrategy.CLOSEST_TO_REFERENCE_POSE, BarbaryFig, barbaryFigRobotToCam);
+
+        aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
     }
 
     public Optional<EstimatedRobotPose> getArducamPose(Pose2d prevEstimatedRobotPose) {
@@ -112,10 +114,8 @@ public class Vision extends SubsystemBase {
         Optional<Alliance> ally = DriverStation.getAlliance();
         if (ally.isPresent()) {
             if (ally.get() == Alliance.Red) {
-                aprilTagFieldLayout.setOrigin(OriginPosition.kRedAllianceWallRightSide);
                 aprilTagFieldLayout.getTagPose(4).ifPresent(pose -> speakerPosition = pose.toPose2d());
             } else if (ally.get() == Alliance.Blue) {
-                aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
                 aprilTagFieldLayout.getTagPose(7).ifPresent(pose -> speakerPosition = pose.toPose2d());
             }
         } else {
