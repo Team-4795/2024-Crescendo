@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.StateManager;
+import frc.robot.Constants.IntakeSetpoints;
+import frc.robot.Constants.ShooterSetpoints;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.indexer.Indexer;
@@ -57,10 +59,11 @@ public class AutoCommands {
   };
 
   public static Command initialize(double speed) {
-    return new InstantCommand(() -> {
-      intake.setIntakeSpeed(speed);
-      shooter.setShootingSpeedRPM(-3000 * speed, 3000 * speed);
-    });
+    return Commands.parallel(
+      Commands.runOnce(() -> intake.setIntakeSpeed(IntakeSetpoints.intake)),
+      Commands.runOnce(() -> shooter.setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom)),
+      Commands.runOnce(() -> drive.zeroHeading())
+    );
   }
 
   public static Command resetOdometry(Pose2d pose) {
@@ -89,6 +92,7 @@ public class AutoCommands {
      .andThen(indexer.reverse().withTimeout(0.1)
     );
   }
+
 
   public static Command sensingPiece() {
     return Commands.waitUntil(() -> indexer.isStoring());

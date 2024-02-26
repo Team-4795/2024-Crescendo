@@ -28,18 +28,24 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "AS GP123 P1"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "Align"
                 }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AS GP123 P1"
+                }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait"
           }
         },
         {

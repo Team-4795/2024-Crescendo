@@ -22,6 +22,7 @@ public class AutoSelector {
         chooser.addDefaultOption("Testing auto", new testingPath());
         chooser.addOption("AS GP1234", new AS_GP1234());
         chooser.addOption("As GP123", new AS_GP123());
+        
     }
 
     public Command getSelected() {
