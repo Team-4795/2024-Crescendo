@@ -3,6 +3,7 @@ package frc.robot.subsystems.pivot;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkRelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
@@ -13,7 +14,7 @@ import edu.wpi.first.wpilibj.PWM.PeriodMultiplier;
 public class PivotIOReal implements PivotIO {
   private CANSparkFlex pivotLeft = new CANSparkFlex(PivotConstants.leftCanID, MotorType.kBrushless);
   private CANSparkFlex pivotRight = new CANSparkFlex(PivotConstants.rightCanID, MotorType.kBrushless);
-  private RelativeEncoder motorEncoder = pivotLeft.getEncoder();
+  private RelativeEncoder motorEncoder = pivotLeft.getEncoder(SparkRelativeEncoder.Type.kQuadrature, 7168);
   private AbsoluteEncoder encoder = pivotRight.getAbsoluteEncoder();
   private double inputVolts = 0.0;
 
