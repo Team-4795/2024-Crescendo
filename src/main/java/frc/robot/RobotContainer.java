@@ -196,7 +196,7 @@ public class RobotContainer {
             intake.intake(),
             indexer.forwards())
         .until(indexer::isStoring)
-        .andThen(rumble(0.5).withTimeout(0.5))
+        .andThen(Commands.startEnd(() -> rumble(0.5), () -> rumble(0.0)).withTimeout(0.5))
     );
 
     // Slow reverse
