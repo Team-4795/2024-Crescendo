@@ -135,6 +135,8 @@ public class Robot extends LoggedRobot {
     Threads.setCurrentThreadPriority(true, 99);
     CommandScheduler.getInstance().run();
 
+    Logger.recordOutput("Free memory", (double)Runtime.getRuntime().freeMemory() / 1024 / 1024);
+
     StateManager.getInstance().periodic();
     Threads.setCurrentThreadPriority(true, 10);
   }

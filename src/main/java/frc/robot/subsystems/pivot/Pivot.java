@@ -1,6 +1,8 @@
 package frc.robot.subsystems.pivot;
 
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.proto.Photon;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -40,6 +42,7 @@ public class Pivot extends SubsystemBase {
 
     private double goal = 0;
     private final boolean disableArm = false;
+    private boolean autoAim = false;
     private boolean idleMode = true;
 
     PivotVisualizer visualizer = new PivotVisualizer(Color.kDarkOrange);
@@ -93,12 +96,21 @@ public class Pivot extends SubsystemBase {
         );
     }
 
+    public void toggleAutoAim() {
+        autoAim = !autoAim;
+    }
+
     public Command aimSpeakerDynamic(){
-        return Commands.run(() -> {
-            double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
-            double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / distanceToSpeaker);
-            this.setGoal(angleCalc - PivotConstants.angleOffset);
-        }).finallyDo(() -> setGoal(PivotSetpoints.stow));
+        return Commands.either(
+            Commands.run(() -> {
+                double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
+                double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker + PivotConstants.offset));
+                this.setGoal(angleCalc - PivotConstants.angleOffset);
+            }).finallyDo(() -> setGoal(PivotSetpoints.stow)), 
+            Commands.startEnd(
+                () -> setGoal(PivotSetpoints.speaker),
+                () -> setGoal(PivotSetpoints.stow)),
+            () -> autoAim);
     }
 
     public Command aimAmp() {

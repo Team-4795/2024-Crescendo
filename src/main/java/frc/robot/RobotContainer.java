@@ -19,6 +19,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -151,8 +152,8 @@ public class RobotContainer {
 
     // Zero drive heading
     OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
-    OIConstants.driverController.leftBumper().whileTrue(new AlignSpeaker());
-
+    OIConstants.driverController.povUp().or(OIConstants.driverController.leftBumper())
+      .whileTrue(new AlignSpeaker());
     // Shoot
     OIConstants.driverController.rightTrigger(0.3).or(OIConstants.driverController.leftTrigger(0.3))
         .whileTrue(
@@ -162,20 +163,22 @@ public class RobotContainer {
 
     // Auto drive align
     OIConstants.driverController.povDown().whileTrue(AlignToAmp.pathfindingCommand);
-    OIConstants.driverController.povUp().whileTrue(new AlignSpeaker());
+    OIConstants.driverController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
+    OIConstants.driverController.povLeft().onTrue(Commands.runOnce(() -> pivot.toggleAutoAim()));
+
 
     OIConstants.driverController.y().whileTrue(AlignHeading.align(0));
-    OIConstants.driverController.x().whileTrue(AlignHeading.align(90));
-    OIConstants.driverController.a().whileTrue(AlignHeading.align(180));
-    OIConstants.driverController.b().whileTrue(AlignHeading.align(270));
+    OIConstants.driverController.x().whileTrue(AlignHeading.align(Units.degreesToRadians(90)));
+    OIConstants.driverController.a().whileTrue(AlignHeading.align(Units.degreesToRadians(180)));
+    OIConstants.driverController.b().whileTrue(AlignHeading.align(Units.degreesToRadians(270)));
 
     // Speaker aim and rev up
-    // OIConstants.operatorController.leftBumper().whileTrue(
-    //     pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker()));
+    OIConstants.operatorController.leftBumper().whileTrue(
+        pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker()));
 
-      OIConstants.operatorController.leftBumper().whileTrue(
-        shooter.revSpeaker()
-      );
+    // OIConstants.operatorController.leftBumper().whileTrue(
+    //   shooter.revSpeaker()
+    // );
     // Amp aim and rev up
     OIConstants.operatorController.rightBumper().whileTrue(
         pivot.aimAmp().alongWith(shooter.revAmp()));
@@ -193,7 +196,10 @@ public class RobotContainer {
             intake.intake(),
             indexer.forwards())
         .until(indexer::isStoring)
-        .andThen(rumble(0.5).withTimeout(0.5))
+        .andThen(Commands.parallel(
+          Commands.startEnd(() -> rumble(0.5), () -> rumble(0.0)).withTimeout(0.5),
+          indexer.reverse().withTimeout(0.1))
+        )
     );
 
     // Slow reverse
