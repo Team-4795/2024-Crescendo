@@ -55,5 +55,6 @@ public class Intake extends SubsystemBase{
         io.updateInputs(inputs);
         Logger.processInputs("Intake", inputs);
         io.setMotorSpeed(intakeSpeed);
+        Logger.recordOutput("Intake/Intake speed", intakeSpeed);
     }
 }

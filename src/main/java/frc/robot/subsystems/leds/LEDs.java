@@ -3,7 +3,9 @@ package frc.robot.subsystems.leds;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.indexer.Indexer;
 
 public class LEDs extends SubsystemBase {
     private final int LED_LENGTH = 0;
@@ -13,6 +15,13 @@ public class LEDs extends SubsystemBase {
     private AddressableLEDBuffer buffer;
     private String[] led1 = new String[1];
 
+    private int r;
+    private int g;
+    private int b;
+
+    private int frame;
+
+    private boolean teamColorsAnimation = false;
 
     public LEDs() {
         led = new AddressableLED(PORT);
@@ -35,20 +44,91 @@ public class LEDs extends SubsystemBase {
 
     }
 
-    public void setRGB(int r, int g, int b, int led) {
+    public void setLEDRGB(int r, int g, int b, int led) {
         setColor(r, g, b, false, led, led);
     }
+
+    public void setPartRGB(int r, int g, int b, int start, int end) {
+        setColor(r, g, b, false, start, end);
+    }
     
-    public void setStrip(int r, int g, int b) {
+    public void setStripRGB(int r, int g, int b) {
         setColor(r, g, b, false, 0, LED_LENGTH);
     }
 
-    public void setTopColor(int r, int g, int b) {
+    public void setTopColorRGB(int r, int g, int b) {
         setColor(r, g, b, false, LED_LENGTH/2, LED_LENGTH);
     }
 
-    public void setBottomColor(int r, int g, int b) {
+    public void setBottomColorRGB(int r, int g, int b) {
         setColor(r, g, b, false, 0, LED_LENGTH/2);
     }
 
+    public void setLEDHSV(int h, int s, int v, int led) {
+        setColor(h, s, v, true, led, led);
+    }
+
+    public void setPartHSV(int h, int s, int v, int start, int end) {
+        setColor(h, s, v, true, start, end);
+    }
+
+    public void setStripHSV(int h, int s, int v) {
+        setColor(h, s, v, true, 0, LED_LENGTH);
+    }
+
+    public void setTopColorHSV(int h, int s, int v) {
+        setColor(h, s, v, true, LED_LENGTH/2, LED_LENGTH);
+    }
+
+    public void setBottomColorHSV(int h, int s, int v) {
+        setColor(h, s, v, true, 0, LED_LENGTH/2);
+    }
+
+    public void setStripAlliance() {
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+            setStripRGB(255, 0, 0);
+        }
+        else {
+            setStripRGB(0, 0, 255);
+        }
+
+    }
+    
+    public void toggleTeamColorsAnimation() {
+        if (teamColorsAnimation) {
+            teamColorsAnimation = false;
+        }
+        else {
+            teamColorsAnimation = true;
+        }
+    }
+
+    private void updateTeamColor() {
+        if ((frame/10) % 2 == 0) {
+            setStripRGB(143, 139, 189);
+        }
+        else {
+            setStripRGB(1, 195, 203);
+        }
+    }
+
+
+    @Override
+    public void periodic() {
+        // updates LEDs to show state of intake
+        if (Indexer.getInstance().isStoring()) {
+            setStripRGB(0, 255, 0);
+        } 
+        else {
+            setStripRGB(255, 0, 0);
+        }
+        if (teamColorsAnimation) {
+            updateTeamColor();
+        }
+    }
+
 }
+//143 139 189
+//1 195 203
+
+//142, 46, 14, ratio is 71:23:7

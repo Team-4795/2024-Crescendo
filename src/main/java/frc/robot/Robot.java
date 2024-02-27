@@ -123,6 +123,24 @@ public class Robot extends LoggedRobot {
     // Start AdvantageKit logger & URCL
     Logger.registerURCL(URCL.startExternal());
     Logger.start();
+
+    Map<String, Integer> commandCounts = new HashMap<>();
+        BiConsumer<Command, Boolean> logCommandFunction = (Command command, Boolean active) -> {
+            String name = command.getName();
+            int count = commandCounts.getOrDefault(name, 0) + (active ? 1 : -1);
+            commandCounts.put(name, count);
+            Logger.recordOutput("CommandsUnique/" + name + "_" + Integer.toHexString(command.hashCode()), active);
+            Logger.recordOutput("CommandsAll/" + name, count > 0);
+        };
+        CommandScheduler.getInstance().onCommandInitialize((Command command) -> {
+            logCommandFunction.accept(command, true);
+        });
+        CommandScheduler.getInstance().onCommandFinish((Command command) -> {
+            logCommandFunction.accept(command, false);
+        });
+        CommandScheduler.getInstance().onCommandInterrupt((Command command) -> {
+            logCommandFunction.accept(command, false);
+        });
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
@@ -138,6 +156,8 @@ public class Robot extends LoggedRobot {
     // the Command-based framework to work.
     Threads.setCurrentThreadPriority(true, 99);
     CommandScheduler.getInstance().run();
+
+    Logger.recordOutput("Free memory", (double)Runtime.getRuntime().freeMemory() / 1024 / 1024);
 
     StateManager.getInstance().periodic();
     Threads.setCurrentThreadPriority(true, 10);
@@ -159,7 +179,6 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void autonomousInit() {
-    Indexer.getInstance().setAutoMode(true);
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -176,7 +195,6 @@ public class Robot extends LoggedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    Indexer.getInstance().setAutoMode(false);
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

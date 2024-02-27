@@ -17,6 +17,13 @@ package frc.robot;
 
 
 
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
+import org.photonvision.proto.Photon;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /**
@@ -31,9 +38,11 @@ public final class Constants {
   // Mode of the robot, set to Mode.REPLAY for replay
   public static final Mode currentMode = Mode.fromState();
   public static final boolean tuningMode = true;
-  public static final boolean hasVision = false;
+  public static final boolean hasVision = true;
   public static final int tryConfigCount = 5;
   public static final double configDelay = 0.1;
+  public static final int paramApplyAttemptLimit = 5;
+  public static final double paramApplyTimemout = 0.05;
 
   public static final class PivotSetpoints {
     public static final double speaker = 0.6;
@@ -60,8 +69,8 @@ public final class Constants {
     public static final double reverseTop = 1000;
     public static final double reverseBottom = -1000;
 
-    public static final double slowReverseTop = 150;
-    public static final double slowReverseBottom = -150;
+    public static final double slowReverseTop = 450;
+    public static final double slowReverseBottom = -450;
   }
 
   public static final class IntakeSetpoints {
@@ -109,6 +118,15 @@ public final class Constants {
     public static final double kAxisDeadband = 0.1;
     public static final CommandXboxController driverController = new CommandXboxController(0);
     public static final CommandXboxController operatorController = new CommandXboxController(1);
+  }
+
+  public static final class FieldConstants {
+    public static final double speakerHeight = 1.98; //meters
+  }
+
+  public static class PathFindingConstants {
+    public static final Pose2d blueAmp = new Pose2d(7.5,4.5, new Rotation2d());
+    public static final Pose2d redAmp = new Pose2d(7.5, 4.5, new Rotation2d());
   }
 
   public static class AutoConstants {

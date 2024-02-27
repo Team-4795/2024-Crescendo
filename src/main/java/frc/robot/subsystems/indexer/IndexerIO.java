@@ -7,13 +7,13 @@ public interface IndexerIO {
     
    @AutoLog
    public static class IndexerIOInputs {
-     public double leftMotorSpeed = 0.0;
-     public double leftMotorCurrent = 0.0;
-     public double leftMotorVoltage = 0.0;
+     public double bottomMotorSpeed = 0.0;
+     public double bottomMotorCurrent = 0.0;
+     public double bottomMotorVoltage = 0.0;
  
-     public double rightMotorSpeed = 0.0;
-     public double rightMotorCurrent = 0.0;
-     public double rightMotorVoltage = 0.0;
+     public double towerMotorSpeed = 0.0;
+     public double towerMotorCurrent = 0.0;
+     public double towerMotorVoltage = 0.0;
      public boolean sensorActivated = false;
    }
 

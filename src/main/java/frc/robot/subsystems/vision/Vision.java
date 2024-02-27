@@ -13,6 +13,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.PhotonUtils;
+import org.photonvision.PhotonVersion;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -21,6 +22,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -74,8 +76,8 @@ public class Vision extends SubsystemBase {
 
         // Cam mounted facing forward, half a meter forward of center, half a meter up
         // from center. Change Both Later
-        saguaroRobotToCam = new Transform3d(new Translation3d(0.241, 0.0889, 0.826), new Rotation3d(0, 0, 0));
-        barbaryFigRobotToCam = new Transform3d(new Translation3d(-0.178, 0.165, 0.489), new Rotation3d(0, 0, Math.PI));
+        saguaroRobotToCam = new Transform3d(new Translation3d(Units.inchesToMeters(-8), Units.inchesToMeters(-6.5), Units.inchesToMeters(10.5)), new Rotation3d(0, Units.degreesToRadians(20), Units.degreesToRadians(-90)));
+        barbaryFigRobotToCam = new Transform3d(new Translation3d(Units.inchesToMeters(-10.5), Units.inchesToMeters(5), Units.inchesToMeters(11)), new Rotation3d(0, Units.degreesToRadians(20), Math.PI));
 
         try {
             aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
@@ -87,6 +89,9 @@ public class Vision extends SubsystemBase {
                 PoseStrategy.CLOSEST_TO_REFERENCE_POSE, SaguaroCam, saguaroRobotToCam);
         barbaryFigPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
                 PoseStrategy.CLOSEST_TO_REFERENCE_POSE, BarbaryFig, barbaryFigRobotToCam);
+
+        aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
+        getSpeakerPos();
     }
 
     public Optional<EstimatedRobotPose> getArducamPose(Pose2d prevEstimatedRobotPose) {
@@ -112,10 +117,8 @@ public class Vision extends SubsystemBase {
         Optional<Alliance> ally = DriverStation.getAlliance();
         if (ally.isPresent()) {
             if (ally.get() == Alliance.Red) {
-                aprilTagFieldLayout.setOrigin(OriginPosition.kRedAllianceWallRightSide);
                 aprilTagFieldLayout.getTagPose(4).ifPresent(pose -> speakerPosition = pose.toPose2d());
             } else if (ally.get() == Alliance.Blue) {
-                aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
                 aprilTagFieldLayout.getTagPose(7).ifPresent(pose -> speakerPosition = pose.toPose2d());
             }
         } else {

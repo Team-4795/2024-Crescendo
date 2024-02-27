@@ -13,13 +13,13 @@
 
 package frc.robot;
 
-import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -39,8 +39,8 @@ import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AlignToAmp;
 import frc.robot.commands.AutoCommands;
-import frc.robot.commands.ScoreSpeaker;
-
+import frc.robot.commands.AlignHeading;
+import frc.robot.commands.AlignSpeaker;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -63,6 +63,7 @@ public class RobotContainer {
   private final StateManager manager = StateManager.getInstance();
 
   LoggedDashboardChooser<Command> autoChooser;
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -77,10 +78,14 @@ public class RobotContainer {
         // Real robot, instantiate hardware IO implementations
         drive = Drive.initialize(
             new GyroIOPigeon2(),
-            new ModuleIOSparkMax(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId, DriveConstants.kFrontLeftChassisAngularOffset),
-            new ModuleIOSparkMax(DriveConstants.kFrontRightDrivingCanId, DriveConstants.kFrontRightTurningCanId, DriveConstants.kFrontRightChassisAngularOffset),
-            new ModuleIOSparkMax(DriveConstants.kRearLeftDrivingCanId, DriveConstants.kRearLeftTurningCanId, DriveConstants.kBackLeftChassisAngularOffset),
-            new ModuleIOSparkMax(DriveConstants.kRearRightDrivingCanId, DriveConstants.kRearRightTurningCanId, DriveConstants.kBackRightChassisAngularOffset));
+            new ModuleIOSparkMax(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId,
+                DriveConstants.kFrontLeftChassisAngularOffset),
+            new ModuleIOSparkMax(DriveConstants.kFrontRightDrivingCanId, DriveConstants.kFrontRightTurningCanId,
+                DriveConstants.kFrontRightChassisAngularOffset),
+            new ModuleIOSparkMax(DriveConstants.kRearLeftDrivingCanId, DriveConstants.kRearLeftTurningCanId,
+                DriveConstants.kBackLeftChassisAngularOffset),
+            new ModuleIOSparkMax(DriveConstants.kRearRightDrivingCanId, DriveConstants.kRearRightTurningCanId,
+                DriveConstants.kBackRightChassisAngularOffset));
         break;
 
       case SIM:
@@ -89,13 +94,12 @@ public class RobotContainer {
         pivot = Pivot.initialize(new PivotIOSim());
         indexer = Indexer.initialize(new IndexerIOSim());
         // Sim robot, instantiate physics sim IO implementations
-        drive =
-            Drive.initialize(
-                new GyroIOSim(),
-                new ModuleIOSim(DriveConstants.kFrontLeftChassisAngularOffset),
-                new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
-                new ModuleIOSim(DriveConstants.kBackLeftChassisAngularOffset),
-                new ModuleIOSim(DriveConstants.kBackRightChassisAngularOffset));
+        drive = Drive.initialize(
+            new GyroIOSim(),
+            new ModuleIOSim(DriveConstants.kFrontLeftChassisAngularOffset),
+            new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
+            new ModuleIOSim(DriveConstants.kBackLeftChassisAngularOffset),
+            new ModuleIOSim(DriveConstants.kBackRightChassisAngularOffset));
 
         break;
 
@@ -124,11 +128,9 @@ public class RobotContainer {
 
 
 
-
-
     // Configure the button bindings
     configureButtonBindings();
-    
+
   }
 
   /**
@@ -140,6 +142,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+
+    Trigger isReady = new Trigger(() -> (pivot.atSetpoint()));
+
     drive.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
@@ -153,88 +158,77 @@ public class RobotContainer {
 
     // Zero drive heading
     OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
+    OIConstants.driverController.povUp().or(OIConstants.driverController.leftBumper())
+      .whileTrue(new AlignSpeaker());
+    // Shoot
+    OIConstants.driverController.rightTrigger(0.3).or(OIConstants.driverController.leftTrigger(0.3))
+        .whileTrue(
+            Commands.sequence(
+                indexer.reverse().withTimeout(0.05),
+                indexer.forwards()));
 
-    // Switch pivot motor idle mode
-    OIConstants.driverController.b().onTrue(Commands.runOnce(pivot::toggleIdleMode))
-                                     .onFalse(Commands.runOnce(pivot::toggleIdleMode));
+    // Auto drive align
+    OIConstants.driverController.povDown().whileTrue(AlignToAmp.pathfindingCommand);
+    OIConstants.driverController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
+    OIConstants.driverController.povLeft().onTrue(Commands.runOnce(() -> pivot.toggleAutoAim()));
+
+
+    OIConstants.driverController.y().whileTrue(AlignHeading.align(0));
+    OIConstants.driverController.x().whileTrue(AlignHeading.align(Units.degreesToRadians(90)));
+    OIConstants.driverController.a().whileTrue(AlignHeading.align(Units.degreesToRadians(180)));
+    OIConstants.driverController.b().whileTrue(AlignHeading.align(Units.degreesToRadians(270)));
 
     // Speaker aim and rev up
     OIConstants.operatorController.leftBumper().whileTrue(
-      pivot.aimSpeaker().alongWith(shooter.revSpeaker())
-    );
+        pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker()));
 
+    // OIConstants.operatorController.leftBumper().whileTrue(
+    //   shooter.revSpeaker()
+    // );
     // Amp aim and rev up
     OIConstants.operatorController.rightBumper().whileTrue(
-      pivot.aimAmp().alongWith(shooter.revAmp())
-    );
+        pivot.aimAmp().alongWith(shooter.revAmp()));
 
-    Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint());
-
-    // Slow reverse
-    OIConstants.driverController
-      .leftTrigger(0.3)
-      .whileTrue(
+    OIConstants.operatorController.povUp().onTrue(
         Commands.parallel(
-          indexer.slowReverse(),
-          shooter.slowReverse()
-        )
-      );
-
-    // Shoot
-    OIConstants.driverController
-      .rightTrigger(0.3)
-      .and(isReady.debounce(0.3))
-      .whileTrue(rumble(0.5))
-      .whileTrue(
-        Commands.sequence(
-          indexer.reverse().withTimeout(0.05),
-          indexer.forwards()
-        )
-      );
+            shooter.slowReverse(),
+            indexer.slowReverse(),
+            pivot.aimSource()));
 
     // Intake
-    OIConstants.operatorController.a().whileTrue(
-      Commands.parallel(
-        pivot.aimIntake(),
-        intake.intake(),
-        indexer.forwards()
-      )
+    OIConstants.operatorController.povDown().whileTrue(
+        Commands.parallel(
+            pivot.aimIntake(),
+            intake.intake(),
+            indexer.forwards())
         .until(indexer::isStoring)
-        .andThen(rumble(0.1).withTimeout(0.2))
+        .andThen(Commands.parallel(
+          Commands.startEnd(() -> rumble(0.5), () -> rumble(0.0)).withTimeout(0.5),
+          indexer.reverse().withTimeout(0.1))
+        )
     );
+
+    // Slow reverse
+    OIConstants.operatorController.a().whileTrue(
+            Commands.parallel(
+                indexer.slowReverse(),
+                shooter.slowReverse()));
 
     // Full reverse
     OIConstants.operatorController.b().whileTrue(
-      Commands.parallel(
-        intake.reverse(),
-        indexer.reverse(),
-        shooter.reverse()
-      )
-    );
+        Commands.parallel(
+            intake.reverse(),
+            indexer.reverse(),
+            shooter.reverse()));
 
     // Override storing (flips it)
     OIConstants.operatorController.x().whileTrue(indexer.overrideStoring());
 
     // Other reverse
     OIConstants.operatorController.y().whileTrue(
-      Commands.parallel(
-        intake.slowReverse(),
-        indexer.forwards()
-      )
-    );
-
-    OIConstants.operatorController.povUp().onTrue(
-      Commands.parallel(
-        shooter.slowReverse(),
-        indexer.slowReverse(),
-        pivot.aimSource()
-      )
-    );
-
-    // Auto drive align
-    OIConstants.driverController.a().whileTrue(AlignToAmp.pathfindingCommand);
-
-    OIConstants.driverController.x().whileTrue(new ScoreSpeaker());
+        Commands.parallel(
+            intake.slowReverse(),
+            indexer.forwards()));
 
   }
 
@@ -244,13 +238,15 @@ public class RobotContainer {
   }
 
   public Command rumble(double amount) {
-    // return Commands.run(() -> setBothRumble(amount)).finallyDo(() -> setBothRumble(0));
+    // return Commands.run(() -> setBothRumble(amount)).finallyDo(() ->
+    // setBothRumble(0));
     return Commands.startEnd(() -> setBothRumble(amount), () -> setBothRumble(0));
   }
 
   public void teleopInit() {
     manager.setState(State.Init);
   }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
