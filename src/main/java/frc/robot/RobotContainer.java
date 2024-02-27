@@ -19,6 +19,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -167,17 +168,17 @@ public class RobotContainer {
 
 
     OIConstants.driverController.y().whileTrue(AlignHeading.align(0));
-    OIConstants.driverController.x().whileTrue(AlignHeading.align(90));
-    OIConstants.driverController.a().whileTrue(AlignHeading.align(180));
-    OIConstants.driverController.b().whileTrue(AlignHeading.align(270));
+    OIConstants.driverController.x().whileTrue(AlignHeading.align(Units.degreesToRadians(90)));
+    OIConstants.driverController.a().whileTrue(AlignHeading.align(Units.degreesToRadians(180)));
+    OIConstants.driverController.b().whileTrue(AlignHeading.align(Units.degreesToRadians(270)));
 
     // Speaker aim and rev up
-    // OIConstants.operatorController.leftBumper().whileTrue(
-    //     pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker()));
-
     OIConstants.operatorController.leftBumper().whileTrue(
-      shooter.revSpeaker().alongWith(pivot.aimSpeakerDynamic())
-    );
+        pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker()));
+
+    // OIConstants.operatorController.leftBumper().whileTrue(
+    //   shooter.revSpeaker()
+    // );
     // Amp aim and rev up
     OIConstants.operatorController.rightBumper().whileTrue(
         pivot.aimAmp().alongWith(shooter.revAmp()));
