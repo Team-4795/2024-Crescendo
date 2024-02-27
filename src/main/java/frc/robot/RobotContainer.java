@@ -113,6 +113,7 @@ public class RobotContainer {
     }
     NamedCommands.registerCommand("Score", AutoCommands.score());
     NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.2)); //change later
+    NamedCommands.registerCommand("Align Subwoofer", AutoCommands.SetPivotAngle(0.6));
     NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
     NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(1));
     NamedCommands.registerCommand("StopIndexer", AutoCommands.runIndexer(0));

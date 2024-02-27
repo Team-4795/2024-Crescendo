@@ -12,9 +12,34 @@
     "data": {
       "commands": [
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Subwoofer"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Initialize"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "RunEverything"
+            "name": "Score"
           }
         },
         {

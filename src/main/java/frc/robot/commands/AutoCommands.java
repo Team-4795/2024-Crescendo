@@ -87,11 +87,13 @@ public class AutoCommands {
   }
 
   public static Command intake() {
-    return Commands.parallel(
-      Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
-      Commands.runOnce(() -> pivot.setGoal(PivotSetpoints.intake))
-    ).until(indexer::isStoring)
-     .andThen(indexer.reverse().withTimeout(0.1));
+    return Commands.sequence(
+      Commands.parallel(
+        Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
+        Commands.runOnce(() -> pivot.setGoal(PivotSetpoints.intake))
+      ),
+      Commands.waitUntil(indexer::isStoring),
+      indexer.reverse().withTimeout(0.1));
   }
 
   public static Command sensingPiece() {
