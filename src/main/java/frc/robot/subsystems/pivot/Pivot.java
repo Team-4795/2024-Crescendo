@@ -39,6 +39,7 @@ public class Pivot extends SubsystemBase {
 
     private double goal = 0;
     private final boolean disableArm = false;
+    private boolean autoAim = false;
     private boolean idleMode = true;
 
     PivotVisualizer visualizer = new PivotVisualizer(Color.kDarkOrange);
@@ -90,6 +91,10 @@ public class Pivot extends SubsystemBase {
             () -> setGoal(PivotSetpoints.speaker),
             () -> setGoal(PivotSetpoints.stow)
         );
+    }
+
+    public void toggleAutoAim() {
+        autoAim = !autoAim;
     }
 
     public Command aimSpeakerDynamic(){

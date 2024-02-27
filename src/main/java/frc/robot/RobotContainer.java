@@ -163,6 +163,9 @@ public class RobotContainer {
     // Auto drive align
     OIConstants.driverController.povDown().whileTrue(AlignToAmp.pathfindingCommand);
     OIConstants.driverController.povUp().whileTrue(new AlignSpeaker());
+    OIConstants.driverController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
+    OIConstants.driverController.povLeft().onTrue(Commands.runOnce(() -> pivot.toggleAutoAim()));
+
 
     OIConstants.driverController.y().whileTrue(AlignHeading.align(0));
     OIConstants.driverController.x().whileTrue(AlignHeading.align(90));
