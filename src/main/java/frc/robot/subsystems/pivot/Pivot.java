@@ -16,6 +16,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PivotSetpoints;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.util.LoggedTunableNumber;
 
 public class Pivot extends SubsystemBase {

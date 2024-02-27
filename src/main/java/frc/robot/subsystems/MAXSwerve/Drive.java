@@ -164,18 +164,19 @@ public class Drive extends SubsystemBase {
                 });
         
         if (Constants.currentMode == Mode.REAL && Constants.hasVision) {
-            vision.getArducamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> 
+            Vision.getInstance().getBarbaryFigPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> 
             m_poseEstimator.addVisionMeasurement(
                 pose.estimatedPose.toPose2d(), 
                 pose.timestampSeconds,
                 VecBuilder.fill(1,1,Units.degreesToRadians(20))));
-            vision.getLifecamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> 
+
+            vision.getSaguaroPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> 
             m_poseEstimator.addVisionMeasurement(
                 pose.estimatedPose.toPose2d(), 
                 pose.timestampSeconds,
                 VecBuilder.fill(1,1,Units.degreesToRadians(20))));
             
-            vision.getLifecamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> visionPose = pose);
+            //vision.getLifecamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> visionPose = pose);
         }
 
         Logger.recordOutput("Estimated Pose", getPose());
