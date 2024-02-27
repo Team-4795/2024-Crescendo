@@ -180,6 +180,7 @@ public class Drive extends SubsystemBase {
 
         Logger.recordOutput("Estimated Pose", getPose());
         Logger.recordOutput("Vision pose", visionPose.estimatedPose);
+        Logger.recordOutput("Vision/Distance to speaker", vision.getDistancetoSpeaker(getPose()));
         // Read wheel deltas from each module
         SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
         wheelDeltas[0] = m_frontLeft.getPositionDelta();

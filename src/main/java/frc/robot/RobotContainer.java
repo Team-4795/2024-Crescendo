@@ -173,9 +173,9 @@ public class RobotContainer {
     // OIConstants.operatorController.leftBumper().whileTrue(
     //     pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker()));
 
-      OIConstants.operatorController.leftBumper().whileTrue(
-        shooter.revSpeaker()
-      );
+    OIConstants.operatorController.leftBumper().whileTrue(
+      shooter.revSpeaker()
+    );
     // Amp aim and rev up
     OIConstants.operatorController.rightBumper().whileTrue(
         pivot.aimAmp().alongWith(shooter.revAmp()));
