@@ -69,8 +69,8 @@ public final class Constants {
     public static final double reverseTop = 1000;
     public static final double reverseBottom = -1000;
 
-    public static final double slowReverseTop = 150;
-    public static final double slowReverseBottom = -150;
+    public static final double slowReverseTop = 450;
+    public static final double slowReverseBottom = -450;
   }
 
   public static final class IntakeSetpoints {
@@ -121,8 +121,7 @@ public final class Constants {
   }
 
   public static final class FieldConstants {
-    public static final double speakerHeight = 1.95
-    ; //meters
+    public static final double speakerHeight = 1.98; //meters
   }
 
   public static class PathFindingConstants {

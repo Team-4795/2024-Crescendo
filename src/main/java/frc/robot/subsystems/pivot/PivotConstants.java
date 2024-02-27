@@ -15,7 +15,7 @@ public final class PivotConstants {
 
     public static final double angleOffset = 0.26;
     public static final double kDt = 0.02;
-    public static final Constraints constraints = new Constraints(2, 2);
+    public static final Constraints constraints = new Constraints(3, 4); //rad/s and rad/s^2
     public static final double manualSpeed = 0.01;
     
     public static final double F = 178;
