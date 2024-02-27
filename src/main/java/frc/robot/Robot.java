@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.util.LocalADStarAK;
 
 import java.util.HashMap;
@@ -98,24 +97,6 @@ public class Robot extends LoggedRobot {
         Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"), 0.0001));
         break;
     }
-
-    Map<String, Integer> commandCounts = new HashMap<>();
-    BiConsumer<Command, Boolean> logCommandFunction = (Command command, Boolean active) -> {
-      String name = command.getName();
-      int count = commandCounts.getOrDefault(name, 0) + (active ? 1 : -1);
-      commandCounts.put(name, count);
-      Logger.recordOutput("CommandsUnique/" + name + "_" + Integer.toHexString(command.hashCode()), active);
-      Logger.recordOutput("CommandsAll/" + name, count > 0);
-    };
-    CommandScheduler.getInstance().onCommandInitialize((Command command) -> {
-      logCommandFunction.accept(command, true);
-    });
-    CommandScheduler.getInstance().onCommandFinish((Command command) -> {
-      logCommandFunction.accept(command, false);
-    });
-    CommandScheduler.getInstance().onCommandInterrupt((Command command) -> {
-      logCommandFunction.accept(command, false);
-    });
 
     // See http://bit.ly/3YIzFZ6 for more information on timestamps in AdvantageKit.
     // Logger.disableDeterministicTimestamps()

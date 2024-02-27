@@ -17,13 +17,8 @@ package frc.robot;
 
 
 
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
-import org.photonvision.proto.Photon;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /**
@@ -74,8 +69,8 @@ public final class Constants {
   }
 
   public static final class IntakeSetpoints {
-    public static final double intake = -0.5;
-    public static final double reverse = 0.5;
+    public static final double intake = -0.6;
+    public static final double reverse = 0.6;
     public static final double slowReverse = 0.4;
   }
 
