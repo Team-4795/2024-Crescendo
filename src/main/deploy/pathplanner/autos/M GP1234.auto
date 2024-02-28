@@ -12,13 +12,19 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AS GP1234 P1"
+                  "pathName": "M GP1234 P1"
                 }
               },
               {
@@ -31,27 +37,33 @@
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "SensingPiece"
+            "waitTime": 0.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "AS GP1234 P2"
+            "pathName": "M GP1234 P2"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "SensingPiece"
+            "waitTime": 0.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "AS GP1234 P3"
+            "pathName": "M GP1234 P3"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {
@@ -61,15 +73,15 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "SensingPiece"
+            "pathName": "M GP1234 P4"
           }
         },
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "AS GP1234 P4"
+            "waitTime": 0.5
           }
         },
         {

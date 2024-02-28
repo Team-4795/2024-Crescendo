@@ -53,7 +53,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "AS GP123 P1"
+                        "pathName": "M GP123 P1"
                       }
                     },
                     {
@@ -103,7 +103,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "AS GP123 P2"
+                        "pathName": "M GP123 P2"
                       }
                     },
                     {

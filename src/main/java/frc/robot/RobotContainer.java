@@ -121,7 +121,8 @@ public class RobotContainer {
         break;
     }
     NamedCommands.registerCommand("Score", AutoCommands.score());
-    NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.2)); //change later
+    NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.2)); //change later
+    NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.2)); //change later
     NamedCommands.registerCommand("Align Subwoofer", AutoCommands.SetPivotAngle(0.6));
     NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
     NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(1));
@@ -129,6 +130,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("SensePiece", AutoCommands.sensingPiece());
     NamedCommands.registerCommand("Intake", AutoCommands.intake());
     NamedCommands.registerCommand("Jostle Pivot", AutoCommands.SetPivotAngle(0.08));
+    NamedCommands.registerCommand("SetIntakePose", AutoCommands.SetPivotAngle(1));
+    NamedCommands.registerCommand("VisionAlign", AutoCommands.aimSpeakerDynamic());
 
 
     manager.setState(State.Init);

@@ -116,7 +116,11 @@ public final class Constants {
   }
 
   public static final class FieldConstants {
+<<<<<<< HEAD
     public static final double speakerHeight = 2.01; //meters
+=======
+    public static final double speakerHeight = 2.02; //meters
+>>>>>>> 44df5c168e61e0a82ea0be91adc5e6ef1c8b195d
   }
 
   public static class PathFindingConstants {
