@@ -21,7 +21,7 @@ public class IntakeIOReal implements IntakeIO {
     private final StatusSignal<Double> velocity = intakeMotor.getVelocity();
 
     public IntakeIOReal() {
-        intakeMotor.setInverted(false);
+        intakeMotor.setInverted(true);
 
         talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         talonFXConfig.CurrentLimits.StatorCurrentLimit = 80;
