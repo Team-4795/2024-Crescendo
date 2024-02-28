@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 1.3756161320151827,
-      "y": 5.67736632507666
-    },
-    "rotation": 0.0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -20,7 +14,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {
@@ -28,48 +22,72 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Align"
+                  "pathName": "M GP1234 P1"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "AS GP123 P1"
+                  "name": "Align"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "Wait"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "SensingPiece"
+            "waitTime": 0.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "AS GP123 P2"
+            "pathName": "M GP1234 P2"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "SensingPiece"
+            "waitTime": 0.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "AS GP123 P3"
+            "pathName": "M GP1234 P3"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopIndexer"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M GP1234 P4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
           }
         }
       ]

@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.3756161320151827,
+      "y": 5.67736632507666
+    },
+    "rotation": 0.0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -12,70 +18,58 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "AS GP1234 P1"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "Align"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "M GP123 P1"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "SensingPiece"
+            "waitTime": 0.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "AS GP1234 P2"
+            "pathName": "M GP123 P2"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "SensingPiece"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AS GP1234 P3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopIndexer"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "SensingPiece"
+            "waitTime": 0.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "AS GP1234 P4"
+            "pathName": "AS GP123 P3"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "Score"
+            "waitTime": 0.5
           }
         }
       ]
