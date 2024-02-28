@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.StateManager.State;
@@ -65,7 +64,6 @@ public class RobotContainer {
   private final Indexer indexer;
   private final Intake intake;
   private LEDs leds;
-  AutoSelector autoSelector;
 
   // Managers
   private final StateManager manager = StateManager.getInstance();
@@ -94,7 +92,7 @@ public class RobotContainer {
                 DriveConstants.kBackLeftChassisAngularOffset),
             new ModuleIOSparkMax(DriveConstants.kRearRightDrivingCanId, DriveConstants.kRearRightTurningCanId,
                 DriveConstants.kBackRightChassisAngularOffset));
-        leds = new LEDs();
+        leds = LEDs.getInstance();
         break;
 
       case SIM:
@@ -136,7 +134,7 @@ public class RobotContainer {
     manager.setState(State.Init);
 
     NoteVisualizer.setRobotPoseSupplier(drive::getPose);
-    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("AS GP123"));
+    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("TEST - AS GP123"));
 
 
 

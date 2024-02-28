@@ -28,7 +28,7 @@ public class LEDs extends SubsystemBase {
         return instance;
     }
 
-    public LEDs() {
+    private LEDs() {
         led = new AddressableLED(PORT);
         buffer = new AddressableLEDBuffer(LED_LENGTH);
         led.setLength(buffer.getLength());

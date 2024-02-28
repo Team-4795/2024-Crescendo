@@ -24,12 +24,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "StopIndexer"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -46,12 +40,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "SensingPiece"
           }
         },
         {

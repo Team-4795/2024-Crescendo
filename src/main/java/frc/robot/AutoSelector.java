@@ -11,11 +11,12 @@ import frc.robot.autoPaths.testingPath;
 import frc.robot.commands.AutoCommands;
 
 public class AutoSelector {
-    private final LoggedDashboardChooser<AutoPath> chooser = new LoggedDashboardChooser<>("Auto Selector");
+    private final LoggedDashboardChooser<AutoPath> chooser;
 
     AutoCommands autoCommands;
 
     public AutoSelector() {
+        chooser = new LoggedDashboardChooser<>("Auto Selector");
         autoCommands = new AutoCommands();
 
         chooser.addOption("Close3PAuto", new Close3PAuto());

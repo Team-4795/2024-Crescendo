@@ -2,6 +2,7 @@ package frc.robot.subsystems.MAXSwerve;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -19,7 +20,8 @@ public class ModuleIOSim implements ModuleIO {
     private SwerveModuleState optimizedState = new SwerveModuleState();
 
     private PIDController turnController = new PIDController(3, 0, 0);
-    private PIDController driveController = new PIDController(3, 0, 0);
+    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 2.002); //2.002
+    private PIDController driveController = new PIDController(0.04, 0, 0);
 
     public ModuleIOSim(double chassisAngularOffset) {
         turnController.enableContinuousInput(0, 2 * Math.PI);
@@ -37,7 +39,7 @@ public class ModuleIOSim implements ModuleIO {
         SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(state,
                 new Rotation2d(turnSim.getAngularPositionRad()));
 
-        double driveVolts = driveController.calculate(driveSim.getAngularVelocityRadPerSec() * ModuleConstants.kWheelDiameterMeters / 2, optimizedDesiredState.speedMetersPerSecond);
+        double driveVolts = feedforward.calculate(optimizedDesiredState.speedMetersPerSecond) + driveController.calculate(driveSim.getAngularVelocityRadPerSec() * ModuleConstants.kWheelDiameterMeters / 2, optimizedDesiredState.speedMetersPerSecond);
         double turnOutput = turnController.calculate(turnSim.getAngularPositionRad(), optimizedDesiredState.angle.getRadians());
         
         driveSim.setInputVoltage(MathUtil.clamp(driveVolts, -12, 12));
