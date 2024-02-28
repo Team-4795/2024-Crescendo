@@ -78,17 +78,14 @@ public class PivotIOReal implements PivotIO {
   }
 
   private double getAbsolutePosition() {
-    return encoder.getAbsolutePosition() * PivotConstants.positionConversionFactor;
+    return -encoder.getAbsolutePosition() * PivotConstants.positionConversionFactor + 4.187;
   }
 
   @Override
   public void updateInputs(PivotIOInputs inputs) {
     inputs.pivotInputVolts = inputVolts;
     inputs.pivotAppliedVolts = pivotLeft.getAppliedOutput() * pivotLeft.getBusVoltage();
-
-    if (Math.abs(inputs.pivotPositionRads - getAbsolutePosition()) < 0.1) {
-      inputs.pivotPositionRads = getAbsolutePosition();
-    }
+    inputs.pivotPositionRads = getAbsolutePosition();
 
     // Cut off weird jumps
     if (Math.abs(motorEncoder.getPosition()) < 2.0) {

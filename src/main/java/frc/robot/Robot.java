@@ -133,7 +133,10 @@ public class Robot extends LoggedRobot {
     // This must be called from the robot's periodic block in order for anything in
     // the Command-based framework to work.
     Threads.setCurrentThreadPriority(true, 99);
+//    Runtime.getRuntime().gc();
     CommandScheduler.getInstance().run();
+
+    Logger.recordOutput("Free memory", (double)Runtime.getRuntime().freeMemory() / 1024 / 1024);
 
     StateManager.getInstance().periodic();
     Threads.setCurrentThreadPriority(true, 10);

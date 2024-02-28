@@ -45,7 +45,7 @@ public class AlignSpeaker extends Command {
                 currentPose.getY() + (velocity.getY() * 0.02),
                 currentPose.getRotation());
         double deltaY = vision.getSpeakerPos().getY() - newPose.getY();
-        previousAngle = Units.radiansToDegrees(Math.asin(deltaY / vision.getDistancetoSpeaker(newPose)));
+        previousAngle = -Units.radiansToDegrees(Math.asin(deltaY / vision.getDistancetoSpeaker(newPose)));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class AlignSpeaker extends Command {
                 currentPose.getRotation());
 
         double deltaY = vision.getSpeakerPos().getY() - newPose.getY();
-        double angle = Units.radiansToDegrees(-Math.asin(deltaY / vision.getDistancetoSpeaker(newPose)));
+        double angle = -Units.radiansToDegrees(-Math.asin(deltaY / vision.getDistancetoSpeaker(newPose)));
 
         double deltaAngle = Units.degreesToRadians(angle - previousAngle);
         double omega = deltaAngle / 0.02;
