@@ -41,24 +41,27 @@ public class Vision extends SubsystemBase {
         io.updateInputs(inputs);
 
         speakerPosition = io.getSpeakerPos();
-
-        
-        saguaroPhotonPoseEstimator = io.getSaguaroPoseEstimator();
-        barbaryFigPhotonPoseEstimator = io.getBarbaryFigPoseEstimator();
-
     }
 
     public Optional<EstimatedRobotPose> getBarbaryFigPose(Pose2d prevEstimatedRobotPose) {
-        return inputs.barbaryFigPose;
+        return io.getBarbaryFigPose(prevEstimatedRobotPose);
     }
 
     public Optional<EstimatedRobotPose> getSaguaroPose(Pose2d prevEstimatedRobotPose) {
-        return inputs.saguaroPose;
+        return io.getSaguaroPose(prevEstimatedRobotPose);
     }
 
     public double getDistancetoSpeaker(Pose2d robotPose) {
+        if(speakerPosition == null){
+            return 0;
+        }
         distanceToTarget = PhotonUtils.getDistanceToPose(robotPose, speakerPosition);
         return distanceToTarget;
+    }
+
+    public Pose2d getSpeakerPos(){
+        speakerPosition = io.getSpeakerPos();
+        return speakerPosition;
     }
 
     public void periodic() {

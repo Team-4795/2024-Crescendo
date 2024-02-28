@@ -6,10 +6,7 @@ import org.littletonrobotics.junction.AutoLog;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonPoseEstimator;
 
-import com.fasterxml.jackson.databind.node.POJONode;
-
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
  
 public interface VisionIO {
     @AutoLog
@@ -22,8 +19,6 @@ public interface VisionIO {
         public double barbaryFigPitch = 0.0;
         public double barbaryFigYaw = 0.0;
 
-        public Optional<EstimatedRobotPose> saguaroPose;
-        public Optional<EstimatedRobotPose> barbaryFigPose;
     }
 
     public default void updateInputs(VisionIOInputs inputs) {}
@@ -32,11 +27,11 @@ public interface VisionIO {
         return null;
     }
 
-    public default PhotonPoseEstimator getBarbaryFigPoseEstimator(){
+    public default Optional<EstimatedRobotPose> getBarbaryFigPose(Pose2d reference){
         return null;
     }
 
-    public default PhotonPoseEstimator getSaguaroPoseEstimator(){
+    public default Optional<EstimatedRobotPose> getSaguaroPose(Pose2d reference){
         return null;
     }
 

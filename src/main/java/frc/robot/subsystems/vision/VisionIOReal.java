@@ -66,13 +66,15 @@ public class VisionIOReal implements VisionIO {
     getSpeakerPos();
 }
     @Override
-    public PhotonPoseEstimator getSaguaroPoseEstimator(){
-        return saguaroPhotonPoseEstimator;
+    public Optional<EstimatedRobotPose> getSaguaroPose(Pose2d reference){
+        saguaroPhotonPoseEstimator.setReferencePose(reference);
+        return saguaroPhotonPoseEstimator.update();
     }
 
     @Override
-    public PhotonPoseEstimator getBarbaryFigPoseEstimator(){
-        return barbaryFigPhotonPoseEstimator;
+    public Optional<EstimatedRobotPose> getBarbaryFigPose(Pose2d reference){
+        barbaryFigPhotonPoseEstimator.setReferencePose(reference);
+        return barbaryFigPhotonPoseEstimator.update();
     }
 
     @Override
@@ -116,8 +118,5 @@ public class VisionIOReal implements VisionIO {
             inputs.barbaryFigPitch = barbaryFigTarget.getPitch();
             inputs.barbaryFigYaw = barbaryFigTarget.getYaw();
         }
-
-        inputs.saguaroPose = saguaroPhotonPoseEstimator.update();
-        inputs.barbaryFigPose = barbaryFigPhotonPoseEstimator.update();
     }
 }
