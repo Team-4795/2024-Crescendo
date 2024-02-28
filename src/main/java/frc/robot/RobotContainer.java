@@ -178,7 +178,8 @@ public class RobotContainer {
                 indexer.forwards()));
 
     new Trigger(() -> Math.abs(OIConstants.operatorController.getLeftY()) > 0.15)
-      .whileTrue(new RainbowCommand(() -> MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), 0.15)));
+      .whileTrue(
+        new RainbowCommand(() -> MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), 0.15)));
 
     // Auto drive align
     OIConstants.driverController.povDown().whileTrue(AlignToAmp.pathfindingCommand);

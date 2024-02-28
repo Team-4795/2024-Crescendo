@@ -114,5 +114,6 @@ public class VisionIOReal implements VisionIO {
             inputs.barbaryFigPitch = barbaryFigTarget.getPitch();
             inputs.barbaryFigYaw = barbaryFigTarget.getYaw();
         }
+
     }
 }

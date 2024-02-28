@@ -21,10 +21,12 @@ public class IntakeIOReal implements IntakeIO {
     private final StatusSignal<Double> velocity = intakeMotor.getVelocity();
 
     public IntakeIOReal() {
-        intakeMotor.setInverted(true);
+        // intakeMotor.setInverted(true);
 
         talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         talonFXConfig.CurrentLimits.StatorCurrentLimit = 80;
+
+        // talonFXConfig.
 
         talonFXConfig.Audio.BeepOnBoot = true;
         
@@ -32,7 +34,7 @@ public class IntakeIOReal implements IntakeIO {
 
         intakeMotor.clearStickyFaults();
 
-        BaseStatusSignal.setUpdateFrequencyForAll(50, velocity, voltage);
+        BaseStatusSignal.setUpdateFrequencyForAll(50, velocity, voltage, current);
 
         intakeMotor.optimizeBusUtilization(1.0);
 
@@ -47,7 +49,7 @@ public class IntakeIOReal implements IntakeIO {
     }
 
     public void updateInputs(IntakeIOInputs inputs) {
-        BaseStatusSignal.refreshAll(velocity, voltage);
+        BaseStatusSignal.refreshAll(velocity, voltage, current);
         
         inputs.angularVelocityRPM = velocity.getValueAsDouble() * 60;
         // inputs.angularPositionRot = intakeMotor.getPosition().getValueAsDouble();
@@ -57,7 +59,7 @@ public class IntakeIOReal implements IntakeIO {
 
     @Override
     public void setMotorSpeed(double speed) {
-        intakeMotor.set(speed);
+        intakeMotor.set(-speed);
     }
 
 }
