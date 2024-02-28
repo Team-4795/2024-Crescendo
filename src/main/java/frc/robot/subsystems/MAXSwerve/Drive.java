@@ -129,9 +129,6 @@ public class Drive extends SubsystemBase {
                 this // Reference to this subsystem to set requirements
         );
 
-        Pathfinding.setPathfinder(new LocalADStarAK()); // Implements A* pathfinding algorithm (very cool btw) -
-                                                        // assuming I understand this correctly
-
         PathPlannerLogging.setLogActivePathCallback(
                 (activePath) -> {
                     Logger.recordOutput(

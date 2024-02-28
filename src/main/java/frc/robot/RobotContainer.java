@@ -63,7 +63,7 @@ public class RobotContainer {
   private final Pivot pivot;
   private final Indexer indexer;
   private final Intake intake;
-  private final LEDs leds = new LEDs();
+  private LEDs leds;
   AutoSelector autoSelector;
 
   // Managers
@@ -93,6 +93,7 @@ public class RobotContainer {
                 DriveConstants.kBackLeftChassisAngularOffset),
             new ModuleIOSparkMax(DriveConstants.kRearRightDrivingCanId, DriveConstants.kRearRightTurningCanId,
                 DriveConstants.kBackRightChassisAngularOffset));
+        leds = new LEDs();
         break;
 
       case SIM:

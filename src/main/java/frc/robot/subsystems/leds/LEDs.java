@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LEDs extends SubsystemBase {
-    private final int LED_LENGTH = 0;
+    private final int LED_LENGTH = 1;
     private final int PORT = 0;
 
     private AddressableLED led;
@@ -37,16 +37,16 @@ public class LEDs extends SubsystemBase {
     }
 
     private void init() {
-        this.setStripAlliance();
+        setStripRGB(85, 12, 168);
     }
 
     private void setColor(int a0, int a1, int a2, boolean colorModel, int start, int end) /* false: RGB; true: HSV */ {
         start = MathUtil.clamp(start, 0, LED_LENGTH);
         end = MathUtil.clamp(end, start, LED_LENGTH);
 
-        for (int i = start; i <= end; i++) {
-            if (colorModel) {buffer.setHSV(i, a0, a1, a2);}
-            else {buffer.setRGB(i, a0, a1, a2);}
+        for (int i = start; i < end; i++) {
+            if (colorModel) buffer.setHSV(i, a0, a1, a2);
+            else buffer.setRGB(i, a0, a1, a2);
         }
 
         led.setData(buffer);
