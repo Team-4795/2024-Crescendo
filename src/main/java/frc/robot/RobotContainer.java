@@ -114,6 +114,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.4));
     NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
     NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(1));
+    NamedCommands.registerCommand("PivotAlign", AutoCommands.aimSpeakerDynamic().withTimeout(1));
+    NamedCommands.registerCommand("StopIndexer", AutoCommands.runIndexer(0));
+    NamedCommands.registerCommand("TurnToSpeaker", new AlignSpeaker());
+
 
     manager.setState(State.Init);
 
