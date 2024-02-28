@@ -33,6 +33,7 @@ import frc.robot.subsystems.MAXSwerve.*;
 import frc.robot.subsystems.Shooter.*;
 import frc.robot.subsystems.indexer.*;
 import frc.robot.subsystems.intake.*;
+import frc.robot.subsystems.leds.LEDs;
 import frc.robot.subsystems.pivot.*;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
@@ -41,6 +42,7 @@ import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AlignToAmp;
 import frc.robot.commands.AutoCommands;
+import frc.robot.commands.RainbowCommand;
 import frc.robot.commands.AlignHeading;
 import frc.robot.commands.AlignSpeaker;
 
@@ -61,6 +63,7 @@ public class RobotContainer {
   private final Pivot pivot;
   private final Indexer indexer;
   private final Intake intake;
+  private final LEDs leds = new LEDs();
   AutoSelector autoSelector;
 
   // Managers
@@ -167,11 +170,13 @@ public class RobotContainer {
                 indexer.reverse().withTimeout(0.05),
                 indexer.forwards()));
 
+    new Trigger(() -> Math.abs(OIConstants.operatorController.getLeftY()) > 0.15)
+      .whileTrue(new RainbowCommand(() -> MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), 0.15)));
+
     // Auto drive align
     OIConstants.driverController.povDown().whileTrue(AlignToAmp.pathfindingCommand);
     OIConstants.driverController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
     OIConstants.driverController.povLeft().onTrue(Commands.runOnce(() -> pivot.toggleAutoAim()));
-
 
     OIConstants.driverController.y().whileTrue(AlignHeading.align(0));
     OIConstants.driverController.x().whileTrue(AlignHeading.align(Units.degreesToRadians(90)));

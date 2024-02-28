@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.indexer.Indexer;
 
 public class LEDs extends SubsystemBase {
     private final int LED_LENGTH = 0;
@@ -13,21 +12,32 @@ public class LEDs extends SubsystemBase {
 
     private AddressableLED led;
     private AddressableLEDBuffer buffer;
-    private String[] led1 = new String[1];
-
-    private int r;
-    private int g;
-    private int b;
+    // private String[] led1 = new String[1];
 
     private int frame;
 
     private boolean teamColorsAnimation = false;
 
+    private static LEDs instance;
+
+    public static LEDs getInstance() {
+        if (instance == null) {
+            instance = new LEDs();
+        }
+
+        return instance;
+    }
+
     public LEDs() {
         led = new AddressableLED(PORT);
         buffer = new AddressableLEDBuffer(LED_LENGTH);
         led.setLength(buffer.getLength());
-        
+
+        init();
+    }
+
+    private void init() {
+        this.setStripAlliance();
     }
 
     private void setColor(int a0, int a1, int a2, boolean colorModel, int start, int end) /* false: RGB; true: HSV */ {
@@ -41,7 +51,6 @@ public class LEDs extends SubsystemBase {
 
         led.setData(buffer);
         led.start();
-
     }
 
     public void setLEDRGB(int r, int g, int b, int led) {
@@ -62,10 +71,6 @@ public class LEDs extends SubsystemBase {
 
     public void setBottomColorRGB(int r, int g, int b) {
         setColor(r, g, b, false, 0, LED_LENGTH/2);
-    }
-
-    public void setLEDHSV(int h, int s, int v, int led) {
-        setColor(h, s, v, true, led, led);
     }
 
     public void setPartHSV(int h, int s, int v, int start, int end) {
@@ -91,7 +96,6 @@ public class LEDs extends SubsystemBase {
         else {
             setStripRGB(0, 0, 255);
         }
-
     }
     
     public void toggleTeamColorsAnimation() {
@@ -112,20 +116,32 @@ public class LEDs extends SubsystemBase {
         }
     }
 
-
-    @Override
-    public void periodic() {
-        // updates LEDs to show state of intake
-        if (Indexer.getInstance().isStoring()) {
-            setStripRGB(0, 255, 0);
-        } 
-        else {
-            setStripRGB(255, 0, 0);
-        }
-        if (teamColorsAnimation) {
-            updateTeamColor();
-        }
+    public void setHSVIndex(int index, int h, int s, int v) {
+        buffer.setHSV(index, h, s, v);
     }
+
+    public int getLength() {
+        return buffer.getLength();
+    }
+
+    public void setOutput() {
+        led.setData(buffer);
+        led.start();
+    }
+
+    // @Override
+    // public void periodic() {
+    //     // updates LEDs to show state of intake
+    //     if (Indexer.getInstance().isStoring()) {
+    //         setStripRGB(0, 255, 0);
+    //     } 
+    //     else {
+    //         setStripRGB(255, 0, 0);
+    //     }
+    //     if (teamColorsAnimation) {
+    //         updateTeamColor();
+    //     }
+    // }
 
 }
 //143 139 189
