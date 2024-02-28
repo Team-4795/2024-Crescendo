@@ -69,8 +69,8 @@ public final class Constants {
     public static final double reverseTop = 1000;
     public static final double reverseBottom = -1000;
 
-    public static final double slowReverseTop = 450;
-    public static final double slowReverseBottom = -450;
+    public static final double slowReverseTop = 650;
+    public static final double slowReverseBottom = -650;
   }
 
   public static final class IntakeSetpoints {
