@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.StateManager;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.IndexerSetpoints;
 import frc.robot.Constants.IntakeSetpoints;
 import frc.robot.Constants.PivotSetpoints;
@@ -20,6 +21,8 @@ import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.pivot.Pivot;
+import frc.robot.subsystems.pivot.PivotConstants;
+import frc.robot.subsystems.vision.Vision;
 
 public class AutoCommands {
   private HashMap<String, PathPlannerTrajectory> paths = new HashMap<>();
@@ -99,4 +102,12 @@ public class AutoCommands {
   public static Command sensingPiece() {
     return Commands.waitUntil(() -> indexer.isStoring());
   }
+
+      public static Command aimSpeakerDynamic(){
+        return Commands.run(() -> {
+                double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
+                double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker + PivotConstants.offset));
+                pivot.setGoal(angleCalc - PivotConstants.angleOffset);
+            });
+    }
 }
