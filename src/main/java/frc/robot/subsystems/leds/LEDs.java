@@ -4,6 +4,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LEDs extends SubsystemBase {
@@ -33,16 +35,20 @@ public class LEDs extends SubsystemBase {
         buffer = new AddressableLEDBuffer(LED_LENGTH);
         led.setLength(buffer.getLength());
 
-        init();
+        setDefaultCommand(runOnce(() -> {
+            teamColors();
+        }));
+
+        teamColors();
     }
 
-    private void init() {
+    private void teamColors() {
         setStripRGB(85, 12, 168);
     }
 
-    // public Command readyToShoot() {
-    //     return 
-    // }
+    public Command intook() {
+        return runOnce(() -> setStripRGB(0, 200, 0)).andThen(Commands.waitSeconds(1));
+    }
 
     private void setColor(int a0, int a1, int a2, boolean colorModel, int start, int end) /* false: RGB; true: HSV */ {
         start = MathUtil.clamp(start, 0, LED_LENGTH);

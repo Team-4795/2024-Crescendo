@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterSetpoints;
@@ -222,6 +223,7 @@ public class RobotContainer {
             indexer.forwards())
         .until(indexer::isStoring)
         .andThen(Commands.parallel(
+          new ScheduleCommand(leds.intook()),
           rumbleCommand(0.5).withTimeout(0.5),
           indexer.reverse().withTimeout(0.1))
         )
