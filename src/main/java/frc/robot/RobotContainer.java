@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
@@ -40,6 +39,7 @@ import frc.robot.subsystems.pivot.*;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOReal;
+import frc.robot.util.NamedCommandManager;
 import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AlignToAmp;
@@ -122,26 +122,13 @@ public class RobotContainer {
         drive = Drive.initialize(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
         break;
     }
-    NamedCommands.registerCommand("Score", AutoCommands.score());
-    NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.2)); //change later
-    NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.6)); //change later
-    NamedCommands.registerCommand("Align Subwoofer", AutoCommands.SetPivotAngle(0.6));
-    NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
-    NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(1));
-    NamedCommands.registerCommand("StopIndexer", AutoCommands.runIndexer(0));
-    NamedCommands.registerCommand("SensePiece", AutoCommands.sensingPiece());
-    NamedCommands.registerCommand("Intake", AutoCommands.intake());
-    NamedCommands.registerCommand("Jostle Pivot", AutoCommands.SetPivotAngle(0.08));
-    NamedCommands.registerCommand("SetIntakePose", AutoCommands.SetPivotAngle(0.6));
-    NamedCommands.registerCommand("VisionAlign", AutoCommands.aimSpeakerDynamic().alongWith(Commands.runOnce(() -> shooter.setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom))).withTimeout(1));
 
+    NamedCommandManager.registerAll();
 
     manager.setState(State.Init);
 
     NoteVisualizer.setRobotPoseSupplier(drive::getPose);
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("TEST - AS GP123"));
-
-
 
     // Configure the button bindings
     configureButtonBindings();
@@ -160,39 +147,26 @@ public class RobotContainer {
 
     Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint());
 
-    drive.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        new RunCommand(
-            () -> drive.drive(
-                -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband),
-                -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband),
-                -MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kAxisDeadband),
-                true, true),
-            drive));
-
     // Zero drive heading
     OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
 
     // Auto align
-    OIConstants.driverController.povUp().or(OIConstants.driverController.leftBumper())
-      .whileTrue(new AlignSpeaker());
+    OIConstants.driverController.leftBumper().whileTrue(new AlignSpeaker());
 
-    OIConstants.driverController.rightTrigger(0.3).or(OIConstants.driverController.leftTrigger(0.3))
-        .whileTrue(
-            Commands.sequence(
-                indexer.reverse().withTimeout(0.05),
-                indexer.forwards()));
-
-    new Trigger(() -> Math.abs(OIConstants.operatorController.getLeftY()) > 0.15)
-      .whileTrue(
-        new RainbowCommand(() -> MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), 0.15)));
+    //Shoot
+    OIConstants.driverController.rightTrigger(0.3).whileTrue(indexer.forwards());
+    
+    //Drive robot relative
+    OIConstants.driverController.leftTrigger(0.3)
+      .onTrue(Commands.runOnce(() -> drive.setFieldRelative(false)))
+      .onFalse(Commands.runOnce(() -> drive.setFieldRelative(true)));
 
     // Auto drive align
     OIConstants.driverController.povDown().whileTrue(AlignToAmp.pathfindingCommand);
     OIConstants.driverController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
     OIConstants.driverController.povLeft().onTrue(Commands.runOnce(() -> pivot.toggleAutoAim()));
 
+    //Heading align
     OIConstants.driverController.y().whileTrue(AlignHeading.align(0));
     OIConstants.driverController.x().whileTrue(AlignHeading.align(Units.degreesToRadians(90)));
     OIConstants.driverController.a().whileTrue(AlignHeading.align(Units.degreesToRadians(180)));
@@ -202,20 +176,18 @@ public class RobotContainer {
     OIConstants.operatorController.leftBumper()
       .whileTrue(pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker()));
 
-    // OIConstants.operatorController.leftBumper().whileTrue(
-    //   shooter.revSpeaker()
-    // );
     // Amp aim and rev up
     OIConstants.operatorController.rightBumper().whileTrue(
         pivot.aimAmp().alongWith(shooter.revAmp()));
 
+    //Source Intake
     OIConstants.operatorController.povUp().onTrue(
         Commands.parallel(
             shooter.slowReverse(),
             indexer.slowReverse(),
             pivot.aimSource()));
 
-    // Intake
+    //Ground Intake
     OIConstants.operatorController.povDown().whileTrue(
         Commands.parallel(
             pivot.aimIntake(),
@@ -223,19 +195,19 @@ public class RobotContainer {
             indexer.forwards())
         .until(indexer::isStoring)
         .andThen(Commands.parallel(
-          new ScheduleCommand(leds.intook()),
+          // new ScheduleCommand(leds.intook()),
           rumbleCommand(0.5).withTimeout(0.5),
           indexer.reverse().withTimeout(0.1))
         )
     );
 
-    // Slow reverse
+    // Slow reverse tower
     OIConstants.operatorController.a().whileTrue(
             Commands.parallel(
                 indexer.slowReverse(),
                 shooter.slowReverse()));
 
-    // Full reverse
+    // Full reverse everything
     OIConstants.operatorController.b().whileTrue(
         Commands.parallel(
             intake.reverse(),
@@ -245,12 +217,15 @@ public class RobotContainer {
     // Override storing (flips it)
     OIConstants.operatorController.x().whileTrue(indexer.overrideStoring());
 
-    // Other reverse
+    // Handoff unjam
     OIConstants.operatorController.y().whileTrue(
         Commands.parallel(
             intake.slowReverse(),
             indexer.forwards()));
 
+    new Trigger(() -> Math.abs(OIConstants.operatorController.getLeftY()) > 0.15)
+      .whileTrue(
+        new RainbowCommand(() -> MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), 0.15)));
   }
 
   private void setBothRumble(double amount) {

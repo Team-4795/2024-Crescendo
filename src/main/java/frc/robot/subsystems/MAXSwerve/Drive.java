@@ -14,6 +14,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -30,12 +31,16 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.Constants.OIConstants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.AutoConstants;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.ModuleConstants;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.util.LocalADStarAK;
 import frc.robot.util.SwerveUtils;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -49,6 +54,7 @@ public class Drive extends SubsystemBase {
     // The gyro sensor
     private GyroIO gyro;
     private GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
+    private boolean fieldRelative = true;
 
     // Slew rate filter variables for controlling lateral acceleration
     private double m_currentRotation = 0.0;
@@ -63,7 +69,7 @@ public class Drive extends SubsystemBase {
     SwerveDrivePoseEstimator m_poseEstimator;
     private EstimatedRobotPose visionPose = new EstimatedRobotPose(new Pose3d(), m_currentRotation, null, null);
 
-    private Vision vision;;
+    private Vision vision;
     // Odometry class for tracking robot pose
     SwerveDriveOdometry m_odometry;
     private Pose2d pose = new Pose2d();
@@ -140,6 +146,16 @@ public class Drive extends SubsystemBase {
                 (targetPose) -> {
                     Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
                 }); // Adds a way for PathPlanner to log what pose it's currently trying to go to
+
+        setDefaultCommand(Commands.run(() -> {
+        // The left stick controls translation of the robot.
+        // Turning is controlled by the X axis of the right stick.
+            this.drive(
+                -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband),
+                -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband),
+                -MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kAxisDeadband),
+                fieldRelative, true);
+        }, this));
     }
 
     @Override
@@ -160,8 +176,7 @@ public class Drive extends SubsystemBase {
                     m_rearRight.getPosition()
                 });
 
-
-        
+     
         if (Constants.currentMode == Mode.REAL && Constants.hasVision) {
             Vision.getInstance().getBarbaryFigPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> {
                 m_poseEstimator.addVisionMeasurement(
@@ -400,6 +415,9 @@ public class Drive extends SubsystemBase {
         pose.rotateBy(pose.getRotation().times(-1)); //This may not work
     }
 
+    public void setFieldRelative(boolean fieldRelative){
+        this.fieldRelative = fieldRelative;
+    }
 
     public double getHeading() {
         return gyroInputs.yaw.getDegrees();
