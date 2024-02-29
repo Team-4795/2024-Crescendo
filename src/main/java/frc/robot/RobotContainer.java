@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.ShooterSetpoints;
 import frc.robot.StateManager.State;
 import frc.robot.subsystems.MAXSwerve.*;
 import frc.robot.subsystems.Shooter.*;
@@ -64,7 +65,6 @@ public class RobotContainer {
   private final Indexer indexer;
   private final Intake intake;
   private LEDs leds;
-  AutoSelector autoSelector;
 
   // Managers
   private final StateManager manager = StateManager.getInstance();
@@ -93,7 +93,7 @@ public class RobotContainer {
                 DriveConstants.kBackLeftChassisAngularOffset),
             new ModuleIOSparkMax(DriveConstants.kRearRightDrivingCanId, DriveConstants.kRearRightTurningCanId,
                 DriveConstants.kBackRightChassisAngularOffset));
-        leds = new LEDs();
+        leds = LEDs.getInstance();
         break;
 
       case SIM:
@@ -121,20 +121,26 @@ public class RobotContainer {
         drive = Drive.initialize(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
         break;
     }
-    NamedCommands.registerCommand("Score", AutoCommands.score(0.7));
-    NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.4));
+    NamedCommands.registerCommand("Score", AutoCommands.score());
+    NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.2)); //change later
+    NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.6)); //change later
+    NamedCommands.registerCommand("Align Subwoofer", AutoCommands.SetPivotAngle(0.6));
     NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
     NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(1));
-    NamedCommands.registerCommand("PivotAlign", AutoCommands.aimSpeakerDynamic().withTimeout(1));
     NamedCommands.registerCommand("StopIndexer", AutoCommands.runIndexer(0));
-    NamedCommands.registerCommand("TurnToSpeaker", new AlignSpeaker());
+    NamedCommands.registerCommand("SensePiece", AutoCommands.sensingPiece());
+    NamedCommands.registerCommand("Intake", AutoCommands.intake());
+    NamedCommands.registerCommand("Jostle Pivot", AutoCommands.SetPivotAngle(0.08));
+    NamedCommands.registerCommand("SetIntakePose", AutoCommands.SetPivotAngle(0.6));
+    NamedCommands.registerCommand("VisionAlign", AutoCommands.aimSpeakerDynamic().alongWith(Commands.runOnce(() -> shooter.setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom))).withTimeout(1));
 
 
     manager.setState(State.Init);
 
-    autoSelector = new AutoSelector();
     NoteVisualizer.setRobotPoseSupplier(drive::getPose);
-    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("AS GP 123"));
+    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("TEST - AS GP123"));
+
+
 
     // Configure the button bindings
     configureButtonBindings();
@@ -151,7 +157,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    Trigger isReady = new Trigger(() -> (pivot.atSetpoint()));
+    Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint());
 
     drive.setDefaultCommand(
         // The left stick controls translation of the robot.
@@ -166,9 +172,11 @@ public class RobotContainer {
 
     // Zero drive heading
     OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
+
+    // Auto align
     OIConstants.driverController.povUp().or(OIConstants.driverController.leftBumper())
       .whileTrue(new AlignSpeaker());
-    // Shoot
+
     OIConstants.driverController.rightTrigger(0.3).or(OIConstants.driverController.leftTrigger(0.3))
         .whileTrue(
             Commands.sequence(
@@ -176,7 +184,8 @@ public class RobotContainer {
                 indexer.forwards()));
 
     new Trigger(() -> Math.abs(OIConstants.operatorController.getLeftY()) > 0.15)
-      .whileTrue(new RainbowCommand(() -> MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), 0.15)));
+      .whileTrue(
+        new RainbowCommand(() -> MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), 0.15)));
 
     // Auto drive align
     OIConstants.driverController.povDown().whileTrue(AlignToAmp.pathfindingCommand);
@@ -189,8 +198,8 @@ public class RobotContainer {
     OIConstants.driverController.b().whileTrue(AlignHeading.align(Units.degreesToRadians(270)));
 
     // Speaker aim and rev up
-    OIConstants.operatorController.leftBumper().whileTrue(
-        pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker()));
+    OIConstants.operatorController.leftBumper()
+      .whileTrue(pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker()));
 
     // OIConstants.operatorController.leftBumper().whileTrue(
     //   shooter.revSpeaker()
@@ -213,7 +222,7 @@ public class RobotContainer {
             indexer.forwards())
         .until(indexer::isStoring)
         .andThen(Commands.parallel(
-          Commands.startEnd(() -> rumble(0.5), () -> rumble(0.0)).withTimeout(0.5),
+          rumbleCommand(0.5).withTimeout(0.5),
           indexer.reverse().withTimeout(0.1))
         )
     );
@@ -247,7 +256,7 @@ public class RobotContainer {
     OIConstants.operatorController.getHID().setRumble(RumbleType.kBothRumble, amount);
   }
 
-  public Command rumble(double amount) {
+  public Command rumbleCommand(double amount) {
     // return Commands.run(() -> setBothRumble(amount)).finallyDo(() ->
     // setBothRumble(0));
     return Commands.startEnd(() -> setBothRumble(amount), () -> setBothRumble(0));

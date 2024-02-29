@@ -1,0 +1,56 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.3669845521509223,
+      "y": 5.550603828480384
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "RunEverything"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Testing Commands path"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

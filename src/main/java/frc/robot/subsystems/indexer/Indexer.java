@@ -15,7 +15,7 @@ public class Indexer extends SubsystemBase {
     private double indexerSpeed = 0.0;
     private boolean overrideStoring = false;
 
-    private boolean currentStoring = false;
+    public static boolean currentStoring = false;
     private CircularBuffer<Double> currents = new CircularBuffer<>(IndexerConstants.bufferSize);
 
     private static Indexer instance;

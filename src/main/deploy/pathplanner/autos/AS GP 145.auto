@@ -1,0 +1,104 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.67,
+      "y": 6.65
+    },
+    "rotation": 58.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "RunEverything"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AS GP145 P1"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopIndexer"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS GP145 P2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS GP145 P3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS GP145 P4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS GP 145 P5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

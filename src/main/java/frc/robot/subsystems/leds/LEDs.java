@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LEDs extends SubsystemBase {
-    private final int LED_LENGTH = 1;
+    private final int LED_LENGTH = 26;
     private final int PORT = 0;
 
     private AddressableLED led;
@@ -28,7 +28,7 @@ public class LEDs extends SubsystemBase {
         return instance;
     }
 
-    public LEDs() {
+    private LEDs() {
         led = new AddressableLED(PORT);
         buffer = new AddressableLEDBuffer(LED_LENGTH);
         led.setLength(buffer.getLength());
@@ -39,6 +39,10 @@ public class LEDs extends SubsystemBase {
     private void init() {
         setStripRGB(85, 12, 168);
     }
+
+    // public Command readyToShoot() {
+    //     return 
+    // }
 
     private void setColor(int a0, int a1, int a2, boolean colorModel, int start, int end) /* false: RGB; true: HSV */ {
         start = MathUtil.clamp(start, 0, LED_LENGTH);

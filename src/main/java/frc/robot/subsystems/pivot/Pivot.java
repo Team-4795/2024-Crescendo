@@ -42,7 +42,7 @@ public class Pivot extends SubsystemBase {
 
     private double goal = 0;
     private final boolean disableArm = false;
-    private boolean autoAim = false;
+    private boolean autoAim = true;
     private boolean idleMode = true;
 
     PivotVisualizer visualizer = new PivotVisualizer(Color.kDarkOrange);

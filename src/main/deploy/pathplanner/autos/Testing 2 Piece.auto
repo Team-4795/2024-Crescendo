@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3756161320151827,
-      "y": 5.67736632507666
+      "x": 1.1969112668610487,
+      "y": 5.574358195791997
     },
-    "rotation": 0.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,13 +14,25 @@
         {
           "type": "named",
           "data": {
-            "name": "RunEverything"
+            "name": "AlignClose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Initialize"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
           }
         },
         {
@@ -28,30 +40,30 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "AS GP123 P1"
+                  "name": "Intake"
                 }
               },
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Align"
+                  "pathName": "Go forward"
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "AS GP123 P2"
+            "name": "VisionAlign"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "AS GP123 P3"
+            "name": "Score"
           }
         }
       ]

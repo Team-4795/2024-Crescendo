@@ -1,18 +1,14 @@
 package frc.robot.subsystems.vision;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
-import org.photonvision.targeting.TargetCorner;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -47,8 +43,25 @@ public class VisionIOReal implements VisionIO {
     SaguaroCam = new PhotonCamera("Saguaro");
     BarbaryFig = new PhotonCamera("Barbary Fig");
 
-    saguaroRobotToCam = new Transform3d(new Translation3d(Units.inchesToMeters(-8), Units.inchesToMeters(-6.5), Units.inchesToMeters(10.5)), new Rotation3d(0, Units.degreesToRadians(20), Units.degreesToRadians(-90)));
-    barbaryFigRobotToCam = new Transform3d(new Translation3d(Units.inchesToMeters(-10.5), Units.inchesToMeters(5), Units.inchesToMeters(11)), new Rotation3d(0, Units.degreesToRadians(20), Math.PI));
+    saguaroRobotToCam = new Transform3d(
+        new Translation3d(
+            Units.inchesToMeters(-8), 
+            Units.inchesToMeters(-6.5), 
+            Units.inchesToMeters(10.5)), 
+        new Rotation3d(
+            0, 
+            Units.degreesToRadians(20), 
+            Units.degreesToRadians(-90)));
+
+    barbaryFigRobotToCam = new Transform3d(
+        new Translation3d(
+            Units.inchesToMeters(-10.5), 
+            Units.inchesToMeters(5), 
+            Units.inchesToMeters(11)), 
+            new Rotation3d(
+                0, 
+                Units.degreesToRadians(20), 
+                Math.PI));
 
     try {
         aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
@@ -118,5 +131,6 @@ public class VisionIOReal implements VisionIO {
             inputs.barbaryFigPitch = barbaryFigTarget.getPitch();
             inputs.barbaryFigYaw = barbaryFigTarget.getYaw();
         }
+
     }
 }

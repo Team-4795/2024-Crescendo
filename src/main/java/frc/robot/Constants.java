@@ -17,13 +17,8 @@ package frc.robot;
 
 
 
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
-import org.photonvision.proto.Photon;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /**
@@ -46,9 +41,9 @@ public final class Constants {
 
   public static final class PivotSetpoints {
     public static final double speaker = 0.6;
-    public static final double amp = 1.1;
+    public static final double amp = 1.2;
     public static final double stow = 0.08;
-    public static final double intake = 0.15;
+    public static final double intake = 0.3;
     public static final double source = 0.96;
   }
 
@@ -63,8 +58,8 @@ public final class Constants {
     public static final double speakerTop = -5000;
     public static final double speakerBottom = 5000;
 
-    public static final double ampTop = 600;
-    public static final double ampBottom = 600;
+    public static final double ampTop = 500;
+    public static final double ampBottom = 500;
 
     public static final double reverseTop = 1000;
     public static final double reverseBottom = -1000;
@@ -74,8 +69,8 @@ public final class Constants {
   }
 
   public static final class IntakeSetpoints {
-    public static final double intake = -0.8;
-    public static final double reverse = 0.8;
+    public static final double intake = -0.6;
+    public static final double reverse = 0.6;
     public static final double slowReverse = 0.4;
   }
 
@@ -121,7 +116,7 @@ public final class Constants {
   }
 
   public static final class FieldConstants {
-    public static final double speakerHeight = 1.98; //meters
+    public static final double speakerHeight = 2.02; //meters
   }
 
   public static class PathFindingConstants {

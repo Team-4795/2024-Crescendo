@@ -135,7 +135,7 @@ public class Drive extends SubsystemBase {
                             "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
                 }); // Adds a way for PathPlanner to log what poses it's trying to get the robot to
                     // go to
-
+        
         PathPlannerLogging.setLogTargetPoseCallback(
                 (targetPose) -> {
                     Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
@@ -159,19 +159,26 @@ public class Drive extends SubsystemBase {
                     m_rearLeft.getPosition(),
                     m_rearRight.getPosition()
                 });
+
+
         
         if (Constants.currentMode == Mode.REAL && Constants.hasVision) {
-            Vision.getInstance().getBarbaryFigPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> 
-            m_poseEstimator.addVisionMeasurement(
-                pose.estimatedPose.toPose2d(), 
-                pose.timestampSeconds,
-                VecBuilder.fill(1,1,Units.degreesToRadians(20))));
+            Vision.getInstance().getBarbaryFigPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> {
+                m_poseEstimator.addVisionMeasurement(
+                    pose.estimatedPose.toPose2d(), 
+                    pose.timestampSeconds,
+                    VecBuilder.fill(1,1,Units.degreesToRadians(20)));
+                    Logger.recordOutput("Vision/Barbary Fig Pose", pose.estimatedPose.toPose2d());
+            });
 
-            vision.getSaguaroPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> 
+
+            vision.getSaguaroPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> {
             m_poseEstimator.addVisionMeasurement(
                 pose.estimatedPose.toPose2d(), 
                 pose.timestampSeconds,
-                VecBuilder.fill(1,1,Units.degreesToRadians(20))));
+                VecBuilder.fill(1,1,Units.degreesToRadians(20)));
+            Logger.recordOutput("Vision/Saguaro Pose", pose.estimatedPose.toPose2d());
+        });
             
             //vision.getLifecamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> visionPose = pose);
         }
@@ -242,11 +249,6 @@ public class Drive extends SubsystemBase {
      * @param rateLimit     Whether to enable rate limiting for smoother control.
      */
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
-
-        if (Constants.currentMode == Mode.SIM) {
-            rot *= -1.0;
-        }
-
         double xSpeedCommanded;
         double ySpeedCommanded;
 
@@ -403,6 +405,10 @@ public class Drive extends SubsystemBase {
         return gyroInputs.yaw.getDegrees();
     }
 
+    public Rotation2d getRotationHeading() {
+        return gyroInputs.yaw;
+    }
+
     //between -180 and 180
     public double getWrappedHeading(){
         double rotation = gyroInputs.yaw.getDegrees() % 360;
@@ -417,7 +423,7 @@ public class Drive extends SubsystemBase {
     /**
      * Returns the turn rate of the robot.
      *
-     * @return The turn rate of the robot, in degrees per second
+     * @return The turn rate of the robot, in radians per second
      */
     public double getTurnRate() {
         return gyroInputs.yawVelocity;
