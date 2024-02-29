@@ -249,11 +249,6 @@ public class Drive extends SubsystemBase {
      * @param rateLimit     Whether to enable rate limiting for smoother control.
      */
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
-
-        if (Constants.currentMode == Mode.SIM) {
-            rot *= -1.0;
-        }
-
         double xSpeedCommanded;
         double ySpeedCommanded;
 
@@ -410,6 +405,10 @@ public class Drive extends SubsystemBase {
         return gyroInputs.yaw.getDegrees();
     }
 
+    public Rotation2d getRotationHeading() {
+        return gyroInputs.yaw;
+    }
+
     //between -180 and 180
     public double getWrappedHeading(){
         double rotation = gyroInputs.yaw.getDegrees() % 360;
@@ -424,7 +423,7 @@ public class Drive extends SubsystemBase {
     /**
      * Returns the turn rate of the robot.
      *
-     * @return The turn rate of the robot, in degrees per second
+     * @return The turn rate of the robot, in radians per second
      */
     public double getTurnRate() {
         return gyroInputs.yawVelocity;

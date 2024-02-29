@@ -157,7 +157,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    Trigger isReady = new Trigger(() -> (pivot.atSetpoint()));
+    Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint());
 
     drive.setDefaultCommand(
         // The left stick controls translation of the robot.
@@ -172,9 +172,10 @@ public class RobotContainer {
 
     // Zero drive heading
     OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
+
+    // Auto align
     OIConstants.driverController.povUp().or(OIConstants.driverController.leftBumper())
       .whileTrue(new AlignSpeaker());
-    // Shoot
 
     OIConstants.driverController.rightTrigger(0.3).or(OIConstants.driverController.leftTrigger(0.3))
         .whileTrue(
@@ -197,8 +198,8 @@ public class RobotContainer {
     OIConstants.driverController.b().whileTrue(AlignHeading.align(Units.degreesToRadians(270)));
 
     // Speaker aim and rev up
-    OIConstants.operatorController.leftBumper().whileTrue(
-        pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker()));
+    OIConstants.operatorController.leftBumper()
+      .whileTrue(pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker()));
 
     // OIConstants.operatorController.leftBumper().whileTrue(
     //   shooter.revSpeaker()
@@ -221,7 +222,7 @@ public class RobotContainer {
             indexer.forwards())
         .until(indexer::isStoring)
         .andThen(Commands.parallel(
-          Commands.startEnd(() -> rumble(0.5), () -> rumble(0.0)).withTimeout(0.5),
+          rumbleCommand(0.5).withTimeout(0.5),
           indexer.reverse().withTimeout(0.1))
         )
     );
@@ -255,7 +256,7 @@ public class RobotContainer {
     OIConstants.operatorController.getHID().setRumble(RumbleType.kBothRumble, amount);
   }
 
-  public Command rumble(double amount) {
+  public Command rumbleCommand(double amount) {
     // return Commands.run(() -> setBothRumble(amount)).finallyDo(() ->
     // setBothRumble(0));
     return Commands.startEnd(() -> setBothRumble(amount), () -> setBothRumble(0));

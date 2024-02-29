@@ -28,6 +28,9 @@ public class ShooterIOReal implements ShooterIO {
 
     private final StatusSignal<Double> topRPM = topShooterMotor.getVelocity();
     private final StatusSignal<Double> bottomRPM = bottomShooterMotor.getVelocity();
+    private final StatusSignal<Double> topCurrent = bottomShooterMotor.getTorqueCurrent();
+    private final StatusSignal<Double> bottomCurrent = bottomShooterMotor.getTorqueCurrent();
+
 
     public ShooterIOReal() {
         talonFXConfig.Slot0.kP = ShooterConstants.kP;
@@ -45,7 +48,9 @@ public class ShooterIOReal implements ShooterIO {
 
         BaseStatusSignal.setUpdateFrequencyForAll(50,
             topRPM,
-            bottomRPM);
+            bottomRPM,
+            topCurrent,
+            bottomCurrent);
 
         topShooterMotor.optimizeBusUtilization(1.0);
         bottomShooterMotor.optimizeBusUtilization(1.0);
@@ -105,16 +110,16 @@ public class ShooterIOReal implements ShooterIO {
 
     @Override
     public void updateInputs(ShooterIOInputs inputs) {
-        BaseStatusSignal.refreshAll(topRPM, bottomRPM);
+        BaseStatusSignal.refreshAll(topRPM, bottomRPM, topCurrent, bottomCurrent);
 
         // inputs.bottomShooterMotorAppliedVolts = bottomShooterMotor.getMotorVoltage().getValueAsDouble();
         inputs.bottomShooterMotorVelocityRPM = bottomRPM.getValueAsDouble() * 60.0; // RPS to RPM
-        // inputs.bottomShooterCurrent = bottomShooterMotor.getStatorCurrent().getValueAsDouble();
+        inputs.bottomShooterCurrent = bottomCurrent.getValueAsDouble();
         // inputs.bottomShooterAppliedVolts = bottomShooterMotor.getMotorVoltage().getValueAsDouble();
 
         // inputs.topShooterMotorAppliedVolts = topShooterMotor.getMotorVoltage().getValueAsDouble();
         inputs.topShooterMotorVelocityRPM = topRPM.getValueAsDouble() * 60.0; // RPS to RPM
-        // inputs.topShooterCurrent = topShooterMotor.getStatorCurrent().getValueAsDouble();
+        inputs.topShooterCurrent = topCurrent.getValueAsDouble();
         // inputs.topShooterAppliedVolts = topShooterMotor.getMotorVoltage().getValueAsDouble();
 
         isEnabled = DriverStation.isEnabled();
