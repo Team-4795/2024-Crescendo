@@ -43,8 +43,25 @@ public class VisionIOReal implements VisionIO {
     SaguaroCam = new PhotonCamera("Saguaro");
     BarbaryFig = new PhotonCamera("Barbary Fig");
 
-    saguaroRobotToCam = new Transform3d(new Translation3d(Units.inchesToMeters(-8), Units.inchesToMeters(-6.5), Units.inchesToMeters(10.5)), new Rotation3d(0, Units.degreesToRadians(20), Units.degreesToRadians(-90)));
-    barbaryFigRobotToCam = new Transform3d(new Translation3d(Units.inchesToMeters(-10.5), Units.inchesToMeters(5), Units.inchesToMeters(11)), new Rotation3d(0, Units.degreesToRadians(20), Math.PI));
+    saguaroRobotToCam = new Transform3d(
+        new Translation3d(
+            Units.inchesToMeters(-8), 
+            Units.inchesToMeters(-6.5), 
+            Units.inchesToMeters(10.5)), 
+        new Rotation3d(
+            0, 
+            Units.degreesToRadians(20), 
+            Units.degreesToRadians(-90)));
+
+    barbaryFigRobotToCam = new Transform3d(
+        new Translation3d(
+            Units.inchesToMeters(-10.5), 
+            Units.inchesToMeters(5), 
+            Units.inchesToMeters(11)), 
+            new Rotation3d(
+                0, 
+                Units.degreesToRadians(20), 
+                Math.PI));
 
     try {
         aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
