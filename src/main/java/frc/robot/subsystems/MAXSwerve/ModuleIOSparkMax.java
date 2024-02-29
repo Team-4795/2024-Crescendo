@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
@@ -16,6 +17,7 @@ import com.revrobotics.SparkRelativeEncoder;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.ModuleConstants;
@@ -63,7 +65,10 @@ public class ModuleIOSparkMax implements ModuleIO {
 
       // in meters and meters per second
       m_drivingEncoder.setPositionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
-      m_drivingEncoder.setVelocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
+      REVLibError status = m_drivingEncoder.setVelocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
+      if(status != REVLibError.kOk){
+        DriverStation.reportWarning("Spark Flex Driving Velocity Conversion Failed to Set on SparkFlex ID " + drivingCANId, false);
+      }
 
       // in radians and radians per second
       m_turningEncoder.setPositionConversionFactor(ModuleConstants.kTurningEncoderPositionFactor);
