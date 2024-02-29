@@ -34,10 +34,6 @@ public final class PivotConstants {
     public static final double lowLimit = Units.degreesToRadians(3);
     public static final double highLimit = Units.degreesToRadians(80);
     public static final double height = 0.2794;
-<<<<<<< HEAD
     public static final double offset = 0.2;
-=======
-    public static final double offset = 0.215;
->>>>>>> 44df5c168e61e0a82ea0be91adc5e6ef1c8b195d
 
 }

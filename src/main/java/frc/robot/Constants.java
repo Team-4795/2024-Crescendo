@@ -55,8 +55,8 @@ public final class Constants {
   }
 
   public static final class ShooterSetpoints {
-    public static final double speakerTop = -4000;
-    public static final double speakerBottom = 4000;
+    public static final double speakerTop = -5000;
+    public static final double speakerBottom = 5000;
 
     public static final double ampTop = 500;
     public static final double ampBottom = 500;
@@ -116,11 +116,7 @@ public final class Constants {
   }
 
   public static final class FieldConstants {
-<<<<<<< HEAD
-    public static final double speakerHeight = 2.01; //meters
-=======
     public static final double speakerHeight = 2.02; //meters
->>>>>>> 44df5c168e61e0a82ea0be91adc5e6ef1c8b195d
   }
 
   public static class PathFindingConstants {

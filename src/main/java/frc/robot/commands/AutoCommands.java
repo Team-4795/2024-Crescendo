@@ -48,7 +48,10 @@ public class AutoCommands {
   }
 
   public static Command score() {
-    return indexer.forwards().withTimeout(0.5);
+    return Commands.sequence(
+          indexer.forwards().withTimeout(0.5),
+          Commands.runOnce(() -> shooter.setShootingSpeedRPM(0.0, 0.0))
+    );
   }
 
   public static Command SetPivotAngle(double setpoint) {
@@ -65,7 +68,7 @@ public class AutoCommands {
 
   public static Command initialize(double speed) {
     return Commands.parallel(
-      Commands.runOnce(() -> intake.setIntakeSpeed(IntakeSetpoints.intake)),
+      Commands.runOnce(() -> intake.setIntakeSpeed(-1)),
       Commands.runOnce(() -> shooter.setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom)),
       Commands.runOnce(() -> drive.zeroHeading())
     );
@@ -93,7 +96,7 @@ public class AutoCommands {
     return Commands.sequence(
       Commands.parallel(
         Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
-        Commands.runOnce(() -> pivot.setGoal(PivotSetpoints.intake))
+        Commands.runOnce(() -> pivot.setGoal(0.6))
       ),
       Commands.waitUntil(indexer::isStoring),
       indexer.reverse().withTimeout(0.1));

@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3074487833435935,
-      "y": 5.570246205735591
+      "x": 1.1969112668610487,
+      "y": 5.574358195791997
     },
     "rotation": 0
   },
@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "VisionAlign"
+            "name": "AlignClose"
           }
         },
         {
@@ -26,7 +26,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 2.0
           }
         },
         {
@@ -42,7 +42,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "SetIntakePose"
+                  "name": "Intake"
                 }
               },
               {

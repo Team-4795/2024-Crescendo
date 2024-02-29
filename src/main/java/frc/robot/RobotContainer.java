@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.ShooterSetpoints;
 import frc.robot.StateManager.State;
 import frc.robot.subsystems.MAXSwerve.*;
 import frc.robot.subsystems.Shooter.*;
@@ -121,8 +122,8 @@ public class RobotContainer {
         break;
     }
     NamedCommands.registerCommand("Score", AutoCommands.score());
-    NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.2)); //change later
-    NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.2)); //change later
+    NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.2)); //change later
+    NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.6)); //change later
     NamedCommands.registerCommand("Align Subwoofer", AutoCommands.SetPivotAngle(0.6));
     NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
     NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(1));
@@ -130,8 +131,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("SensePiece", AutoCommands.sensingPiece());
     NamedCommands.registerCommand("Intake", AutoCommands.intake());
     NamedCommands.registerCommand("Jostle Pivot", AutoCommands.SetPivotAngle(0.08));
-    NamedCommands.registerCommand("SetIntakePose", AutoCommands.SetPivotAngle(1));
-    NamedCommands.registerCommand("VisionAlign", AutoCommands.aimSpeakerDynamic());
+    NamedCommands.registerCommand("SetIntakePose", AutoCommands.SetPivotAngle(0.6));
+    NamedCommands.registerCommand("VisionAlign", AutoCommands.aimSpeakerDynamic().alongWith(Commands.runOnce(() -> shooter.setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom))).withTimeout(1));
 
 
     manager.setState(State.Init);
@@ -174,6 +175,7 @@ public class RobotContainer {
     OIConstants.driverController.povUp().or(OIConstants.driverController.leftBumper())
       .whileTrue(new AlignSpeaker());
     // Shoot
+
     OIConstants.driverController.rightTrigger(0.3).or(OIConstants.driverController.leftTrigger(0.3))
         .whileTrue(
             Commands.sequence(

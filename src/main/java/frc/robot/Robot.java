@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.util.LocalADStarAK;
 
 import java.util.HashMap;
@@ -125,6 +126,7 @@ public class Robot extends LoggedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
+    Pivot.getInstance().setGoal(0.15);
   }
 
   /** This function is called periodically during all modes. */
@@ -161,6 +163,7 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void autonomousInit() {
+    Pivot.getInstance().setGoal(0.15);
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
