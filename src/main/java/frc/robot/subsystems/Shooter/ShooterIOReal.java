@@ -16,9 +16,7 @@ public class ShooterIOReal implements ShooterIO {
     private TalonFX topShooterMotor = new TalonFX(ShooterConstants.rightCanID);
     private TalonFX bottomShooterMotor = new TalonFX(ShooterConstants.leftCanID);
 
-
-
-    private TalonFXConfiguration talonFXConfig = new TalonFXConfiguration();
+    // private TalonFXConfiguration talonFXConfig = new TalonFXConfiguration();
     final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
     private boolean isEnabled;
     private boolean hasPlayed = false;
@@ -31,13 +29,14 @@ public class ShooterIOReal implements ShooterIO {
     private final StatusSignal<Double> topCurrent = bottomShooterMotor.getTorqueCurrent();
     private final StatusSignal<Double> bottomCurrent = bottomShooterMotor.getTorqueCurrent();
 
+    private TalonFXConfiguration config(double kV) {
+        var talonFXConfig = new TalonFXConfiguration();
 
-    public ShooterIOReal() {
         talonFXConfig.Slot0.kP = ShooterConstants.kP;
         talonFXConfig.Slot0.kI = 0;
         talonFXConfig.Slot0.kD = 0;
         talonFXConfig.Slot0.kS = 0;
-        talonFXConfig.Slot0.kV = ShooterConstants.kV;
+        talonFXConfig.Slot0.kV = kV;
 
         talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         talonFXConfig.CurrentLimits.StatorCurrentLimit = 80;
@@ -45,6 +44,13 @@ public class ShooterIOReal implements ShooterIO {
         talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
         talonFXConfig.Audio.BeepOnBoot = true;
+
+        return talonFXConfig;
+    }
+
+    public ShooterIOReal() {
+        var topConfig = config(ShooterConstants.kVTop);
+        var bottomConfig = config(ShooterConstants.kVBottom);
 
         BaseStatusSignal.setUpdateFrequencyForAll(50,
             topRPM,
@@ -60,7 +66,7 @@ public class ShooterIOReal implements ShooterIO {
 
         StatusCode status = StatusCode.StatusCodeNotInitialized;
         for (int i = 0; i < 5; i++) {
-            status = bottomShooterMotor.getConfigurator().apply(talonFXConfig);
+            status = bottomShooterMotor.getConfigurator().apply(bottomConfig);
             if (status.isOK()) break;
         }
 
@@ -74,7 +80,7 @@ public class ShooterIOReal implements ShooterIO {
 
         status = StatusCode.StatusCodeNotInitialized;
         for (int i = 0; i < 5; i++) {
-            status = topShooterMotor.getConfigurator().apply(talonFXConfig);
+            status = topShooterMotor.getConfigurator().apply(topConfig);
             if (status.isOK()) break;
         }
 

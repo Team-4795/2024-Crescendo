@@ -114,14 +114,14 @@ public class LEDs extends SubsystemBase {
         setColor(h, s, v, true, 0, LED_LENGTH/2);
     }
 
-    public void setStripAlliance() {
-        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-            setStripRGB(255, 0, 0);
-        }
-        else {
-            setStripRGB(0, 0, 255);
-        }
-    }
+    // public void setStripAlliance() {
+    //     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+    //         setStripRGB(255, 0, 0);
+    //     }
+    //     else {
+    //         setStripRGB(0, 0, 255);
+    //     }
+    // }
     
     public void toggleTeamColorsAnimation() {
         if (teamColorsAnimation) {
