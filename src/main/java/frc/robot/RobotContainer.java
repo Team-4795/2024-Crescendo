@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.Mode;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterSetpoints;
 import frc.robot.StateManager.State;
@@ -195,7 +196,6 @@ public class RobotContainer {
             indexer.forwards())
         .until(indexer::isStoring)
         .andThen(Commands.parallel(
-          new ScheduleCommand(leds.intook()),
           rumbleCommand(0.5).withTimeout(0.5),
           indexer.reverse().withTimeout(0.1))
         )
@@ -226,6 +226,9 @@ public class RobotContainer {
     new Trigger(() -> Math.abs(OIConstants.operatorController.getLeftY()) > 0.15)
       .whileTrue(
         new RainbowCommand(() -> MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), 0.15)));
+
+    if (Constants.currentMode == Mode.REAL) 
+      new Trigger(indexer::isStoring).onTrue(leds.intook());
   }
 
   private void setBothRumble(double amount) {
