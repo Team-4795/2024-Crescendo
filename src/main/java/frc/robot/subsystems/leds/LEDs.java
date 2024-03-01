@@ -35,7 +35,7 @@ public class LEDs extends SubsystemBase {
         buffer = new AddressableLEDBuffer(LED_LENGTH);
         led.setLength(buffer.getLength());
 
-        setDefaultCommand(runOnce(() -> {
+        setDefaultCommand(run(() -> {
             setTeamColors();
         }));
 
@@ -46,12 +46,12 @@ public class LEDs extends SubsystemBase {
     // Blue 1 195 203
 
     private void setTeamColors() {
-        setColorNoOutput(143, 139, 189, false, 0, 7);
+        setColorNoOutput(174, 19, 186, false, 0, 7);
         setColorNoOutput(1, 195, 203, false, 7, 13);
 
         // Flip for other led strip
         setColorNoOutput(1, 195, 203, false, 13, 19);
-        setColorNoOutput(143, 139, 189, false, 19, 26);
+        setColorNoOutput(174, 19, 186, false, 19, 26);
 
         setOutput();
     }

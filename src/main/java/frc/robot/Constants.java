@@ -41,7 +41,7 @@ public final class Constants {
 
   public static final class PivotSetpoints {
     public static final double speaker = 0.6;
-    public static final double amp = 1.2;
+    public static final double amp = 1.15;
     public static final double stow = 0.08;
     public static final double intake = 0.3;
     public static final double source = 0.96;
