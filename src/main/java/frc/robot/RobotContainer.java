@@ -197,7 +197,7 @@ public class RobotContainer {
         .until(indexer::isStoring)
         .andThen(Commands.parallel(
           rumbleCommand(0.5).withTimeout(0.5),
-          indexer.reverse().withTimeout(0.1))
+          indexer.reverse().withTimeout(0.05))
         )
     );
 

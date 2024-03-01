@@ -57,4 +57,9 @@ public class RainbowCommand extends Command {
     public boolean isFinished() {
         return false;
     }
+
+    @Override
+    public boolean runsWhenDisabled() {
+        return true;
+    }
 }

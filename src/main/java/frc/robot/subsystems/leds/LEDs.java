@@ -36,21 +36,31 @@ public class LEDs extends SubsystemBase {
         led.setLength(buffer.getLength());
 
         setDefaultCommand(runOnce(() -> {
-            teamColors();
+            setTeamColors();
         }));
 
-        teamColors();
-    }
+        setTeamColors();
+    };
 
-    private void teamColors() {
-        setStripRGB(85, 12, 168);
+    // Purple 143 139 189
+    // Blue 1 195 203
+
+    private void setTeamColors() {
+        setColorNoOutput(143, 139, 189, false, 0, 7);
+        setColorNoOutput(1, 195, 203, false, 7, 13);
+
+        // Flip for other led strip
+        setColorNoOutput(1, 195, 203, false, 13, 19);
+        setColorNoOutput(143, 139, 189, false, 19, 26);
+
+        setOutput();
     }
 
     public Command intook() {
         return runOnce(() -> setStripRGB(0, 200, 0)).andThen(Commands.waitSeconds(1));
     }
 
-    private void setColor(int a0, int a1, int a2, boolean colorModel, int start, int end) /* false: RGB; true: HSV */ {
+    private void setColorNoOutput(int a0, int a1, int a2, boolean colorModel, int start, int end) /* false: RGB; true: HSV */ {
         start = MathUtil.clamp(start, 0, LED_LENGTH);
         end = MathUtil.clamp(end, start, LED_LENGTH);
 
@@ -61,6 +71,11 @@ public class LEDs extends SubsystemBase {
 
         led.setData(buffer);
         led.start();
+    }
+
+    private void setColor(int a0, int a1, int a2, boolean colorModel, int start, int end) /* false: RGB; true: HSV */ {
+        setColorNoOutput(a0, a1, a2, colorModel, start, end);
+        setOutput();
     }
 
     public void setLEDRGB(int r, int g, int b, int led) {
@@ -99,14 +114,14 @@ public class LEDs extends SubsystemBase {
         setColor(h, s, v, true, 0, LED_LENGTH/2);
     }
 
-    public void setStripAlliance() {
-        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-            setStripRGB(255, 0, 0);
-        }
-        else {
-            setStripRGB(0, 0, 255);
-        }
-    }
+    // public void setStripAlliance() {
+    //     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+    //         setStripRGB(255, 0, 0);
+    //     }
+    //     else {
+    //         setStripRGB(0, 0, 255);
+    //     }
+    // }
     
     public void toggleTeamColorsAnimation() {
         if (teamColorsAnimation) {
