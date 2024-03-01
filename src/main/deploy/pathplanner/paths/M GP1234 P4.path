@@ -65,7 +65,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "M GP1234",
   "previewStartingState": {
     "rotation": 30.0,
     "velocity": 0

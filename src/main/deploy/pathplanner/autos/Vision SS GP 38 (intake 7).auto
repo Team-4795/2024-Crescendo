@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.0404784445934623,
+      "y": 4.487126792433784
+    },
+    "rotation": -58.54000000000002
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,74 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "RunEverything"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "M GP1234 P1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "M GP1234 P2"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "M GP1234 P3"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "name": "Initialize"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "StopIndexer"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "M GP1234 P4"
+            "name": "VisionAlign"
           }
         },
         {
@@ -88,6 +33,56 @@
           "type": "named",
           "data": {
             "name": "Score"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SS GP 38 P1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionAlign"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SS GP 38 P2"
+                }
+              }
+            ]
           }
         }
       ]

@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 1.1969112668610487,
-      "y": 5.574358195791997
-    },
-    "rotation": 0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -14,50 +8,19 @@
         {
           "type": "named",
           "data": {
-            "name": "AlignClose"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Initialize"
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "AlignClose"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Go forward"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "VisionAlign"
+            "waitTime": 0.5
           }
         },
         {
@@ -73,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "M GP12 P2"
+                  "pathName": "M GP1234 P1"
                 }
               },
               {
@@ -88,13 +51,73 @@
         {
           "type": "named",
           "data": {
-            "name": "VisionAlign"
+            "name": "Align GP3"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.2
+            "waitTime": 0.8
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M GP1234 P2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AlignGP2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.8
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M GP1234 P3"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopIndexer"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M GP1234 P4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {

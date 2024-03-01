@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3669845521509223,
-      "y": 5.550603828480384
+      "x": 1.1969112668610487,
+      "y": 5.574358195791997
     },
     "rotation": 0
   },
@@ -14,13 +14,25 @@
         {
           "type": "named",
           "data": {
-            "name": "RunEverything"
+            "name": "AlignClose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Initialize"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
           }
         },
         {
@@ -28,18 +40,24 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Testing Commands path"
+                  "name": "Intake"
                 }
               },
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Align"
+                  "pathName": "M GP21(4) P1"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionAlign"
           }
         },
         {
