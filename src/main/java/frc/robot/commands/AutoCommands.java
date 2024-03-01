@@ -60,6 +60,13 @@ public class AutoCommands {
     });
   }
 
+  public static Command setPivotAndShooter(double setpoint){
+    return Commands.parallel(
+      Commands.runOnce(() -> pivot.setGoal(setpoint)),
+      Commands.runOnce(() -> shooter.setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom))
+    );
+  }
+
   public static Command alignTrajectory(String PathName, double setpoint) {
     return Commands.parallel(
         followTrajectory(PathName),
@@ -96,7 +103,7 @@ public class AutoCommands {
     return Commands.sequence(
       Commands.parallel(
         Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
-        Commands.runOnce(() -> pivot.setGoal(0.6))
+        Commands.runOnce(() -> pivot.setGoal(0.55))
       ),
       Commands.waitUntil(indexer::isStoring),
       indexer.reverse().withTimeout(0.1));

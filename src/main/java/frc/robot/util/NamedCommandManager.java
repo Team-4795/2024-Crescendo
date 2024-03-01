@@ -14,9 +14,18 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.2)); // change later
 
-        NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.6)); // change later
+        NamedCommands.registerCommand("AlignGP1", AutoCommands.setPivotAndShooter(0.2)); // change later
 
-        NamedCommands.registerCommand("Align Subwoofer", AutoCommands.SetPivotAngle(0.6));
+        NamedCommands.registerCommand("AlignCommunityLine", AutoCommands.setPivotAndShooter(0.25)); // change later
+
+
+        NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.195)); // change later
+
+        NamedCommands.registerCommand("AlignGP3", AutoCommands.setPivotAndShooter(0.2)); // change later
+
+        NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.58)); // change later
+
+        NamedCommands.registerCommand("Align Subwoofer", AutoCommands.SetPivotAngle(0.58));
 
         NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
 

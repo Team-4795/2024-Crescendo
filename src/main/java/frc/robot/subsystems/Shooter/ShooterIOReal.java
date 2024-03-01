@@ -16,7 +16,7 @@ public class ShooterIOReal implements ShooterIO {
     private TalonFX topShooterMotor = new TalonFX(ShooterConstants.rightCanID);
     private TalonFX bottomShooterMotor = new TalonFX(ShooterConstants.leftCanID);
 
-    private Orchestra m_orchestra = new Orchestra();
+
 
     private TalonFXConfiguration talonFXConfig = new TalonFXConfiguration();
     final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
@@ -85,11 +85,6 @@ public class ShooterIOReal implements ShooterIO {
                             + " failed config with error "
                             + status.toString());
         }
-
-        m_orchestra.addInstrument(bottomShooterMotor);
-        m_orchestra.addInstrument(topShooterMotor);
-
-        m_orchestra.loadMusic("chirp1Up.chrp");
     }
 
     @Override
@@ -124,13 +119,6 @@ public class ShooterIOReal implements ShooterIO {
 
         isEnabled = DriverStation.isEnabled();
 
-        if (isEnabled && !hasPlayed && !DriverStation.isFMSAttached()) {
-            m_orchestra.play();
-            hasPlayed = true;
-        } 
 
-        if (hasPlayed && m_orchestra.isPlaying() && m_orchestra.getCurrentTime() > 1) {
-            m_orchestra.stop();
-        }
     }
 } 

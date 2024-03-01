@@ -20,7 +20,7 @@
         {
           "type": "named",
           "data": {
-            "name": "VisionAlign"
+            "name": "AlignClose"
           }
         },
         {
@@ -57,13 +57,13 @@
         {
           "type": "named",
           "data": {
-            "name": "VisionAlign"
+            "name": "AlignGP1"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 1.0
           }
         },
         {
@@ -94,13 +94,13 @@
         {
           "type": "named",
           "data": {
-            "name": "VisionAlign"
+            "name": "AlignGP2"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 1.0
           }
         },
         {
@@ -129,15 +129,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "VisionAlign"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "M GP123 P4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AlignCommunityLine"
+                }
+              }
+            ]
           }
         },
         {

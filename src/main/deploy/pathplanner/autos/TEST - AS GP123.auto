@@ -57,12 +57,6 @@
                       }
                     },
                     {
-                      "type": "named",
-                      "data": {
-                        "name": "Jostle Pivot"
-                      }
-                    },
-                    {
                       "type": "wait",
                       "data": {
                         "waitTime": 2.0

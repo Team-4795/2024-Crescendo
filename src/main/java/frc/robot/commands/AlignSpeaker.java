@@ -8,6 +8,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
@@ -23,6 +25,7 @@ public class AlignSpeaker extends Command {
     public double angleCalc = 0.0;
 
     private double previousAngle;
+    private double mult;
 
     private Vision vision;
     private Drive drive = Drive.getInstance();
@@ -39,13 +42,14 @@ public class AlignSpeaker extends Command {
 
     @Override
     public void initialize(){
+            DriverStation.getAlliance().ifPresent(alliance -> mult = (alliance == Alliance.Red) ? -1.0 : 1.0);
         Pose2d currentPose = drive.getPose();
         Translation2d velocity = drive.getTranslationVelocity();
         Pose2d newPose = new Pose2d(currentPose.getX() + (velocity.getX() * 0.02),
                 currentPose.getY() + (velocity.getY() * 0.02),
                 currentPose.getRotation());
         double deltaY = vision.getSpeakerPos().getY() - newPose.getY();
-        previousAngle = -Units.radiansToDegrees(Math.asin(deltaY / vision.getDistancetoSpeaker(newPose)));
+        previousAngle = mult * Units.radiansToDegrees(Math.asin(deltaY / vision.getDistancetoSpeaker(newPose)));
     }
 
     @Override
@@ -58,7 +62,7 @@ public class AlignSpeaker extends Command {
                 currentPose.getRotation());
 
         double deltaY = vision.getSpeakerPos().getY() - newPose.getY();
-        double angle = -Units.radiansToDegrees(-Math.asin(deltaY / vision.getDistancetoSpeaker(newPose)));
+        double angle = mult * Units.radiansToDegrees(-Math.asin(deltaY / vision.getDistancetoSpeaker(newPose)));
 
         double deltaAngle = Units.degreesToRadians(angle - previousAngle);
         double omega = deltaAngle / 0.02;

@@ -29,7 +29,7 @@ public class GyroIOPigeon2 implements GyroIO{
     public void updateInputs(GyroIOInputs inputs) {
         inputs.connected = BaseStatusSignal.refreshAll(yaw, rate).isOK();
         inputs.yaw = Rotation2d.fromDegrees(pigeon.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0));
-        inputs.yawVelocity = Units.degreesToRadians(pigeon.getRate()) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+        inputs.yawVelocity = -Units.degreesToRadians(rate.getValueAsDouble()) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
     }
 
 }
