@@ -24,7 +24,7 @@ public class VisionIOReal implements VisionIO {
     PhotonPipelineResult saguaroResult;
     PhotonPipelineResult barbaryFigResult;
 
-    PhotonCamera SaguaroCam;
+    // PhotonCamera SaguaroCam;
     PhotonCamera BarbaryFig;
 
     PhotonTrackedTarget saguaroTarget;
@@ -40,7 +40,7 @@ public class VisionIOReal implements VisionIO {
     double distanceToTarget;
 
   public VisionIOReal() {
-    SaguaroCam = new PhotonCamera("Saguaro");
+    // SaguaroCam = new PhotonCamera("Saguaro");
     BarbaryFig = new PhotonCamera("Barbary Fig");
 
     saguaroRobotToCam = new Transform3d(
@@ -69,8 +69,8 @@ public class VisionIOReal implements VisionIO {
         e.printStackTrace();
     }
 
-    saguaroPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
-                PoseStrategy.CLOSEST_TO_REFERENCE_POSE, SaguaroCam, saguaroRobotToCam);
+    // saguaroPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
+    //             PoseStrategy.CLOSEST_TO_REFERENCE_POSE, SaguaroCam, saguaroRobotToCam);
                 
     barbaryFigPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
                 PoseStrategy.CLOSEST_TO_REFERENCE_POSE, BarbaryFig, barbaryFigRobotToCam);
@@ -78,17 +78,19 @@ public class VisionIOReal implements VisionIO {
     aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
     getSpeakerPos();
 }
-    @Override
-    public Optional<EstimatedRobotPose> getSaguaroPose(Pose2d reference){
-        saguaroPhotonPoseEstimator.setReferencePose(reference);
-        return saguaroPhotonPoseEstimator.update();
-    }
+    // @Override
+    // public Optional<EstimatedRobotPose> getSaguaroPose(Pose2d reference){
+    //     saguaroPhotonPoseEstimator.setReferencePose(reference);
+    //     return saguaroPhotonPoseEstimator.update();
+    // }
 
     @Override
     public Optional<EstimatedRobotPose> getBarbaryFigPose(Pose2d reference){
         barbaryFigPhotonPoseEstimator.setReferencePose(reference);
         return barbaryFigPhotonPoseEstimator.update();
     }
+
+    
 
     @Override
     public Pose2d getSpeakerPos() {
@@ -108,20 +110,20 @@ public class VisionIOReal implements VisionIO {
 
     @Override
     public void updateInputs(VisionIOInputs inputs) {
-        PhotonPipelineResult saguaroResult = SaguaroCam.getLatestResult();
+        // PhotonPipelineResult saguaroResult = SaguaroCam.getLatestResult();
         PhotonPipelineResult barbaryFigResult = BarbaryFig.getLatestResult();
 
-        boolean saguaroHasTargets = saguaroResult.hasTargets();
+        // boolean saguaroHasTargets = saguaroResult.hasTargets();
         boolean barbaryFigHasTargets = barbaryFigResult.hasTargets();
 
-        if (saguaroHasTargets)
-        {
-            saguaroTarget = saguaroResult.getBestTarget();
+        // if (saguaroHasTargets)
+        // {
+        //     saguaroTarget = saguaroResult.getBestTarget();
 
-            inputs.saguaroRoll = saguaroTarget.getSkew();
-            inputs.saguaroPitch = saguaroTarget.getPitch();
-            inputs.saguaroYaw = saguaroTarget.getYaw();
-        }
+        //     inputs.saguaroRoll = saguaroTarget.getSkew();
+        //     inputs.saguaroPitch = saguaroTarget.getPitch();
+        //     inputs.saguaroYaw = saguaroTarget.getYaw();
+        // }
 
         if (barbaryFigHasTargets)
         {

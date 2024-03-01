@@ -24,15 +24,15 @@ public interface VisionIO {
     public default void updateInputs(VisionIOInputs inputs) {}
 
     public default Pose2d getSpeakerPos() {
-        return null;
+        return new Pose2d();
     }
 
     public default Optional<EstimatedRobotPose> getBarbaryFigPose(Pose2d reference){
-        return null;
+        return Optional.empty();
     }
 
     public default Optional<EstimatedRobotPose> getSaguaroPose(Pose2d reference){
-        return null;
+        return Optional.empty();
     }
 
 } 
