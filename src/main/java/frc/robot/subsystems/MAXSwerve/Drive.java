@@ -182,7 +182,7 @@ public class Drive extends SubsystemBase {
                 m_poseEstimator.addVisionMeasurement(
                     pose.estimatedPose.toPose2d(), 
                     pose.timestampSeconds,
-                    VecBuilder.fill(0.5,0.5,Units.degreesToRadians(10)));
+                    VecBuilder.fill(1,1,Units.degreesToRadians(20)));
                     Logger.recordOutput("Vision/Barbary Fig Pose", pose.estimatedPose.toPose2d());
             });
 

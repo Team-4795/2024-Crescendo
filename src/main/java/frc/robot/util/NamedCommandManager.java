@@ -14,12 +14,12 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.2)); // change later
 
-        NamedCommands.registerCommand("AlignGP1", AutoCommands.setPivotAndShooter(0.2)); // change later
+        NamedCommands.registerCommand("AlignGP1", AutoCommands.setPivotAndShooter(0.215)); // change later
 
         NamedCommands.registerCommand("AlignCommunityLine", AutoCommands.setPivotAndShooter(0.25)); // change later
 
 
-        NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.195)); // change later
+        NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.21)); // change later
 
         NamedCommands.registerCommand("AlignGP3", AutoCommands.setPivotAndShooter(0.2)); // change later
 

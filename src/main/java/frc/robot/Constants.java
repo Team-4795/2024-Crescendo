@@ -55,8 +55,8 @@ public final class Constants {
   }
 
   public static final class ShooterSetpoints {
-    public static final double speakerTop = -5000;
-    public static final double speakerBottom = 5000;
+    public static final double speakerTop = -4000;
+    public static final double speakerBottom = 4000;
 
     public static final double ampTop = 500;
     public static final double ampBottom = 500;

@@ -105,7 +105,7 @@ public class Pivot extends SubsystemBase {
             Commands.run(() -> {
                 double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
                 double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker + PivotConstants.offset));
-                this.setGoal(angleCalc - PivotConstants.angleOffset);
+                this.setGoal(angleCalc - PivotConstants.angleOffset + 0.02);
             }).finallyDo(() -> setGoal(PivotSetpoints.stow)), 
             Commands.startEnd(
                 () -> setGoal(PivotSetpoints.speaker),
