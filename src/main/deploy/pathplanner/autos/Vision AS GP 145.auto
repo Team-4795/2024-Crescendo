@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.1969112668610487,
-      "y": 5.574358195791997
+      "x": 1.0871221742443484,
+      "y": 6.6140808645253655
     },
-    "rotation": 0
+    "rotation": 58.0
   },
   "command": {
     "type": "sequential",
@@ -14,19 +14,19 @@
         {
           "type": "named",
           "data": {
-            "name": "AlignClose"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Initialize"
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "AlignClose"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {
@@ -48,7 +48,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "M GP214 P1"
+                  "pathName": "AS GP145 P1"
                 }
               }
             ]
@@ -57,13 +57,13 @@
         {
           "type": "named",
           "data": {
-            "name": "AlignGP2"
+            "name": "VisionAlign"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {
@@ -79,7 +79,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "M GP214 P2"
+                  "pathName": "AS GP145 P2"
                 }
               },
               {
@@ -92,15 +92,64 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "AS GP145 P3"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "AlignGP1"
+            "name": "VisionAlign"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AS GP145 P4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS GP 145 P5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionAlign"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {

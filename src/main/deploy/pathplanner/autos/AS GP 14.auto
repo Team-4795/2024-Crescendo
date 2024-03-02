@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.1969112668610487,
-      "y": 5.574358195791997
+      "x": 0.6744662599645491,
+      "y": 6.651185591808782
     },
-    "rotation": 0
+    "rotation": 58.0
   },
   "command": {
     "type": "sequential",
@@ -14,19 +14,19 @@
         {
           "type": "named",
           "data": {
-            "name": "AlignClose"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Initialize"
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "AlignClose"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {
@@ -48,7 +48,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "M GP214 P1"
+                  "pathName": "AS GP145 P1"
                 }
               }
             ]
@@ -57,7 +57,7 @@
         {
           "type": "named",
           "data": {
-            "name": "AlignGP2"
+            "name": "AlignGP1"
           }
         },
         {
@@ -79,7 +79,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "M GP214 P2"
+                  "pathName": "AS GP145 P2"
                 }
               },
               {
@@ -89,6 +89,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS GP145 P3"
           }
         },
         {
