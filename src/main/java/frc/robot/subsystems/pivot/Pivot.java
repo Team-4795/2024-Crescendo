@@ -45,7 +45,7 @@ public class Pivot extends SubsystemBase {
     private boolean autoAim = true;
     private boolean idleMode = true;
 
-    PivotVisualizer visualizer = new PivotVisualizer(Color.kDarkOrange);
+    PivotVisualizer visualizer = new PivotVisualizer();
 
     private static Pivot instance;
 
@@ -64,7 +64,7 @@ public class Pivot extends SubsystemBase {
         io = pivotIO;
         io.updateInputs(inputs);
 
-        visualizer.update(360 * getTruePosition() / (Math.PI * 2));
+        visualizer.update(360 * getTruePosition() / (Math.PI * 2), Units.radiansToDegrees(controller.getSetpoint().position + PivotConstants.angleOffset));
         controller.setTolerance(Units.degreesToRadians(3));
 
         setDefaultCommand(run(() -> {
@@ -142,7 +142,7 @@ public class Pivot extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Pivot", inputs);
-        // visualizer.update(Units.radiansToDegrees(getPosition() + PivotConstants.angleOffset));
+        visualizer.update(Units.radiansToDegrees(getTruePosition()), Units.radiansToDegrees(controller.getSetpoint().position + PivotConstants.angleOffset));
 
         // LoggedTunableNumber.ifChanged(hashCode(), () -> controller.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
         // LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);

@@ -2,7 +2,8 @@
   "name": "Alpha",
   "sourceUrl": "",
   "rotations": [
-    { "axis": "x", "degrees": 90}
+    {"axis": "x", "degrees": 90},
+    {"axis": "z", "degrees": -90}
   ],
   "position": [0, 0, 0.07],
   "cameras": [
@@ -10,9 +11,10 @@
       "name": "MainCamera",
       "rotations": [
         { "axis": "x", "degrees": 0 },
-        { "axis": "y", "degrees": 0 }
+        { "axis": "y", "degrees": -30 },
+	{ "axis": "z", "degrees": 180 }
       ],
-      "position": [1, 0, 0],
+      "position": [0.23, 0, 0.18],
       "resolution": [1920, 1080],
       "fov": 90
     }
@@ -24,7 +26,7 @@
         { "axis": "y", "degrees": 0},
         { "axis": "z", "degrees": 0}
       ],
-      "zeroedPosition": [0.0, 0, -0.14605]
+      "zeroedPosition": [0, -0.254, -0.14605]
     }
   ]  
 }
