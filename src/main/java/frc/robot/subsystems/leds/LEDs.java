@@ -52,8 +52,8 @@ public class LEDs extends SubsystemBase {
     // Blue 1 195 203
 
     private void setTeamColors() {
-        setColorNoOutput(174, 19, 186, false, 0, 7);
-        setColorNoOutput(1, 195, 203, false, 7, 13);
+        setColorNoOutput(174, 19, 186, false, 1, 8);
+        setColorNoOutput(1, 195, 203, false, 8, 14);
 
         // Flip for other led strip
         setColorNoOutput(1, 195, 203, false, 14, 20);
