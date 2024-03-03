@@ -40,7 +40,7 @@ public final class Constants {
   public static final double paramApplyTimemout = 0.05;
 
   public static final class PivotSetpoints {
-    public static final double speaker = 0.6;
+    public static final double speaker = 0.56;
     public static final double amp = 1.15;
     public static final double stow = 0.08;
     public static final double intake = 0.3;

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LEDs extends SubsystemBase {
-    private final int LED_LENGTH = 26;
+    private final int LED_LENGTH = 27;
     private final int PORT = 0;
 
     private AddressableLED led;
@@ -19,6 +19,8 @@ public class LEDs extends SubsystemBase {
     private int frame;
 
     private boolean teamColorsAnimation = false;
+
+    private boolean yellow = false;
 
     private static LEDs instance;
 
@@ -36,8 +38,12 @@ public class LEDs extends SubsystemBase {
         led.setLength(buffer.getLength());
 
         setDefaultCommand(run(() -> {
-            setTeamColors();
-        }));
+            if (yellow) {
+                setYellow();
+            } else {
+                setTeamColors();
+            }
+        }).ignoringDisable(true));
 
         setTeamColors();
     };
@@ -50,14 +56,22 @@ public class LEDs extends SubsystemBase {
         setColorNoOutput(1, 195, 203, false, 7, 13);
 
         // Flip for other led strip
-        setColorNoOutput(1, 195, 203, false, 13, 19);
-        setColorNoOutput(174, 19, 186, false, 19, 26);
+        setColorNoOutput(1, 195, 203, false, 14, 20);
+        setColorNoOutput(174, 19, 186, false, 20, 27);
 
         setOutput();
     }
 
     public Command intook() {
-        return runOnce(() -> setStripRGB(0, 200, 0)).andThen(Commands.waitSeconds(1));
+        return runOnce(() -> setStripRGB(0, 200, 0)).andThen(Commands.waitSeconds(3));
+    }
+
+    public void toggleYellow() {
+        yellow = !yellow;
+    }
+
+    private void setYellow() {
+        setStripRGB(255, 255, 0);
     }
 
     private void setColorNoOutput(int a0, int a1, int a2, boolean colorModel, int start, int end) /* false: RGB; true: HSV */ {

@@ -67,6 +67,10 @@ public class Vision extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Vision", inputs);
+
+        if(speakerPosition.getX() == 0 && speakerPosition.getY() == 0){
+            this.getSpeakerPos();
+        }
     }
 
 }

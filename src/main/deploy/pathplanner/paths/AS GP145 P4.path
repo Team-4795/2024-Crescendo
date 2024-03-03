@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.6513193714406413,
-        "y": 6.9141167938326396
+        "x": 4.19,
+        "y": 6.36
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.6513193714406413,
-        "y": 6.9141167938326396
+        "x": 5.19,
+        "y": 6.36
       },
       "isLocked": false,
       "linkedName": null
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": "AS GP 145",
   "previewStartingState": {
-    "rotation": 30.0,
+    "rotation": 10.239034419210947,
     "velocity": 0
   },
   "useDefaultConstraints": true

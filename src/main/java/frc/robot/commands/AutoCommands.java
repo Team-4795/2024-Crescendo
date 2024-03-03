@@ -120,4 +120,5 @@ public class AutoCommands {
             pivot.setGoal(angleCalc - PivotConstants.angleOffset);
         });
   }
+
 }

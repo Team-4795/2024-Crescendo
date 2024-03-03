@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.9763502326530165,
-      "y": 4.6061651316659695
+      "x": 1.2782342053414837,
+      "y": 5.574358195791997
     },
-    "rotation": -58.54000000000002
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,16 +14,16 @@
         {
           "type": "named",
           "data": {
+            "name": "AlignClose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Initialize"
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "VisionAlign"
-          }
-        },
-        {
           "type": "wait",
           "data": {
             "waitTime": 0.5
@@ -40,15 +40,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "SS GP 38 P1"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "M GP214 P1"
                 }
               }
             ]
@@ -57,13 +57,13 @@
         {
           "type": "named",
           "data": {
-            "name": "VisionAlign"
+            "name": "AlignGP2"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.9
           }
         },
         {
@@ -79,7 +79,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SS GP 38 P2"
+                  "pathName": "M GP214 P2"
                 }
               },
               {
@@ -92,15 +92,46 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "AlignGP1"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 0.2
+            "waitTime": 0.9
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "M GP214 P3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SS GP 38 P3"
+            "pathName": "M GP214 P4"
           }
         },
         {
@@ -119,25 +150,6 @@
           "type": "named",
           "data": {
             "name": "Score"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SS GP 38 P4"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              }
-            ]
           }
         }
       ]
