@@ -20,7 +20,7 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("AlignCommunityLine", AutoCommands.setPivotAndShooter(0.25)); // change later
 
 
-        NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.21)); // change later
+        NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.2425)); // change later
 
         NamedCommands.registerCommand("AlignGP3", AutoCommands.setPivotAndShooter(0.2)); // change later
 
@@ -43,7 +43,7 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("SetIntakePose", AutoCommands.SetPivotAngle(0.6));
 
         NamedCommands.registerCommand("VisionAlign",
-                AutoCommands.aimSpeakerDynamic().withTimeout(1)
+                AutoCommands.aimSpeakerDynamic().withTimeout(0.9)
                 .alongWith(Commands.runOnce(
                         () -> Shooter.getInstance().setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom))));
     }

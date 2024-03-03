@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  */
 public final class Constants {
   // Mode of the robot, set to Mode.REPLAY for replay
-  public static final Mode currentMode = Mode.REPLAY;
+  public static final Mode currentMode = Mode.fromState();
   public static final boolean tuningMode = false;
   public static final boolean hasVision = true;
   public static final int tryConfigCount = 5;
@@ -116,7 +116,7 @@ public final class Constants {
   }
 
   public static final class FieldConstants {
-    public static final double speakerHeight = 2.02; //meters
+    public static final double speakerHeight = 2.01; //meters
   }
 
   public static class PathFindingConstants {
