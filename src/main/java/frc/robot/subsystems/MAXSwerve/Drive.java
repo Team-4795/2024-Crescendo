@@ -176,24 +176,20 @@ public class Drive extends SubsystemBase {
                     m_rearRight.getPosition()
                 });
 
+        Vision.getInstance().setReferencePose(m_poseEstimator.getEstimatedPosition());
      
-        if (Constants.currentMode == Mode.REAL && Constants.hasVision) {
-            Vision.getInstance().getBarbaryFigPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> {
+        if (Constants.hasVision) {
+            Vision.getInstance().getBarbaryFigPose().ifPresent(pose -> 
                 m_poseEstimator.addVisionMeasurement(
-                    pose.estimatedPose.toPose2d(), 
-                    pose.timestampSeconds,
-                    VecBuilder.fill(1,1,Units.degreesToRadians(20)));
-                    Logger.recordOutput("Vision/Barbary Fig Pose", pose.estimatedPose.toPose2d());
-            });
+                    pose.pose(), 
+                    pose.timestamp(),
+                    VecBuilder.fill(1,1,Units.degreesToRadians(20))));
 
-
-            vision.getSaguaroPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> {
-            m_poseEstimator.addVisionMeasurement(
-                pose.estimatedPose.toPose2d(), 
-                pose.timestampSeconds,
-                VecBuilder.fill(1,1,Units.degreesToRadians(20)));
-            Logger.recordOutput("Vision/Saguaro Pose", pose.estimatedPose.toPose2d());
-        });
+            vision.getSaguaroPose().ifPresent(pose -> 
+                m_poseEstimator.addVisionMeasurement(
+                    pose.pose(), 
+                    pose.timestamp(),
+                    VecBuilder.fill(1,1,Units.degreesToRadians(20))));
             
             //vision.getLifecamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> visionPose = pose);
         }

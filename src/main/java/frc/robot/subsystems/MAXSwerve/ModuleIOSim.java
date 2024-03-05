@@ -6,6 +6,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.ModuleConstants;
 
@@ -42,8 +43,11 @@ public class ModuleIOSim implements ModuleIO {
         double driveVolts = feedforward.calculate(optimizedDesiredState.speedMetersPerSecond) + driveController.calculate(driveSim.getAngularVelocityRadPerSec() * ModuleConstants.kWheelDiameterMeters / 2, optimizedDesiredState.speedMetersPerSecond);
         double turnOutput = turnController.calculate(turnSim.getAngularPositionRad(), optimizedDesiredState.angle.getRadians());
         
-        driveSim.setInputVoltage(MathUtil.clamp(driveVolts, -12, 12));
-        turnSim.setInputVoltage(MathUtil.clamp(turnOutput, -12, 12));
+        if (DriverStation.isEnabled()) {
+            driveSim.setInputVoltage(MathUtil.clamp(driveVolts, -12, 12));
+            turnSim.setInputVoltage(MathUtil.clamp(turnOutput, -12, 12));
+        }
+
         optimizedState = new SwerveModuleState(optimizedDesiredState.speedMetersPerSecond, optimizedDesiredState.angle);
     }
 
@@ -65,6 +69,11 @@ public class ModuleIOSim implements ModuleIO {
     public void updateInputs(ModuleIOInputs inputs) {
         driveSim.update(LOOP_PERIOD_SECS);
         turnSim.update(LOOP_PERIOD_SECS);
+
+        if (DriverStation.isDisabled()) {
+            driveSim.setInputVoltage(0);
+            turnSim.setInputVoltage(0);
+        }
 
         inputs.drivePositionMeters = driveSim.getAngularPositionRad() * ModuleConstants.kWheelDiameterMeters / 2;
         inputs.driveVelocityMetersPerSec = driveSim.getAngularVelocityRadPerSec() * ModuleConstants.kWheelDiameterMeters / 2;

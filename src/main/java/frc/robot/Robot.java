@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.util.LocalADStarAK;
+import frc.robot.util.NoteVisualizer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -163,6 +164,8 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void autonomousInit() {
+    NoteVisualizer.resetAutoNotes();
+    NoteVisualizer.showAutoNotes();
     Pivot.getInstance().setGoal(0.15);
     autonomousCommand = robotContainer.getAutonomousCommand();
 

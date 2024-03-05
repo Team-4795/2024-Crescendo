@@ -3,6 +3,7 @@ package frc.robot.subsystems.vision;
 import java.io.IOException;
 import java.util.Optional;
 
+import org.opencv.aruco.EstimateParameters;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -39,100 +40,53 @@ public class VisionIOReal implements VisionIO {
     Pose2d speakerPosition;
     double distanceToTarget;
 
-  public VisionIOReal() {
-    // SaguaroCam = new PhotonCamera("Saguaro");
-    BarbaryFig = new PhotonCamera("Barbary Fig");
+    public VisionIOReal() {
+        // SaguaroCam = new PhotonCamera("Saguaro");
+        BarbaryFig = new PhotonCamera("Barbary Fig");
 
-    saguaroRobotToCam = new Transform3d(
-        new Translation3d(
-            Units.inchesToMeters(-8), 
-            Units.inchesToMeters(-6.5), 
-            Units.inchesToMeters(10.5)), 
-        new Rotation3d(
-            0, 
-            Units.degreesToRadians(20), 
-            Units.degreesToRadians(-90)));
-
-    barbaryFigRobotToCam = new Transform3d(
-        new Translation3d(
-            Units.inchesToMeters(-11), 
-            Units.inchesToMeters(5), 
-            Units.inchesToMeters(11)), 
+        saguaroRobotToCam = new Transform3d(
+            new Translation3d(
+                Units.inchesToMeters(-8), 
+                Units.inchesToMeters(-6.5), 
+                Units.inchesToMeters(10.5)), 
             new Rotation3d(
                 0, 
                 Units.degreesToRadians(20), 
-                Math.PI));
+                Units.degreesToRadians(-90)));
 
-    try {
-        aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
+        barbaryFigRobotToCam = new Transform3d(
+            new Translation3d(
+                Units.inchesToMeters(-11), 
+                Units.inchesToMeters(5), 
+                Units.inchesToMeters(11)), 
+                new Rotation3d(
+                    0, 
+                    Units.degreesToRadians(20), 
+                    Math.PI));
 
-    // saguaroPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
-    //             PoseStrategy.CLOSEST_TO_REFERENCE_POSE, SaguaroCam, saguaroRobotToCam);
-                
-    barbaryFigPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
-                PoseStrategy.CLOSEST_TO_REFERENCE_POSE, BarbaryFig, barbaryFigRobotToCam);
-
-    aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
-    getSpeakerPos();
-}
-    // @Override
-    // public Optional<EstimatedRobotPose> getSaguaroPose(Pose2d reference){
-    //     saguaroPhotonPoseEstimator.setReferencePose(reference);
-    //     return saguaroPhotonPoseEstimator.update();
-    // }
-
-    @Override
-    public Optional<EstimatedRobotPose> getBarbaryFigPose(Pose2d reference){
-        barbaryFigPhotonPoseEstimator.setReferencePose(reference);
-        return barbaryFigPhotonPoseEstimator.update();
-    }
-
-    
-
-    @Override
-    public Pose2d getSpeakerPos() {
-        Optional<Alliance> ally = DriverStation.getAlliance();
-        if (ally.isPresent()) {
-            if (ally.get() == Alliance.Red) {
-                aprilTagFieldLayout.getTagPose(4).ifPresent(pose -> speakerPosition = pose.toPose2d());
-            } else if (ally.get() == Alliance.Blue) {
-                aprilTagFieldLayout.getTagPose(7).ifPresent(pose -> speakerPosition = pose.toPose2d());
-            }
-        } else {
-            speakerPosition = new Pose2d();
+        try {
+            aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return speakerPosition;
+
+        // saguaroPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
+        //             PoseStrategy.CLOSEST_TO_REFERENCE_POSE, SaguaroCam, saguaroRobotToCam);
+                    
+        barbaryFigPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
+                    PoseStrategy.CLOSEST_TO_REFERENCE_POSE, BarbaryFig, barbaryFigRobotToCam);
+
+        aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
     }
 
+    @Override
+    public void setReferencePose(Pose2d reference) {
+        barbaryFigPhotonPoseEstimator.setReferencePose(reference);
+    }
 
     @Override
     public void updateInputs(VisionIOInputs inputs) {
-        // PhotonPipelineResult saguaroResult = SaguaroCam.getLatestResult();
-        PhotonPipelineResult barbaryFigResult = BarbaryFig.getLatestResult();
-
-        // boolean saguaroHasTargets = saguaroResult.hasTargets();
-        boolean barbaryFigHasTargets = barbaryFigResult.hasTargets();
-
-        // if (saguaroHasTargets)
-        // {
-        //     saguaroTarget = saguaroResult.getBestTarget();
-
-        //     inputs.saguaroRoll = saguaroTarget.getSkew();
-        //     inputs.saguaroPitch = saguaroTarget.getPitch();
-        //     inputs.saguaroYaw = saguaroTarget.getYaw();
-        // }
-
-        if (barbaryFigHasTargets)
-        {
-            barbaryFigTarget = barbaryFigResult.getBestTarget();
-
-            inputs.barbaryFigRoll = barbaryFigTarget.getSkew();
-            inputs.barbaryFigPitch = barbaryFigTarget.getPitch();
-            inputs.barbaryFigYaw = barbaryFigTarget.getYaw();
-        }
-
+        inputs.barbaryFigPose = barbaryFigPhotonPoseEstimator.update().map((pose) -> new EstimatedPose(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
+        inputs.saguaroPose = barbaryFigPhotonPoseEstimator.update().map((pose) -> new EstimatedPose(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
     }
 }

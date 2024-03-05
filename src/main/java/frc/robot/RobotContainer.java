@@ -40,6 +40,7 @@ import frc.robot.subsystems.pivot.*;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOReal;
+import frc.robot.subsystems.vision.VisionIOSim;
 import frc.robot.util.NamedCommandManager;
 import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -104,14 +105,13 @@ public class RobotContainer {
         shooter = Shooter.initialize(new ShooterIOSim());
         pivot = Pivot.initialize(new PivotIOSim());
         indexer = Indexer.initialize(new IndexerIOSim());
-        vision = Vision.initialize(new VisionIO() {});
+        vision = Vision.initialize(new VisionIOSim());
         drive = Drive.initialize(
             new GyroIOSim(),
             new ModuleIOSim(DriveConstants.kFrontLeftChassisAngularOffset),
             new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
             new ModuleIOSim(DriveConstants.kBackLeftChassisAngularOffset),
             new ModuleIOSim(DriveConstants.kBackRightChassisAngularOffset));
-
         break;
 
       default:
@@ -128,7 +128,7 @@ public class RobotContainer {
 
     manager.setState(State.Init);
 
-    NoteVisualizer.setRobotPoseSupplier(drive::getPose);
+    NoteVisualizer.setPivotPoseSupplier(pivot::getPose);
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("TEST - AS GP123"));
 
     // Configure the button bindings
@@ -155,7 +155,9 @@ public class RobotContainer {
     OIConstants.driverController.leftBumper().whileTrue(new AlignSpeaker());
 
     //Shoot
-    OIConstants.driverController.rightTrigger(0.3).whileTrue(indexer.forwards());
+    OIConstants.driverController.rightTrigger(0.3)
+      .whileTrue(indexer.forwards())
+      .onTrue(NoteVisualizer.shoot());
     
     //Drive robot relative
     OIConstants.driverController.leftTrigger(0.3)
