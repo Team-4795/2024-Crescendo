@@ -14,6 +14,8 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -25,15 +27,20 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.Constants.OIConstants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.AutoConstants;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.ModuleConstants;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.util.LocalADStarAK;
 import frc.robot.util.SwerveUtils;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -47,6 +54,7 @@ public class Drive extends SubsystemBase {
     // The gyro sensor
     private GyroIO gyro;
     private GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
+    private boolean fieldRelative = true;
 
     // Slew rate filter variables for controlling lateral acceleration
     private double m_currentRotation = 0.0;
@@ -61,7 +69,7 @@ public class Drive extends SubsystemBase {
     SwerveDrivePoseEstimator m_poseEstimator;
     private EstimatedRobotPose visionPose = new EstimatedRobotPose(new Pose3d(), m_currentRotation, null, null);
 
-    private Vision vision;;
+    private Vision vision;
     // Odometry class for tracking robot pose
     SwerveDriveOdometry m_odometry;
     private Pose2d pose = new Pose2d();
@@ -127,20 +135,27 @@ public class Drive extends SubsystemBase {
                 this // Reference to this subsystem to set requirements
         );
 
-        Pathfinding.setPathfinder(new LocalADStarAK()); // Implements A* pathfinding algorithm (very cool btw) -
-                                                        // assuming I understand this correctly
-
         PathPlannerLogging.setLogActivePathCallback(
                 (activePath) -> {
                     Logger.recordOutput(
                             "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
                 }); // Adds a way for PathPlanner to log what poses it's trying to get the robot to
                     // go to
-
+        
         PathPlannerLogging.setLogTargetPoseCallback(
                 (targetPose) -> {
                     Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
                 }); // Adds a way for PathPlanner to log what pose it's currently trying to go to
+
+        setDefaultCommand(Commands.run(() -> {
+        // The left stick controls translation of the robot.
+        // Turning is controlled by the X axis of the right stick.
+            this.drive(
+                -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband),
+                -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband),
+                -MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kAxisDeadband),
+                fieldRelative, true);
+        }, this));
     }
 
     @Override
@@ -160,16 +175,32 @@ public class Drive extends SubsystemBase {
                     m_rearLeft.getPosition(),
                     m_rearRight.getPosition()
                 });
-        
+
+     
         if (Constants.currentMode == Mode.REAL && Constants.hasVision) {
-            vision.getArducamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> m_poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
-            vision.getLifecamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> m_poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
+            Vision.getInstance().getBarbaryFigPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> {
+                m_poseEstimator.addVisionMeasurement(
+                    pose.estimatedPose.toPose2d(), 
+                    pose.timestampSeconds,
+                    VecBuilder.fill(1,1,Units.degreesToRadians(20)));
+                    Logger.recordOutput("Vision/Barbary Fig Pose", pose.estimatedPose.toPose2d());
+            });
+
+
+            vision.getSaguaroPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> {
+            m_poseEstimator.addVisionMeasurement(
+                pose.estimatedPose.toPose2d(), 
+                pose.timestampSeconds,
+                VecBuilder.fill(1,1,Units.degreesToRadians(20)));
+            Logger.recordOutput("Vision/Saguaro Pose", pose.estimatedPose.toPose2d());
+        });
             
-            vision.getLifecamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> visionPose = pose);
+            //vision.getLifecamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> visionPose = pose);
         }
 
         Logger.recordOutput("Estimated Pose", getPose());
         Logger.recordOutput("Vision pose", visionPose.estimatedPose);
+        Logger.recordOutput("Vision/Distance to speaker", vision.getDistancetoSpeaker(getPose()));
         // Read wheel deltas from each module
         SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
         wheelDeltas[0] = m_frontLeft.getPositionDelta();
@@ -233,11 +264,6 @@ public class Drive extends SubsystemBase {
      * @param rateLimit     Whether to enable rate limiting for smoother control.
      */
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
-
-        if (Constants.currentMode == Mode.SIM) {
-            rot *= -1.0;
-        }
-
         double xSpeedCommanded;
         double ySpeedCommanded;
 
@@ -389,9 +415,16 @@ public class Drive extends SubsystemBase {
         pose.rotateBy(pose.getRotation().times(-1)); //This may not work
     }
 
+    public void setFieldRelative(boolean fieldRelative){
+        this.fieldRelative = fieldRelative;
+    }
 
     public double getHeading() {
         return gyroInputs.yaw.getDegrees();
+    }
+
+    public Rotation2d getRotationHeading() {
+        return gyroInputs.yaw;
     }
 
     //between -180 and 180
@@ -408,7 +441,7 @@ public class Drive extends SubsystemBase {
     /**
      * Returns the turn rate of the robot.
      *
-     * @return The turn rate of the robot, in degrees per second
+     * @return The turn rate of the robot, in radians per second
      */
     public double getTurnRate() {
         return gyroInputs.yawVelocity;

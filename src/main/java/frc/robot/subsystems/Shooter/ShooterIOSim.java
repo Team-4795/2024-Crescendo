@@ -10,7 +10,7 @@ public class ShooterIOSim implements ShooterIO{
     DCMotorSim topMotor = new DCMotorSim(DCMotor.getKrakenX60(1), 1, 0.001);
     DCMotorSim bottomMotor = new DCMotorSim(DCMotor.getKrakenX60(1), 1, 0.001);
 
-    SimpleMotorFeedforward ffd = new SimpleMotorFeedforward(0, ShooterConstants.kV / 60);
+    SimpleMotorFeedforward ffd = new SimpleMotorFeedforward(0, ShooterConstants.kVTop / 60);
     PIDController controller = new PIDController(ShooterConstants.kP / 60, 0, 0);
 
     private double topSpeed = 0.0;

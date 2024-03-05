@@ -3,6 +3,7 @@ package frc.robot.subsystems.pivot;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkRelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
@@ -13,8 +14,9 @@ import edu.wpi.first.wpilibj.PWM.PeriodMultiplier;
 public class PivotIOReal implements PivotIO {
   private CANSparkFlex pivotLeft = new CANSparkFlex(PivotConstants.leftCanID, MotorType.kBrushless);
   private CANSparkFlex pivotRight = new CANSparkFlex(PivotConstants.rightCanID, MotorType.kBrushless);
-  private RelativeEncoder motorEncoder = pivotLeft.getEncoder();
-  private AbsoluteEncoder encoder = pivotRight.getAbsoluteEncoder();
+  private RelativeEncoder motorEncoder = pivotLeft.getEncoder(SparkRelativeEncoder.Type.kQuadrature, 7168);
+  // private AbsoluteEncoder encoder = pivotRight.getAbsoluteEncoder();
+  private DutyCycleEncoder encoder = new DutyCycleEncoder(9);
   private double inputVolts = 0.0;
 
   public PivotIOReal() {
@@ -27,8 +29,8 @@ public class PivotIOReal implements PivotIO {
     pivotLeft.setSmartCurrentLimit(30);
     pivotRight.setSmartCurrentLimit(30);
 
-    encoder.setPositionConversionFactor(PivotConstants.positionConversionFactor);
-    encoder.setVelocityConversionFactor(PivotConstants.velocityConversionFactor);
+    // encoder.setPositionConversionFactor(PivotConstants.positionConversionFactor);
+    // encoder.setVelocityConversionFactor(PivotConstants.velocityConversionFactor);
 
     pivotLeft.setIdleMode(IdleMode.kBrake);
     pivotRight.setIdleMode(IdleMode.kBrake);
@@ -76,17 +78,14 @@ public class PivotIOReal implements PivotIO {
   }
 
   private double getAbsolutePosition() {
-    return encoder.getPosition();
+    return -encoder.getAbsolutePosition() * PivotConstants.positionConversionFactor + 4.187;
   }
 
   @Override
   public void updateInputs(PivotIOInputs inputs) {
     inputs.pivotInputVolts = inputVolts;
     inputs.pivotAppliedVolts = pivotLeft.getAppliedOutput() * pivotLeft.getBusVoltage();
-
-    if (Math.abs(inputs.pivotPositionRads - getAbsolutePosition()) < 0.1) {
-      inputs.pivotPositionRads = getAbsolutePosition();
-    }
+    inputs.pivotPositionRads = getAbsolutePosition();
 
     // Cut off weird jumps
     if (Math.abs(motorEncoder.getPosition()) < 2.0) {

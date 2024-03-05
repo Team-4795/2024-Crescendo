@@ -1,15 +1,10 @@
 package frc.robot.subsystems.indexer;
 
-import java.beans.Statement;
-import java.util.function.DoubleSupplier;
-
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.util.CircularBuffer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.StateManager;
-import frc.robot.StateManager.State;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.Constants.IndexerSetpoints;
 
@@ -18,11 +13,9 @@ public class Indexer extends SubsystemBase {
     private IndexerIO io;
     private final IndexerIOInputsAutoLogged inputs = new IndexerIOInputsAutoLogged(); 
     private double indexerSpeed = 0.0;
-    private boolean shouldSpin = false;
     private boolean overrideStoring = false;
-    private boolean isAuto = false;
 
-    private boolean currentStoring = false;
+    public static boolean currentStoring = false;
     private CircularBuffer<Double> currents = new CircularBuffer<>(IndexerConstants.bufferSize);
 
     private static Indexer instance;
@@ -49,22 +42,6 @@ public class Indexer extends SubsystemBase {
 
     public void setIndexerSpeed(double motorValue) {
         indexerSpeed = motorValue;
-    }
-
-    public void setSpin(boolean on){
-        shouldSpin = on;
-    }
-
-    // public void reverse() {
-    //     indexerSpeed *= -1;
-    // }
-
-    // public void setOverrideStoring(boolean on) {
-    //    override = on;
-    // }
-
-    public void setAutoMode(boolean on){
-        isAuto = on;
     }
 
     public Command reverse() {
@@ -99,17 +76,18 @@ public class Indexer extends SubsystemBase {
         // Flip the value if overrideStoring is true
         return inputs.sensorActivated ^ overrideStoring;
     }
+
+    public boolean handoff(){
+        return currentStoring;
+    }
     
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Indexer", inputs);
         double averageCurrent = this.averageCurrent();
-        currents.addLast(Double.valueOf(inputs.leftMotorCurrent));
+        currents.addLast(Double.valueOf(inputs.bottomMotorCurrent));
 
-        // if(inputs.sensorActivated && StateManager.getInstance().state == State.GroundIntake){
-        //     StateManager.getInstance().setState(State.Stow);
-        // }
 
         if (Pivot.getInstance().getPosition() < 1.0) {
             io.canSpinBottom(true);
@@ -118,14 +96,6 @@ public class Indexer extends SubsystemBase {
         }
 
         io.setIndexerSpeed(indexerSpeed);
-
-        // if(override){
-        //     io.setIndexerSpeed(IndexerConstants.overrideSpeed);
-        // } else if (isAuto || shouldSpin || StateManager.getInstance().state == State.GroundIntake){
-        //     io.setIndexerSpeed(indexerSpeed);
-        // } else {
-        //     io.setIndexerSpeed(0);
-        // }
 
         if(averageCurrent > IndexerConstants.currentThreshold){
             currentStoring = true;

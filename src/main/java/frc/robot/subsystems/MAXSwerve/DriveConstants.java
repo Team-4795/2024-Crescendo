@@ -18,7 +18,7 @@ import edu.wpi.first.math.util.Units;
 public final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 4.8;
+    public static final double kMaxSpeedMetersPerSecond = 5.6;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 10.0; // radians per second
@@ -26,12 +26,12 @@ public final class DriveConstants {
     public static final double kRotationalSlewRate = 10.0; // percent per second (1 = 100%)
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(20.75);
+    public static final double kTrackWidth = Units.inchesToMeters(21.5);
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(20.75);
+    public static final double kWheelBase = Units.inchesToMeters(21.5);
     // Distance between front and back wheels on robot
     
-    public static final double kTrackRadius = Units.inchesToMeters(29.34/2); 
+    public static final double kTrackRadius = Units.inchesToMeters(21.5 * Math.sqrt(2)/2); 
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
             new Translation2d(kWheelBase / 2, kTrackWidth / 2),
             new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
@@ -120,7 +120,7 @@ public final class DriveConstants {
         public static final double kMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-        public static final double kPDrivingController = 2;
+        public static final double kPDrivingController = 3;
         public static final double kPThetaController = 3;
 
         // Constraint for the motion profiled robot angle controller

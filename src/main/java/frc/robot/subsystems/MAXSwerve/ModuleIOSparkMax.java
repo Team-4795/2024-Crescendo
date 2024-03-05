@@ -9,12 +9,15 @@ import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.SparkRelativeEncoder;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.ModuleConstants;
@@ -44,7 +47,7 @@ public class ModuleIOSparkMax implements ModuleIO {
     m_turningSparkMax.restoreFactoryDefaults();
 
     // Setup encoders and PID controllers for the driving and turning SPARKS MAX.
-    m_drivingEncoder = m_drivingSpark.getEncoder();
+    m_drivingEncoder = m_drivingSpark.getEncoder(SparkRelativeEncoder.Type.kQuadrature, 7168);
     m_turningEncoder = m_turningSparkMax.getAbsoluteEncoder(Type.kDutyCycle);
     m_drivingPIDController = m_drivingSpark.getPIDController();
     m_turningPIDController = m_turningSparkMax.getPIDController();
@@ -58,13 +61,14 @@ public class ModuleIOSparkMax implements ModuleIO {
       m_turningPIDController.setFeedbackDevice(m_turningEncoder);
 
       m_turningEncoder.setAverageDepth(2);
-
-      m_drivingEncoder.setMeasurementPeriod(10);
       m_drivingEncoder.setAverageDepth(2);
 
       // in meters and meters per second
       m_drivingEncoder.setPositionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
-      m_drivingEncoder.setVelocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
+      REVLibError status = m_drivingEncoder.setVelocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
+      if(status != REVLibError.kOk){
+        DriverStation.reportWarning("Spark Flex Driving Velocity Conversion Failed to Set on SparkFlex ID " + drivingCANId, false);
+      }
 
       // in radians and radians per second
       m_turningEncoder.setPositionConversionFactor(ModuleConstants.kTurningEncoderPositionFactor);

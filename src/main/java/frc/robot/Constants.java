@@ -17,10 +17,6 @@ package frc.robot;
 
 
 
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
-import org.photonvision.proto.Photon;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -36,16 +32,18 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public final class Constants {
   // Mode of the robot, set to Mode.REPLAY for replay
   public static final Mode currentMode = Mode.fromState();
-  public static final boolean tuningMode = true;
-  public static final boolean hasVision = false;
+  public static final boolean tuningMode = false;
+  public static final boolean hasVision = true;
   public static final int tryConfigCount = 5;
   public static final double configDelay = 0.1;
+  public static final int paramApplyAttemptLimit = 5;
+  public static final double paramApplyTimemout = 0.05;
 
   public static final class PivotSetpoints {
-    public static final double speaker = 0.6;
-    public static final double amp = 1.1;
+    public static final double speaker = 0.56;
+    public static final double amp = 1.15;
     public static final double stow = 0.08;
-    public static final double intake = 0.15;
+    public static final double intake = 0.3;
     public static final double source = 0.96;
   }
 
@@ -57,22 +55,22 @@ public final class Constants {
   }
 
   public static final class ShooterSetpoints {
-    public static final double speakerTop = -5000;
-    public static final double speakerBottom = 5000;
+    public static final double speakerTop = -4000;
+    public static final double speakerBottom = 4000;
 
-    public static final double ampTop = 600;
-    public static final double ampBottom = 600;
+    public static final double ampTop = 500;
+    public static final double ampBottom = 500;
 
     public static final double reverseTop = 1000;
     public static final double reverseBottom = -1000;
 
-    public static final double slowReverseTop = 150;
-    public static final double slowReverseBottom = -150;
+    public static final double slowReverseTop = 650;
+    public static final double slowReverseBottom = -650;
   }
 
   public static final class IntakeSetpoints {
-    public static final double intake = -0.7;
-    public static final double reverse = 0.7;
+    public static final double intake = -0.6;
+    public static final double reverse = 0.6;
     public static final double slowReverse = 0.4;
   }
 
@@ -115,6 +113,10 @@ public final class Constants {
     public static final double kAxisDeadband = 0.1;
     public static final CommandXboxController driverController = new CommandXboxController(0);
     public static final CommandXboxController operatorController = new CommandXboxController(1);
+  }
+
+  public static final class FieldConstants {
+    public static final double speakerHeight = 2.01; //meters
   }
 
   public static class PathFindingConstants {

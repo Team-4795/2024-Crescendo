@@ -1,6 +1,8 @@
 package frc.robot.subsystems.pivot;
 
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.proto.Photon;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -11,8 +13,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PivotSetpoints;
+import frc.robot.subsystems.MAXSwerve.Drive;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.util.LoggedTunableNumber;
 
 public class Pivot extends SubsystemBase {
@@ -36,9 +42,10 @@ public class Pivot extends SubsystemBase {
 
     private double goal = 0;
     private final boolean disableArm = false;
+    private boolean autoAim = true;
     private boolean idleMode = true;
 
-    PivotVisualizer visualizer = new PivotVisualizer(Color.kDarkOrange);
+    PivotVisualizer visualizer = new PivotVisualizer();
 
     private static Pivot instance;
 
@@ -57,7 +64,7 @@ public class Pivot extends SubsystemBase {
         io = pivotIO;
         io.updateInputs(inputs);
 
-        visualizer.update(360 * getTruePosition() / (Math.PI * 2));
+        visualizer.update(360 * getTruePosition() / (Math.PI * 2), Units.radiansToDegrees(controller.getSetpoint().position + PivotConstants.angleOffset));
         controller.setTolerance(Units.degreesToRadians(3));
 
         setDefaultCommand(run(() -> {
@@ -89,6 +96,23 @@ public class Pivot extends SubsystemBase {
         );
     }
 
+    public void toggleAutoAim() {
+        autoAim = !autoAim;
+    }
+
+    public Command aimSpeakerDynamic(){
+        return Commands.either(
+            Commands.run(() -> {
+                double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
+                double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker + PivotConstants.offset));
+                this.setGoal(angleCalc - PivotConstants.angleOffset + 0.02);
+            }).finallyDo(() -> setGoal(PivotSetpoints.stow)), 
+            Commands.startEnd(
+                () -> setGoal(PivotSetpoints.speaker),
+                () -> setGoal(PivotSetpoints.stow)),
+            () -> autoAim);
+    }
+
     public Command aimAmp() {
         return Commands.startEnd(
             () -> setGoal(PivotSetpoints.amp),
@@ -118,7 +142,7 @@ public class Pivot extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Pivot", inputs);
-        // visualizer.update(Units.radiansToDegrees(getPosition() + PivotConstants.angleOffset));
+        visualizer.update(Units.radiansToDegrees(getTruePosition()), Units.radiansToDegrees(controller.getSetpoint().position + PivotConstants.angleOffset));
 
         // LoggedTunableNumber.ifChanged(hashCode(), () -> controller.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
         // LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);

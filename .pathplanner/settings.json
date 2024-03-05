@@ -1,8 +1,17 @@
 {
-  "robotWidth": 0.76,
-  "robotLength": 0.76,
+  "robotWidth": 0.79,
+  "robotLength": 0.79,
   "holonomicMode": true,
-  "pathFolders": [],
+  "pathFolders": [
+    "AS GP 145",
+    "M GP 123",
+    "M GP 21(4)",
+    "M GP1234",
+    "AS Preload + Move",
+    "PathFinding",
+    "SS GP 38 (intake 7)",
+    "SS GP78"
+  ],
   "autoFolders": [],
   "defaultMaxVel": 4.0,
   "defaultMaxAccel": 4.0,

@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.887777957373393,
+        "y": 2.257556515110104
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.469808575980788,
+        "y": 1.3899831436026515
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.8782413928464217,
+        "y": 2.6680213360426723
+      },
+      "prevControl": {
+        "x": 3.559239845752419,
+        "y": 1.5485718244163769
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 520.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -41.423665625002556,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "SS GP 38 (intake 7)",
+  "previewStartingState": {
+    "rotation": 22.04,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

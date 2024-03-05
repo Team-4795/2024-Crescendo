@@ -9,57 +9,57 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
 public class IndexerIOReal implements IndexerIO {
-    private CANSparkMax leftIndexMotor = new CANSparkMax(IndexerConstants.leftCanID, MotorType.kBrushless);
-    private CANSparkMax rightIndexMotor = new CANSparkMax(IndexerConstants.rightCanID, MotorType.kBrushless);
-    private RelativeEncoder leftEncoder = leftIndexMotor.getEncoder();
-    private RelativeEncoder rightEncoder = rightIndexMotor.getEncoder();
-    private SparkLimitSwitch noteSensor = leftIndexMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+    private CANSparkMax bottomIndexMotor = new CANSparkMax(IndexerConstants.leftCanID, MotorType.kBrushless);
+    private CANSparkMax towerIndexMotor = new CANSparkMax(IndexerConstants.rightCanID, MotorType.kBrushless);
+    private RelativeEncoder bottomEncoder = bottomIndexMotor.getEncoder();
+    private RelativeEncoder towerEncoder = towerIndexMotor.getEncoder();
+    private SparkLimitSwitch noteSensor = bottomIndexMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
     private boolean spinBottom = true;
 
     public IndexerIOReal() {
-        rightIndexMotor.restoreFactoryDefaults();
-        leftIndexMotor.restoreFactoryDefaults();
+        towerIndexMotor.restoreFactoryDefaults();
+        bottomIndexMotor.restoreFactoryDefaults();
         
         noteSensor.enableLimitSwitch(false);
 
-        rightIndexMotor.setSmartCurrentLimit(25);
-        leftIndexMotor.setSmartCurrentLimit(25);
+        towerIndexMotor.setSmartCurrentLimit(25);
+        bottomIndexMotor.setSmartCurrentLimit(25);
 
-        rightEncoder.setVelocityConversionFactor(IndexerConstants.kVelocityConversionFactor);
-        leftEncoder.setVelocityConversionFactor(IndexerConstants.kVelocityConversionFactor);
+        towerEncoder.setVelocityConversionFactor(IndexerConstants.kVelocityConversionFactor);
+        bottomEncoder.setVelocityConversionFactor(IndexerConstants.kVelocityConversionFactor);
 
-        leftEncoder.setPosition(0);
-        rightEncoder.setPosition(0);
+        bottomEncoder.setPosition(0);
+        towerEncoder.setPosition(0);
 
-        rightIndexMotor.setIdleMode(IdleMode.kBrake);
-        leftIndexMotor.setIdleMode(IdleMode.kCoast);
+        towerIndexMotor.setIdleMode(IdleMode.kBrake);
+        bottomIndexMotor.setIdleMode(IdleMode.kCoast);
 
-        rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
-        rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200);
-        rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 65535);
-        rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
-        rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
-        rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
-        rightIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 65535);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
 
-        leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
-        leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200);
-        leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 65535);
-        leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
-        leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
-        leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
-        leftIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 65535);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
 
-        rightIndexMotor.burnFlash();
-        leftIndexMotor.burnFlash();
+        towerIndexMotor.burnFlash();
+        bottomIndexMotor.burnFlash();
     }
 
     @Override
     public void setIndexerSpeed(double speed) {
         if (spinBottom) {
-            leftIndexMotor.set(speed);
+            bottomIndexMotor.set(speed);
         }
-        rightIndexMotor.set(speed);
+        towerIndexMotor.set(speed);
     }
 
     @Override
@@ -69,13 +69,13 @@ public class IndexerIOReal implements IndexerIO {
 
     @Override
     public void updateInputs(IndexerIOInputs inputs) {    
-        inputs.leftMotorSpeed = leftEncoder.getVelocity();
-        inputs.leftMotorCurrent = leftIndexMotor.getOutputCurrent();
-        inputs.leftMotorVoltage = leftIndexMotor.getAppliedOutput();
+        inputs.bottomMotorSpeed = bottomEncoder.getVelocity();
+        inputs.bottomMotorCurrent = bottomIndexMotor.getOutputCurrent();
+        inputs.bottomMotorVoltage = bottomIndexMotor.getAppliedOutput();
 
-        inputs.rightMotorSpeed = rightEncoder.getVelocity();
-        inputs.rightMotorCurrent = rightIndexMotor.getOutputCurrent();
-        inputs.rightMotorVoltage = rightIndexMotor.getAppliedOutput();
+        inputs.towerMotorSpeed = towerEncoder.getVelocity();
+        inputs.towerMotorCurrent = towerIndexMotor.getOutputCurrent();
+        inputs.towerMotorVoltage = towerIndexMotor.getAppliedOutput();
 
         inputs.sensorActivated = noteSensor.isPressed();
     }
