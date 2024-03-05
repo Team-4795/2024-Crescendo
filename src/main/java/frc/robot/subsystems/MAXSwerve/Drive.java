@@ -21,6 +21,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -148,13 +149,27 @@ public class Drive extends SubsystemBase {
                 }); // Adds a way for PathPlanner to log what pose it's currently trying to go to
 
         setDefaultCommand(Commands.run(() -> {
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
+            double xSpeed = -OIConstants.driverController.getLeftY();
+            double ySpeed = -OIConstants.driverController.getLeftX();
+            double rotSpeed = -OIConstants.driverController.getRightX();
+
+            double speed = MathUtil.applyDeadband(Math.hypot(xSpeed, ySpeed), OIConstants.kAxisDeadband);
+            Rotation2d direction = new Rotation2d(xSpeed, ySpeed);
+            double omega = MathUtil.applyDeadband(rotSpeed, OIConstants.kAxisDeadband);
+
+            speed = speed * speed;
+            omega = Math.copySign(omega * omega, omega);
+
+            Translation2d velocity = new Pose2d(new Translation2d(), direction)
+                .transformBy(new Transform2d(speed, 0, new Rotation2d()))
+                .getTranslation();
+
             this.drive(
-                -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband),
-                -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband),
-                -MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kAxisDeadband),
-                fieldRelative, true);
+                velocity.getX(),
+                velocity.getY(),
+                omega,
+                fieldRelative, 
+                true);
         }, this));
     }
 
@@ -266,7 +281,7 @@ public class Drive extends SubsystemBase {
         if (rateLimit) {
             // Convert XY to polar for rate limiting
             double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
-            double inputTranslationMag = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
+            double inputTranslationMag = Math.hypot(xSpeed, ySpeed);
 
             // Calculate the direction slew rate based on an estimate of the lateral
             // acceleration
