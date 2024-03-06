@@ -14,7 +14,6 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
 import frc.robot.subsystems.pivot.Pivot;
-import frc.robot.subsystems.pivot.PivotConstants;
 
 /** Represents a simulated single jointed arm mechanism. */
 public class SpringArmSim extends LinearSystemSim<N2, N1, N1> {
@@ -221,7 +220,8 @@ public class SpringArmSim extends LinearSystemSim<N2, N1, N1> {
         NumericalIntegration.rkdp(
             (Matrix<N2, N1> x, Matrix<N1, N1> _u) -> {
               Matrix<N2, N1> xdot = m_plant.getA().times(x)
-                .plus(m_plant.getB().times(_u.plus(linearFF(x.get(0, 0)))));
+                .plus(m_plant.getB().times(_u))
+                .plus(VecBuilder.fill(0, torqueFromAngle(x.get(0, 0)) / m_jKgMetersSquared));
 
               return xdot;
             },
@@ -239,7 +239,14 @@ public class SpringArmSim extends LinearSystemSim<N2, N1, N1> {
     return updatedXhat;
   }
 
-  private double linearFF(double angleRad) {
-    return -0.24 * angleRad - 0.01;
+  private double torqueFromAngle(double angleRad) {
+    angleRad = angleRad;
+
+    double springAngle = Math.atan2(
+        m_connectionPointMeters * Math.sin(angleRad) + m_yOffsetMeters, 
+        -m_connectionPointMeters * Math.cos(angleRad) + m_xOffsetMeters);
+    double Tg = -m_massKg * m_armCoMDistance * -9.81 * Math.cos(angleRad);
+    double Ts = m_connectionPointMeters * m_springForce * Math.sin(springAngle - (Math.PI - angleRad));
+    return Tg + Ts;
   }
 }

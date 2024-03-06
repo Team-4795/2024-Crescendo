@@ -23,11 +23,11 @@ public class PivotIOSim implements PivotIO {
 
     @Override
     public void updateInputs(PivotIOInputs inputs) {
-        pivotSim.update(PivotConstants.kDt);
         inputs.pivotPositionRads = pivotSim.getAngleRads();
         inputs.pivotMotorPositionRads = pivotSim.getAngleRads();
         inputs.pivotMotorVelocityRadPerSec = pivotSim.getVelocityRadPerSec();
         inputs.pivotAppliedVolts = pivotAppliedVolts;
+        pivotSim.update(PivotConstants.kDt);
     }
     
     @Override

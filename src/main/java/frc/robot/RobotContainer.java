@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterSetpoints;
@@ -45,7 +46,9 @@ import frc.robot.util.NamedCommandManager;
 import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AlignToAmp;
+import frc.robot.commands.ArmFeedForwardCharacterization;
 import frc.robot.commands.AutoCommands;
+import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.RainbowCommand;
 import frc.robot.commands.AlignHeading;
 import frc.robot.commands.AlignSpeaker;
@@ -130,6 +133,13 @@ public class RobotContainer {
 
     NoteVisualizer.setPivotPoseSupplier(pivot::getPose);
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("TEST - AS GP123"));
+
+
+    // autoChooser.addOption("Pivot SysIs (Quasistatic Forward)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption("Pivot SysIs (Quasistatic Reverse)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption("Pivot SysIs (Dynamic Forward)", pivot.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption("Pivot SysIs (Dynamic Reverse)", pivot.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    autoChooser.addOption("Pivot Model", new ArmFeedForwardCharacterization(pivot, (volts) -> pivot.runVoltage(volts), () -> pivot.getVelocity(), () -> pivot.getPosition(), (x) -> 0.0));
 
     // Configure the button bindings
     configureButtonBindings();

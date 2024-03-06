@@ -1,5 +1,8 @@
 package frc.robot.subsystems.pivot;
 
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.proto.Photon;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -16,6 +19,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
@@ -45,9 +49,11 @@ public class Pivot extends SubsystemBase {
             kS.get(), kV.get(), kA.get());
 
     private double goal = 0;
-    private final boolean disableArm = false;
+    private final boolean disableArm = true;
     private boolean autoAim = true;
     private boolean idleMode = true;
+
+    private SysIdRoutine sysid;
 
     PivotVisualizer visualizer = new PivotVisualizer();
 
@@ -70,6 +76,12 @@ public class Pivot extends SubsystemBase {
 
         visualizer.update(360 * getTruePosition() / (Math.PI * 2), Units.radiansToDegrees(controller.getSetpoint().position + PivotConstants.angleOffset));
         controller.setTolerance(Units.degreesToRadians(3));
+
+        sysid = new SysIdRoutine(
+            new SysIdRoutine.Config(Volts.of(0.2).per(Seconds.of(1)), Volts.of(2), null, (state) -> Logger.recordOutput("Pivot/SysIdState", state.toString())),
+            new SysIdRoutine.Mechanism((voltage) -> {
+                runVoltage(voltage.in(Volts));
+            }, null, this));
 
         setDefaultCommand(run(() -> {
             double up = MathUtil.applyDeadband(
@@ -111,6 +123,14 @@ public class Pivot extends SubsystemBase {
 
     public void toggleAutoAim() {
         autoAim = !autoAim;
+    }
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return sysid.quasistatic(direction);
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return sysid.dynamic(direction);
     }
 
     public Command aimSpeakerDynamic(){
