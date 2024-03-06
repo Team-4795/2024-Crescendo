@@ -187,7 +187,6 @@ public class RobotContainer {
     OIConstants.driverController.x().whileTrue(AlignHeading.align(Units.degreesToRadians(90)));
     OIConstants.driverController.a().whileTrue(AlignHeading.align(Units.degreesToRadians(180)));
     OIConstants.driverController.b().whileTrue(AlignHeading.align(Units.degreesToRadians(270)));
-
     // Speaker aim and rev up
     OIConstants.operatorController.leftBumper()
       .whileTrue(pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker()));
