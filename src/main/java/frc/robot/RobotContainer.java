@@ -185,7 +185,7 @@ public class RobotContainer {
     OIConstants.driverController.y().whileTrue(AlignHeading.align(0));
     OIConstants.driverController.x().whileTrue(AlignHeading.align(Units.degreesToRadians(90)));
     // OIConstants.driverController.a().whileTrue(AlignHeading.align(Units.degreesToRadians(180)));
-      OIConstants.driverController.a().whileTrue(pivot.aimSpeakerDynamic());
+    OIConstants.driverController.a().whileTrue(pivot.aimSpeakerDynamic());
     OIConstants.driverController.b().whileTrue(AlignHeading.align(Units.degreesToRadians(270)));
     // Speaker aim and rev up
     OIConstants.operatorController.leftBumper()
@@ -239,7 +239,10 @@ public class RobotContainer {
             intake.slowReverse(),
             indexer.forwards()));
 
-    OIConstants.operatorController.start().whileTrue(Commands.startEnd(() -> pivot.toggleIdleMode(), () -> pivot.toggleIdleMode()));
+    // Toggle pivot idle mode
+    OIConstants.operatorController.start().whileTrue(
+      Commands.startEnd(() -> pivot.toggleIdleMode(), () -> pivot.toggleIdleMode())
+        .ignoringDisable(true));
 
     new Trigger(() -> Math.abs(OIConstants.operatorController.getLeftY()) > 0.15)
       .whileTrue(

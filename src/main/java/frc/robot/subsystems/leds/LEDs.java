@@ -74,19 +74,19 @@ public class LEDs extends SubsystemBase {
     }
 
     public Command intook() {
-        return runOnce(() -> setStripRGB(0, 200, 0)).andThen(Commands.waitSeconds(3));
+        return runOnce(() -> setColor(Color.kGreen)).andThen(Commands.waitSeconds(3));
     }
 
     public Command pathfinding() {
-        return startEnd(() -> pathfinding = true, () -> pathfinding = false);
+        return Commands.startEnd(() -> pathfinding = true, () -> pathfinding = false);
     }
 
     public Command revving() {
-        return startEnd(() -> revving = true, () -> revving = false);
+        return Commands.startEnd(() -> revving = true, () -> revving = false);
     }
 
     public Command canShoot() {
-        return startEnd(() -> canShoot = true, () -> canShoot = false);
+        return Commands.startEnd(() -> canShoot = true, () -> canShoot = false);
     }
 
     public void toggleYellow() {
