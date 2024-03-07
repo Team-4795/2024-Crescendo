@@ -2,6 +2,7 @@ package frc.robot.subsystems.vision;
 
 import java.util.Optional;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,6 +20,8 @@ public class Vision extends SubsystemBase {
     private Translation3d redSpeaker = new Translation3d(16.579342, 5.547868, 2);
     private Translation3d blueSpeaker = new Translation3d(-0.0381, 5.547868, 2);
 
+    
+    @AutoLogOutput
     private Translation3d speakerPosition = new Translation3d();
 
     public static Vision instance;

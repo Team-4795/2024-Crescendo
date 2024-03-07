@@ -131,7 +131,7 @@ public class Pivot extends SubsystemBase {
     public Command aimSpeakerDynamic(){
         return Commands.either(
             Commands.run(() -> {
-                double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
+                double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose()) + PivotConstants.offset;
                 // double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker + PivotConstants.offset));
                 double angleCalc = this.aimSpeaker(distanceToSpeaker);
                 if(angleCalc != Double.NaN){
@@ -208,7 +208,7 @@ public class Pivot extends SubsystemBase {
     }
 
     public double linearFF(double angle) {
-        return -0.12 * angle - 0.06;
+        return -0.14 * angle - 0.03;
     }
 
     public void runVoltage(double volts) {
@@ -220,9 +220,10 @@ public class Pivot extends SubsystemBase {
     }
 
     public double aimSpeaker(double distance){
-        double c = FieldConstants.speakerHeight + (distance * distance * 9.8 / (ShooterConstants.initialVelocity * ShooterConstants.initialVelocity));
-        double det = Math.pow(2 * c * FieldConstants.speakerHeight, 2) - 4 * (Math.pow(FieldConstants.speakerHeight, 2) + Math.pow(distance, 2)) * (c * c - distance * distance);
-        double cos = (-2 * c * FieldConstants.speakerHeight + Math.sqrt(det)) / (2 * (FieldConstants.speakerHeight * FieldConstants.speakerHeight + distance * distance));
+        double h = FieldConstants.speakerHeight - PivotConstants.height;
+        double c = h + (distance * distance * 9.8 / (ShooterConstants.initialVelocity * ShooterConstants.initialVelocity));
+        double det = Math.pow(2 * c * h, 2) - 4 * (Math.pow(h, 2) + Math.pow(distance, 2)) * (c * c - distance * distance);
+        double cos = (-2 * c * h + Math.sqrt(det)) / (2 * (h * h + distance * distance));
         return Math.acos(cos) / 2;
     }
 

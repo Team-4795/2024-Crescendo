@@ -56,7 +56,7 @@ public class VisionIOReal implements VisionIO {
 
         barbaryFigRobotToCam = new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(-11), 
+                Units.inchesToMeters(-20), 
                 Units.inchesToMeters(5), 
                 Units.inchesToMeters(11)), 
                 new Rotation3d(
@@ -74,7 +74,7 @@ public class VisionIOReal implements VisionIO {
         //             PoseStrategy.CLOSEST_TO_REFERENCE_POSE, SaguaroCam, saguaroRobotToCam);
                     
         barbaryFigPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
-                    PoseStrategy.CLOSEST_TO_REFERENCE_POSE, BarbaryFig, barbaryFigRobotToCam);
+                    PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, BarbaryFig, barbaryFigRobotToCam);
 
         aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
     }
