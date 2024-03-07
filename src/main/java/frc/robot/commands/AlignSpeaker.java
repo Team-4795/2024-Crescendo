@@ -19,8 +19,8 @@ import frc.robot.subsystems.vision.Vision;
 
 public class AlignSpeaker extends Command {
 
-    public final double speakerHeight = 1.98;
-    public final double pivotHeight = 0.2794;
+    public final double speakerHeight = 2.06;
+    public final double pivotHeight = 0.29;
     public double distanceToSpeaker = 0.0;
     public double angleCalc = 0.0;
 

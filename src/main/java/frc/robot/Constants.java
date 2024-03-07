@@ -129,7 +129,7 @@ public final class Constants {
   }
 
   public static final class FieldConstants {
-    public static final double speakerHeight = 2.01; //meters
+    public static final double speakerHeight = 2.06; //meters
     public static final double fieldLength = Units.inchesToMeters(651.223);
 
     public static final class StagingLocations {
