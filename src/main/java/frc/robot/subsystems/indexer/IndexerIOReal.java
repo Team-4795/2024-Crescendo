@@ -8,6 +8,8 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
+import frc.robot.Constants.CurrentLimits;
+
 public class IndexerIOReal implements IndexerIO {
     private CANSparkMax bottomIndexMotor = new CANSparkMax(IndexerConstants.leftCanID, MotorType.kBrushless);
     private CANSparkMax towerIndexMotor = new CANSparkMax(IndexerConstants.rightCanID, MotorType.kBrushless);
@@ -22,8 +24,8 @@ public class IndexerIOReal implements IndexerIO {
         
         noteSensor.enableLimitSwitch(false);
 
-        towerIndexMotor.setSmartCurrentLimit(25);
-        bottomIndexMotor.setSmartCurrentLimit(25);
+        towerIndexMotor.setSmartCurrentLimit(CurrentLimits.tower);
+        bottomIndexMotor.setSmartCurrentLimit(CurrentLimits.handoff);
 
         towerEncoder.setVelocityConversionFactor(IndexerConstants.kVelocityConversionFactor);
         bottomEncoder.setVelocityConversionFactor(IndexerConstants.kVelocityConversionFactor);

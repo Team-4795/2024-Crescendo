@@ -4,6 +4,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -42,11 +44,13 @@ public class LEDs extends SubsystemBase {
 
         setDefaultCommand(run(() -> {
             if (canShoot) {
-                setMagenta();
+                setColor(Color.kMagenta);
+            } else if (revving) {
+                setColor(Color.kFirstBlue);  
             } else if (pathfinding) {
-                setMagenta();
+                setColor(Color.kOrange);
             } else if (yellow) {
-                setYellow();
+                setColor(Color.kYellow);
             } else {
                 setTeamColors();
             }
@@ -77,16 +81,20 @@ public class LEDs extends SubsystemBase {
         return startEnd(() -> pathfinding = true, () -> pathfinding = false);
     }
 
+    public Command revving() {
+        return startEnd(() -> revving = true, () -> revving = false);
+    }
+
+    public Command canShoot() {
+        return startEnd(() -> canShoot = true, () -> canShoot = false);
+    }
+
     public void toggleYellow() {
         yellow = !yellow;
     }
 
-    public void setMagenta() {
-        setStripRGB(255, 0, 255);
-    }
-
-    private void setYellow() {
-        setStripRGB(255, 255, 0);
+    public void setColor(Color color) {
+        setStripRGB((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255));
     }
 
     private void setColorNoOutput(int a0, int a1, int a2, boolean colorModel, int start, int end) /* false: RGB; true: HSV */ {

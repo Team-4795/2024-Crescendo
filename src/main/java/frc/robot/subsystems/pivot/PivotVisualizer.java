@@ -1,7 +1,5 @@
 package frc.robot.subsystems.pivot;
 
-import java.security.MessageDigest;
-
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose3d;

@@ -10,6 +10,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Constants.CurrentLimits;
 import frc.robot.util.KrakenLogger;
 
 public class ShooterIOReal implements ShooterIO {
@@ -39,7 +40,7 @@ public class ShooterIOReal implements ShooterIO {
         talonFXConfig.Slot0.kV = kV;
 
         talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-        talonFXConfig.CurrentLimits.StatorCurrentLimit = 80;
+        talonFXConfig.CurrentLimits.StatorCurrentLimit = CurrentLimits.shooter;
 
         talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 

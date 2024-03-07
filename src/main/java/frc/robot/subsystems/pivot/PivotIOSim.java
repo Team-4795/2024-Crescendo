@@ -6,7 +6,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.robot.util.SpringArmSim;
+// import frc.robot.util.SpringArmSim;
 
 public class PivotIOSim implements PivotIO {
     private SingleJointedArmSim pivotSim = new SingleJointedArmSim(

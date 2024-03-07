@@ -41,6 +41,17 @@ public final class Constants {
   public static final int paramApplyAttemptLimit = 5;
   public static final double paramApplyTimemout = 0.05;
 
+  public static final class CurrentLimits {
+    public static final int pivot = 60;
+    public static final int drive = 60;
+    public static final int turning = 25;
+    public static final int intakeVortex = 60;
+    public static final int intakeKraken = 80;
+    public static final int tower = 25;
+    public static final int handoff = 25;
+    public static final int shooter = 80;
+  }
+
   public static final class PivotSetpoints {
     public static final double speaker = 0.56;
     public static final double amp = 1.15;

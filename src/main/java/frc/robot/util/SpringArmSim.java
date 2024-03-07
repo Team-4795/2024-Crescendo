@@ -13,7 +13,6 @@ import edu.wpi.first.math.system.NumericalIntegration;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
-import frc.robot.subsystems.pivot.Pivot;
 
 /** Represents a simulated single jointed arm mechanism. */
 public class SpringArmSim extends LinearSystemSim<N2, N1, N1> {

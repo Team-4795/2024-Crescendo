@@ -13,7 +13,6 @@
 
 package frc.robot.util;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -27,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.subsystems.pivot.Pivot;
 
 import java.util.Set;
 import java.util.List;
@@ -38,8 +36,8 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class NoteVisualizer {
-  private static final Translation3d blueSpeaker = new Translation3d(0.225, 5.55, 2.1);
-  private static final Translation3d redSpeaker = new Translation3d(16.317, 5.55, 2.1);
+  // private static final Translation3d blueSpeaker = new Translation3d(0.225, 5.55, 2.1);
+  // private static final Translation3d redSpeaker = new Translation3d(16.317, 5.55, 2.1);
   private static final double shotSpeed = 12.0; // Meters per sec
   private static Supplier<Pose3d> pivotPoseSupplier = () -> new Pose3d();
 

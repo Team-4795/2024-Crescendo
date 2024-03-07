@@ -155,7 +155,6 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
     Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint());
 
     // Zero drive heading
@@ -190,8 +189,10 @@ public class RobotContainer {
     OIConstants.driverController.b().whileTrue(AlignHeading.align(Units.degreesToRadians(270)));
     // Speaker aim and rev up
     OIConstants.operatorController.leftBumper()
-      .whileTrue(pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker()));
-
+      .whileTrue(pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker(), leds.revving()))
+      .and(isReady)
+      .whileTrue(leds.canShoot());
+      
     // Amp aim and rev up
     OIConstants.operatorController.rightBumper().whileTrue(
         pivot.aimAmp().alongWith(shooter.revAmp()));

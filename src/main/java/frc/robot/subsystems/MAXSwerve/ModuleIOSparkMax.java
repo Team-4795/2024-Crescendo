@@ -20,6 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
+import frc.robot.Constants.CurrentLimits;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.ModuleConstants;
 
 public class ModuleIOSparkMax implements ModuleIO {
@@ -113,8 +114,8 @@ public class ModuleIOSparkMax implements ModuleIO {
 
       m_drivingSpark.setIdleMode(ModuleConstants.kDrivingMotorIdleMode);
       m_turningSparkMax.setIdleMode(ModuleConstants.kTurningMotorIdleMode);
-      m_drivingSpark.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
-      m_turningSparkMax.setSmartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
+      m_drivingSpark.setSmartCurrentLimit(CurrentLimits.drive);
+      m_turningSparkMax.setSmartCurrentLimit(CurrentLimits.turning);
 
 
       m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
