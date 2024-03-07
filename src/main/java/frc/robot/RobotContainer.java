@@ -239,6 +239,8 @@ public class RobotContainer {
             intake.slowReverse(),
             indexer.forwards()));
 
+    OIConstants.operatorController.start().whileTrue(Commands.startEnd(() -> pivot.toggleIdleMode(), () -> pivot.toggleIdleMode()));
+
     new Trigger(() -> Math.abs(OIConstants.operatorController.getLeftY()) > 0.15)
       .whileTrue(
         new RainbowCommand(() -> MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), 0.15)));

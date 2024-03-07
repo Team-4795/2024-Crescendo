@@ -208,7 +208,7 @@ public class Pivot extends SubsystemBase {
     }
 
     public double linearFF(double angle) {
-        return -0.24 * angle - 0.01;
+        return -0.12 * angle - 0.06;
     }
 
     public void runVoltage(double volts) {
