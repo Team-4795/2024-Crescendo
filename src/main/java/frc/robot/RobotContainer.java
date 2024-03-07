@@ -185,7 +185,8 @@ public class RobotContainer {
     //Heading align
     OIConstants.driverController.y().whileTrue(AlignHeading.align(0));
     OIConstants.driverController.x().whileTrue(AlignHeading.align(Units.degreesToRadians(90)));
-    OIConstants.driverController.a().whileTrue(AlignHeading.align(Units.degreesToRadians(180)));
+    // OIConstants.driverController.a().whileTrue(AlignHeading.align(Units.degreesToRadians(180)));
+      OIConstants.driverController.a().whileTrue(pivot.aimSpeakerDynamic());
     OIConstants.driverController.b().whileTrue(AlignHeading.align(Units.degreesToRadians(270)));
     // Speaker aim and rev up
     OIConstants.operatorController.leftBumper()
@@ -241,9 +242,10 @@ public class RobotContainer {
       .whileTrue(
         new RainbowCommand(() -> MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), 0.15)));
 
-    if (Constants.currentMode == Mode.REAL) 
+    if (Constants.currentMode == Mode.REAL){
       new Trigger(indexer::isStoring).onTrue(leds.intook());
       new Trigger(intake::isIntaking).onTrue(leds.intook());
+    }
     
   }
 

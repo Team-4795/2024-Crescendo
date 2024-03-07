@@ -140,7 +140,9 @@ public class Pivot extends SubsystemBase {
                 double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
                 // double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker + PivotConstants.offset));
                 double angleCalc = this.aimSpeaker(distanceToSpeaker);
-                this.setGoal(angleCalc - PivotConstants.angleOffset);
+                if(angleCalc != Double.NaN){
+                    this.setGoal(angleCalc - PivotConstants.angleOffset);
+                }
             }).finallyDo(() -> setGoal(PivotSetpoints.stow)), 
             Commands.startEnd(
                 () -> setGoal(PivotSetpoints.speaker),
@@ -194,6 +196,7 @@ public class Pivot extends SubsystemBase {
         Logger.recordOutput("Pivot/Setpoint Position", controller.getSetpoint().position);
         Logger.recordOutput("Pivot/Setpoint Velocity", controller.getSetpoint().velocity);
         Logger.recordOutput("Pivot/Goal", goal);
+        Logger.recordOutput("Pivot/Gravity setpoint", this.aimSpeaker(Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose())));
     }
     
     public void toggleIdleMode() {
@@ -223,9 +226,9 @@ public class Pivot extends SubsystemBase {
     }
 
     public double aimSpeaker(double distance){
-        double c = FieldConstants.speakerHeight + (Math.pow(distance, 2) * 9.8 / Math.pow(ShooterConstants.initialVelocity, 2));
-        double det = Math.sqrt(Math.pow(2 * c * FieldConstants.speakerHeight, 2) - 4 * (Math.pow(FieldConstants.speakerHeight, 2) + Math.pow(distance, 2)) * (Math.pow(c, 2) + Math.pow(distance, 2)));
-        double cos = (-2 * c * FieldConstants.speakerHeight + det) / (2 * (Math.pow(FieldConstants.speakerHeight, 2) + Math.pow(distance, 2)));
+        double c = FieldConstants.speakerHeight + (distance * distance * 9.8 / (ShooterConstants.initialVelocity * ShooterConstants.initialVelocity));
+        double det = Math.pow(2 * c * FieldConstants.speakerHeight, 2) - 4 * (Math.pow(FieldConstants.speakerHeight, 2) + Math.pow(distance, 2)) * (c * c - distance * distance);
+        double cos = (-2 * c * FieldConstants.speakerHeight + Math.sqrt(det)) / (2 * (FieldConstants.speakerHeight * FieldConstants.speakerHeight + distance * distance));
         return Math.acos(cos) / 2;
     }
 
