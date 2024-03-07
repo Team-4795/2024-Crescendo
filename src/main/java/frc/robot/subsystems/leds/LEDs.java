@@ -21,6 +21,9 @@ public class LEDs extends SubsystemBase {
     private boolean teamColorsAnimation = false;
 
     private boolean yellow = false;
+    private boolean pathfinding = false;
+    private boolean revving = false;
+    private boolean canShoot = false;
 
     private static LEDs instance;
 
@@ -38,7 +41,11 @@ public class LEDs extends SubsystemBase {
         led.setLength(buffer.getLength());
 
         setDefaultCommand(run(() -> {
-            if (yellow) {
+            if (canShoot) {
+                setMagenta();
+            } else if (pathfinding) {
+                setMagenta();
+            } else if (yellow) {
                 setYellow();
             } else {
                 setTeamColors();
@@ -66,8 +73,16 @@ public class LEDs extends SubsystemBase {
         return runOnce(() -> setStripRGB(0, 200, 0)).andThen(Commands.waitSeconds(3));
     }
 
+    public Command pathfinding() {
+        return startEnd(() -> pathfinding = true, () -> pathfinding = false);
+    }
+
     public void toggleYellow() {
         yellow = !yellow;
+    }
+
+    public void setMagenta() {
+        setStripRGB(255, 0, 255);
     }
 
     private void setYellow() {

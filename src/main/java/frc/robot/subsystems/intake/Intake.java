@@ -38,6 +38,10 @@ public class Intake extends SubsystemBase{
         reverseIntake = override;
     }
 
+    public boolean isIntaking() {
+        return inputs.currentAmps > IntakeConstants.intakeCurrent;
+    }
+
     public Command intake() {
         return startEnd(() -> setIntakeSpeed(IntakeSetpoints.intake), () -> setIntakeSpeed(0));
     }

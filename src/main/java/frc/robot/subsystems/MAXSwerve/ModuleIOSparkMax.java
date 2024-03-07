@@ -56,12 +56,16 @@ public class ModuleIOSparkMax implements ModuleIO {
     m_turningSparkMax.setCANTimeout(250);
 
     for (int i = 0; i < Constants.tryConfigCount; i++) {
+      m_drivingSpark.enableVoltageCompensation(12);
+      m_turningSparkMax.enableVoltageCompensation(12);
 
       m_drivingPIDController.setFeedbackDevice(m_drivingEncoder);
       m_turningPIDController.setFeedbackDevice(m_turningEncoder);
 
       m_turningEncoder.setAverageDepth(2);
       m_drivingEncoder.setAverageDepth(2);
+
+      m_drivingEncoder.setMeasurementPeriod(20);
 
       // in meters and meters per second
       m_drivingEncoder.setPositionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);

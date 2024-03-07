@@ -25,6 +25,9 @@ public class PivotIOReal implements PivotIO {
     pivotLeft.setCANTimeout(250);
     pivotRight.setCANTimeout(250);
 
+    pivotLeft.enableVoltageCompensation(12);
+    pivotRight.enableVoltageCompensation(12);
+
     pivotLeft.setSmartCurrentLimit(30);
     pivotRight.setSmartCurrentLimit(30);
 

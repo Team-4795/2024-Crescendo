@@ -25,6 +25,7 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PivotSetpoints;
 import frc.robot.subsystems.MAXSwerve.Drive;
+import frc.robot.subsystems.Shooter.ShooterConstants;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.util.LoggedTunableNumber;
@@ -49,7 +50,7 @@ public class Pivot extends SubsystemBase {
             kS.get(), kV.get(), kA.get());
 
     private double goal = 0;
-    private final boolean disableArm = true;
+    private final boolean disableArm = false;
     private boolean autoAim = true;
     private boolean idleMode = true;
 
@@ -137,8 +138,9 @@ public class Pivot extends SubsystemBase {
         return Commands.either(
             Commands.run(() -> {
                 double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
-                double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker + PivotConstants.offset));
-                this.setGoal(angleCalc - PivotConstants.angleOffset + 0.02);
+                // double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker + PivotConstants.offset));
+                double angleCalc = this.aimSpeaker(distanceToSpeaker);
+                this.setGoal(angleCalc - PivotConstants.angleOffset);
             }).finallyDo(() -> setGoal(PivotSetpoints.stow)), 
             Commands.startEnd(
                 () -> setGoal(PivotSetpoints.speaker),
@@ -218,6 +220,13 @@ public class Pivot extends SubsystemBase {
         } else {
             throw new IllegalArgumentException("Setting direct pivot voltage without disabling arm!");
         }
+    }
+
+    public double aimSpeaker(double distance){
+        double c = FieldConstants.speakerHeight + (Math.pow(distance, 2) * 9.8 / Math.pow(ShooterConstants.initialVelocity, 2));
+        double det = Math.sqrt(Math.pow(2 * c * FieldConstants.speakerHeight, 2) - 4 * (Math.pow(FieldConstants.speakerHeight, 2) + Math.pow(distance, 2)) * (Math.pow(c, 2) + Math.pow(distance, 2)));
+        double cos = (-2 * c * FieldConstants.speakerHeight + det) / (2 * (Math.pow(FieldConstants.speakerHeight, 2) + Math.pow(distance, 2)));
+        return Math.acos(cos) / 2;
     }
 
     // Choose between motor position or absolute encoder position 
