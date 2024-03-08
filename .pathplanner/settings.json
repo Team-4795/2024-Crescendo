@@ -4,10 +4,12 @@
   "holonomicMode": true,
   "pathFolders": [
     "AS GP 145",
+    "AS GP 123",
+    "AS Preload + Move",
     "M GP 123",
     "M GP 21(4)",
     "M GP1234",
-    "AS Preload + Move",
+    "SS GP 876",
     "PathFinding",
     "SS GP 38 (intake 7)",
     "SS GP78"
