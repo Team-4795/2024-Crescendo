@@ -10,5 +10,5 @@ public final class ShooterConstants {
     public static final double kVBottom = 0.127;
 
     public static final double RPMTolerance = 150;
-    public static final double initialVelocity = 11.5; // m/s
+    public static final double initialVelocity = 14; // m/s
 }

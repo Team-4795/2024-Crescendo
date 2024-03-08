@@ -13,6 +13,7 @@ public interface VisionIO {
     public static class VisionIOInputs {
         Optional<EstimatedPose> barbaryFigPose = Optional.empty();
         Optional<EstimatedPose> saguaroPose = Optional.empty();
+        double lifeCamyaw = 0;
     }
 
     public class VisionIOInputsAutoLogged extends VisionIO.VisionIOInputs implements LoggableInputs, Cloneable {
