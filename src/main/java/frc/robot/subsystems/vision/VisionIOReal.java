@@ -27,9 +27,11 @@ public class VisionIOReal implements VisionIO {
 
     // PhotonCamera SaguaroCam;
     PhotonCamera BarbaryFig;
+    PhotonCamera LifeCam;
 
     PhotonTrackedTarget saguaroTarget;
     PhotonTrackedTarget barbaryFigTarget;
+    PhotonTrackedTarget lifecamTarget;
 
     AprilTagFieldLayout aprilTagFieldLayout;
     Transform3d saguaroRobotToCam;
@@ -43,6 +45,8 @@ public class VisionIOReal implements VisionIO {
     public VisionIOReal() {
         // SaguaroCam = new PhotonCamera("Saguaro");
         BarbaryFig = new PhotonCamera("Barbary Fig");
+        LifeCam = new PhotonCamera("Queen of the Night");
+        
 
         saguaroRobotToCam = new Transform3d(
             new Translation3d(
@@ -88,5 +92,14 @@ public class VisionIOReal implements VisionIO {
     public void updateInputs(VisionIOInputs inputs) {
         inputs.barbaryFigPose = barbaryFigPhotonPoseEstimator.update().map((pose) -> new EstimatedPose(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
         inputs.saguaroPose = barbaryFigPhotonPoseEstimator.update().map((pose) -> new EstimatedPose(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
+
+        PhotonPipelineResult lifecamResult = LifeCam.getLatestResult();
+        boolean LifeCamHastargets = lifecamResult.hasTargets();
+
+        if (LifeCamHastargets) {
+            lifecamTarget = lifecamResult.getBestTarget();
+
+            inputs.lifeCamyaw = lifecamTarget.getYaw();
+        }
     }
 }

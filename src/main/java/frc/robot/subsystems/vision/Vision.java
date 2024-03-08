@@ -83,6 +83,10 @@ public class Vision extends SubsystemBase {
         io.setReferencePose(reference);
     }
 
+    public double getLifecamYaw () {
+        return inputs.lifeCamyaw;
+    }
+
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Vision", inputs);

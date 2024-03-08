@@ -46,6 +46,7 @@ import frc.robot.util.NamedCommandManager;
 import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AlignToAmp;
+import frc.robot.commands.AlignToGamepiece;
 import frc.robot.commands.ArmFeedForwardCharacterization;
 import frc.robot.commands.AutoCommands;
 import frc.robot.commands.FeedForwardCharacterization;
@@ -182,14 +183,12 @@ public class RobotContainer {
     }));
 
     //Heading align
-    OIConstants.driverController.y().whileTrue(AlignHeading.align(0));
-    OIConstants.driverController.x().whileTrue(AlignHeading.align(Units.degreesToRadians(90)));
-    // OIConstants.driverController.a().whileTrue(AlignHeading.align(Units.degreesToRadians(180)));
-    OIConstants.driverController.a().whileTrue(pivot.aimSpeakerDynamic());
-    OIConstants.driverController.b().whileTrue(AlignHeading.align(Units.degreesToRadians(270)));
+    OIConstants.driverController.y().whileTrue(new AlignToGamepiece());
+
     // Speaker aim and rev up
     OIConstants.operatorController.leftBumper()
-      .whileTrue(pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker(), leds.revving()))
+      // .whileTrue(pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker(), leds.revving()))
+      .whileTrue(shooter.revSpeaker().alongWith(leds.revving()))
       .and(isReady)
       .whileTrue(leds.canShoot());
       
