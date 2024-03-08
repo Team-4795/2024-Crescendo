@@ -20,12 +20,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.subsystems.MAXSwerve.Drive;
 
 import java.util.Set;
 import java.util.List;
@@ -38,7 +40,7 @@ import org.littletonrobotics.junction.Logger;
 public class NoteVisualizer {
   // private static final Translation3d blueSpeaker = new Translation3d(0.225, 5.55, 2.1);
   // private static final Translation3d redSpeaker = new Translation3d(16.317, 5.55, 2.1);
-  private static final double shotSpeed = 12.0; // Meters per sec
+  private static final double shotSpeed = 15.0; // Meters per sec
   private static Supplier<Pose3d> pivotPoseSupplier = () -> new Pose3d();
 
   private static final List<Translation2d> autoNotes = new ArrayList<>();
@@ -98,11 +100,18 @@ public class NoteVisualizer {
         Commands.defer(
                 () -> {
                   final Pose3d startPose = pivotPoseSupplier.get();
+                  final Translation2d driveVelocity = Drive.getInstance().getTranslationVelocity().rotateBy(Drive.getInstance().getRotationHeading());
 
                   // final double duration =
                   //     startPose.getTranslation().getDistance(endPose.getTranslation()) / shotSpeed;
                   final double duration = 1;
                   final Pose3d endPose = startPose.transformBy(new Transform3d(shotSpeed * duration, 0, 0, new Rotation3d()));
+                  final Pose3d newEndPose = new Pose3d(
+                    endPose.getX() + driveVelocity.getX() * duration, 
+                    endPose.getY() + driveVelocity.getY() * duration,
+                    endPose.getZ(),
+                    endPose.getRotation());
+
                   final Timer timer = new Timer();
                   timer.start();
 
@@ -111,7 +120,7 @@ public class NoteVisualizer {
                             Logger.recordOutput(
                                 "NoteVisualizer",
                                 new Pose3d[] {
-                                  startPose.interpolate(endPose, timer.get() / duration)
+                                  startPose.interpolate(newEndPose, timer.get() / duration)
                                 });
                           })
                       .until(() -> timer.hasElapsed(duration))

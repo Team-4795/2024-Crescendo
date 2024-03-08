@@ -16,21 +16,17 @@ package frc.robot;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.ShooterSetpoints;
 import frc.robot.StateManager.State;
 import frc.robot.subsystems.MAXSwerve.*;
 import frc.robot.subsystems.Shooter.*;
@@ -48,11 +44,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AlignToAmp;
 import frc.robot.commands.AlignToGamepiece;
 import frc.robot.commands.ArmFeedForwardCharacterization;
-import frc.robot.commands.AutoCommands;
-import frc.robot.commands.FeedForwardCharacterization;
+// import frc.robot.commands.AutoCommands;
+// import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.RainbowCommand;
-import frc.robot.commands.AlignHeading;
-import frc.robot.commands.AlignSpeaker;
+import frc.robot.commands.ShootAtSpeaker;
+// import frc.robot.commands.AlignHeading;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -138,11 +134,11 @@ public class RobotContainer {
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("TEST - AS GP123"));
 
 
-    autoChooser.addOption("Pivot SysIs (Quasistatic Forward)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption("Pivot SysIs (Quasistatic Reverse)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption("Pivot SysIs (Dynamic Forward)", pivot.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption("Pivot SysIs (Dynamic Reverse)", pivot.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption("Pivot Model", new ArmFeedForwardCharacterization(pivot, (volts) -> pivot.runVoltage(volts), () -> pivot.getVelocity(), () -> pivot.getPosition(), (x) -> 0.0));
+    // autoChooser.addOption("Pivot SysIs (Quasistatic Forward)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption("Pivot SysIs (Quasistatic Reverse)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption("Pivot SysIs (Dynamic Forward)", pivot.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption("Pivot SysIs (Dynamic Reverse)", pivot.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption("Pivot Model", new ArmFeedForwardCharacterization(pivot, (volts) -> pivot.runVoltage(volts), () -> pivot.getVelocity(), () -> pivot.getPosition(), (x) -> 0.0));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -164,7 +160,7 @@ public class RobotContainer {
     OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
 
     // Auto align
-    OIConstants.driverController.leftBumper().whileTrue(new AlignSpeaker());
+    OIConstants.driverController.leftBumper().whileTrue(new ShootAtSpeaker());
 
     //Shoot
     OIConstants.driverController.rightTrigger(0.3)

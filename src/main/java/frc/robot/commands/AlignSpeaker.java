@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
@@ -55,38 +56,38 @@ public class AlignSpeaker extends Command {
     @Override
     public void execute() {
 
-        Pose2d currentPose = drive.getPose();
-        Translation2d velocity = drive.getTranslationVelocity();
-        Pose2d newPose = new Pose2d(currentPose.getX() + (velocity.getX() * 0.02),
-                currentPose.getY() + (velocity.getY() * 0.02),
-                currentPose.getRotation());
+        // Pose2d currentPose = drive.getPose();
+        // Translation2d velocity = drive.getTranslationVelocity();
+        // Pose2d newPose = new Pose2d(currentPose.getX() + (velocity.getX() * 0.02),
+        //         currentPose.getY() + (velocity.getY() * 0.02),
+        //         currentPose.getRotation());
 
-        double deltaY = vision.getSpeakerPos().getY() - newPose.getY();
-        double angle = mult * Units.radiansToDegrees(-Math.asin(deltaY / vision.getDistancetoSpeaker(newPose)));
+        // double deltaY = vision.getSpeakerPos().getY() - newPose.getY();
+        // double angle = mult * Units.radiansToDegrees(-Math.asin(deltaY / vision.getDistancetoSpeaker(newPose)));
 
-        double deltaAngle = Units.degreesToRadians(angle - previousAngle);
-        double omega = deltaAngle / 0.02;
+        // double deltaAngle = angle.minus(previousAngle).getRadians();
+        // double omega = deltaAngle / 0.02;
 
-        double driveHeading = drive.getWrappedHeading();
-        double output = rotationPID.calculate(driveHeading, angle);
+        // double driveHeading = drive.getWrappedHeading();
+        // double output = rotationPID.calculate(driveHeading, angle.getDegrees());
 
-        drive.runVelocity(new ChassisSpeeds(
-                -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband)
-                        * DriveConstants.kMaxSpeedMetersPerSecond,
-                -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband)
-                        * DriveConstants.kMaxSpeedMetersPerSecond,
-                MathUtil.clamp(omega + output, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed)));
+        // drive.runVelocity(new ChassisSpeeds(
+        //         -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband)
+        //                 * DriveConstants.kMaxSpeedMetersPerSecond,
+        //         -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband)
+        //                 * DriveConstants.kMaxSpeedMetersPerSecond,
+        //         MathUtil.clamp(omega + output, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed)));
 
         
-        Logger.recordOutput("Vision/drive heading", driveHeading);
-        Logger.recordOutput("Vision/Speaker Position", vision.getSpeakerPos());
-        Logger.recordOutput("Vision/angle", angle);
-        Logger.recordOutput("Vision/output", output);
-        Logger.recordOutput("Vision/NewPose", newPose);
-        Logger.recordOutput("Vision/previous angle", previousAngle);
-        Logger.recordOutput("Vision/omega", omega);
+        // Logger.recordOutput("Vision/drive heading", driveHeading);
+        // Logger.recordOutput("Vision/Speaker Position", vision.getSpeakerPos());
+        // Logger.recordOutput("Vision/angle", angle);
+        // Logger.recordOutput("Vision/output", output);
+        // Logger.recordOutput("Vision/NewPose", newPose);
+        // Logger.recordOutput("Vision/previous angle", previousAngle);
+        // Logger.recordOutput("Vision/omega", omega);
 
-        previousAngle = angle;
+        // previousAngle = angle;
     }
 
     @Override
