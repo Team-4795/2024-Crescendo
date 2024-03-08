@@ -39,7 +39,7 @@ public class Intake extends SubsystemBase{
     }
 
     public boolean isIntaking() {
-        return inputs.currentAmps > IntakeConstants.intakeCurrent;
+        return inputs.currentAmps > IntakeConstants.intakeCurrent && inputs.angularVelocityRPM > 2400;
     }
 
     public Command intake() {

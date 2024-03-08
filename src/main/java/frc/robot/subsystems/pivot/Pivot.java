@@ -132,8 +132,9 @@ public class Pivot extends SubsystemBase {
         return Commands.either(
             Commands.run(() -> {
                 double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose()) + PivotConstants.offset;
-                // double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker + PivotConstants.offset));
-                double angleCalc = this.aimSpeaker(distanceToSpeaker);
+                // System.out.println(distanceToSpeaker);
+                double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker));
+                // double angleCalc = this.aimSpeaker(distanceToSpeaker);
                 if(angleCalc != Double.NaN){
                     this.setGoal(angleCalc - PivotConstants.angleOffset);
                 }
@@ -177,9 +178,11 @@ public class Pivot extends SubsystemBase {
 
         // LoggedTunableNumber.ifChanged(hashCode(), () -> controller.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
         // LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);
-                
+        
+        double v1 = controller.getSetpoint().velocity;
         double PIDVolts = controller.calculate(getPosition());
-        double FFVolts = motorFeedforward.calculate(controller.getSetpoint().velocity);
+        double acc = (controller.getSetpoint().velocity - v1) / 0.02;
+        double FFVolts = motorFeedforward.calculate(controller.getSetpoint().velocity, acc);
 
         if (!disableArm) {
             io.setVoltage(PIDVolts + FFVolts + linearFF(getPosition()));

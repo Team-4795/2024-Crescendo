@@ -26,6 +26,7 @@ public class PivotIOSim implements PivotIO {
         inputs.pivotPositionRads = pivotSim.getAngleRads();
         inputs.pivotMotorPositionRads = pivotSim.getAngleRads();
         inputs.pivotMotorVelocityRadPerSec = pivotSim.getVelocityRadPerSec();
+        inputs.pivotCurrent = pivotSim.getCurrentDrawAmps();
         inputs.pivotAppliedVolts = pivotAppliedVolts;
         pivotSim.update(PivotConstants.kDt);
     }
@@ -40,6 +41,6 @@ public class PivotIOSim implements PivotIO {
     public void setVoltage(double volts){
         pivotAppliedVolts = volts;
         Logger.recordOutput("Setting output", volts);
-        pivotSim.setInputVoltage(pivotAppliedVolts - (-0.24 * pivotSim.getAngleRads() - 0.01));
+        pivotSim.setInputVoltage(pivotAppliedVolts - (-0.14 * pivotSim.getAngleRads() - 0.03));
     }
 }

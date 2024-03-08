@@ -16,6 +16,7 @@ public class LEDs extends SubsystemBase {
 
     private AddressableLED led;
     private AddressableLEDBuffer buffer;
+
     // private String[] led1 = new String[1];
 
     private int frame;
@@ -105,9 +106,6 @@ public class LEDs extends SubsystemBase {
             if (colorModel) buffer.setHSV(i, a0, a1, a2);
             else buffer.setRGB(i, a0, a1, a2);
         }
-
-        led.setData(buffer);
-        led.start();
     }
 
     private void setColor(int a0, int a1, int a2, boolean colorModel, int start, int end) /* false: RGB; true: HSV */ {

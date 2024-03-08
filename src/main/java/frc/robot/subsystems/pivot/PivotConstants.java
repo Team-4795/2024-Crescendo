@@ -6,16 +6,16 @@ import edu.wpi.first.math.util.Units;
 public final class PivotConstants {
     public static final int leftCanID = 11;
     public static final int rightCanID = 12;
-    public static final double kA = 0.4;
-    public static final double kV = 2.5;
-    public static final double kS = 0.2;
-    public static final double kP = 7;
+    public static final double kA = 0.022;
+    public static final double kV = 2.4;
+    public static final double kS = 0.1;
+    public static final double kP = 6;
     public static final double kI = 0;
     public static final double kD = 0;
 
     public static final double angleOffset = 0.24;
     public static final double kDt = 0.02;
-    public static final Constraints constraints = new Constraints(4.5, 8); //rad/s and rad/s^2
+    public static final Constraints constraints = new Constraints(4.5, 7); //rad/s and rad/s^2
     public static final double manualSpeed = 0.01;
     
     public static final double F = 178;

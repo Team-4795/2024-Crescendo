@@ -116,6 +116,8 @@ public class RobotContainer {
             new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
             new ModuleIOSim(DriveConstants.kBackLeftChassisAngularOffset),
             new ModuleIOSim(DriveConstants.kBackRightChassisAngularOffset));
+        leds = LEDs.getInstance();
+
         break;
 
       default:
@@ -187,8 +189,8 @@ public class RobotContainer {
 
     // Speaker aim and rev up
     OIConstants.operatorController.leftBumper()
-      // .whileTrue(pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker(), leds.revving()))
-      .whileTrue(shooter.revSpeaker().alongWith(leds.revving()))
+      .whileTrue(pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker(), leds.revving()))
+      // .whileTrue(shooter.revSpeaker().alongWith(leds.revving()))
       .and(isReady)
       .whileTrue(leds.canShoot());
       
@@ -249,7 +251,7 @@ public class RobotContainer {
 
     if (Constants.currentMode == Mode.REAL){
       new Trigger(indexer::isStoring).onTrue(leds.intook());
-      new Trigger(intake::isIntaking).onTrue(leds.intook());
+      new Trigger(intake::isIntaking).debounce(0.1).onTrue(leds.intook());
     }
     
   }

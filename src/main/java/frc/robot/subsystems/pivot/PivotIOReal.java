@@ -90,6 +90,7 @@ public class PivotIOReal implements PivotIO {
     inputs.pivotInputVolts = inputVolts;
     inputs.pivotAppliedVolts = pivotLeft.getAppliedOutput() * pivotLeft.getBusVoltage();
     inputs.pivotPositionRads = getAbsolutePosition();
+    inputs.pivotCurrent = pivotLeft.getOutputCurrent();
 
     // Cut off weird jumps
     if (Math.abs(motorEncoder.getPosition()) < 2.0) {
