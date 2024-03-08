@@ -1,5 +1,6 @@
 package frc.robot.subsystems.pivot;
 
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 
@@ -36,4 +37,16 @@ public final class PivotConstants {
     public static final double height = 0.2794;
     public static final double offset = 0.25;
 
+    public static final InterpolatingDoubleTreeMap armAngleMap = new InterpolatingDoubleTreeMap();
+
+    static {
+        armAngleMap.put(1.3, 0.6);
+        armAngleMap.put(1.7, 0.427);
+        armAngleMap.put(2.6, 0.28);
+        armAngleMap.put(3.75, 0.175);
+        armAngleMap.put(4.6, 0.115);
+        armAngleMap.put(5.7, 0.097);
+        armAngleMap.put(6.1, 0.092);
+        armAngleMap.put(6.4, 0.08);
+    }
 }

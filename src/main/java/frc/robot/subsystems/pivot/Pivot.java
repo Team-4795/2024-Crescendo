@@ -131,13 +131,14 @@ public class Pivot extends SubsystemBase {
     public Command aimSpeakerDynamic(){
         return Commands.either(
             Commands.run(() -> {
-                double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose()) + PivotConstants.offset;
+                double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
                 // System.out.println(distanceToSpeaker);
-                double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker));
+                // double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker));
                 // double angleCalc = this.aimSpeaker(distanceToSpeaker);
-                if(angleCalc != Double.NaN){
-                    this.setGoal(angleCalc - PivotConstants.angleOffset);
-                }
+                // if(angleCalc != Double.NaN){
+                //     this.setGoal(angleCalc - PivotConstants.angleOffset);
+                // }
+                this.setGoal(PivotConstants.armAngleMap.get(distanceToSpeaker));
             }).finallyDo(() -> setGoal(PivotSetpoints.stow)), 
             Commands.startEnd(
                 () -> setGoal(PivotSetpoints.speaker),
