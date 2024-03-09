@@ -39,7 +39,7 @@ public class AlignToGamepiece extends Command {
        
         drive.drive(
             -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband),
-            0,
+            -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband),
             output,
             false, true);    
         

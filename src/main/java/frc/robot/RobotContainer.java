@@ -148,23 +148,24 @@ public class RobotContainer {
     Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint());
 
     // Zero drive heading
-    OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
+    OIConstants.driverController.rightBumper().onTrue(new AlignToGamepiece());
 
     // Auto align
     OIConstants.driverController.leftBumper().whileTrue(
-      Commands.either(new AlignSpeaker(), new AlignToGamepiece(), () -> indexer.isStoring()));
+      Commands.either(
+        Commands.parallel(
+          new AlignSpeaker(),
+          pivot.aim(),
+          shooter.rev() 
+        ), 
+        drive.AutoAlignAmp(), 
+        () -> StateManager.getState() == State.SPEAKER));
 
     //Shoot
-    OIConstants.driverController.rightTrigger(0.3)
+    OIConstants.driverController.rightTrigger(0.3).and(isReady)
       .whileTrue(
-        Commands.sequence(
-          Commands.parallel(
-            shooter.rev(),
-            pivot.aim()
-          ),
-          Commands.waitUntil(isReady),
           indexer.forwards()
-        ))
+        )
       .onTrue(NoteVisualizer.shoot());
     
     //Drive robot relative
@@ -176,6 +177,8 @@ public class RobotContainer {
       pivot.toggleAutoAim();
       leds.toggleYellow();
     }));
+
+    OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));
 
     // Speaker aim and rev up
     OIConstants.operatorController.leftBumper().onTrue(Commands.runOnce(() -> StateManager.setState(State.SPEAKER)));
@@ -211,26 +214,26 @@ public class RobotContainer {
     );
 
     // Slow reverse tower
-    // OIConstants.operatorController.a().whileTrue(
-    //         Commands.parallel(
-    //             indexer.slowReverse(),
-    //             shooter.slowReverse()));
+    OIConstants.operatorController.a().whileTrue(
+            Commands.parallel(
+                indexer.slowReverse(),
+                shooter.slowReverse()));
 
-    // // Full reverse everything
-    // OIConstants.operatorController.b().whileTrue(
-    //     Commands.parallel(
-    //         intake.reverse(),
-    //         indexer.reverse(),
-    //         shooter.reverse()));
+    // Full reverse everything
+    OIConstants.operatorController.b().whileTrue(
+        Commands.parallel(
+            intake.reverse(),
+            indexer.reverse(),
+            shooter.reverse()));
 
-    // // Override storing (flips it)
-    // OIConstants.operatorController.x().whileTrue(indexer.overrideStoring());
+    // Override storing (flips it)
+    OIConstants.operatorController.x().whileTrue(indexer.overrideStoring());
 
-    // // Handoff unjam
-    // OIConstants.operatorController.y().whileTrue(
-    //     Commands.parallel(
-    //         intake.slowReverse(),
-    //         indexer.forwards()));
+    // Handoff unjam
+    OIConstants.operatorController.y().whileTrue(
+        Commands.parallel(
+            intake.slowReverse(),
+            indexer.forwards()));
 
     // Toggle pivot idle mode
     OIConstants.operatorController.start().whileTrue(

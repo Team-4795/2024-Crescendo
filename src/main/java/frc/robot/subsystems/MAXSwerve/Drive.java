@@ -15,6 +15,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -27,13 +28,17 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AutoAlignAmp;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.AutoConstants;
 import frc.robot.subsystems.vision.Vision;
+import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.SwerveUtils;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -59,6 +64,18 @@ public class Drive extends SubsystemBase {
     private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
     private double m_prevTime = WPIUtilJNI.now() * 1e-6;
     
+    //PID controllers for auto-alignment
+    private static final LoggedTunableNumber linearkP = new LoggedTunableNumber("AutoAlign/drivekP", 1.0);
+    private static final LoggedTunableNumber linearkD = new LoggedTunableNumber("AutoAlign/drivekD", 0.0);
+    private static final LoggedTunableNumber thetakP = new LoggedTunableNumber("AutoAlign/thetakP", 1.0);
+    private static final LoggedTunableNumber thetakD = new LoggedTunableNumber("AutoAlign/thetakD", 0.5);
+    private static final LoggedTunableNumber linearTolerance = new LoggedTunableNumber(
+            "AutoAlign/translationalTolerance", 0.1);
+    private static final LoggedTunableNumber thetaTolerance = new LoggedTunableNumber(
+            "AutoAlign/rotationalTolerance", Units.degreesToRadians(5.0));
+    private ProfiledPIDController translationController;
+    private ProfiledPIDController rotationController;
+
       // Odometry class for tracking robot pose
     SwerveDrivePoseEstimator m_poseEstimator;
     private EstimatedRobotPose visionPose = new EstimatedRobotPose(new Pose3d(), m_currentRotation, null, null);
@@ -93,10 +110,7 @@ public class Drive extends SubsystemBase {
         m_frontRight.updateInputs();
         m_rearLeft.updateInputs();
         m_rearRight.updateInputs();
-
-        if(Constants.hasVision){
-            vision = Vision.getInstance();
-        }
+        vision = Vision.getInstance();
 
           // Odometry class for tracking robot pose
         m_poseEstimator = new SwerveDrivePoseEstimator(
@@ -110,6 +124,11 @@ public class Drive extends SubsystemBase {
                 }, new Pose2d(0,0, new Rotation2d(0)));
 
         this.zeroHeading();
+
+        translationController = new ProfiledPIDController(linearkP.get(), 0, linearkD.get(), new Constraints(4, 4));
+        rotationController = new ProfiledPIDController(thetakP.get(), 0, thetakD.get(), new Constraints(4, 5));
+        translationController.setTolerance(linearTolerance.get());
+        rotationController.setTolerance(thetaTolerance.get());
 
         AutoBuilder.configureHolonomic(
                 this::getPose,
@@ -186,25 +205,35 @@ public class Drive extends SubsystemBase {
 
         Vision.getInstance().setReferencePose(m_poseEstimator.getEstimatedPosition());
      
-        if (Constants.hasVision) {
-            Vision.getInstance().getBarbaryFigPose().ifPresent(pose -> 
-                m_poseEstimator.addVisionMeasurement(
-                    pose.pose(), 
-                    pose.timestamp(),
-                    VecBuilder.fill(1,1,Units.degreesToRadians(20))));
+        Vision.getInstance().getBarbaryFigPose().ifPresent(pose -> 
+            m_poseEstimator.addVisionMeasurement(
+                pose.pose(), 
+                pose.timestamp(),
+                VecBuilder.fill(1,1,Units.degreesToRadians(20))));    
 
-            vision.getSaguaroPose().ifPresent(pose -> 
-                m_poseEstimator.addVisionMeasurement(
-                    pose.pose(), 
-                    pose.timestamp(),
-                    VecBuilder.fill(1,1,Units.degreesToRadians(20))));
-            
-            //vision.getLifecamPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> visionPose = pose);
-        }
+        vision.getSaguaroPose().ifPresent(pose -> 
+            m_poseEstimator.addVisionMeasurement(
+                pose.pose(), 
+                pose.timestamp(),
+                VecBuilder.fill(1,1,Units.degreesToRadians(20))));    
+        
+        LoggedTunableNumber.ifChanged(
+            hashCode(),
+            () -> translationController.setPID(linearkP.get(), 0, linearkD.get()),
+            linearkP, linearkD);
+        LoggedTunableNumber.ifChanged(
+            hashCode(),
+            () -> rotationController.setPID(thetakP.get(), 0, thetakD.get()),
+            thetakP, thetakD);
+        LoggedTunableNumber.ifChanged(
+            hashCode(), () -> translationController.setTolerance(linearTolerance.get()), linearTolerance);
+        LoggedTunableNumber.ifChanged(
+            hashCode(), () -> rotationController.setTolerance(thetaTolerance.get()), thetaTolerance);
 
         Logger.recordOutput("Estimated Pose", getPose());
         Logger.recordOutput("Vision pose", visionPose.estimatedPose);
         Logger.recordOutput("Vision/Distance to speaker", vision.getDistancetoSpeaker(getPose()));
+        
         // Read wheel deltas from each module
         SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
         wheelDeltas[0] = m_frontLeft.getPositionDelta();
@@ -391,6 +420,16 @@ public class Drive extends SubsystemBase {
         return new Translation2d(speed.vxMetersPerSecond, speed.vyMetersPerSecond);
     }
 
+    public Translation2d getFieldRelativeTranslationVelocity(){
+        SwerveModuleState[] currentState = new SwerveModuleState[4];
+        currentState[0] = m_frontLeft.getFieldRelativeState(gyroInputs.yaw);
+        currentState[1] = m_frontRight.getFieldRelativeState(gyroInputs.yaw);
+        currentState[2] = m_rearLeft.getFieldRelativeState(gyroInputs.yaw);
+        currentState[3] = m_rearRight.getFieldRelativeState(gyroInputs.yaw);
+        ChassisSpeeds speed = DriveConstants.kDriveKinematics.toChassisSpeeds(currentState);
+        return new Translation2d(speed.vxMetersPerSecond, speed.vyMetersPerSecond);
+    }
+
     /**
      * Sets the swerve ModuleStates.
      *
@@ -403,6 +442,10 @@ public class Drive extends SubsystemBase {
         m_frontRight.setDesiredState(desiredStates[1]);
         m_rearLeft.setDesiredState(desiredStates[2]);
         m_rearRight.setDesiredState(desiredStates[3]);
+    }
+
+    public Command AutoAlignAmp(){
+        return new AutoAlignAmp(translationController, rotationController);
     }
 
     /** Resets the drive encoders to currently read a position of 0. */
