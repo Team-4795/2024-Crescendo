@@ -44,7 +44,7 @@ public final class Constants {
   public static final class CurrentLimits {
     public static final int pivot = 60;
     public static final int drive = 60;
-    public static final int turning = 25;
+    public static final int turning = 20;
     public static final int intakeVortex = 60;
     public static final int intakeKraken = 80;
     public static final int tower = 25;

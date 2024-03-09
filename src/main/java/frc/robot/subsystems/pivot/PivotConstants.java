@@ -1,21 +1,22 @@
 package frc.robot.subsystems.pivot;
 
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 
 public final class PivotConstants {
     public static final int leftCanID = 11;
     public static final int rightCanID = 12;
-    public static final double kA = 0.4;
-    public static final double kV = 2.5;
-    public static final double kS = 0.2;
-    public static final double kP = 7;
+    public static final double kA = 0.022;
+    public static final double kV = 2.4;
+    public static final double kS = 0.1;
+    public static final double kP = 6;
     public static final double kI = 0;
     public static final double kD = 0;
 
     public static final double angleOffset = 0.24;
     public static final double kDt = 0.02;
-    public static final Constraints constraints = new Constraints(4.5, 8); //rad/s and rad/s^2
+    public static final Constraints constraints = new Constraints(4.5, 7); //rad/s and rad/s^2
     public static final double manualSpeed = 0.01;
     
     public static final double F = 178;
@@ -36,4 +37,16 @@ public final class PivotConstants {
     public static final double height = 0.2794;
     public static final double offset = 0.25;
 
+    public static final InterpolatingDoubleTreeMap armAngleMap = new InterpolatingDoubleTreeMap();
+
+    static {
+        armAngleMap.put(1.3, 0.6);
+        armAngleMap.put(1.7, 0.427);
+        armAngleMap.put(2.6, 0.28);
+        armAngleMap.put(3.75, 0.175);
+        armAngleMap.put(4.6, 0.115);
+        armAngleMap.put(5.7, 0.097);
+        armAngleMap.put(6.1, 0.092);
+        armAngleMap.put(6.4, 0.08);
+    }
 }

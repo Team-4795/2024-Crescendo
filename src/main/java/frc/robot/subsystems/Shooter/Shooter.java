@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.StateManager;
 import frc.robot.Constants.ShooterSetpoints;
 
 public class Shooter extends SubsystemBase {
@@ -55,6 +56,17 @@ public class Shooter extends SubsystemBase {
 
     public double getVelocityBottom() {
         return inputs.bottomShooterMotorVelocityRPM * Math.PI / 30.0;
+    }
+
+    public Command rev(){
+        switch(StateManager.getState()){
+            case AMP:
+                return this.revAmp();
+            case SPEAKER:
+                return this.revSpeaker();
+            default:
+                return null;
+        }
     }
 
     public Command revSpeaker() {

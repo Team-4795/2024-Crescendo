@@ -11,11 +11,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
-import frc.robot.StateManager;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.IndexerSetpoints;
-import frc.robot.Constants.IntakeSetpoints;
-import frc.robot.Constants.PivotSetpoints;
 import frc.robot.Constants.ShooterSetpoints;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
@@ -34,7 +31,6 @@ public class AutoCommands {
   private static Intake intake = Intake.getInstance();
   private static Pivot pivot = Pivot.getInstance();
   private static Indexer indexer = Indexer.getInstance();
-  private StateManager manager = StateManager.getInstance();
 
   public AutoCommands() {
   }

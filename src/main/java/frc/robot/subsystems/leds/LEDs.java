@@ -16,6 +16,7 @@ public class LEDs extends SubsystemBase {
 
     private AddressableLED led;
     private AddressableLEDBuffer buffer;
+
     // private String[] led1 = new String[1];
 
     private int frame;
@@ -74,7 +75,12 @@ public class LEDs extends SubsystemBase {
     }
 
     public Command intook() {
-        return runOnce(() -> setColor(Color.kGreen)).andThen(Commands.waitSeconds(3));
+        return Commands.repeatingSequence(
+            runOnce(() -> setColor(Color.kGreen)), 
+            Commands.waitSeconds(0.3),
+            runOnce(() -> setColor(Color.kBlack)),
+            Commands.waitSeconds(0.3)
+        ).withTimeout(3);
     }
 
     public Command pathfinding() {
@@ -105,9 +111,6 @@ public class LEDs extends SubsystemBase {
             if (colorModel) buffer.setHSV(i, a0, a1, a2);
             else buffer.setRGB(i, a0, a1, a2);
         }
-
-        led.setData(buffer);
-        led.start();
     }
 
     private void setColor(int a0, int a1, int a2, boolean colorModel, int start, int end) /* false: RGB; true: HSV */ {
