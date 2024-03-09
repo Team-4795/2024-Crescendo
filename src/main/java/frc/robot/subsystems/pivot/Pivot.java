@@ -14,8 +14,10 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.StateManager;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PivotSetpoints;
@@ -128,7 +130,18 @@ public class Pivot extends SubsystemBase {
         return sysid.dynamic(direction);
     }
 
-    public Command aimSpeakerDynamic(){
+    public Command aim(){
+        switch(StateManager.getState()){
+            case AMP:
+                return this.aimAmp();
+            case SPEAKER:
+                return this.aimSpeakerDynamic();
+            default:
+                return null;
+        }
+    }
+
+    private Command aimSpeakerDynamic(){
         return Commands.either(
             Commands.run(() -> {
                 double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
@@ -146,7 +159,7 @@ public class Pivot extends SubsystemBase {
             () -> autoAim);
     }
 
-    public Command aimAmp() {
+    private Command aimAmp() {
         return Commands.startEnd(
             () -> setGoal(PivotSetpoints.amp),
             () -> setGoal(PivotSetpoints.stow)

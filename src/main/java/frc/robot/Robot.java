@@ -143,8 +143,7 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().run();
 
     Logger.recordOutput("Free memory", (double)Runtime.getRuntime().freeMemory() / 1024 / 1024);
-
-    StateManager.getInstance().periodic();
+    Logger.recordOutput("Current State", StateManager.getState());
     Threads.setCurrentThreadPriority(true, 10);
   }
 

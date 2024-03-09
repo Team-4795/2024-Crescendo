@@ -1,10 +1,6 @@
 package frc.robot.subsystems.vision;
 
 import java.io.IOException;
-import java.util.Optional;
-
-import org.opencv.aruco.EstimateParameters;
-import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
@@ -18,8 +14,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class VisionIOReal implements VisionIO {
     PhotonPipelineResult saguaroResult;
