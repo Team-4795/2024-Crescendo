@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.72,
-        "y": 5.57
+        "x": 7.628905257810516,
+        "y": 5.9
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7867781190107834,
-        "y": 6.045027362781998
+        "x": 6.7030272242362665,
+        "y": 6.2409310273166
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.4499707772596704,
-        "y": 6.897682725465309
+        "x": 5.1544553998198905,
+        "y": 6.427505945920983
       },
       "prevControl": {
-        "x": 1.8800655783129747,
-        "y": 6.558108388944051
+        "x": 6.451151084120349,
+        "y": 6.3155609947583535
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,20 +32,20 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.5,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 270.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 28.393019421383006,
+    "rotation": 10.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "M GP 21(4)",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -11.310000000000002,
     "velocity": 0
   },
   "useDefaultConstraints": false

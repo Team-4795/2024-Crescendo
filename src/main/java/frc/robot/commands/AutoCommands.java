@@ -36,11 +36,6 @@ public class AutoCommands {
   private static Indexer indexer = Indexer.getInstance();
   private StateManager manager = StateManager.getInstance();
 
-  public enum OutakePlace {
-    amp,
-    speaker;
-  }
-
   public AutoCommands() {
   }
 
@@ -51,7 +46,7 @@ public class AutoCommands {
 
   public static Command score() {
     return Commands.sequence(
-          indexer.forwards().withTimeout(0.5).alongWith(Commands.waitSeconds(0.1).andThen(NoteVisualizer.shoot())),
+          indexer.forwards().withTimeout(0.4).alongWith(Commands.waitSeconds(0.1).andThen(NoteVisualizer.shoot())),
           Commands.runOnce(() -> shooter.setShootingSpeedRPM(0.0, 0.0))
     );
   }
@@ -91,7 +86,7 @@ public class AutoCommands {
 
   public static Command runIndexer(double speed) {
     return new InstantCommand(() -> {
-      indexer.setIndexerSpeed(0.7);
+      indexer.setIndexerSpeed(1);
     });
   }
 
