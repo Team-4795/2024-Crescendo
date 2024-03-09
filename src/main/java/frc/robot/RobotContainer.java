@@ -160,7 +160,7 @@ public class RobotContainer {
     OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
 
     // Auto align
-    OIConstants.driverController.leftBumper().whileTrue(new ShootAtSpeaker());
+    OIConstants.driverController.leftBumper().whileTrue(new ShootAtSpeaker().alongWith(shooter.revSpeaker()));
 
     //Shoot
     OIConstants.driverController.rightTrigger(0.3)

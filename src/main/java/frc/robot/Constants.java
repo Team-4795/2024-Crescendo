@@ -56,7 +56,7 @@ public final class Constants {
     public static final double speaker = 0.56;
     public static final double amp = 1.15;
     public static final double stow = 0.08;
-    public static final double intake = 0.12;
+    public static final double intake = 0.2;
     public static final double source = 0.96;
   }
 

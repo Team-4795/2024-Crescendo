@@ -33,13 +33,13 @@ import frc.robot.Constants.OIConstants;
 
 public class ShootAtSpeaker extends Command {
     private Vision vision;
-    private static ProfiledPIDController rotationPID = new ProfiledPIDController(20, 0, 4, new Constraints(10, 10)); // Change Values
+    private static ProfiledPIDController rotationPID = new ProfiledPIDController(12, 0, 0, new Constraints(10, 8)); // Change Values
 
     private final Drive drive = Drive.getInstance();
     private final Pivot pivot = Pivot.getInstance(); 
     private final LEDs leds = LEDs.getInstance();
 
-    private static final double shootingSpeed = 15;
+    private static final double shootingSpeed = 17;
 
     private record AimData(double time, Translation2d noteVel, Rotation2d heading, double pivotAngle) {}
 
