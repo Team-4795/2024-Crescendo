@@ -33,7 +33,11 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
+<<<<<<< HEAD
 import frc.robot.commands.AutoAlignAmp;
+=======
+import java.util.Optional;
+>>>>>>> 0c2e820 (Slight controls change and make drive atTarget variable)
 import frc.robot.subsystems.MAXSwerve.DriveConstants.AutoConstants;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.util.LoggedTunableNumber;
@@ -79,6 +83,9 @@ public class Drive extends SubsystemBase {
       // Odometry class for tracking robot pose
     SwerveDrivePoseEstimator m_poseEstimator;
     private EstimatedRobotPose visionPose = new EstimatedRobotPose(new Pose3d(), m_currentRotation, null, null);
+
+    // Used for targeting a heading
+    private Optional<Boolean> atTarget; 
 
     private Vision vision;
     // Odometry class for tracking robot pose
@@ -176,6 +183,8 @@ public class Drive extends SubsystemBase {
                 .transformBy(new Transform2d(speed, 0, new Rotation2d()))
                 .getTranslation();
 
+            setAtTarget(Optional.empty());
+
             this.drive(
                 velocity.getX(),
                 velocity.getY(),
@@ -256,6 +265,14 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput("Simulated Pose", pose);
         Logger.recordOutput("Swerve/SwerveStates", this.getModuleStates());
         Logger.recordOutput("Swerve/OptimizedStates", this.getOptimizedStates());
+    }
+
+    public void setAtTarget(Optional<Boolean> atTarget) {
+        this.atTarget = atTarget;
+    }
+
+    public boolean isAtTarget() {
+        return atTarget.orElse(true);
     }
 
     /**

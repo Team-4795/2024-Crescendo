@@ -145,7 +145,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     Trigger timeRumble = new Trigger(() -> between(DriverStation.getMatchTime(), 19, 21) || between(DriverStation.getMatchTime(), 39, 41));
-    Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint());
+    Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint() && drive.isAtTarget());
 
     // Zero drive heading
     OIConstants.driverController.rightBumper().onTrue(new AlignToGamepiece());
@@ -163,9 +163,7 @@ public class RobotContainer {
 
     //Shoot
     OIConstants.driverController.rightTrigger(0.3).and(isReady)
-      .whileTrue(
-          indexer.forwards()
-        )
+      .whileTrue(indexer.forwards())
       .onTrue(NoteVisualizer.shoot());
     
     //Drive robot relative
