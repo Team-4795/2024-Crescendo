@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Mode;
@@ -148,21 +149,18 @@ public class RobotContainer {
     Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint() && drive.isAtTarget());
 
     // Zero drive heading
-    OIConstants.driverController.rightBumper().onTrue(new AlignToGamepiece());
+    OIConstants.driverController.rightBumper().whileTrue(new AlignToGamepiece());
 
     // Auto align
     OIConstants.driverController.leftBumper().whileTrue(
-      Commands.either(
         Commands.parallel(
           new AlignSpeaker(),
           pivot.aim(),
           shooter.rev() 
-        ), 
-        drive.AutoAlignAmp(), 
-        () -> StateManager.getState() == State.SPEAKER));
+        ));
 
     //Shoot
-    OIConstants.driverController.rightTrigger(0.3).and(isReady)
+    OIConstants.driverController.rightTrigger(0.3)
       .whileTrue(indexer.forwards())
       .onTrue(NoteVisualizer.shoot());
     
@@ -177,7 +175,8 @@ public class RobotContainer {
     }));
 
     OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));
-
+    OIConstants.driverController.b().whileTrue(drive.AutoAlignAmp());
+    OIConstants.driverController.x().whileTrue(pivot.aimAmp());
     // Speaker aim and rev up
     OIConstants.operatorController.leftBumper().onTrue(Commands.runOnce(() -> StateManager.setState(State.SPEAKER)));
       

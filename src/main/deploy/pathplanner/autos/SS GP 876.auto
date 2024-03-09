@@ -170,18 +170,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "SS GP 876 P6"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SS GP 876 P7"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [

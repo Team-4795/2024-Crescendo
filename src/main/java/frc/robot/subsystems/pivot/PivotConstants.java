@@ -7,10 +7,10 @@ import edu.wpi.first.math.util.Units;
 public final class PivotConstants {
     public static final int leftCanID = 11;
     public static final int rightCanID = 12;
-    public static final double kA = 0.022;
-    public static final double kV = 2.4;
-    public static final double kS = 0.1;
-    public static final double kP = 6;
+    public static final double kA = 0.14;
+    public static final double kV = 2.35;
+    public static final double kS = 0.15;
+    public static final double kP = 10;
     public static final double kI = 0;
     public static final double kD = 0;
 
@@ -44,7 +44,8 @@ public final class PivotConstants {
         armAngleMap.put(1.7, 0.427);
         armAngleMap.put(2.6, 0.28);
         armAngleMap.put(3.75, 0.175);
-        armAngleMap.put(4.6, 0.115);
+        armAngleMap.put(4.6, 0.12);
+        armAngleMap.put(4.9, 0.115);
         armAngleMap.put(5.7, 0.097);
         armAngleMap.put(6.1, 0.092);
         armAngleMap.put(6.4, 0.08);

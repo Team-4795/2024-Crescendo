@@ -24,8 +24,8 @@ import frc.robot.subsystems.pivot.Pivot;
 
 public class AutoAlignAmp extends Command{
 
-    private static final Pose2d RED_AMP = new Pose2d(14.7, 7.8, Rotation2d.fromRadians(Math.PI / 2));
-    private static final Pose2d BLUE_AMP = new Pose2d(0, 0, Rotation2d.fromRadians(-Math.PI / 2));
+    private static final Pose2d RED_AMP = new Pose2d(14.7, 7.5, Rotation2d.fromRadians(Math.PI / 2));
+    private static final Pose2d BLUE_AMP = new Pose2d(2.2, 7.5, Rotation2d.fromRadians(Math.PI / 2));
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
