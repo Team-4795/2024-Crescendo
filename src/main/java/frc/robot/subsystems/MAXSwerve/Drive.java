@@ -33,11 +33,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
-<<<<<<< HEAD
 import frc.robot.commands.AutoAlignAmp;
-=======
 import java.util.Optional;
->>>>>>> 0c2e820 (Slight controls change and make drive atTarget variable)
 import frc.robot.subsystems.MAXSwerve.DriveConstants.AutoConstants;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.util.LoggedTunableNumber;
