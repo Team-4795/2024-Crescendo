@@ -18,6 +18,8 @@ import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.MAXSwerve.DriveConstants;
 import frc.robot.subsystems.vision.Vision;
 
+import java.util.Optional;
+
 public class AlignSpeaker extends Command {
 
     public final double speakerHeight = 2.06;
@@ -39,6 +41,7 @@ public class AlignSpeaker extends Command {
             addRequirements(vision);
         }
         rotationPID.enableContinuousInput(-180, 180);
+        rotationPID.setTolerance(5);
     }
 
     @Override

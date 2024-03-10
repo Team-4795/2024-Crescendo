@@ -75,7 +75,12 @@ public class LEDs extends SubsystemBase {
     }
 
     public Command intook() {
-        return runOnce(() -> setColor(Color.kGreen)).andThen(Commands.waitSeconds(3));
+        return Commands.repeatingSequence(
+            runOnce(() -> setColor(Color.kGreen)), 
+            Commands.waitSeconds(0.3),
+            runOnce(() -> setColor(Color.kBlack)),
+            Commands.waitSeconds(0.3)
+        ).withTimeout(3);
     }
 
     public Command pathfinding() {

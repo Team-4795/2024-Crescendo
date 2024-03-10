@@ -40,7 +40,7 @@ import org.littletonrobotics.junction.Logger;
 public class NoteVisualizer {
   // private static final Translation3d blueSpeaker = new Translation3d(0.225, 5.55, 2.1);
   // private static final Translation3d redSpeaker = new Translation3d(16.317, 5.55, 2.1);
-  private static final double shotSpeed = 15.0; // Meters per sec
+  private static final double shotSpeed = 17.0; // Meters per sec
   private static Supplier<Pose3d> pivotPoseSupplier = () -> new Pose3d();
 
   private static final List<Translation2d> autoNotes = new ArrayList<>();

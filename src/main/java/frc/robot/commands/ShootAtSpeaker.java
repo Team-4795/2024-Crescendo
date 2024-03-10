@@ -19,6 +19,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.MAXSwerve.Drive;
@@ -44,6 +46,7 @@ public class ShootAtSpeaker extends Command {
     private record AimData(double time, Translation2d noteVel, Rotation2d heading, double pivotAngle) {}
 
     private Rotation2d previousAngle = new Rotation2d();
+    private double mult = 1.0;
 
     public ShootAtSpeaker() {
         addRequirements(drive, pivot, leds);
@@ -59,6 +62,8 @@ public class ShootAtSpeaker extends Command {
 
     @Override
     public void initialize() {
+        DriverStation.getAlliance().ifPresent(alliance -> mult = (alliance == Alliance.Red) ? -1.0 : 1.0);
+
         Pose2d robotPose = drive.getPose();
         Translation2d velocity = drive.getTranslationVelocity().rotateBy(drive.getRotationHeading());
         rotationPID.reset(drive.getRotationHeading().getRadians() + Math.PI, drive.getTurnRate());
@@ -86,9 +91,11 @@ public class ShootAtSpeaker extends Command {
         double ff = results.heading.minus(previousAngle).getRadians() / 0.02;
         // double ff = rotationPID.getSetpoint().velocity;
 
+        Translation2d driveVelocity = drive.getDriveTranslation();
+
         drive.runVelocity(new ChassisSpeeds(
-            -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband) * DriveConstants.kMaxSpeedMetersPerSecond,
-            -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband) * DriveConstants.kMaxSpeedMetersPerSecond,
+            driveVelocity.getX() * DriveConstants.kMaxSpeedMetersPerSecond,
+            driveVelocity.getY() * DriveConstants.kMaxSpeedMetersPerSecond,
             MathUtil.clamp(ff + pid, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed)
         ));
 

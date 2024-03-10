@@ -37,9 +37,12 @@ public class AlignToGamepiece extends Command {
        
        double output = MathUtil.clamp(rotationPID.calculate(Units.degreesToRadians(lifecamYaw), 0), -1, 1);
        
+       double x = MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband);
+       double y = MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband);
+
         drive.drive(
-            -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband),
-            0,
+            -Math.copySign(x * x, x),
+            -Math.copySign(y * y, y),
             output,
             false, true);    
         
