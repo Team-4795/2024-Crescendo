@@ -243,7 +243,7 @@ public class RobotContainer {
 
     if (Constants.currentMode == Mode.REAL){
       new Trigger(indexer::isStoring).onTrue(leds.intook());
-      new Trigger(intake::isIntaking).debounce(0.1).onTrue(leds.intook());
+      new Trigger(intake::isIntaking).debounce(0.1).whileTrue(leds.intaking());
     }
 
     timeRumble.onTrue(rumbleCommand(0.3).withTimeout(0.5));
@@ -256,8 +256,6 @@ public class RobotContainer {
   }
 
   public Command rumbleCommand(double amount) {
-    // return Commands.run(() -> setBothRumble(amount)).finallyDo(() ->
-    // setBothRumble(0));
     return Commands.startEnd(() -> setBothRumble(amount), () -> setBothRumble(0));
   }
 
