@@ -3,6 +3,7 @@ package frc.robot.subsystems.vision;
 import java.io.IOException;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonUtils;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -10,10 +11,12 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.MAXSwerve.Drive;
 
 public class VisionIOReal implements VisionIO {
     PhotonPipelineResult saguaroResult;
@@ -35,6 +38,8 @@ public class VisionIOReal implements VisionIO {
 
     Pose2d speakerPosition;
     double distanceToTarget;
+
+    Pose3d tagPose;
 
     public VisionIOReal() {
         // SaguaroCam = new PhotonCamera("Saguaro");
@@ -83,14 +88,23 @@ public class VisionIOReal implements VisionIO {
     }
 
     @Override
+    public double getDistanceToTag(int tag) {
+        aprilTagFieldLayout.getTagPose(tag).ifPresent(pose -> tagPose = pose);
+        return PhotonUtils.getDistanceToPose(Drive.getInstance().getPose(), tagPose.toPose2d());
+    }
+    
+    @Override
     public void updateInputs(VisionIOInputs inputs) {
         inputs.barbaryFigPose = barbaryFigPhotonPoseEstimator.update().map((pose) -> new EstimatedPose(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
         inputs.saguaroPose = barbaryFigPhotonPoseEstimator.update().map((pose) -> new EstimatedPose(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
 
-        PhotonPipelineResult lifecamResult = LifeCam.getLatestResult();
-        boolean LifeCamHastargets = lifecamResult.hasTargets();
+        PhotonPipelineResult barbaryFigResult = BarbaryFig.getLatestResult();
+        inputs.barbaryFigAprilTagDetected = barbaryFigResult.getBestTarget().getFiducialId();
 
-        if (LifeCamHastargets) {
+        PhotonPipelineResult lifecamResult = LifeCam.getLatestResult();
+        inputs.lifeCamHastargets = lifecamResult.hasTargets();
+
+        if (inputs.lifeCamHastargets) {
             lifecamTarget = lifecamResult.getBestTarget();
 
             inputs.lifeCamyaw = lifecamTarget.getYaw();

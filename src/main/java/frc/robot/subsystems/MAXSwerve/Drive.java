@@ -210,12 +210,21 @@ public class Drive extends SubsystemBase {
                 });
 
         Vision.getInstance().setReferencePose(m_poseEstimator.getEstimatedPosition());
-     
-        Vision.getInstance().getBarbaryFigPose().ifPresent(pose -> 
-            m_poseEstimator.addVisionMeasurement(
-                pose.pose(), 
-                pose.timestamp(),
-                VecBuilder.fill(1,1,Units.degreesToRadians(20))));    
+        
+        Vision.getInstance().getBarbaryFigPose().ifPresent(visionPose -> {
+            double distance = visionPose.pose().getTranslation().getDistance(this.getPose().getTranslation());
+            double gyroDiff = visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees();
+            double distanceToAprilTag = vision.distanceToTag(vision.barbaryFigAprilTagDetected());
+    
+            if (distance < 1 && gyroDiff < 15)
+            {
+                m_poseEstimator.addVisionMeasurement(
+                visionPose.pose(), 
+                visionPose.timestamp(),
+                VecBuilder.fill(this.getVisionStd(distanceToAprilTag), this.getVisionStd(distanceToAprilTag), Units.degreesToRadians(20))); //Do math to find Std
+            }
+        });
+            
 
         vision.getSaguaroPose().ifPresent(pose -> 
             m_poseEstimator.addVisionMeasurement(
@@ -262,6 +271,10 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput("Simulated Pose", pose);
         Logger.recordOutput("Swerve/SwerveStates", this.getModuleStates());
         Logger.recordOutput("Swerve/OptimizedStates", this.getOptimizedStates());
+    }
+
+    public double getVisionStd(double distance) {
+        return (distance * 1.9 / 8.25) + 0.1;
     }
 
     public void setAtTarget(Optional<Boolean> atTarget) {

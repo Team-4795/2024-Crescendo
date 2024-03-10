@@ -14,6 +14,8 @@ public interface VisionIO {
         Optional<EstimatedPose> barbaryFigPose = Optional.empty();
         Optional<EstimatedPose> saguaroPose = Optional.empty();
         double lifeCamyaw = 0;
+        int barbaryFigAprilTagDetected = 0;
+        boolean lifeCamHastargets = false;
     }
 
     public class VisionIOInputsAutoLogged extends VisionIO.VisionIOInputs implements LoggableInputs, Cloneable {
@@ -59,5 +61,9 @@ public interface VisionIO {
     public default void updateInputs(VisionIOInputs inputs) {}
 
     public default void setReferencePose(Pose2d reference) {}
+
+    public default double getDistanceToTag(int tag) { 
+        return 0.0;
+    }
 } 
 

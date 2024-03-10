@@ -6,10 +6,12 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.vision.VisionIO.EstimatedPose;
 import frc.robot.subsystems.vision.VisionIO.VisionIOInputsAutoLogged;
 
@@ -19,7 +21,6 @@ public class Vision extends SubsystemBase {
 
     private Translation3d redSpeaker = new Translation3d(16.579342, 5.547868, 2);
     private Translation3d blueSpeaker = new Translation3d(-0.0381, 5.547868, 2);
-
     
     @AutoLogOutput
     private Translation3d speakerPosition = new Translation3d();
@@ -83,14 +84,26 @@ public class Vision extends SubsystemBase {
         io.setReferencePose(reference);
     }
 
+    public double distanceToTag(int tag) {
+        return io.getDistanceToTag(tag);
+    }
+
     public double getLifecamYaw () {
         return inputs.lifeCamyaw;
+    }
+
+    public boolean lifeCamHastargets() {
+        return inputs.lifeCamHastargets;
+    }
+
+    public int barbaryFigAprilTagDetected() {
+        return inputs.barbaryFigAprilTagDetected;
     }
 
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Vision", inputs);
-
+        
         setSpeakerPos();
     }
 }
