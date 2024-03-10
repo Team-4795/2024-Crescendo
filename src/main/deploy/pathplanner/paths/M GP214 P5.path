@@ -30,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.7,
       "rotationDegrees": -11.310000000000002,
       "rotateFast": false
     }
@@ -38,20 +38,20 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 5.0,
     "maxAngularVelocity": 270.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -11.309932474020178,
+    "rotation": -4.635463426902658,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "M GP 21(4)",
   "previewStartingState": {
-    "rotation": 37.77,
+    "rotation": 11.105149745032135,
     "velocity": 0
   },
   "useDefaultConstraints": false

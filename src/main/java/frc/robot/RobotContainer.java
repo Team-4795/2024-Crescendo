@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Mode;
@@ -145,26 +146,22 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     Trigger timeRumble = new Trigger(() -> between(DriverStation.getMatchTime(), 19, 21) || between(DriverStation.getMatchTime(), 39, 41));
-    Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint());
+    Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint() && drive.isAtTarget());
 
     // Zero drive heading
-    OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
+    OIConstants.driverController.rightBumper().whileTrue(new AlignToGamepiece());
 
     // Auto align
     OIConstants.driverController.leftBumper().whileTrue(
-      Commands.either(new AlignSpeaker(), new AlignToGamepiece(), () -> indexer.isStoring()));
+        Commands.parallel(
+          new AlignSpeaker(),
+          pivot.aim(),
+          shooter.rev() 
+        ));
 
     //Shoot
     OIConstants.driverController.rightTrigger(0.3)
-      .whileTrue(
-        Commands.sequence(
-          Commands.parallel(
-            shooter.rev(),
-            pivot.aim()
-          ),
-          Commands.waitUntil(isReady),
-          indexer.forwards()
-        ))
+      .whileTrue(indexer.forwards())
       .onTrue(NoteVisualizer.shoot());
     
     //Drive robot relative
@@ -177,6 +174,9 @@ public class RobotContainer {
       leds.toggleYellow();
     }));
 
+    OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));
+    OIConstants.driverController.b().whileTrue(drive.AutoAlignAmp());
+    OIConstants.driverController.x().whileTrue(pivot.aimAmp());
     // Speaker aim and rev up
     OIConstants.operatorController.leftBumper().onTrue(Commands.runOnce(() -> StateManager.setState(State.SPEAKER)));
       
@@ -211,26 +211,26 @@ public class RobotContainer {
     );
 
     // Slow reverse tower
-    // OIConstants.operatorController.a().whileTrue(
-    //         Commands.parallel(
-    //             indexer.slowReverse(),
-    //             shooter.slowReverse()));
+    OIConstants.operatorController.a().whileTrue(
+            Commands.parallel(
+                indexer.slowReverse(),
+                shooter.slowReverse()));
 
-    // // Full reverse everything
-    // OIConstants.operatorController.b().whileTrue(
-    //     Commands.parallel(
-    //         intake.reverse(),
-    //         indexer.reverse(),
-    //         shooter.reverse()));
+    // Full reverse everything
+    OIConstants.operatorController.b().whileTrue(
+        Commands.parallel(
+            intake.reverse(),
+            indexer.reverse(),
+            shooter.reverse()));
 
-    // // Override storing (flips it)
-    // OIConstants.operatorController.x().whileTrue(indexer.overrideStoring());
+    // Override storing (flips it)
+    OIConstants.operatorController.x().whileTrue(indexer.overrideStoring());
 
-    // // Handoff unjam
-    // OIConstants.operatorController.y().whileTrue(
-    //     Commands.parallel(
-    //         intake.slowReverse(),
-    //         indexer.forwards()));
+    // Handoff unjam
+    OIConstants.operatorController.y().whileTrue(
+        Commands.parallel(
+            intake.slowReverse(),
+            indexer.forwards()));
 
     // Toggle pivot idle mode
     OIConstants.operatorController.start().whileTrue(
@@ -243,7 +243,7 @@ public class RobotContainer {
 
     if (Constants.currentMode == Mode.REAL){
       new Trigger(indexer::isStoring).onTrue(leds.intook());
-      new Trigger(intake::isIntaking).debounce(0.1).onTrue(leds.intook());
+      new Trigger(intake::isIntaking).debounce(0.1).whileTrue(leds.intaking());
     }
 
     timeRumble.onTrue(rumbleCommand(0.3).withTimeout(0.5));
@@ -256,8 +256,6 @@ public class RobotContainer {
   }
 
   public Command rumbleCommand(double amount) {
-    // return Commands.run(() -> setBothRumble(amount)).finallyDo(() ->
-    // setBothRumble(0));
     return Commands.startEnd(() -> setBothRumble(amount), () -> setBothRumble(0));
   }
 

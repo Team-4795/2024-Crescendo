@@ -72,7 +72,7 @@ public class VisionIOReal implements VisionIO {
         //             PoseStrategy.CLOSEST_TO_REFERENCE_POSE, SaguaroCam, saguaroRobotToCam);
                     
         barbaryFigPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
-                    PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, BarbaryFig, barbaryFigRobotToCam);
+                    PoseStrategy.CLOSEST_TO_REFERENCE_POSE, BarbaryFig, barbaryFigRobotToCam);
 
         aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
     }

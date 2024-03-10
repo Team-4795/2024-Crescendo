@@ -50,3 +50,55 @@
   },
   "useDefaultConstraints": false
 }
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.89,
+        "y": 5.79
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.970353683931332,
+        "y": 6.37069508090514
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.604764701683467,
+        "y": 6.2770083885388885
+      },
+      "prevControl": {
+        "x": 5.764137519715834,
+        "y": 6.28871922508467
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 520.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 8.746162262555135,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "M GP 21(4)",
+  "previewStartingState": {
+    "rotation": -10.249624558812496,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

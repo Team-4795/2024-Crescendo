@@ -48,7 +48,7 @@ public class ModuleIOSparkMax implements ModuleIO {
     m_turningSparkMax.restoreFactoryDefaults();
 
     // Setup encoders and PID controllers for the driving and turning SPARKS MAX.
-    m_drivingEncoder = m_drivingSpark.getEncoder(SparkRelativeEncoder.Type.kQuadrature, 7168);
+    m_drivingEncoder = m_drivingSpark.getEncoder();
     m_turningEncoder = m_turningSparkMax.getAbsoluteEncoder(Type.kDutyCycle);
     m_drivingPIDController = m_drivingSpark.getPIDController();
     m_turningPIDController = m_turningSparkMax.getPIDController();

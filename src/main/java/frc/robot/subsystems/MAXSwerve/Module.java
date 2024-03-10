@@ -51,6 +51,10 @@ public class Module {
     return new SwerveModuleState(inputs.driveVelocityMetersPerSec, inputs.turnAbsolutePosition);
   }
 
+  public SwerveModuleState getFieldRelativeState(Rotation2d gyroAngle){
+    return new SwerveModuleState(inputs.driveVelocityMetersPerSec, inputs.turnAbsolutePosition.plus(gyroAngle));
+  }
+
   public SwerveModuleState getOptimizedState() {
     return moduleIO.getOptimizedState();
   }

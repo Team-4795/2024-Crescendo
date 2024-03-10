@@ -159,7 +159,7 @@ public class Pivot extends SubsystemBase {
             () -> autoAim);
     }
 
-    private Command aimAmp() {
+    public Command aimAmp() {
         return Commands.startEnd(
             () -> setGoal(PivotSetpoints.amp),
             () -> setGoal(PivotSetpoints.stow)
