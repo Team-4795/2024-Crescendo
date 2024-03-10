@@ -20,19 +20,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Initialize"
+            "name": "RunEverything"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score"
+            "waitTime": 0.2
           }
         },
         {
@@ -40,36 +34,24 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "M GP214 P1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AlignGP2"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "AlignGP2"
-          }
-        },
-        {
           "type": "wait",
           "data": {
-            "waitTime": 0.8
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score"
+            "waitTime": 0.2
           }
         },
         {
@@ -85,28 +67,22 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Intake"
+                  "name": "AlignGP1"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "AlignGP1"
-          }
-        },
-        {
           "type": "wait",
           "data": {
-            "waitTime": 0.8
+            "waitTime": 0.2
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Score"
+            "name": "StopIndexer"
           }
         },
         {

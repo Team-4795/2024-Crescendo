@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.439620589164843,
-        "y": 2.999363341549934
+        "x": 7.544184674674627,
+        "y": 7.41
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4396205891648433,
-        "y": 2.999363341549934
+        "x": 5.556982392577757,
+        "y": 7.314198823782264
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.099276234139658,
-        "y": 2.999363341549934
+        "x": 2.592890215436422,
+        "y": 7.069927876510557
       },
       "prevControl": {
-        "x": 1.0639939666642149,
-        "y": 2.989625148877695
+        "x": 4.793721758262023,
+        "y": 7.157571610516887
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,19 +34,19 @@
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 5.0,
-    "maxAngularVelocity": 520.0,
+    "maxAngularVelocity": 270.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -43.30000000000001,
+    "rotation": 35.18,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "SS GP 876",
+  "folder": "M GP 21(4)",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 0.0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

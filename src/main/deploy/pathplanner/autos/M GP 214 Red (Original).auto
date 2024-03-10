@@ -57,7 +57,13 @@
         {
           "type": "named",
           "data": {
-            "name": "VisionAlign"
+            "name": "AlignGP2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.8
           }
         },
         {
@@ -73,7 +79,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "M GP214 P2 Blue"
+                  "pathName": "M GP214 P2 Red"
                 }
               },
               {
@@ -88,13 +94,13 @@
         {
           "type": "named",
           "data": {
-            "name": "VisionAlign"
+            "name": "AlignGP1"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.8
           }
         },
         {
@@ -110,7 +116,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "M GP214 P3"
+                  "pathName": "M GP214 P3 Red"
                 }
               },
               {
@@ -125,7 +131,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "M GP214 P4 Blue"
+            "pathName": "M GP214 P4 Red (Original)"
           }
         },
         {
@@ -137,7 +143,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.7
+            "waitTime": 0.5
           }
         },
         {
