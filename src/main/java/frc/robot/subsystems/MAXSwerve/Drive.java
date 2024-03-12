@@ -212,25 +212,34 @@ public class Drive extends SubsystemBase {
         Vision.getInstance().setReferencePose(m_poseEstimator.getEstimatedPosition());
         
         Vision.getInstance().getBarbaryFigPose().ifPresent(visionPose -> {
-            double distance = visionPose.pose().getTranslation().getDistance(this.getPose().getTranslation());
-            double gyroDiff = visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees();
-            double distanceToAprilTag = vision.distanceToTag(vision.barbaryFigAprilTagDetected());
+            double poseDiff = visionPose.pose().getTranslation().getDistance(this.getPose().getTranslation());
+            double gyroDiff = Math.abs(visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees());
+            double distanceToAprilTag = Vision.getInstance().distanceToTag(vision.barbaryFigAprilTagDetected());
+            int numOfTags = Vision.getInstance().barbaryFigNumberOfTags();
     
-            if (distance < 1 && gyroDiff < 15)
+            if (poseDiff < 1 && gyroDiff < 10)
             {
                 m_poseEstimator.addVisionMeasurement(
                 visionPose.pose(), 
                 visionPose.timestamp(),
-                VecBuilder.fill(this.getVisionStd(distanceToAprilTag), this.getVisionStd(distanceToAprilTag), Units.degreesToRadians(20))); //Do math to find Std
+                VecBuilder.fill(this.getVisionStd(distanceToAprilTag) / numOfTags, this.getVisionStd(distanceToAprilTag) / numOfTags, Units.degreesToRadians(20))); //Do math to find Std
             }
         });
-            
-
-        vision.getSaguaroPose().ifPresent(pose -> 
-            m_poseEstimator.addVisionMeasurement(
-                pose.pose(), 
-                pose.timestamp(),
-                VecBuilder.fill(1,1,Units.degreesToRadians(20))));    
+        
+        // Vision.getInstance().getSaguaroPose().ifPresent(visionPose -> {
+        //     double poseDiff = visionPose.pose().getTranslation().getDistance(this.getPose().getTranslation());
+        //     double gyroDiff = Math.abs(visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees());
+        //     double distanceToAprilTag = Vision.getInstance().distanceToTag(vision.saguaroAprilTagDetected());
+        //     int numOfTags = Vision.getInstance().saguaroNumberOfTags();
+    
+        //     if (poseDiff < 1 && gyroDiff < 10)
+        //     {
+        //         m_poseEstimator.addVisionMeasurement(
+        //         visionPose.pose(), 
+        //         visionPose.timestamp(),
+        //         VecBuilder.fill(this.getVisionStd(distanceToAprilTag), this.getVisionStd(distanceToAprilTag), Units.degreesToRadians(20))); //Do math to find Std
+        //     }
+        // });
         
         LoggedTunableNumber.ifChanged(
             hashCode(),

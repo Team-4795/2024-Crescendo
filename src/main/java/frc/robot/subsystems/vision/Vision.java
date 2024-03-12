@@ -11,7 +11,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.vision.VisionIO.EstimatedPose;
 import frc.robot.subsystems.vision.VisionIO.VisionIOInputsAutoLogged;
 
@@ -88,16 +87,28 @@ public class Vision extends SubsystemBase {
         return io.getDistanceToTag(tag);
     }
 
-    public double getLifecamYaw () {
-        return inputs.lifeCamyaw;
+    public int barbaryFigNumberOfTags() {
+        return inputs.barbaryFigNumberOfTags;
     }
+
+    public int barbaryFigAprilTagDetected() {
+        return inputs.barbaryFigAprilTagDetected;
+    }
+
+    // public int saguaroNumberOfTags() {
+    //     return inputs.saguaroNumberOfTags;
+    // }
+
+    // public int saguaroAprilTagDetected() {
+    //     return inputs.saguaroAprilTagDetected;
+    // }
 
     public boolean lifeCamHastargets() {
         return inputs.lifeCamHastargets;
     }
 
-    public int barbaryFigAprilTagDetected() {
-        return inputs.barbaryFigAprilTagDetected;
+    public double getLifecamYaw () {
+        return inputs.lifeCamyaw;
     }
 
     public void periodic() {

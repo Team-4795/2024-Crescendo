@@ -19,14 +19,14 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.subsystems.MAXSwerve.Drive;
 
 public class VisionIOReal implements VisionIO {
-    PhotonPipelineResult saguaroResult;
+    // PhotonPipelineResult saguaroResult;
     PhotonPipelineResult barbaryFigResult;
 
     // PhotonCamera SaguaroCam;
     PhotonCamera BarbaryFig;
     PhotonCamera LifeCam;
 
-    PhotonTrackedTarget saguaroTarget;
+    // PhotonTrackedTarget saguaroTarget;
     PhotonTrackedTarget barbaryFigTarget;
     PhotonTrackedTarget lifecamTarget;
 
@@ -55,17 +55,17 @@ public class VisionIOReal implements VisionIO {
             new Rotation3d(
                 0, 
                 Units.degreesToRadians(20), 
-                Units.degreesToRadians(-90)));
+                Units.degreesToRadians(-110)));
 
         barbaryFigRobotToCam = new Transform3d(
             new Translation3d(
                 Units.inchesToMeters(-20), 
                 Units.inchesToMeters(5), 
                 Units.inchesToMeters(11)), 
-                new Rotation3d(
-                    0, 
-                    Units.degreesToRadians(20), 
-                    Math.PI));
+            new Rotation3d(
+                Math.PI, 
+                Units.degreesToRadians(20), 
+                Math.PI));
 
         try {
             aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
@@ -74,7 +74,7 @@ public class VisionIOReal implements VisionIO {
         }
 
         // saguaroPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
-        //             PoseStrategy.CLOSEST_TO_REFERENCE_POSE, SaguaroCam, saguaroRobotToCam);
+        //              PoseStrategy.CLOSEST_TO_REFERENCE_POSE, SaguaroCam, saguaroRobotToCam);
                     
         barbaryFigPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
                     PoseStrategy.CLOSEST_TO_REFERENCE_POSE, BarbaryFig, barbaryFigRobotToCam);
@@ -99,14 +99,21 @@ public class VisionIOReal implements VisionIO {
         inputs.saguaroPose = barbaryFigPhotonPoseEstimator.update().map((pose) -> new EstimatedPose(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
 
         PhotonPipelineResult barbaryFigResult = BarbaryFig.getLatestResult();
-        inputs.barbaryFigAprilTagDetected = barbaryFigResult.getBestTarget().getFiducialId();
+        if (barbaryFigResult.hasTargets()) {
+            inputs.barbaryFigAprilTagDetected = barbaryFigResult.getBestTarget().getFiducialId();
+            inputs.barbaryFigNumberOfTags = barbaryFigResult.getTargets().size();
+        }
+
+        // PhotonPipelineResult saguaroResult = SaguaroCam.getLatestResult();
+        // if (saguaroResult.hasTargets()) {
+        //     inputs.saguaroAprilTagDetected = saguaroResult.getBestTarget().getFiducialId();
+        //     inputs.saguaroNumberOfTags = saguaroResult.getTargets().size();
+        // }
 
         PhotonPipelineResult lifecamResult = LifeCam.getLatestResult();
         inputs.lifeCamHastargets = lifecamResult.hasTargets();
-
         if (inputs.lifeCamHastargets) {
             lifecamTarget = lifecamResult.getBestTarget();
-
             inputs.lifeCamyaw = lifecamTarget.getYaw();
         }
     }
