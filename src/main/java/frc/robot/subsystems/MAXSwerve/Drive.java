@@ -217,13 +217,10 @@ public class Drive extends SubsystemBase {
             double distanceToAprilTag = Vision.getInstance().distanceToTag(vision.barbaryFigAprilTagDetected());
             int numOfTags = Vision.getInstance().barbaryFigNumberOfTags();
     
-            if (poseDiff < 1 && gyroDiff < 10)
-            {
                 m_poseEstimator.addVisionMeasurement(
                 visionPose.pose(), 
                 visionPose.timestamp(),
                 VecBuilder.fill(this.getVisionStd(distanceToAprilTag) / numOfTags, this.getVisionStd(distanceToAprilTag) / numOfTags, Units.degreesToRadians(20))); //Do math to find Std
-            }
         });
         
         Vision.getInstance().getSaguaroPose().ifPresent(visionPose -> {
@@ -231,14 +228,12 @@ public class Drive extends SubsystemBase {
             double gyroDiff = Math.abs(visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees());
             double distanceToAprilTag = Vision.getInstance().distanceToTag(vision.saguaroAprilTagDetected());
             int numOfTags = Vision.getInstance().saguaroNumberOfTags();
-    
-            if (poseDiff < 1 && gyroDiff < 10)
-            {
+
                 m_poseEstimator.addVisionMeasurement(
                 visionPose.pose(), 
                 visionPose.timestamp(),
                 VecBuilder.fill(this.getVisionStd(distanceToAprilTag), this.getVisionStd(distanceToAprilTag), Units.degreesToRadians(20))); //Do math to find Std
-            }
+
         });
         
         LoggedTunableNumber.ifChanged(

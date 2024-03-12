@@ -47,8 +47,8 @@ public final class Constants {
     public static final int turning = 20;
     public static final int intakeVortex = 60;
     public static final int intakeKraken = 80;
-    public static final int tower = 50;
-    public static final int handoff = 50;
+    public static final int tower = 25;
+    public static final int handoff = 25;
     public static final int shooter = 80;
   }
 
@@ -56,7 +56,7 @@ public final class Constants {
     public static final double speaker = 0.56;
     public static final double amp = 1.15;
     public static final double stow = 0.08;
-    public static final double intake = 0.12;
+    public static final double intake = 0.3;
     public static final double source = 0.96;
   }
 
@@ -82,8 +82,8 @@ public final class Constants {
   }
 
   public static final class IntakeSetpoints {
-    public static final double intake = -0.9;
-    public static final double reverse = 0.9;
+    public static final double intake = -0.6;
+    public static final double reverse = 0.6;
     public static final double slowReverse = 0.4;
   }
 

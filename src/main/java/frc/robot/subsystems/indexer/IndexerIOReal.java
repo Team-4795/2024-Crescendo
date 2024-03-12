@@ -21,6 +21,9 @@ public class IndexerIOReal implements IndexerIO {
     public IndexerIOReal() {
         towerIndexMotor.restoreFactoryDefaults();
         bottomIndexMotor.restoreFactoryDefaults();
+
+        towerIndexMotor.setInverted(false);
+        bottomIndexMotor.setInverted(false);
         
         noteSensor.enableLimitSwitch(false);
 

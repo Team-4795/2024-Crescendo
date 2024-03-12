@@ -82,7 +82,7 @@ public class PivotIOReal implements PivotIO {
   }
 
   private double getAbsolutePosition() {
-    return -encoder.getAbsolutePosition() * PivotConstants.positionConversionFactor + 4.187;
+    return -encoder.getAbsolutePosition() * PivotConstants.positionConversionFactor + 4.187 - 3.151;
   }
 
   @Override
