@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 7.695703173138257,
-        "y": 7.430241005203245
+        "y": 7.45
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.708500891041386,
-        "y": 7.334439828985508
+        "x": 6.900088664656643,
+        "y": 7.210212633906602
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.34,
-        "y": 7.29
+        "x": 4.98,
+        "y": 6.59
       },
       "prevControl": {
-        "x": 7.10869434857751,
-        "y": 7.3954865885955545
+        "x": 5.904667558265215,
+        "y": 6.850839379282182
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 14.796762245057387,
+    "rotation": 12.295806976524299,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "M GP 21(4)",
+  "folder": "M GP 2145",
   "previewStartingState": {
     "rotation": 0.0,
     "velocity": 0

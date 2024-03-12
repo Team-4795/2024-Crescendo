@@ -69,8 +69,7 @@ public class AutoCommands {
   public static Command initialize(double speed) {
     return Commands.parallel(
       Commands.runOnce(() -> intake.setIntakeSpeed(-1)),
-      Commands.runOnce(() -> shooter.setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom)),
-      Commands.runOnce(() -> drive.zeroHeading())
+      Commands.runOnce(() -> shooter.setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom))
     );
   }
 

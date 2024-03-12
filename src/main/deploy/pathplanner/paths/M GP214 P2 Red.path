@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7867781190107834,
-        "y": 6.045027362781998
+        "x": 2.2040432097982583,
+        "y": 5.808574926707628
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.4499707772596704,
-        "y": 6.897682725465309
+        "x": 2.496814123442796,
+        "y": 6.8157068696448375
       },
       "prevControl": {
-        "x": 1.8800655783129747,
-        "y": 6.558108388944051
+        "x": 1.8878506230621577,
+        "y": 6.534646792546081
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "M GP 21(4)",
+  "folder": "M GP 2145",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
