@@ -19,14 +19,14 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.subsystems.MAXSwerve.Drive;
 
 public class VisionIOReal implements VisionIO {
-    // PhotonPipelineResult saguaroResult;
+    PhotonPipelineResult saguaroResult;
     PhotonPipelineResult barbaryFigResult;
 
-    // PhotonCamera SaguaroCam;
+    PhotonCamera SaguaroCam;
     PhotonCamera BarbaryFig;
     PhotonCamera LifeCam;
 
-    // PhotonTrackedTarget saguaroTarget;
+    PhotonTrackedTarget saguaroTarget;
     PhotonTrackedTarget barbaryFigTarget;
     PhotonTrackedTarget lifecamTarget;
 
@@ -42,7 +42,7 @@ public class VisionIOReal implements VisionIO {
     Pose3d tagPose;
 
     public VisionIOReal() {
-        // SaguaroCam = new PhotonCamera("Saguaro");
+        SaguaroCam = new PhotonCamera("Saguaro");
         BarbaryFig = new PhotonCamera("Barbary Fig");
         LifeCam = new PhotonCamera("Queen of the Night");
         
@@ -73,11 +73,11 @@ public class VisionIOReal implements VisionIO {
             e.printStackTrace();
         }
 
-        // saguaroPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
-        //              PoseStrategy.CLOSEST_TO_REFERENCE_POSE, SaguaroCam, saguaroRobotToCam);
+        saguaroPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
+                      PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, SaguaroCam, saguaroRobotToCam);
                     
         barbaryFigPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
-                    PoseStrategy.CLOSEST_TO_REFERENCE_POSE, BarbaryFig, barbaryFigRobotToCam);
+                    PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, BarbaryFig, barbaryFigRobotToCam);
 
         aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
     }
@@ -104,11 +104,11 @@ public class VisionIOReal implements VisionIO {
             inputs.barbaryFigNumberOfTags = barbaryFigResult.getTargets().size();
         }
 
-        // PhotonPipelineResult saguaroResult = SaguaroCam.getLatestResult();
-        // if (saguaroResult.hasTargets()) {
-        //     inputs.saguaroAprilTagDetected = saguaroResult.getBestTarget().getFiducialId();
-        //     inputs.saguaroNumberOfTags = saguaroResult.getTargets().size();
-        // }
+        PhotonPipelineResult saguaroResult = SaguaroCam.getLatestResult();
+        if (saguaroResult.hasTargets()) {
+            inputs.saguaroAprilTagDetected = saguaroResult.getBestTarget().getFiducialId();
+            inputs.saguaroNumberOfTags = saguaroResult.getTargets().size();
+        }
 
         PhotonPipelineResult lifecamResult = LifeCam.getLatestResult();
         inputs.lifeCamHastargets = lifecamResult.hasTargets();

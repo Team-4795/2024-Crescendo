@@ -6,7 +6,6 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -95,13 +94,13 @@ public class Vision extends SubsystemBase {
         return inputs.barbaryFigAprilTagDetected;
     }
 
-    // public int saguaroNumberOfTags() {
-    //     return inputs.saguaroNumberOfTags;
-    // }
+    public int saguaroNumberOfTags() {
+        return inputs.saguaroNumberOfTags;
+    }
 
-    // public int saguaroAprilTagDetected() {
-    //     return inputs.saguaroAprilTagDetected;
-    // }
+    public int saguaroAprilTagDetected() {
+        return inputs.saguaroAprilTagDetected;
+    }
 
     public boolean lifeCamHastargets() {
         return inputs.lifeCamHastargets;
