@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7121481515690302,
-        "y": 5.989054887200684
+        "x": 2.0166698250657547,
+        "y": 5.679755724704031
       },
       "isLocked": false,
       "linkedName": null
@@ -32,8 +32,8 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 2.5,
+    "maxAcceleration": 4.5,
     "maxAngularVelocity": 270.0,
     "maxAngularAcceleration": 720.0
   },
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "M GP 21(4)",
+  "folder": "M GP 2145",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
