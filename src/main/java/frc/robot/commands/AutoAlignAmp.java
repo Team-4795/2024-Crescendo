@@ -25,7 +25,7 @@ import frc.robot.subsystems.pivot.Pivot;
 public class AutoAlignAmp extends Command{
 
     private static final Pose2d RED_AMP = new Pose2d(14.7, 7.5, Rotation2d.fromRadians(Math.PI / 2));
-    private static final Pose2d BLUE_AMP = new Pose2d(2.2, 7.5, Rotation2d.fromRadians(Math.PI / 2));
+    private static final Pose2d BLUE_AMP = new Pose2d(1.86, 7.6, Rotation2d.fromRadians(Math.PI / 2));
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
@@ -46,7 +46,7 @@ public class AutoAlignAmp extends Command{
         pivot = Pivot.getInstance();
         shooter = Shooter.getInstance();
         indexer = Indexer.getInstance();
-        addRequirements(drive, pivot, shooter, indexer);
+        addRequirements(drive, pivot, shooter);
     }
 
     @Override

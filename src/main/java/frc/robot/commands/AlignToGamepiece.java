@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import org.littletonrobotics.junction.Logger;
 
 import com.fasterxml.jackson.databind.node.POJONode;
@@ -23,8 +25,8 @@ public class AlignToGamepiece extends Command {
 
     private PIDController rotationPID = new PIDController(0.35, 0, 0); 
 
-    private Pose2d BLUE_SOURCE = new Pose2d(15.8,0.8, new Rotation2d(-45));
-    private Pose2d RED_SOURCE = new Pose2d(0.8,0.5, new Rotation2d(45));
+    private Pose2d BLUE_SOURCE = new Pose2d(15.8,0.8, Rotation2d.fromDegrees(-45));
+    private Pose2d RED_SOURCE = new Pose2d(0.8,0.5, Rotation2d.fromDegrees(45));
     private Pose2d sourcePose;
     
     public AlignToGamepiece() {
@@ -50,7 +52,7 @@ public class AlignToGamepiece extends Command {
        boolean hasTargets = vision.lifeCamHastargets();
 
        double distanceToSource = drive.getPose().getTranslation().getDistance(sourcePose.getTranslation());
-       double driveHeading = Units.degreesToRadians(drive.getHeading());
+       double driveHeading = Units.degreesToRadians(drive.getWrappedHeading());
        
        double x = MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband);
        double y = MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband);
@@ -59,7 +61,7 @@ public class AlignToGamepiece extends Command {
        if (hasTargets) {
             output = MathUtil.clamp(rotationPID.calculate(Units.degreesToRadians(lifecamYaw), 0), -1, 1);
        } 
-       else if (!hasTargets && distanceToSource < 1.5) {
+       else if (!hasTargets && distanceToSource < 2.5) {
             output = MathUtil.clamp(rotationPID.calculate(driveHeading, sourcePose.getRotation().getRadians()), -1, 1);
        }
 

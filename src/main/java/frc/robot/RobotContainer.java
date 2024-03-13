@@ -22,8 +22,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Mode;
@@ -146,18 +144,20 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     Trigger timeRumble = new Trigger(() -> between(DriverStation.getMatchTime(), 19, 21) || between(DriverStation.getMatchTime(), 39, 41));
+    Trigger continuousRumble = new Trigger(() -> DriverStation.getMatchTime() <= 5);
     Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint() && drive.isAtTarget());
 
     // Zero drive heading
-    OIConstants.driverController.rightBumper().whileTrue(new AlignToGamepiece());
+    OIConstants.driverController.x().whileTrue(new AlignToGamepiece());
 
-    // Auto align
+    //Align Amp / Speaker
     OIConstants.driverController.leftBumper().whileTrue(
-        Commands.parallel(
-          new AlignSpeaker(),
-          pivot.aim(),
-          shooter.rev() 
-        ));
+        Commands.either(
+          new AlignSpeaker().alongWith(shooter.rev()).alongWith(pivot.aim()), 
+          drive.AutoAlignAmp().alongWith(leds.pathfinding()), 
+          () -> StateManager.getState() == State.SPEAKER
+        )
+    );
 
     //Shoot
     OIConstants.driverController.rightTrigger(0.3)
@@ -176,7 +176,6 @@ public class RobotContainer {
 
     OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));
     OIConstants.driverController.b().whileTrue(drive.AutoAlignAmp());
-    OIConstants.driverController.x().whileTrue(pivot.aimAmp());
     // Speaker aim and rev up
     OIConstants.operatorController.leftBumper().onTrue(Commands.runOnce(() -> StateManager.setState(State.SPEAKER)));
       
@@ -211,26 +210,26 @@ public class RobotContainer {
     );
 
     // Slow reverse tower
-    OIConstants.operatorController.a().whileTrue(
-            Commands.parallel(
-                indexer.slowReverse(),
-                shooter.slowReverse()));
+    // OIConstants.operatorController.a().whileTrue(
+    //         Commands.parallel(
+    //             indexer.slowReverse(),
+    //             shooter.slowReverse()));
 
-    // Full reverse everything
-    OIConstants.operatorController.b().whileTrue(
-        Commands.parallel(
-            intake.reverse(),
-            indexer.reverse(),
-            shooter.reverse()));
+    // // Full reverse everything
+    // OIConstants.operatorController.b().whileTrue(
+    //     Commands.parallel(
+    //         intake.reverse(),
+    //         indexer.reverse(),
+    //         shooter.reverse()));
 
-    // Override storing (flips it)
-    OIConstants.operatorController.x().whileTrue(indexer.overrideStoring());
+    // // Override storing (flips it)
+    // OIConstants.operatorController.x().whileTrue(indexer.overrideStoring());
 
-    // Handoff unjam
-    OIConstants.operatorController.y().whileTrue(
-        Commands.parallel(
-            intake.slowReverse(),
-            indexer.forwards()));
+    // // Handoff unjam
+    // OIConstants.operatorController.y().whileTrue(
+    //     Commands.parallel(
+    //         intake.slowReverse(),
+    //         indexer.forwards()));
 
     // Toggle pivot idle mode
     OIConstants.operatorController.start().whileTrue(
@@ -242,12 +241,12 @@ public class RobotContainer {
         new RainbowCommand(() -> MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), 0.15)));
 
     if (Constants.currentMode == Mode.REAL){
-      new Trigger(indexer::isStoring).onTrue(leds.intook());
+      new Trigger(indexer::isStoring).onTrue(leds.intook().withTimeout(1));
       new Trigger(intake::isIntaking).debounce(0.1).whileTrue(leds.intaking());
     }
 
     timeRumble.onTrue(rumbleCommand(0.3).withTimeout(0.5));
-    
+    continuousRumble.whileTrue(rumbleCommand(0.6));
   }
 
   private void setBothRumble(double amount) {

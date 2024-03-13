@@ -129,7 +129,7 @@ public class Drive extends SubsystemBase {
 
         this.zeroHeading();
 
-        translationController = new ProfiledPIDController(linearkP.get(), 0, linearkD.get(), new Constraints(4, 4));
+        translationController = new ProfiledPIDController(linearkP.get(), 0, linearkD.get(), new Constraints(4.5, 4.5));
         rotationController = new ProfiledPIDController(thetakP.get(), 0, thetakD.get(), new Constraints(4, 5));
         translationController.setTolerance(linearTolerance.get());
         rotationController.setTolerance(thetaTolerance.get());
