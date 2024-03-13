@@ -72,8 +72,8 @@ public class AlignSpeaker extends Command {
         double driveHeading = drive.getWrappedHeading();
         double output = rotationPID.calculate(driveHeading, angle);
 
-        double x = MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband);
-        double y = MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband);
+        double x = (DriverStation.isTeleop()) ? MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband) : 0;
+        double y = (DriverStation.isTeleop()) ? MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband) : 0;
 
         drive.runVelocity(new ChassisSpeeds(
                 -Math.copySign(x * x, x) * DriveConstants.kMaxSpeedMetersPerSecond,

@@ -101,6 +101,13 @@ public class AutoCommands {
       indexer.reverse().withTimeout(0.1));
   }
 
+  public static Command intakeWithoutPivot(){
+    return Commands.sequence(
+      Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
+      Commands.either(Commands.waitUntil(indexer::isStoring), Commands.waitSeconds(1), Robot::isReal),
+      indexer.reverse().withTimeout(0.1));
+  }
+
   public static Command sensingPiece() {
     return Commands.waitUntil(() -> indexer.isStoring());
   }
@@ -111,6 +118,10 @@ public class AutoCommands {
             double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker + PivotConstants.offset));
             pivot.setGoal(angleCalc - PivotConstants.angleOffset);
         });
+  }
+
+  public static Command rotateToSpeaker(){
+    return new AlignSpeaker().withTimeout(1);
   }
 
 }

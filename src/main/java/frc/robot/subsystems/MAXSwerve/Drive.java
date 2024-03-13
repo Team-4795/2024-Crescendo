@@ -507,13 +507,8 @@ public class Drive extends SubsystemBase {
 
     //between -180 and 180
     public double getWrappedHeading(){
-        double rotation = gyroInputs.yaw.getDegrees() % 360;
-        if(rotation < -180) {
-            rotation += 360;
-        } else if (rotation > 180){
-            rotation -= 360;
-        }
-        return rotation;
+        double rotation = MathUtil.angleModulus(gyroInputs.yaw.getRadians());
+        return Units.radiansToDegrees(rotation);
     }
 
     /**

@@ -122,7 +122,7 @@ public class RobotContainer {
 
     NamedCommandManager.registerAll();
     NoteVisualizer.setPivotPoseSupplier(pivot::getPose);
-    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("TEST - AS GP123"));
+    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("SS GP 876"));
 
 
     autoChooser.addOption("Pivot SysIs (Quasistatic Forward)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
