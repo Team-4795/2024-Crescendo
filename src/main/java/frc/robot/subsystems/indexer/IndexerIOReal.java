@@ -40,7 +40,7 @@ public class IndexerIOReal implements IndexerIO {
         bottomIndexMotor.setIdleMode(IdleMode.kCoast);
 
         towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
-        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
         towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 65535);
         towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
         towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
@@ -48,7 +48,7 @@ public class IndexerIOReal implements IndexerIO {
         towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
 
         bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
-        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
         bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 65535);
         bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
         bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);

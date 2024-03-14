@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9652475852740565,
-        "y": 2.5412515304345873
+        "x": 0.904140353216511,
+        "y": 4.614069599037914
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.300282951493148,
-        "y": 1.8386013376876962
+        "x": 1.7707422576043426,
+        "y": 2.634938222800839
       },
       "isLocked": false,
       "linkedName": null
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": "SS GP 876",
   "previewStartingState": {
-    "rotation": -35.90972307917775,
+    "rotation": -60.46121774044192,
     "velocity": 0
   },
   "useDefaultConstraints": false

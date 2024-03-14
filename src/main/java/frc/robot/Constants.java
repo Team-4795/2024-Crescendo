@@ -47,7 +47,7 @@ public final class Constants {
     public static final int turning = 20;
     public static final int intakeVortex = 60;
     public static final int intakeKraken = 80;
-    public static final int tower = 25;
+    public static final int tower = 30;
     public static final int handoff = 25;
     public static final int shooter = 80;
   }

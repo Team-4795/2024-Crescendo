@@ -194,7 +194,8 @@ public class RobotContainer {
             pivot.aimSource()));
 
     //Ground Intake
-    OIConstants.operatorController.povDown().whileTrue(
+    OIConstants.operatorController.povDown().or(OIConstants.operatorController.povDownLeft()).or(OIConstants.operatorController.povDownRight())
+    .whileTrue(
         Commands.parallel(
             pivot.aimIntake(),
             intake.intake(),

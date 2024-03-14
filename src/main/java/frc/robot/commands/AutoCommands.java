@@ -66,7 +66,8 @@ public class AutoCommands {
         SetPivotAngle(setpoint));
   };
 
-  public static Command initialize(double speed) {
+  public static Command 
+  initialize(double speed) {
     return Commands.parallel(
       Commands.runOnce(() -> intake.setIntakeSpeed(-1)),
       Commands.runOnce(() -> shooter.setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom))

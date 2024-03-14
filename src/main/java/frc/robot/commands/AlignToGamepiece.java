@@ -57,7 +57,7 @@ public class AlignToGamepiece extends Command {
        if (hasTargets) {
             output = MathUtil.clamp(rotationPID.calculate(Units.degreesToRadians(lifecamYaw), 0), -1, 1);
        } 
-       else if (!hasTargets && distanceToSource < 6) {
+       else if (!hasTargets && distanceToSource < 10000) {
             output = MathUtil.clamp(rotationPID.calculate(driveHeading, sourcePose.getRotation().getRadians()), -1, 1);
        }
 
@@ -69,6 +69,7 @@ public class AlignToGamepiece extends Command {
         
         Logger.recordOutput("Vision/Note Yaw", lifecamYaw);
         Logger.recordOutput("Vision/Note PID", output);
+        Logger.recordOutput("Vision/drive heading", driveHeading);
         Logger.recordOutput("Vision/Source Pos", sourcePose);
     }
 
