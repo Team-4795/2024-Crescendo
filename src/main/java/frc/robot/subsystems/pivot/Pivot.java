@@ -47,7 +47,6 @@ public class Pivot extends SubsystemBase {
 
     private double goal = 0;
     private final boolean disableArm = false;
-    private boolean autoAim = true;
     private boolean idleMode = true;
 
     private SysIdRoutine sysid;
@@ -118,10 +117,6 @@ public class Pivot extends SubsystemBase {
         );
     }
 
-    public void toggleAutoAim() {
-        autoAim = !autoAim;
-    }
-
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
         return sysid.quasistatic(direction);
     }
@@ -156,7 +151,7 @@ public class Pivot extends SubsystemBase {
             Commands.startEnd(
                 () -> setGoal(PivotSetpoints.speaker),
                 () -> setGoal(PivotSetpoints.stow)),
-            () -> autoAim);
+            () -> StateManager.isAutomate());
     }
 
     public Command aimAmp() {

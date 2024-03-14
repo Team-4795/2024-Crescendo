@@ -49,9 +49,9 @@ public class VisionIOReal implements VisionIO {
 
         saguaroRobotToCam = new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(-8), 
+                Units.inchesToMeters(-10), 
                 Units.inchesToMeters(-6.5), 
-                Units.inchesToMeters(10.5)), 
+                Units.inchesToMeters(11)), 
             new Rotation3d(
                 0, 
                 Units.degreesToRadians(20), 
@@ -59,7 +59,7 @@ public class VisionIOReal implements VisionIO {
 
         barbaryFigRobotToCam = new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(-20),
+                Units.inchesToMeters(-11.5),
                 Units.inchesToMeters(5), 
                 Units.inchesToMeters(11)), 
             new Rotation3d(
@@ -85,6 +85,7 @@ public class VisionIOReal implements VisionIO {
     @Override
     public void setReferencePose(Pose2d reference) {
         barbaryFigPhotonPoseEstimator.setReferencePose(reference);
+        saguaroPhotonPoseEstimator.setReferencePose(reference);
     }
 
     @Override
@@ -96,7 +97,7 @@ public class VisionIOReal implements VisionIO {
     @Override
     public void updateInputs(VisionIOInputs inputs) {
         inputs.barbaryFigPose = barbaryFigPhotonPoseEstimator.update().map((pose) -> new EstimatedPose(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
-        inputs.saguaroPose = barbaryFigPhotonPoseEstimator.update().map((pose) -> new EstimatedPose(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
+        inputs.saguaroPose = saguaroPhotonPoseEstimator.update().map((pose) -> new EstimatedPose(pose.estimatedPose.toPose2d(), pose.timestampSeconds));
 
         PhotonPipelineResult barbaryFigResult = BarbaryFig.getLatestResult();
         if (barbaryFigResult.hasTargets()) {

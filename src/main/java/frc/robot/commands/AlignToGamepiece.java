@@ -1,10 +1,6 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Rotation;
-
-import org.littletonrobotics.junction.Logger;
-
-import com.fasterxml.jackson.databind.node.POJONode;
+import org.littletonrobotics.junction.Logger    ;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -61,7 +57,7 @@ public class AlignToGamepiece extends Command {
        if (hasTargets) {
             output = MathUtil.clamp(rotationPID.calculate(Units.degreesToRadians(lifecamYaw), 0), -1, 1);
        } 
-       else if (!hasTargets && distanceToSource < 2.5) {
+       else if (!hasTargets && distanceToSource < 6) {
             output = MathUtil.clamp(rotationPID.calculate(driveHeading, sourcePose.getRotation().getRadians()), -1, 1);
        }
 

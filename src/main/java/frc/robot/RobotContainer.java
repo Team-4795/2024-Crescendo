@@ -148,15 +148,19 @@ public class RobotContainer {
     Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint() && drive.isAtTarget());
 
     // Zero drive heading
-    OIConstants.driverController.x().whileTrue(new AlignToGamepiece());
+    OIConstants.driverController.rightBumper().whileTrue(new AlignToGamepiece());
 
     //Align Amp / Speaker
     OIConstants.driverController.leftBumper().whileTrue(
-        Commands.either(
-          new AlignSpeaker().alongWith(shooter.rev()).alongWith(pivot.aim()), 
-          drive.AutoAlignAmp().alongWith(leds.pathfinding()), 
-          () -> StateManager.getState() == State.SPEAKER
-        )
+          Commands.either(
+            Commands.either(
+              new AlignSpeaker().alongWith(shooter.rev()).alongWith(pivot.aim()), 
+              drive.AutoAlignAmp().alongWith(leds.pathfinding()), 
+              () -> StateManager.getState() == State.SPEAKER
+            ),
+            shooter.rev().alongWith(pivot.aim()),
+            () -> StateManager.isAutomate()
+          )
     );
 
     //Shoot
@@ -169,13 +173,13 @@ public class RobotContainer {
       .onTrue(Commands.runOnce(() -> drive.setFieldRelative(false)))
       .onFalse(Commands.runOnce(() -> drive.setFieldRelative(true)));
 
-    OIConstants.driverController.povLeft().onTrue(Commands.runOnce(() -> {
-      pivot.toggleAutoAim();
+    //SADDEST BUTTON IN EXISTENCE ON PERSEUS, PLEASE DON'T PRESS! :Cry: :Sob:
+    OIConstants.driverController.x().onTrue(Commands.runOnce(() -> {
+      StateManager.toggleAutomate();
       leds.toggleYellow();
     }));
 
     OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));
-    OIConstants.driverController.b().whileTrue(drive.AutoAlignAmp());
     // Speaker aim and rev up
     OIConstants.operatorController.leftBumper().onTrue(Commands.runOnce(() -> StateManager.setState(State.SPEAKER)));
       
@@ -210,26 +214,26 @@ public class RobotContainer {
     );
 
     // Slow reverse tower
-    // OIConstants.operatorController.a().whileTrue(
-    //         Commands.parallel(
-    //             indexer.slowReverse(),
-    //             shooter.slowReverse()));
+    OIConstants.operatorController.a().whileTrue(
+            Commands.parallel(
+                indexer.slowReverse(),
+                shooter.slowReverse()));
 
-    // // Full reverse everything
-    // OIConstants.operatorController.b().whileTrue(
-    //     Commands.parallel(
-    //         intake.reverse(),
-    //         indexer.reverse(),
-    //         shooter.reverse()));
+    // Full reverse everything
+    OIConstants.operatorController.b().whileTrue(
+        Commands.parallel(
+            intake.reverse(),
+            indexer.reverse(),
+            shooter.reverse()));
 
-    // // Override storing (flips it)
-    // OIConstants.operatorController.x().whileTrue(indexer.overrideStoring());
+    // Override storing (flips it)
+    OIConstants.operatorController.x().whileTrue(indexer.overrideStoring());
 
-    // // Handoff unjam
-    // OIConstants.operatorController.y().whileTrue(
-    //     Commands.parallel(
-    //         intake.slowReverse(),
-    //         indexer.forwards()));
+    // Handoff unjam
+    OIConstants.operatorController.y().whileTrue(
+        Commands.parallel(
+            intake.slowReverse(),
+            indexer.forwards()));
 
     // Toggle pivot idle mode
     OIConstants.operatorController.start().whileTrue(
