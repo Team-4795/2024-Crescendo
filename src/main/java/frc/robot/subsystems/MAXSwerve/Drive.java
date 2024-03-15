@@ -215,12 +215,14 @@ public class Drive extends SubsystemBase {
             double poseDiff = visionPose.pose().getTranslation().getDistance(this.getPose().getTranslation());
             double gyroDiff = Math.abs(visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees());
             double distanceToAprilTag = Vision.getInstance().distanceToTag(vision.barbaryFigAprilTagDetected());
-            int numOfTags = Vision.getInstance().barbaryFigNumberOfTags();
-    
-                m_poseEstimator.addVisionMeasurement(
+            // int numOfTags = Vision.getInstance().barbaryFigNumberOfTags();
+            double stddev = getVisionStd(distanceToAprilTag);
+            Logger.recordOutput("Vision/Barbary Fig Std Dev", stddev);
+
+            m_poseEstimator.addVisionMeasurement(
                 visionPose.pose(), 
                 visionPose.timestamp(),
-                VecBuilder.fill(this.getVisionStd(distanceToAprilTag) / numOfTags, this.getVisionStd(distanceToAprilTag) / numOfTags, Units.degreesToRadians(20))); //Do math to find Std
+                VecBuilder.fill(stddev, stddev, Units.degreesToRadians(20))); //Do math to find Std
         });
         
         Vision.getInstance().getSaguaroPose().ifPresent(visionPose -> {
@@ -228,11 +230,12 @@ public class Drive extends SubsystemBase {
             double gyroDiff = Math.abs(visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees());
             double distanceToAprilTag = Vision.getInstance().distanceToTag(vision.saguaroAprilTagDetected());
             int numOfTags = Vision.getInstance().saguaroNumberOfTags();
+            double stddev = getVisionStd(distanceToAprilTag);
 
-                m_poseEstimator.addVisionMeasurement(
+            m_poseEstimator.addVisionMeasurement(
                 visionPose.pose(), 
                 visionPose.timestamp(),
-                VecBuilder.fill(this.getVisionStd(distanceToAprilTag), this.getVisionStd(distanceToAprilTag), Units.degreesToRadians(20))); //Do math to find Std
+                VecBuilder.fill(stddev, stddev, Units.degreesToRadians(20))); //Do math to find Std
 
         });
         
@@ -278,7 +281,7 @@ public class Drive extends SubsystemBase {
     }
 
     public double getVisionStd(double distance) {
-        return (distance * 1.9 / 8.25) + 0.1;
+        return distance * 0.25 + 0.1;
     }
 
     public void setAtTarget(Optional<Boolean> atTarget) {
