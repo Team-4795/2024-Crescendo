@@ -107,11 +107,11 @@ public class Vision extends SubsystemBase {
     }
 
     public int goldenBarrelNumberOfTags() {
-        return inputs.saguaroAprilTagDetected;
+        return inputs.goldenBarrelNumberOfTags;
     }
 
     public int goldenBarrelAprilTagDetected() {
-        return inputs.goldenBarrelNumberOfTags;
+        return inputs.goldenBarrelAprilTagDetected;
     }
 
     public boolean lifeCamHastargets() {

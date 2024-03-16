@@ -99,21 +99,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "M GP214 P4 Red"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "VisionAlign"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "M GP214 P4 Red"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Wing Amp"
+                }
+              }
+            ]
           }
         },
         {
@@ -156,15 +157,9 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.8
-                      }
-                    },
-                    {
                       "type": "named",
                       "data": {
-                        "name": "VisionAlign"
+                        "name": "Align Wing Amp"
                       }
                     }
                   ]

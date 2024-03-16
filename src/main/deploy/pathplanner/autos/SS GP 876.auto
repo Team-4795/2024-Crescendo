@@ -143,10 +143,22 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Align Under Stage"
+                  "name": "Stow"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align Under Stage"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.4
           }
         },
         {

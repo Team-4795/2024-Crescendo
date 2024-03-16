@@ -27,6 +27,8 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("Align Under Stage", AutoCommands.setPivotAndShooter(0.235));
 
+        NamedCommands.registerCommand("Stow", AutoCommands.SetPivotAngle(0.08));
+
         NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.58)); // change later
 
         NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
@@ -49,5 +51,7 @@ public class NamedCommandManager {
                 AutoCommands.aimSpeakerDynamic().withTimeout(0.5)
                 .alongWith(Commands.runOnce(
                         () -> Shooter.getInstance().setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom))));
+                    
+        NamedCommands.registerCommand("Align Wing Amp", AutoCommands.SetPivotAngle(0.133));
     }
 }

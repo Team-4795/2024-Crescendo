@@ -212,17 +212,21 @@ public class Drive extends SubsystemBase {
         Vision.getInstance().setReferencePose(m_poseEstimator.getEstimatedPosition());
         
         Vision.getInstance().getBarbaryFigPose().ifPresent(visionPose -> {
+
             double poseDiff = visionPose.pose().getTranslation().getDistance(this.getPose().getTranslation());
             double gyroDiff = Math.abs(visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees());
             double distanceToAprilTag = Vision.getInstance().distanceToTag(vision.barbaryFigAprilTagDetected());
-            // int numOfTags = Vision.getInstance().barbaryFigNumberOfTags();
             double stddev = getVisionStd(distanceToAprilTag);
             Logger.recordOutput("Vision/Barbary Fig Std Dev", stddev);
 
-            m_poseEstimator.addVisionMeasurement(
-                visionPose.pose(), 
-                visionPose.timestamp(),
-                VecBuilder.fill(stddev, stddev, Units.degreesToRadians(20))); //Do math to find Std
+            //if(poseDiff < 1 && gyroDiff < 20)
+            //{
+                m_poseEstimator.addVisionMeasurement(
+                    visionPose.pose(), 
+                    visionPose.timestamp(),
+                    VecBuilder.fill(stddev, stddev, Units.degreesToRadians(40))); //Do math to find Std
+            //}
+            // int numOfTags = Vision.getInstance().barbaryFigNumberOfTags();      
         });
         
         Vision.getInstance().getSaguaroPose().ifPresent(visionPose -> {
@@ -232,10 +236,13 @@ public class Drive extends SubsystemBase {
             int numOfTags = Vision.getInstance().saguaroNumberOfTags();
             double stddev = getVisionStd(distanceToAprilTag);
 
+            //if(poseDiff < 1 && gyroDiff < 20)
+            //{
             m_poseEstimator.addVisionMeasurement(
                 visionPose.pose(), 
                 visionPose.timestamp(),
-                VecBuilder.fill(stddev, stddev, Units.degreesToRadians(20))); //Do math to find Std
+                VecBuilder.fill(stddev, stddev, Units.degreesToRadians(40))); //Do math to find Std
+            //}
 
         });
 
@@ -246,10 +253,13 @@ public class Drive extends SubsystemBase {
             int numOfTags = Vision.getInstance().goldenBarrelNumberOfTags();
             double stddev = getVisionStd(distanceToAprilTag);
 
+           // if(poseDiff < 1 && gyroDiff < 20)
+            //{
             m_poseEstimator.addVisionMeasurement(
                 visionPose.pose(), 
                 visionPose.timestamp(),
-                VecBuilder.fill(stddev, stddev, Units.degreesToRadians(20))); //Do math to find Std
+                VecBuilder.fill(stddev, stddev, Units.degreesToRadians(40))); //Do math to find Std
+            // }
         });
         
         LoggedTunableNumber.ifChanged(

@@ -56,8 +56,8 @@ public class VisionIOReal implements VisionIO {
         saguaroRobotToCam = new Transform3d(
             new Translation3d(
                 Units.inchesToMeters(-10), 
-                Units.inchesToMeters(-6.5), 
-                Units.inchesToMeters(11)), 
+                Units.inchesToMeters(8.5), 
+                Units.inchesToMeters(9)), 
             new Rotation3d(
                 0, 
                 Units.degreesToRadians(20), 
@@ -73,15 +73,15 @@ public class VisionIOReal implements VisionIO {
                 Units.degreesToRadians(20), 
                 Math.PI));
 
-        barbaryFigRobotToCam = new Transform3d(
+        goldenBarrelRobotToCam = new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(-11.5),
-                Units.inchesToMeters(5), 
-                Units.inchesToMeters(11)), 
+                Units.inchesToMeters(-10),
+                Units.inchesToMeters(-8.5), 
+                Units.inchesToMeters(9)),
             new Rotation3d(
                 0, 
                 Units.degreesToRadians(20), 
-                Math.PI));  
+                Units.degreesToRadians(110)));  
 
         try {
             aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
@@ -95,8 +95,12 @@ public class VisionIOReal implements VisionIO {
         barbaryFigPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
                     PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, BarbaryFig, barbaryFigRobotToCam);
 
-        barbaryFigPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
+        goldenBarrelPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
                     PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, goldenBarrel, goldenBarrelRobotToCam);
+
+        saguaroPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
+        barbaryFigPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
+        goldenBarrelPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
 
         aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
     }
@@ -132,7 +136,7 @@ public class VisionIOReal implements VisionIO {
             inputs.saguaroNumberOfTags = saguaroResult.getTargets().size();
         }
 
-        PhotonPipelineResult goldenBarrelResult = SaguaroCam.getLatestResult();
+        PhotonPipelineResult goldenBarrelResult = goldenBarrel.getLatestResult();
         if (goldenBarrelResult.hasTargets()) {
             inputs.goldenBarrelAprilTagDetected = goldenBarrelResult.getBestTarget().getFiducialId();
             inputs.goldenBarrelNumberOfTags = goldenBarrelResult.getTargets().size();
