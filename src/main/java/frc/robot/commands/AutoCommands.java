@@ -122,7 +122,7 @@ public class AutoCommands {
   }
 
   public static Command rotateToSpeaker(){
-    return new AlignSpeaker().withTimeout(1);
+    return new AlignSpeaker().withTimeout(0.7);
   }
 
 }
