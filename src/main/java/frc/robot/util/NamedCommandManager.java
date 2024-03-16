@@ -54,7 +54,7 @@ public class NamedCommandManager {
                     
         NamedCommands.registerCommand("Align Wing Amp", AutoCommands.setPivotAndShooter(0.133));
 
-        NamedCommands.registerCommand("Align Wing Amp Blue", AutoCommands.setPivotAndShooter(0.132));
+        NamedCommands.registerCommand("Align Wing Amp Blue", AutoCommands.setPivotAndShooter(0.1295));
 
     }
 }
