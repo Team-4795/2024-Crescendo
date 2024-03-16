@@ -65,7 +65,7 @@ public class VisionIOReal implements VisionIO {
 
         barbaryFigRobotToCam = new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(-11.5),
+                Units.inchesToMeters(-16),
                 Units.inchesToMeters(5), 
                 Units.inchesToMeters(11)), 
             new Rotation3d(
