@@ -186,7 +186,8 @@ public class RobotContainer {
     OIConstants.operatorController.leftBumper().onTrue(Commands.runOnce(() -> StateManager.setState(State.SPEAKER)));
       
     // Amp aim and rev up
-    OIConstants.operatorController.rightBumper().onTrue(Commands.runOnce(() -> StateManager.setState(State.AMP)));
+    OIConstants.operatorController.rightBumper().onTrue(Commands.runOnce(() -> StateManager.setState(State.AMP)))
+      .whileTrue(pivot.aimAmp().alongWith(shooter.revAmp()));
 
     //Source Intake
     OIConstants.operatorController.povUp().onTrue(
