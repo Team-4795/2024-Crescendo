@@ -238,6 +238,19 @@ public class Drive extends SubsystemBase {
                 VecBuilder.fill(stddev, stddev, Units.degreesToRadians(20))); //Do math to find Std
 
         });
+
+        Vision.getInstance().getGoldenBarrelPose().ifPresent(visionPose -> {
+            double poseDiff = visionPose.pose().getTranslation().getDistance(this.getPose().getTranslation());
+            double gyroDiff = Math.abs(visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees());
+            double distanceToAprilTag = Vision.getInstance().distanceToTag(vision.goldenBarrelAprilTagDetected());
+            int numOfTags = Vision.getInstance().goldenBarrelNumberOfTags();
+            double stddev = getVisionStd(distanceToAprilTag);
+
+            m_poseEstimator.addVisionMeasurement(
+                visionPose.pose(), 
+                visionPose.timestamp(),
+                VecBuilder.fill(stddev, stddev, Units.degreesToRadians(20))); //Do math to find Std
+        });
         
         LoggedTunableNumber.ifChanged(
             hashCode(),

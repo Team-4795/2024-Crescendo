@@ -180,6 +180,8 @@ public class RobotContainer {
     }));
 
     OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));
+
+    OIConstants.driverController.y().whileTrue(pivot.aimAmp().alongWith(shooter.rev()));
     // Speaker aim and rev up
     OIConstants.operatorController.leftBumper().onTrue(Commands.runOnce(() -> StateManager.setState(State.SPEAKER)));
       
