@@ -24,7 +24,7 @@ import frc.robot.subsystems.pivot.Pivot;
 
 public class AutoAlignAmp extends Command{
 
-    private static final Pose2d RED_AMP = new Pose2d(14.7, 7.5, Rotation2d.fromRadians(Math.PI / 2));
+    private static final Pose2d RED_AMP = new Pose2d(14.7, 7.6, Rotation2d.fromRadians(Math.PI / 2));
     private static final Pose2d BLUE_AMP = new Pose2d(1.86, 7.6, Rotation2d.fromRadians(Math.PI / 2));
 
     private ProfiledPIDController translationController;
@@ -86,7 +86,7 @@ public class AutoAlignAmp extends Command{
                 pivot.setGoal(PivotSetpoints.amp);
                 shooter.setShootingSpeedRPM(ShooterSetpoints.ampTop, ShooterSetpoints.ampBottom);
         }
-        if( distance < 0.06){ //rotationController.atGoal() &&
+        if( distance < 0.1){ //rotationController.atGoal() &&
                 indexer.setIndexerSpeed(IndexerSetpoints.shoot);
         }
 
