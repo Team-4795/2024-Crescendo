@@ -52,6 +52,6 @@ public class NamedCommandManager {
                 .alongWith(Commands.runOnce(
                         () -> Shooter.getInstance().setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom))));
                     
-        NamedCommands.registerCommand("Align Wing Amp", AutoCommands.SetPivotAngle(0.133));
+        NamedCommands.registerCommand("Align Wing Amp", AutoCommands.setPivotAndShooter(0.133));
     }
 }
