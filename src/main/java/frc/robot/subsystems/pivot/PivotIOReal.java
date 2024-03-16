@@ -83,7 +83,7 @@ public class PivotIOReal implements PivotIO {
 
   private double getAbsolutePosition() {
     double rotation = -encoder.getAbsolutePosition() * PivotConstants.positionConversionFactor + 4.187 - 3.151;
-    if(rotation < 0){
+    if(rotation < -1){
       rotation += 2 * Math.PI;
     }
     return rotation;
