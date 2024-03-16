@@ -61,11 +61,11 @@ public class VisionIOReal implements VisionIO {
             new Rotation3d(
                 0, 
                 Units.degreesToRadians(20), 
-                Units.degreesToRadians(-110)));
+                Units.degreesToRadians(110)));
 
         barbaryFigRobotToCam = new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(-16),
+                Units.inchesToMeters(-11.5),
                 Units.inchesToMeters(5), 
                 Units.inchesToMeters(11)), 
             new Rotation3d(
@@ -81,7 +81,7 @@ public class VisionIOReal implements VisionIO {
             new Rotation3d(
                 0, 
                 Units.degreesToRadians(20), 
-                Units.degreesToRadians(110)));  
+                Units.degreesToRadians(-110)));  
 
         try {
             aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
