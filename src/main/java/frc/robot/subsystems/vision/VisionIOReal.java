@@ -57,7 +57,7 @@ public class VisionIOReal implements VisionIO {
             new Translation3d(
                 Units.inchesToMeters(-10), 
                 Units.inchesToMeters(8.5), 
-                Units.inchesToMeters(9)), 
+                Units.inchesToMeters(7.5)), 
             new Rotation3d(
                 0, 
                 Units.degreesToRadians(20), 
