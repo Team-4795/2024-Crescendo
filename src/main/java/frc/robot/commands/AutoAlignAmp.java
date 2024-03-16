@@ -86,7 +86,7 @@ public class AutoAlignAmp extends Command{
                 pivot.setGoal(PivotSetpoints.amp);
                 shooter.setShootingSpeedRPM(ShooterSetpoints.ampTop, ShooterSetpoints.ampBottom);
         }
-        if(rotationController.atGoal() && distance < 0.06){
+        if( distance < 0.06){ //rotationController.atGoal() &&
                 indexer.setIndexerSpeed(IndexerSetpoints.shoot);
         }
 
