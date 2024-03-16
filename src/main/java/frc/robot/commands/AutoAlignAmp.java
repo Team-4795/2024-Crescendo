@@ -56,6 +56,7 @@ public class AutoAlignAmp extends Command{
         });
         currentPose = Drive.getInstance().getPose();
         double velocity = projection(drive.getFieldRelativeTranslationVelocity(), targetPose.getTranslation().minus(currentPose.getTranslation()));
+        rotationController.enableContinuousInput(-Math.PI, Math.PI);
         Logger.recordOutput("AutoAlign/Robot velocity", drive.getFieldRelativeTranslationVelocity());
         Logger.recordOutput("AutoAlign/Translation", targetPose.getTranslation().minus(currentPose.getTranslation()));
         Logger.recordOutput("AutoAlign/velocity", velocity);

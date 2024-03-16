@@ -241,7 +241,7 @@ public class Drive extends SubsystemBase {
             m_poseEstimator.addVisionMeasurement(
                 visionPose.pose(), 
                 visionPose.timestamp(),
-                VecBuilder.fill(stddev, stddev, Units.degreesToRadians(40))); //Do math to find Std
+                VecBuilder.fill(2 * stddev, 2 * stddev, Units.degreesToRadians(40))); //Do math to find Std
             //}
 
         });
