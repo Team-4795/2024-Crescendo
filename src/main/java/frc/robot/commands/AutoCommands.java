@@ -98,7 +98,7 @@ public class AutoCommands {
         Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
         Commands.runOnce(() -> pivot.setGoal(0.45))
       ),
-      Commands.either(Commands.waitUntil(indexer::isStoring), Commands.waitSeconds(1), Robot::isReal),
+      Commands.either(Commands.waitUntil(indexer::isStoring), Commands.waitSeconds(4), Robot::isReal),
       indexer.reverse().withTimeout(0.1));
   }
 
