@@ -23,9 +23,9 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("AlignGP3", AutoCommands.setPivotAndShooter(0.2)); // change later
 
-        NamedCommands.registerCommand("Align Far Source", AutoCommands.setPivotAndShooter(0.111));
+        NamedCommands.registerCommand("Align Far Source", AutoCommands.setPivotAndShooter(0.101));
 
-        NamedCommands.registerCommand("Align Under Stage", AutoCommands.setPivotAndShooter(0.16));
+        NamedCommands.registerCommand("Align Under Stage", AutoCommands.setPivotAndShooter(0.145));
 
         NamedCommands.registerCommand("Stow", AutoCommands.SetPivotAngle(0.08));
 
