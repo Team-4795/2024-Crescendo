@@ -42,7 +42,7 @@ public class AutoCommands {
 
   public static Command score() {
     return Commands.sequence(
-          indexer.forwards().withTimeout(0.4).alongWith(Commands.waitSeconds(0.1).andThen(NoteVisualizer.shoot())),
+          indexer.forwards().withTimeout(0.35).alongWith(Commands.waitSeconds(0.05).andThen(NoteVisualizer.shoot())),
           Commands.runOnce(() -> shooter.setShootingSpeedRPM(0.0, 0.0))
     );
   }
@@ -122,7 +122,7 @@ public class AutoCommands {
   }
 
   public static Command rotateToSpeaker(){
-    return new AlignSpeaker().withTimeout(0.7);
+    return new AlignSpeaker().withTimeout(0.4);
   }
 
 }
