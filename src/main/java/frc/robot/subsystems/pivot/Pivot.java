@@ -24,6 +24,7 @@ import frc.robot.Constants.PivotSetpoints;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.Shooter.ShooterConstants;
 import frc.robot.subsystems.vision.Vision;
+import frc.robot.util.EqualsUtil;
 import frc.robot.util.LoggedTunableNumber;
 
 public class Pivot extends SubsystemBase {
@@ -38,12 +39,14 @@ public class Pivot extends SubsystemBase {
     LoggedTunableNumber kA = new LoggedTunableNumber("Pivot/kA", PivotConstants.kA);
     LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", PivotConstants.kS);
 
-    private ProfiledPIDController controller = new ProfiledPIDController(
-            kP.get(), kI.get(), kD.get(),
-            PivotConstants.constraints);
+    // private ProfiledPIDController controller = new ProfiledPIDController(
+    //         kP.get(), kI.get(), kD.get(),
+    //         PivotConstants.constraints);
 
     private SimpleMotorFeedforward motorFeedforward = new SimpleMotorFeedforward(
             kS.get(), kV.get(), kA.get());
+
+    private PivotController controller = new PivotController();
 
     private double goal = 0;
     private final boolean disableArm = false;
@@ -71,7 +74,6 @@ public class Pivot extends SubsystemBase {
         io.updateInputs(inputs);
 
         visualizer.update(360 * getTruePosition() / (Math.PI * 2), Units.radiansToDegrees(controller.getSetpoint().position + PivotConstants.angleOffset));
-        controller.setTolerance(Units.degreesToRadians(3));
 
         sysid = new SysIdRoutine(
             new SysIdRoutine.Config(Volts.of(0.2).per(Seconds.of(1)), Volts.of(2), null, (state) -> Logger.recordOutput("Pivot/SysIdState", state.toString())),
@@ -107,7 +109,6 @@ public class Pivot extends SubsystemBase {
 
     public void setGoal(double goal) {
         this.goal = MathUtil.clamp(goal, PivotConstants.lowLimit, PivotConstants.highLimit);
-        controller.setGoal(goal);
     }
 
     public Command aimSpeaker() {
@@ -176,7 +177,7 @@ public class Pivot extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return controller.atGoal();
+        return EqualsUtil.epsilonEquals(inputs.pivotPositionRads, goal, PivotConstants.positonTolerance);
     }
 
     @Override
@@ -189,7 +190,7 @@ public class Pivot extends SubsystemBase {
         // LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);
         
         double v1 = controller.getSetpoint().velocity;
-        double PIDVolts = controller.calculate(getPosition());
+        double PIDVolts = controller.calculate(getPosition(), goal);
         double FFVolts = motorFeedforward.calculate(v1, controller.getSetpoint().velocity, 0.02);
 
         if (!disableArm) {

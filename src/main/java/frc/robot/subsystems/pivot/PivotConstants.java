@@ -28,6 +28,8 @@ public final class PivotConstants {
     public static final double g = -9.81;
     public static final double inertia = 1.9;
 
+    public static final double positonTolerance = Units.degreesToRadians(3);
+
     public static final double positionConversionFactor = Math.PI * 2.0;
     public static final double velocityConversionFactor = Math.PI * 2.0;
 

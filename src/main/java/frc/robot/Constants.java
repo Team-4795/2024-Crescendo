@@ -41,6 +41,8 @@ public final class Constants {
   public static final int paramApplyAttemptLimit = 5;
   public static final double paramApplyTimemout = 0.05;
 
+  public static final boolean useLQR = true;
+
   public static final class CurrentLimits {
     public static final int pivot = 60;
     public static final int drive = 60;
