@@ -85,6 +85,12 @@ public class Drive extends SubsystemBase {
     private Optional<Boolean> atTarget; 
 
     private Vision vision;
+
+    //Cam indexes for vision
+    private int barbaryFig = 0;
+    private int saguaro = 1;
+    private int goldenBarrel = 2;
+
     // Odometry class for tracking robot pose
     SwerveDriveOdometry m_odometry;
     private Pose2d pose = new Pose2d();
@@ -211,56 +217,22 @@ public class Drive extends SubsystemBase {
 
         Vision.getInstance().setReferencePose(m_poseEstimator.getEstimatedPosition());
         
-        Vision.getInstance().getBarbaryFigPose().ifPresent(visionPose -> {
+        for(int camIndex = 0; camIndex < 3; camIndex++) {
+            int i = camIndex;
+            Vision.getInstance().getCamPose(camIndex).ifPresent(visionPose -> {
+                    double poseDiff = visionPose.pose().getTranslation().getDistance(this.getPose().getTranslation());
+                    double gyroDiff = Math.abs(visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees());
+                    double distanceToAprilTag = Vision.getInstance().distanceToTag(i, vision.aprilTagDetected(i));
+                    // int numOfTags = Vision.getInstance().barbaryFigNumberOfTags();
+                    double stddev = getVisionStd(distanceToAprilTag);
+                    Logger.recordOutput("Vision/Barbary Fig Std Dev", stddev);
 
-            double poseDiff = visionPose.pose().getTranslation().getDistance(this.getPose().getTranslation());
-            double gyroDiff = Math.abs(visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees());
-            double distanceToAprilTag = Vision.getInstance().distanceToTag(vision.barbaryFigAprilTagDetected());
-            double stddev = getVisionStd(distanceToAprilTag);
-            Logger.recordOutput("Vision/Barbary Fig Std Dev", stddev);
-
-            //if(poseDiff < 1 && gyroDiff < 20)
-            //{
-                m_poseEstimator.addVisionMeasurement(
-                    visionPose.pose(), 
-                    visionPose.timestamp(),
-                    VecBuilder.fill(stddev, stddev, Units.degreesToRadians(40))); //Do math to find Std
-            //}
-            // int numOfTags = Vision.getInstance().barbaryFigNumberOfTags();      
-        });
-        
-        Vision.getInstance().getSaguaroPose().ifPresent(visionPose -> {
-            double poseDiff = visionPose.pose().getTranslation().getDistance(this.getPose().getTranslation());
-            double gyroDiff = Math.abs(visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees());
-            double distanceToAprilTag = Vision.getInstance().distanceToTag(vision.saguaroAprilTagDetected());
-            int numOfTags = Vision.getInstance().saguaroNumberOfTags();
-            double stddev = getVisionStd(distanceToAprilTag);
-
-            //if(poseDiff < 1 && gyroDiff < 20)
-            //{
-            m_poseEstimator.addVisionMeasurement(
-                visionPose.pose(), 
-                visionPose.timestamp(),
-                VecBuilder.fill(2 * stddev, 2 * stddev, Units.degreesToRadians(40))); //Do math to find Std
-            //}
-
-        });
-
-        Vision.getInstance().getGoldenBarrelPose().ifPresent(visionPose -> {
-            double poseDiff = visionPose.pose().getTranslation().getDistance(this.getPose().getTranslation());
-            double gyroDiff = Math.abs(visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees());
-            double distanceToAprilTag = Vision.getInstance().distanceToTag(vision.goldenBarrelAprilTagDetected());
-            int numOfTags = Vision.getInstance().goldenBarrelNumberOfTags();
-            double stddev = getVisionStd(distanceToAprilTag);
-
-           // if(poseDiff < 1 && gyroDiff < 20)
-            //{
-            m_poseEstimator.addVisionMeasurement(
-                visionPose.pose(), 
-                visionPose.timestamp(),
-                VecBuilder.fill(stddev, stddev, Units.degreesToRadians(40))); //Do math to find Std
-            // }
-        });
+                    m_poseEstimator.addVisionMeasurement(
+                        visionPose.pose(), 
+                        visionPose.timestamp(),
+                        VecBuilder.fill(stddev, stddev, Units.degreesToRadians(20))); //Do math to find Std
+                });
+        }
         
         LoggedTunableNumber.ifChanged(
             hashCode(),

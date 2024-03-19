@@ -11,15 +11,10 @@ public interface VisionIO {
     public record EstimatedPose(Pose2d pose, double timestamp) {}
 
     public static class VisionIOInputs {
-        Optional<EstimatedPose> barbaryFigPose = Optional.empty();
-        Optional<EstimatedPose> saguaroPose = Optional.empty();
-        Optional<EstimatedPose> goldenBarrelPose = Optional.empty();
+        Optional<EstimatedPose> visionPose = Optional.empty();
 
-        int barbaryFigAprilTagDetected = 0;
-        int barbaryFigNumberOfTags = 0;
-
-        int saguaroAprilTagDetected = 0;
-        int saguaroNumberOfTags = 0;
+        int aprilTagDetected = 0;
+        int numberOfTags = 0;
 
         int goldenBarrelAprilTagDetected = 0;
         int goldenBarrelNumberOfTags = 0;
@@ -31,19 +26,14 @@ public interface VisionIO {
     public class VisionIOInputsAutoLogged extends VisionIO.VisionIOInputs implements LoggableInputs, Cloneable {
         @Override
         public void toLog(LogTable table) {
-            table.put("barbaryFigPose", barbaryFigPose.map((pose) -> pose.pose()).orElse(null));
-            barbaryFigPose.ifPresent((pose) -> table.put("barbaryFigTimestamp", pose.timestamp()));
+            table.put("barbaryFigPose", visionPose.map((pose) -> pose.pose()).orElse(null));
+            visionPose.ifPresent((pose) -> table.put("barbaryFigTimestamp", pose.timestamp()));
 
-            table.put("saguaroPose", saguaroPose.map((pose) -> pose.pose()).orElse(null));
-            saguaroPose.ifPresent((pose) -> table.put("saguaroFigTimestamp", pose.timestamp()));
-
-            table.put("goldenBarrelPose", goldenBarrelPose.map((pose) -> pose.pose()).orElse(null));
-            goldenBarrelPose.ifPresent((pose) -> table.put("goldenBarrelFigTimestamp", pose.timestamp()));
         }
 
         private Optional<EstimatedPose> getEstimatedPose(LogTable table, String poseKey, String timestampKey) {
-            Pose2d newPose = table.get(poseKey, barbaryFigPose.map((pose) -> pose.pose()).orElse(null));
-            Double newTimestamp = table.get(timestampKey, barbaryFigPose.map((pose) -> pose.timestamp()).orElse(null));
+            Pose2d newPose = table.get(poseKey, visionPose.map((pose) -> pose.pose()).orElse(null));
+            Double newTimestamp = table.get(timestampKey, visionPose.map((pose) -> pose.timestamp()).orElse(null));
 
             Optional<EstimatedPose> estPose;
 
@@ -58,17 +48,13 @@ public interface VisionIO {
 
         @Override
         public void fromLog(LogTable table) {
-            barbaryFigPose = getEstimatedPose(table, "barbaryFigPose", "barbaryFigPoseTimestamp");
-            saguaroPose = getEstimatedPose(table, "saguaroPose", "saguaroPoseTimestamp");
-            goldenBarrelPose = getEstimatedPose(table, "goldenBarrelPose", "saguaroPoseTimestamp");
+            visionPose = getEstimatedPose(table, "barbaryFigPose", "barbaryFigPoseTimestamp");
         }
 
         @Override
         public VisionIOInputsAutoLogged clone() {
             VisionIOInputsAutoLogged copy = new VisionIOInputsAutoLogged();
-            copy.barbaryFigPose = this.barbaryFigPose;
-            copy.saguaroPose = this.saguaroPose;
-            copy.goldenBarrelPose = this.goldenBarrelPose;
+            copy.visionPose = this.visionPose;
             return copy;
         }
     }
