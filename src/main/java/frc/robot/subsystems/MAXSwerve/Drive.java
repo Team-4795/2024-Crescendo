@@ -10,6 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -65,6 +66,12 @@ public class Drive extends SubsystemBase {
     static final Lock odometryLock = new ReentrantLock();
     private EstimatedRobotPose visionPose = new EstimatedRobotPose(new Pose3d(), m_currentRotation, null, null);
     private Rotation2d gyroRotation = new Rotation2d();
+    private SwerveModulePosition[] lastModulePositions = new SwerveModulePosition[] {
+        new SwerveModulePosition(),
+        new SwerveModulePosition(),
+        new SwerveModulePosition(),
+        new SwerveModulePosition()
+    };
 
     private Vision vision;
     // Odometry class for tracking robot pose
@@ -168,26 +175,26 @@ public class Drive extends SubsystemBase {
         int sampleCount = sampleTimestamps.length;
         for (int i = 0; i < sampleCount; i++) {
             SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
-            // SwerveModulePosition[] moduleDeltas = new SwerveModulePosition[4];
+            SwerveModulePosition[] moduleDeltas = new SwerveModulePosition[4];
             for (int moduleIndex = 0; moduleIndex < 4; moduleIndex++) {
                 modulePositions[moduleIndex] = modules[moduleIndex].getOdometryPositions()[i];
-                // moduleDeltas[moduleIndex] = new SwerveModulePosition(
-                //     modulePositions[moduleIndex].distanceMeters - lastModulePositions[moduleIndex].distanceMeters,
-                //     modulePositions[moduleIndex].angle);
-                // lastModulePositions[moduleIndex] = modulePositions[moduleIndex];
+                moduleDeltas[moduleIndex] = new SwerveModulePosition(
+                    modulePositions[moduleIndex].distanceMeters - lastModulePositions[moduleIndex].distanceMeters,
+                    modulePositions[moduleIndex].angle);
+                lastModulePositions[moduleIndex] = modulePositions[moduleIndex];
             }
 
             if(gyroInputs.connected){
                 gyroRotation = gyroInputs.odometryYaw[i];
+            } else {
+                var twist = DriveConstants.kDriveKinematics.toTwist2d(moduleDeltas);
+                gyroRotation = gyroRotation.plus(Rotation2d.fromRadians(twist.dtheta));
+                gyro.addOffset(Rotation2d.fromRadians(twist.dtheta));
+                pose = pose.exp(twist);
             }
 
             m_poseEstimator.updateWithTime(sampleTimestamps[i], gyroRotation, modulePositions);
         }
-
-        m_poseEstimator.update(
-                gyroInputs.yaw,
-                getModulePositions());
-
      
         if (Constants.currentMode == Mode.REAL && Constants.hasVision) {
             vision.getBarbaryFigPose(m_poseEstimator.getEstimatedPosition()).ifPresent(pose -> {
@@ -210,23 +217,6 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput("Estimated Pose", getPose());
         Logger.recordOutput("Vision pose", visionPose.estimatedPose);
         Logger.recordOutput("Vision/Distance to speaker", vision.getDistancetoSpeaker(getPose()));
-        // Read wheel deltas from each module
-        SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
-        for(int i = 0; i < modules.length; i++){
-            wheelDeltas[i] = modules[i].getPositionDelta();
-        }
-
-        // The twist represents the motion of the robot since the last
-        // sample in x, y, and theta based only on the modules, without
-        // the gyro.
-        var twist = DriveConstants.kDriveKinematics.toTwist2d(wheelDeltas);
-
-        if (!gyroInputs.connected) {
-            gyro.addOffset(Rotation2d.fromRadians(twist.dtheta));
-        }
-        // Apply the twist (change since last sample) to the current pose
-        pose = pose.exp(twist);
-
         Logger.recordOutput("Odometry", getPose());
         Logger.recordOutput("Simulated Pose", pose);
         Logger.recordOutput("Swerve/SwerveStates", this.getModuleStates());
