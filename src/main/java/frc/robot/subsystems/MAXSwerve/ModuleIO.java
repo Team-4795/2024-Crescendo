@@ -13,6 +13,10 @@ public interface ModuleIO {
 
         public Rotation2d turnAbsolutePosition = new Rotation2d(); //radians
         public double turnVelocityRadPerSec = 0.0;
+
+        public double[] drivePositions = new double[] {};
+        public Rotation2d[] turnPositions = new Rotation2d[] {};
+        public double[] timeStamps = new double[] {};
     }
 
     public default void updateInputs(ModuleIOInputs inputs){}

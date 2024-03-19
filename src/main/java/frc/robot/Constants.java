@@ -38,6 +38,7 @@ public final class Constants {
   public static final double configDelay = 0.1;
   public static final int paramApplyAttemptLimit = 5;
   public static final double paramApplyTimemout = 0.05;
+  public static final double odometryFrequency = 100; //hz
 
   public static final class PivotSetpoints {
     public static final double speaker = 0.56;

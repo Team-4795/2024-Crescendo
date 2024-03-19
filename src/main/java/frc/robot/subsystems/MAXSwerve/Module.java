@@ -17,6 +17,7 @@ public class Module {
 
   private double lastPositionMeters = 0.0; // Used for delta calculation
   private SwerveModulePosition positionDelta;
+  private SwerveModulePosition[] odometryPositions = new SwerveModulePosition[] {};
 
   /**
    * Constructs a MAXSwerveModule and configures the driving and turning motor,
@@ -30,14 +31,33 @@ public class Module {
     this.index = index;
   }
 
-  public void updateInputs() {
+  public void updateInputs(){
     moduleIO.updateInputs(inputs);
+  }
+
+  public void periodic() {
     Logger.processInputs("Drive/Module" + Integer.toString(index), inputs);
 
     double positionMeters = inputs.drivePositionMeters;
-    Rotation2d angle = inputs.turnAbsolutePosition; 
-    positionDelta = new SwerveModulePosition(inputs.drivePositionMeters - lastPositionMeters, angle);
+    Rotation2d angleRad = inputs.turnAbsolutePosition; 
+    positionDelta = new SwerveModulePosition(inputs.drivePositionMeters - lastPositionMeters, angleRad);
     lastPositionMeters = positionMeters;
+
+    int sampleCount = inputs.drivePositions.length;
+    odometryPositions = new SwerveModulePosition[sampleCount];
+    for(int i = 0; i < sampleCount; i++){
+      double position = inputs.drivePositions[i];
+      Rotation2d angle = inputs.turnPositions[i];
+      odometryPositions[i] = new SwerveModulePosition(position, angle);
+    }
+  }
+
+  public SwerveModulePosition[] getOdometryPositions() {
+    return odometryPositions;
+  }
+
+  public double[] getOdometryTimestamps() {
+    return inputs.timeStamps;
   }
 
   /**

@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems.MAXSwerve;
 
+import java.util.OptionalDouble;
+import java.util.Queue;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -33,6 +36,11 @@ public class ModuleIOSparkMax implements ModuleIO {
   private final SparkPIDController m_turningPIDController;
 
   private Rotation2d m_chassisAngularOffset;
+  
+  Queue<Double> drivePositions;
+  Queue<Double> turnPositions;
+  Queue<Double> timestamps;
+
 
   private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
   private SwerveModuleState optimizedState = new SwerveModuleState(0.0, new Rotation2d());
@@ -129,6 +137,26 @@ public class ModuleIOSparkMax implements ModuleIO {
       Timer.delay(Constants.configDelay);
     }
 
+    timestamps = OdometryThread.getInstance().registerTimestamps();
+
+    drivePositions = OdometryThread.getInstance().registerSignal(() -> {
+      double value = m_drivingEncoder.getPosition();
+      if(m_drivingSpark.getLastError() == REVLibError.kOk){
+        return OptionalDouble.of(value);
+      } else{
+        return OptionalDouble.empty();
+      }
+    });
+
+    turnPositions = OdometryThread.getInstance().registerSignal(() -> {
+      double value = Rotation2d.fromRadians(m_turningEncoder.getPosition()).minus(m_chassisAngularOffset).getRadians();
+      if(m_turningSparkMax.getLastError() == REVLibError.kOk){
+        return OptionalDouble.of(value);
+      } else{
+        return OptionalDouble.empty();
+      }
+    });
+
     // Save the SPARK MAX configurations. If a SPARK MAX browns out during
     // operation, it will maintain the above configurations.
     m_drivingSpark.burnFlash();
@@ -179,6 +207,13 @@ public class ModuleIOSparkMax implements ModuleIO {
 
     inputs.turnAbsolutePosition = Rotation2d.fromRadians(m_turningEncoder.getPosition()).minus(m_chassisAngularOffset);
     inputs.turnVelocityRadPerSec = m_turningEncoder.getVelocity();
+
+    inputs.drivePositions = drivePositions.stream().mapToDouble((Double value) -> value).toArray();
+    inputs.turnPositions = turnPositions.stream().map((Double value) -> Rotation2d.fromRadians(value)).toArray(Rotation2d[]::new);
+    inputs.timeStamps = timestamps.stream().mapToDouble((Double value) -> value).toArray();
+    drivePositions.clear();
+    turnPositions.clear();
+    timestamps.clear();
   }
 
 }
