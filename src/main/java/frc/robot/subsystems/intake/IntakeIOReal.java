@@ -7,6 +7,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import frc.robot.Constants.CurrentLimits;
 import frc.robot.util.KrakenLogger;
 
 public class IntakeIOReal implements IntakeIO {
@@ -24,7 +25,7 @@ public class IntakeIOReal implements IntakeIO {
         // intakeMotor.setInverted(true);
 
         talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-        talonFXConfig.CurrentLimits.StatorCurrentLimit = 80;
+        talonFXConfig.CurrentLimits.StatorCurrentLimit = CurrentLimits.intakeKraken;
 
         // talonFXConfig.
 

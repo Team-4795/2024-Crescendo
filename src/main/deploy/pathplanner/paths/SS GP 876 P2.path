@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.4311279977766789,
+        "y": 3.5366726368260153
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.4382599407138885,
+        "y": 2.096239741694889
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.766690569044476,
+        "y": 0.9134452505709579
+      },
+      "prevControl": {
+        "x": 6.255992654638661,
+        "y": 1.2179270007612764
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 520.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -12.339087278326364,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "SS GP 876",
+  "previewStartingState": {
+    "rotation": -42.709389957361445,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

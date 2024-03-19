@@ -1,24 +1,29 @@
 package frc.robot.subsystems.pivot;
 
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+
 import org.littletonrobotics.junction.Logger;
-import org.photonvision.proto.Photon;
-import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.StateManager;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PivotSetpoints;
 import frc.robot.subsystems.MAXSwerve.Drive;
+import frc.robot.subsystems.Shooter.ShooterConstants;
 import frc.robot.subsystems.vision.Vision;
-import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.util.LoggedTunableNumber;
 
 public class Pivot extends SubsystemBase {
@@ -42,8 +47,9 @@ public class Pivot extends SubsystemBase {
 
     private double goal = 0;
     private final boolean disableArm = false;
-    private boolean autoAim = true;
     private boolean idleMode = true;
+
+    private SysIdRoutine sysid;
 
     PivotVisualizer visualizer = new PivotVisualizer();
 
@@ -67,6 +73,12 @@ public class Pivot extends SubsystemBase {
         visualizer.update(360 * getTruePosition() / (Math.PI * 2), Units.radiansToDegrees(controller.getSetpoint().position + PivotConstants.angleOffset));
         controller.setTolerance(Units.degreesToRadians(3));
 
+        sysid = new SysIdRoutine(
+            new SysIdRoutine.Config(Volts.of(0.2).per(Seconds.of(1)), Volts.of(2), null, (state) -> Logger.recordOutput("Pivot/SysIdState", state.toString())),
+            new SysIdRoutine.Mechanism((voltage) -> {
+                runVoltage(voltage.in(Volts));
+            }, null, this));
+
         setDefaultCommand(run(() -> {
             double up = MathUtil.applyDeadband(
                     OIConstants.operatorController.getRightTriggerAxis(), OIConstants.kAxisDeadband);
@@ -84,6 +96,15 @@ public class Pivot extends SubsystemBase {
         }));
     }
 
+    public Pose3d getPose() {
+        var drivePose = Drive.getInstance().getPose();
+        // return new Pose3d(drivePose.getY(), 0.254 + drivePose.getX(), 0.215, new Rotation3d((0.62)-Units.degreesToRadians(getTruePosition()), 0, 0)).rotateBy(new Rotation3d(0, 0, -Math.PI / 2));
+        var pose1 = new Pose3d(0.254 + Math.sin(getTruePosition()) * 0.112, 0, 0.215 + Math.cos(getTruePosition()) * 0.112, new Rotation3d(0, -getTruePosition(), 0))
+            .rotateBy(new Rotation3d(0, 0, drivePose.getRotation().getRadians() + Math.PI));
+
+        return new Pose3d(-pose1.getX() + drivePose.getX(), -pose1.getY() + drivePose.getY(), pose1.getZ(), pose1.getRotation()).transformBy(new Transform3d(0.35, 0, 0, new Rotation3d()));
+    }
+
     public void setGoal(double goal) {
         this.goal = MathUtil.clamp(goal, PivotConstants.lowLimit, PivotConstants.highLimit);
         controller.setGoal(goal);
@@ -96,21 +117,41 @@ public class Pivot extends SubsystemBase {
         );
     }
 
-    public void toggleAutoAim() {
-        autoAim = !autoAim;
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return sysid.quasistatic(direction);
     }
 
-    public Command aimSpeakerDynamic(){
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return sysid.dynamic(direction);
+    }
+
+    public Command aim(){
+        switch(StateManager.getState()){
+            case AMP:
+                return this.aimAmp();
+            case SPEAKER:
+                return this.aimSpeakerDynamic();
+            default:
+                return null;
+        }
+    }
+
+    private Command aimSpeakerDynamic(){
         return Commands.either(
             Commands.run(() -> {
                 double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
-                double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker + PivotConstants.offset));
-                this.setGoal(angleCalc - PivotConstants.angleOffset + 0.02);
+                // System.out.println(distanceToSpeaker);
+                // double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker));
+                // double angleCalc = this.aimSpeaker(distanceToSpeaker);
+                // if(angleCalc != Double.NaN){
+                //     this.setGoal(angleCalc - PivotConstants.angleOffset);
+                // }
+                this.setGoal(PivotConstants.armAngleMap.get(distanceToSpeaker));
             }).finallyDo(() -> setGoal(PivotSetpoints.stow)), 
             Commands.startEnd(
                 () -> setGoal(PivotSetpoints.speaker),
                 () -> setGoal(PivotSetpoints.stow)),
-            () -> autoAim);
+            () -> StateManager.isAutomate());
     }
 
     public Command aimAmp() {
@@ -146,9 +187,10 @@ public class Pivot extends SubsystemBase {
 
         // LoggedTunableNumber.ifChanged(hashCode(), () -> controller.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
         // LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);
-                
+        
+        double v1 = controller.getSetpoint().velocity;
         double PIDVolts = controller.calculate(getPosition());
-        double FFVolts = motorFeedforward.calculate(controller.getSetpoint().velocity);
+        double FFVolts = motorFeedforward.calculate(v1, controller.getSetpoint().velocity, 0.02);
 
         if (!disableArm) {
             io.setVoltage(PIDVolts + FFVolts + linearFF(getPosition()));
@@ -159,6 +201,7 @@ public class Pivot extends SubsystemBase {
         Logger.recordOutput("Pivot/Setpoint Position", controller.getSetpoint().position);
         Logger.recordOutput("Pivot/Setpoint Velocity", controller.getSetpoint().velocity);
         Logger.recordOutput("Pivot/Goal", goal);
+        Logger.recordOutput("Pivot/Gravity setpoint", this.aimSpeaker(Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose())));
     }
     
     public void toggleIdleMode() {
@@ -176,7 +219,7 @@ public class Pivot extends SubsystemBase {
     }
 
     public double linearFF(double angle) {
-        return -0.24 * angle - 0.01;
+        return -0.14 * angle - 0.03;
     }
 
     public void runVoltage(double volts) {
@@ -185,6 +228,14 @@ public class Pivot extends SubsystemBase {
         } else {
             throw new IllegalArgumentException("Setting direct pivot voltage without disabling arm!");
         }
+    }
+
+    public double aimSpeaker(double distance){
+        double h = FieldConstants.speakerHeight - PivotConstants.height;
+        double c = h + (distance * distance * 9.8 / (ShooterConstants.initialVelocity * ShooterConstants.initialVelocity));
+        double det = Math.pow(2 * c * h, 2) - 4 * (Math.pow(h, 2) + Math.pow(distance, 2)) * (c * c - distance * distance);
+        double cos = (-2 * c * h + Math.sqrt(det)) / (2 * (h * h + distance * distance));
+        return Math.acos(cos) / 2;
     }
 
     // Choose between motor position or absolute encoder position 

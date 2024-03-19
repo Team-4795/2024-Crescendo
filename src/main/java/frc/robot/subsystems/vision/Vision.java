@@ -2,27 +2,30 @@ package frc.robot.subsystems.vision;
 
 import java.util.Optional;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
-import org.photonvision.EstimatedRobotPose;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonUtils;
-import org.photonvision.PhotonVersion;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.subsystems.vision.VisionIO.EstimatedPose;
+import frc.robot.subsystems.vision.VisionIO.VisionIOInputsAutoLogged;
 
 public class Vision extends SubsystemBase {
     private VisionIO io;
     private VisionIOInputsAutoLogged inputs = new VisionIOInputsAutoLogged();
 
+    private Translation3d redSpeaker = new Translation3d(16.579342, 5.547868, 2);
+    private Translation3d blueSpeaker = new Translation3d(-0.0381, 5.547868, 2);
+    
+    @AutoLogOutput
+    private Translation3d speakerPosition = new Translation3d();
+
     public static Vision instance;
     
     public double distanceToTarget;
-    public Pose2d speakerPosition;
-
-    public PhotonPoseEstimator saguaroPhotonPoseEstimator;
-    public PhotonPoseEstimator barbaryFigPhotonPoseEstimator;
 
     public static Vision getInstance() {
         return instance;
@@ -35,42 +38,94 @@ public class Vision extends SubsystemBase {
         return instance;
     }
 
-
     private Vision(VisionIO visionIO) {
         io = visionIO;
         io.updateInputs(inputs);
 
-        speakerPosition = io.getSpeakerPos();
+        setSpeakerPos();
     }
 
-    public Optional<EstimatedRobotPose> getBarbaryFigPose(Pose2d prevEstimatedRobotPose) {
-        return io.getBarbaryFigPose(prevEstimatedRobotPose);
+    public Optional<EstimatedPose> getBarbaryFigPose() {
+        return inputs.barbaryFigPose;
     }
 
-    public Optional<EstimatedRobotPose> getSaguaroPose(Pose2d prevEstimatedRobotPose) {
-        return io.getSaguaroPose(prevEstimatedRobotPose);
+    public Optional<EstimatedPose> getSaguaroPose() {
+        return inputs.saguaroPose;
+    }
+
+    public Optional<EstimatedPose> getGoldenBarrelPose() {
+        return inputs.goldenBarrelPose;
     }
 
     public double getDistancetoSpeaker(Pose2d robotPose) {
         if(speakerPosition == null){
             return 0;
         }
-        distanceToTarget = PhotonUtils.getDistanceToPose(robotPose, speakerPosition);
+        distanceToTarget = robotPose.getTranslation().getDistance(speakerPosition.toTranslation2d());
         return distanceToTarget;
     }
 
-    public Pose2d getSpeakerPos(){
-        speakerPosition = io.getSpeakerPos();
+    public void setSpeakerPos(){
+        Optional<Alliance> ally = DriverStation.getAlliance();
+        if (ally.isPresent()) {
+            if (ally.get() == Alliance.Red) {
+                speakerPosition = redSpeaker;
+            } else if (ally.get() == Alliance.Blue) {
+                speakerPosition = blueSpeaker;
+            }
+        } else {
+            speakerPosition = new Translation3d();
+        }
+    }
+
+    public Translation3d getSpeakerPos() {
         return speakerPosition;
+    }
+
+    public void setReferencePose(Pose2d reference) {
+        io.setReferencePose(reference);
+    }
+
+    public double distanceToTag(int tag) {
+        return io.getDistanceToTag(tag);
+    }
+
+    public int barbaryFigNumberOfTags() {
+        return inputs.barbaryFigNumberOfTags;
+    }
+
+    public int barbaryFigAprilTagDetected() {
+        return inputs.barbaryFigAprilTagDetected;
+    }
+
+    public int saguaroNumberOfTags() {
+        return inputs.saguaroNumberOfTags;
+    }
+
+    public int saguaroAprilTagDetected() {
+        return inputs.saguaroAprilTagDetected;
+    }
+
+    public int goldenBarrelNumberOfTags() {
+        return inputs.goldenBarrelNumberOfTags;
+    }
+
+    public int goldenBarrelAprilTagDetected() {
+        return inputs.goldenBarrelAprilTagDetected;
+    }
+
+    public boolean lifeCamHastargets() {
+        return inputs.lifeCamHastargets;
+    }
+
+    public double getLifecamYaw () {
+        return inputs.lifeCamyaw;
     }
 
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Vision", inputs);
-
-        if(speakerPosition.getX() == 0 && speakerPosition.getY() == 0){
-            this.getSpeakerPos();
-        }
+        
+        setSpeakerPos();
     }
-
 }

@@ -15,18 +15,21 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.2)); // change later
 
-        NamedCommands.registerCommand("AlignGP1", AutoCommands.setPivotAndShooter(0.215)); // change later
+        NamedCommands.registerCommand("AlignGP1", AutoCommands.setPivotAndShooter(0.25)); // change later
 
         NamedCommands.registerCommand("AlignCommunityLine", AutoCommands.setPivotAndShooter(0.25)); // change later
-
 
         NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.2425)); // change later
 
         NamedCommands.registerCommand("AlignGP3", AutoCommands.setPivotAndShooter(0.2)); // change later
 
-        NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.58)); // change later
+        NamedCommands.registerCommand("Align Far Source", AutoCommands.setPivotAndShooter(0.1115));
 
-        NamedCommands.registerCommand("Align Subwoofer", AutoCommands.SetPivotAngle(0.58));
+        NamedCommands.registerCommand("Align Under Stage", AutoCommands.setPivotAndShooter(0.16));
+
+        NamedCommands.registerCommand("Stow", AutoCommands.SetPivotAngle(0.08));
+
+        NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.58)); // change later
 
         NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
 
@@ -38,13 +41,20 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("Intake", AutoCommands.intake());
 
-        NamedCommands.registerCommand("Jostle Pivot", AutoCommands.SetPivotAngle(0.08));
+        NamedCommands.registerCommand("Run Intake", AutoCommands.intakeWithoutPivot());
 
         NamedCommands.registerCommand("SetIntakePose", AutoCommands.SetPivotAngle(0.6));
 
+        NamedCommands.registerCommand("Align Speaker", AutoCommands.rotateToSpeaker());
+
         NamedCommands.registerCommand("VisionAlign",
-                AutoCommands.aimSpeakerDynamic().withTimeout(0.9)
+                AutoCommands.aimSpeakerDynamic().withTimeout(0.5)
                 .alongWith(Commands.runOnce(
                         () -> Shooter.getInstance().setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom))));
+                    
+        NamedCommands.registerCommand("Align Wing Amp", AutoCommands.setPivotAndShooter(0.133));
+
+        NamedCommands.registerCommand("Align Wing Amp Blue", AutoCommands.setPivotAndShooter(0.1295));
+
     }
 }

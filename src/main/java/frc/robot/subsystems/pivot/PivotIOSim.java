@@ -6,7 +6,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.robot.util.SpringArmSim;
+// import frc.robot.util.SpringArmSim;
 
 public class PivotIOSim implements PivotIO {
     private SingleJointedArmSim pivotSim = new SingleJointedArmSim(
@@ -23,11 +23,12 @@ public class PivotIOSim implements PivotIO {
 
     @Override
     public void updateInputs(PivotIOInputs inputs) {
-        pivotSim.update(PivotConstants.kDt);
         inputs.pivotPositionRads = pivotSim.getAngleRads();
         inputs.pivotMotorPositionRads = pivotSim.getAngleRads();
         inputs.pivotMotorVelocityRadPerSec = pivotSim.getVelocityRadPerSec();
+        inputs.pivotCurrent = pivotSim.getCurrentDrawAmps();
         inputs.pivotAppliedVolts = pivotAppliedVolts;
+        pivotSim.update(PivotConstants.kDt);
     }
     
     @Override
@@ -40,6 +41,6 @@ public class PivotIOSim implements PivotIO {
     public void setVoltage(double volts){
         pivotAppliedVolts = volts;
         Logger.recordOutput("Setting output", volts);
-        pivotSim.setInputVoltage(pivotAppliedVolts - (-0.24 * pivotSim.getAngleRads() - 0.01));
+        pivotSim.setInputVoltage(pivotAppliedVolts - (-0.14 * pivotSim.getAngleRads() - 0.03));
     }
 }

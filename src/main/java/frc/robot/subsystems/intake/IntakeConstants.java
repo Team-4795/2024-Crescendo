@@ -5,4 +5,6 @@ public final class IntakeConstants {
 
     public static final double simGearRatio = 30;
     public static final double overrideSpeed = -0.7;
+
+    public static final double intakeCurrent = 25;
 }

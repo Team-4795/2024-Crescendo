@@ -5,6 +5,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
+import frc.robot.Constants.CurrentLimits;
+
 public class IntakeIOSpark implements IntakeIO {
     private final CANSparkFlex intakeMotor = new CANSparkFlex(IntakeConstants.canID, MotorType.kBrushless);
     private final RelativeEncoder frontEncoder = intakeMotor.getEncoder();
@@ -12,7 +14,7 @@ public class IntakeIOSpark implements IntakeIO {
     public IntakeIOSpark() {
         intakeMotor.setInverted(true);
 
-        intakeMotor.setSmartCurrentLimit(60);
+        intakeMotor.setSmartCurrentLimit(CurrentLimits.intakeVortex);
 
         intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
         intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200);

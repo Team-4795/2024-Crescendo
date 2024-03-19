@@ -17,10 +17,12 @@ import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.MAXSwerve.DriveConstants;
 import frc.robot.subsystems.vision.Vision;
 
+import java.util.Optional;
+
 public class AlignSpeaker extends Command {
 
-    public final double speakerHeight = 1.98;
-    public final double pivotHeight = 0.2794;
+    public final double speakerHeight = 2.06;
+    public final double pivotHeight = 0.29;
     public double distanceToSpeaker = 0.0;
     public double angleCalc = 0.0;
 
@@ -38,6 +40,7 @@ public class AlignSpeaker extends Command {
             addRequirements(vision);
         }
         rotationPID.enableContinuousInput(-180, 180);
+        rotationPID.setTolerance(5);
     }
 
     @Override
@@ -54,7 +57,6 @@ public class AlignSpeaker extends Command {
 
     @Override
     public void execute() {
-
         Pose2d currentPose = drive.getPose();
         Translation2d velocity = drive.getTranslationVelocity();
         Pose2d newPose = new Pose2d(currentPose.getX() + (velocity.getX() * 0.02),
@@ -70,14 +72,16 @@ public class AlignSpeaker extends Command {
         double driveHeading = drive.getWrappedHeading();
         double output = rotationPID.calculate(driveHeading, angle);
 
+        double x = (DriverStation.isTeleop()) ? MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband) : 0;
+        double y = (DriverStation.isTeleop()) ? MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband) : 0;
+
         drive.runVelocity(new ChassisSpeeds(
-                -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband)
-                        * DriveConstants.kMaxSpeedMetersPerSecond,
-                -MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband)
-                        * DriveConstants.kMaxSpeedMetersPerSecond,
+                -Math.copySign(x * x, x) * DriveConstants.kMaxSpeedMetersPerSecond,
+                -Math.copySign(y * y, y) * DriveConstants.kMaxSpeedMetersPerSecond,
                 MathUtil.clamp(omega + output, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed)));
 
-        
+        drive.setAtTarget(Optional.of(rotationPID.atSetpoint()));
+
         Logger.recordOutput("Vision/drive heading", driveHeading);
         Logger.recordOutput("Vision/Speaker Position", vision.getSpeakerPos());
         Logger.recordOutput("Vision/angle", angle);

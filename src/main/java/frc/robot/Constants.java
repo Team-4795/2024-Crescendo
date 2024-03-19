@@ -19,6 +19,8 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /**
@@ -32,12 +34,23 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public final class Constants {
   // Mode of the robot, set to Mode.REPLAY for replay
   public static final Mode currentMode = Mode.fromState();
-  public static final boolean tuningMode = false;
+  public static final boolean tuningMode = true;
   public static final boolean hasVision = true;
   public static final int tryConfigCount = 5;
   public static final double configDelay = 0.1;
   public static final int paramApplyAttemptLimit = 5;
   public static final double paramApplyTimemout = 0.05;
+
+  public static final class CurrentLimits {
+    public static final int pivot = 60;
+    public static final int drive = 60;
+    public static final int turning = 20;
+    public static final int intakeVortex = 60;
+    public static final int intakeKraken = 80;
+    public static final int tower = 30;
+    public static final int handoff = 25;
+    public static final int shooter = 80;
+  }
 
   public static final class PivotSetpoints {
     public static final double speaker = 0.56;
@@ -116,7 +129,36 @@ public final class Constants {
   }
 
   public static final class FieldConstants {
-    public static final double speakerHeight = 2.01; //meters
+    public static final double speakerHeight = 1.98; //meters
+    public static final double fieldLength = Units.inchesToMeters(651.223);
+
+    public static final class StagingLocations {
+      public static final double centerlineX = fieldLength / 2.0;
+
+      // need to update
+      public static final double centerlineFirstY = Units.inchesToMeters(29.638);
+      public static final double centerlineSeparationY = Units.inchesToMeters(66);
+      public static final double spikeX = Units.inchesToMeters(114);
+      // need
+      public static final double spikeFirstY = Units.inchesToMeters(161.638);
+      public static final double spikeSeparationY = Units.inchesToMeters(57);
+
+      public static final Translation2d[] centerlineTranslations = new Translation2d[5];
+      public static final Translation2d[] spikeTranslations = new Translation2d[3];
+
+      static {
+        for (int i = 0; i < centerlineTranslations.length; i++) {
+          centerlineTranslations[i] =
+              new Translation2d(centerlineX, centerlineFirstY + (i * centerlineSeparationY));
+        }
+      }
+
+      static {
+        for (int i = 0; i < spikeTranslations.length; i++) {
+          spikeTranslations[i] = new Translation2d(spikeX, spikeFirstY + (i * spikeSeparationY));
+        }
+      }
+    }
   }
 
   public static class PathFindingConstants {

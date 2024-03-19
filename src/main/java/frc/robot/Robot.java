@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.util.LocalADStarAK;
+import frc.robot.util.NoteVisualizer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -142,8 +143,8 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().run();
 
     Logger.recordOutput("Free memory", (double)Runtime.getRuntime().freeMemory() / 1024 / 1024);
-
-    StateManager.getInstance().periodic();
+    Logger.recordOutput("Current State", StateManager.getState());
+    Logger.recordOutput("Automate", StateManager.isAutomate());
     Threads.setCurrentThreadPriority(true, 10);
   }
 
@@ -163,6 +164,8 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void autonomousInit() {
+    NoteVisualizer.resetAutoNotes();
+    NoteVisualizer.showAutoNotes();
     Pivot.getInstance().setGoal(0.15);
     autonomousCommand = robotContainer.getAutonomousCommand();
 

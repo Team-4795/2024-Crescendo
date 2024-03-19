@@ -16,20 +16,16 @@ package frc.robot;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.ShooterSetpoints;
 import frc.robot.StateManager.State;
 import frc.robot.subsystems.MAXSwerve.*;
 import frc.robot.subsystems.Shooter.*;
@@ -40,13 +36,13 @@ import frc.robot.subsystems.pivot.*;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOReal;
+import frc.robot.subsystems.vision.VisionIOSim;
 import frc.robot.util.NamedCommandManager;
 import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.commands.AlignToAmp;
-import frc.robot.commands.AutoCommands;
+import frc.robot.commands.AlignToGamepiece;
+import frc.robot.commands.ArmFeedForwardCharacterization;
 import frc.robot.commands.RainbowCommand;
-import frc.robot.commands.AlignHeading;
 import frc.robot.commands.AlignSpeaker;
 
 /**
@@ -67,9 +63,6 @@ public class RobotContainer {
   private final Indexer indexer;
   private final Intake intake;
   private LEDs leds;
-
-  // Managers
-  private final StateManager manager = StateManager.getInstance();
 
   LoggedDashboardChooser<Command> autoChooser;
 
@@ -104,13 +97,14 @@ public class RobotContainer {
         shooter = Shooter.initialize(new ShooterIOSim());
         pivot = Pivot.initialize(new PivotIOSim());
         indexer = Indexer.initialize(new IndexerIOSim());
-        vision = Vision.initialize(new VisionIO() {});
+        vision = Vision.initialize(new VisionIOSim());
         drive = Drive.initialize(
             new GyroIOSim(),
             new ModuleIOSim(DriveConstants.kFrontLeftChassisAngularOffset),
             new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
             new ModuleIOSim(DriveConstants.kBackLeftChassisAngularOffset),
             new ModuleIOSim(DriveConstants.kBackRightChassisAngularOffset));
+        leds = LEDs.getInstance();
 
         break;
 
@@ -125,11 +119,15 @@ public class RobotContainer {
     }
 
     NamedCommandManager.registerAll();
+    NoteVisualizer.setPivotPoseSupplier(pivot::getPose);
+    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("SS GP 876"));
 
-    manager.setState(State.Init);
 
-    NoteVisualizer.setRobotPoseSupplier(drive::getPose);
-    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("TEST - AS GP123"));
+    autoChooser.addOption("Pivot SysIs (Quasistatic Forward)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    autoChooser.addOption("Pivot SysIs (Quasistatic Reverse)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    autoChooser.addOption("Pivot SysIs (Dynamic Forward)", pivot.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    autoChooser.addOption("Pivot SysIs (Dynamic Reverse)", pivot.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    autoChooser.addOption("Pivot Model", new ArmFeedForwardCharacterization(pivot, (volts) -> pivot.runVoltage(volts), () -> pivot.getVelocity(), () -> pivot.getPosition(), (x) -> 0.0));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -145,44 +143,50 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
-    Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint());
+    Trigger timeRumble = new Trigger(() -> between(DriverStation.getMatchTime(), 19, 21) || between(DriverStation.getMatchTime(), 39, 41));
+    Trigger continuousRumble = new Trigger(() -> DriverStation.getMatchTime() <= 5);
+    Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint() && drive.isAtTarget());
 
     // Zero drive heading
-    OIConstants.driverController.rightBumper().onTrue(new InstantCommand(drive::zeroHeading));
+    OIConstants.driverController.rightBumper().whileTrue(new AlignToGamepiece());
 
-    // Auto align
-    OIConstants.driverController.leftBumper().whileTrue(new AlignSpeaker());
+    //Align Amp / Speaker
+    OIConstants.driverController.leftBumper().whileTrue(
+          Commands.either(
+            Commands.either(
+              new AlignSpeaker().alongWith(shooter.rev()).alongWith(pivot.aim()), 
+              drive.AutoAlignAmp().alongWith(leds.pathfinding()), 
+              () -> StateManager.getState() == State.SPEAKER
+            ),
+            shooter.rev().alongWith(pivot.aim()),
+            () -> StateManager.isAutomate()
+          )
+    );
 
     //Shoot
-    OIConstants.driverController.rightTrigger(0.3).whileTrue(indexer.forwards());
+    OIConstants.driverController.rightTrigger(0.3)
+      .whileTrue(indexer.forwards())
+      .onTrue(NoteVisualizer.shoot());
     
     //Drive robot relative
     OIConstants.driverController.leftTrigger(0.3)
       .onTrue(Commands.runOnce(() -> drive.setFieldRelative(false)))
       .onFalse(Commands.runOnce(() -> drive.setFieldRelative(true)));
 
-    // Auto drive align
-    OIConstants.driverController.povDown().whileTrue(AlignToAmp.pathfindingCommand);
-    OIConstants.driverController.povRight().onTrue(Commands.runOnce(() -> manager.setState(State.Stow)));
-    OIConstants.driverController.povLeft().onTrue(Commands.runOnce(() -> {
-      pivot.toggleAutoAim();
+    //SADDEST BUTTON IN EXISTENCE ON PERSEUS, PLEASE DON'T PRESS! :Cry: :Sob:
+    OIConstants.driverController.x().onTrue(Commands.runOnce(() -> {
+      StateManager.toggleAutomate();
       leds.toggleYellow();
     }));
 
-    //Heading align
-    OIConstants.driverController.y().whileTrue(AlignHeading.align(0));
-    OIConstants.driverController.x().whileTrue(AlignHeading.align(Units.degreesToRadians(90)));
-    OIConstants.driverController.a().whileTrue(AlignHeading.align(Units.degreesToRadians(180)));
-    OIConstants.driverController.b().whileTrue(AlignHeading.align(Units.degreesToRadians(270)));
+    OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));
 
+    OIConstants.driverController.y().whileTrue(pivot.aimAmp().alongWith(shooter.revAmp()));
     // Speaker aim and rev up
-    OIConstants.operatorController.leftBumper()
-      .whileTrue(pivot.aimSpeakerDynamic().alongWith(shooter.revSpeaker()));
-
+    OIConstants.operatorController.leftBumper().onTrue(Commands.runOnce(() -> StateManager.setState(State.SPEAKER)));
+      
     // Amp aim and rev up
-    OIConstants.operatorController.rightBumper().whileTrue(
-        pivot.aimAmp().alongWith(shooter.revAmp()));
+    OIConstants.operatorController.rightBumper().whileTrue(pivot.aimAmp().alongWith(shooter.revAmp()));
 
     //Source Intake
     OIConstants.operatorController.povUp().onTrue(
@@ -192,7 +196,8 @@ public class RobotContainer {
             pivot.aimSource()));
 
     //Ground Intake
-    OIConstants.operatorController.povDown().whileTrue(
+    OIConstants.operatorController.povDown().or(OIConstants.operatorController.povDownLeft()).or(OIConstants.operatorController.povDownRight())
+    .whileTrue(
         Commands.parallel(
             pivot.aimIntake(),
             intake.intake(),
@@ -201,7 +206,14 @@ public class RobotContainer {
         .andThen(Commands.parallel(
           rumbleCommand(0.5).withTimeout(0.5),
           indexer.reverse().withTimeout(0.05))
-        )
+        ).onlyIf(() -> !intake.getIdleMode())
+    );
+
+    OIConstants.operatorController.povLeft().onTrue(
+      Commands.sequence(
+        Commands.runOnce(() -> intake.setIdleMode(!intake.getIdleMode())),
+        Commands.runOnce(() -> intake.setIntakeSpeed(0))
+      )  
     );
 
     // Slow reverse tower
@@ -226,12 +238,22 @@ public class RobotContainer {
             intake.slowReverse(),
             indexer.forwards()));
 
+    // Toggle pivot idle mode
+    OIConstants.operatorController.start().whileTrue(
+      Commands.startEnd(() -> pivot.toggleIdleMode(), () -> pivot.toggleIdleMode())
+        .ignoringDisable(true));
+
     new Trigger(() -> Math.abs(OIConstants.operatorController.getLeftY()) > 0.15)
       .whileTrue(
         new RainbowCommand(() -> MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), 0.15)));
 
-    if (Constants.currentMode == Mode.REAL) 
-      new Trigger(indexer::isStoring).onTrue(leds.intook());
+    if (Constants.currentMode == Mode.REAL){
+      new Trigger(indexer::isStoring).onTrue(leds.intook().withTimeout(1));
+      new Trigger(intake::isIntaking).debounce(0.1).whileTrue(leds.intaking());
+    }
+
+    timeRumble.onTrue(rumbleCommand(0.3).withTimeout(0.5));
+    continuousRumble.whileTrue(rumbleCommand(0.6));
   }
 
   private void setBothRumble(double amount) {
@@ -240,13 +262,18 @@ public class RobotContainer {
   }
 
   public Command rumbleCommand(double amount) {
-    // return Commands.run(() -> setBothRumble(amount)).finallyDo(() ->
-    // setBothRumble(0));
     return Commands.startEnd(() -> setBothRumble(amount), () -> setBothRumble(0));
   }
 
   public void teleopInit() {
-    manager.setState(State.Init);
+    shooter.setShootingSpeedRPM(0, 0);
+    indexer.setIndexerSpeed(0);
+    intake.setIntakeSpeed(0);
+    pivot.reset();
+  }
+
+  private boolean between(double value, double min, double max){
+    return min <= value && value <= max;
   }
 
   /**

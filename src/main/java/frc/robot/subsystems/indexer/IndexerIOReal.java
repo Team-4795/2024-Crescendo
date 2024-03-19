@@ -8,6 +8,8 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
+import frc.robot.Constants.CurrentLimits;
+
 public class IndexerIOReal implements IndexerIO {
     private CANSparkMax bottomIndexMotor = new CANSparkMax(IndexerConstants.leftCanID, MotorType.kBrushless);
     private CANSparkMax towerIndexMotor = new CANSparkMax(IndexerConstants.rightCanID, MotorType.kBrushless);
@@ -19,11 +21,14 @@ public class IndexerIOReal implements IndexerIO {
     public IndexerIOReal() {
         towerIndexMotor.restoreFactoryDefaults();
         bottomIndexMotor.restoreFactoryDefaults();
+
+        towerIndexMotor.setInverted(false);
+        bottomIndexMotor.setInverted(false);
         
         noteSensor.enableLimitSwitch(false);
 
-        towerIndexMotor.setSmartCurrentLimit(25);
-        bottomIndexMotor.setSmartCurrentLimit(25);
+        towerIndexMotor.setSmartCurrentLimit(CurrentLimits.tower);
+        bottomIndexMotor.setSmartCurrentLimit(CurrentLimits.handoff);
 
         towerEncoder.setVelocityConversionFactor(IndexerConstants.kVelocityConversionFactor);
         bottomEncoder.setVelocityConversionFactor(IndexerConstants.kVelocityConversionFactor);
@@ -35,20 +40,20 @@ public class IndexerIOReal implements IndexerIO {
         bottomIndexMotor.setIdleMode(IdleMode.kCoast);
 
         towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
-        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200);
-        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 65535);
-        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
-        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
-        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
-        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 1000);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 1000);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 1000);
 
         bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
-        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200);
-        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 65535);
-        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
-        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
-        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
-        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 1000);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 1000);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 1000);
 
         towerIndexMotor.burnFlash();
         bottomIndexMotor.burnFlash();
