@@ -24,7 +24,7 @@ import frc.robot.subsystems.pivot.Pivot;
 
 public class AutoAlignAmp extends Command{
 
-    private static final Pose2d RED_AMP = new Pose2d(14.7, 7.5, Rotation2d.fromRadians(Math.PI / 2));
+    private static final Pose2d RED_AMP = new Pose2d(14.7, 7.6, Rotation2d.fromRadians(Math.PI / 2));
     private static final Pose2d BLUE_AMP = new Pose2d(1.86, 7.6, Rotation2d.fromRadians(Math.PI / 2));
 
     private ProfiledPIDController translationController;
@@ -56,6 +56,7 @@ public class AutoAlignAmp extends Command{
         });
         currentPose = Drive.getInstance().getPose();
         double velocity = projection(drive.getFieldRelativeTranslationVelocity(), targetPose.getTranslation().minus(currentPose.getTranslation()));
+        rotationController.enableContinuousInput(-Math.PI, Math.PI);
         Logger.recordOutput("AutoAlign/Robot velocity", drive.getFieldRelativeTranslationVelocity());
         Logger.recordOutput("AutoAlign/Translation", targetPose.getTranslation().minus(currentPose.getTranslation()));
         Logger.recordOutput("AutoAlign/velocity", velocity);
@@ -85,7 +86,7 @@ public class AutoAlignAmp extends Command{
                 pivot.setGoal(PivotSetpoints.amp);
                 shooter.setShootingSpeedRPM(ShooterSetpoints.ampTop, ShooterSetpoints.ampBottom);
         }
-        if(rotationController.atGoal() && distance < 0.06){
+        if(rotationController.atGoal() && distance < 0.1){
                 indexer.setIndexerSpeed(IndexerSetpoints.shoot);
         }
 

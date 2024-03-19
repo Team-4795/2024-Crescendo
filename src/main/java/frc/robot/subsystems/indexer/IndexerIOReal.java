@@ -41,19 +41,19 @@ public class IndexerIOReal implements IndexerIO {
 
         towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
         towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
-        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 65535);
-        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
-        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
-        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
-        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 1000);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 1000);
+        towerIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 1000);
 
         bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
         bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
-        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 65535);
-        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
-        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
-        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
-        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 1000);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 1000);
+        bottomIndexMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 1000);
 
         towerIndexMotor.burnFlash();
         bottomIndexMotor.burnFlash();

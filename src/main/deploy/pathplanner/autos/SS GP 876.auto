@@ -6,9 +6,22 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Align Speaker"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "VisionAlign"
+                }
+              }
+            ]
           }
         },
         {
@@ -143,10 +156,22 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Align Under Stage"
+                  "name": "Stow"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align Under Stage"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.4
           }
         },
         {

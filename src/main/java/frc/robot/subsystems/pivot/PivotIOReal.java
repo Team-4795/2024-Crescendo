@@ -50,16 +50,16 @@ public class PivotIOReal implements PivotIO {
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
-    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
-    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
-    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
-    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
+    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
+    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 1000);
+    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 1000);
+    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 1000);
 
     // pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
     pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
     pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
-    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
-    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
+    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 1000);
     pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
     pivotLeft.burnFlash();
@@ -83,7 +83,7 @@ public class PivotIOReal implements PivotIO {
 
   private double getAbsolutePosition() {
     double rotation = -encoder.getAbsolutePosition() * PivotConstants.positionConversionFactor + 4.187 - 3.151;
-    if(rotation < 0){
+    if(rotation < -1){
       rotation += 2 * Math.PI;
     }
     return rotation;

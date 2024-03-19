@@ -53,6 +53,10 @@ public class Vision extends SubsystemBase {
         return inputs.saguaroPose;
     }
 
+    public Optional<EstimatedPose> getGoldenBarrelPose() {
+        return inputs.goldenBarrelPose;
+    }
+
     public double getDistancetoSpeaker(Pose2d robotPose) {
         if(speakerPosition == null){
             return 0;
@@ -100,6 +104,14 @@ public class Vision extends SubsystemBase {
 
     public int saguaroAprilTagDetected() {
         return inputs.saguaroAprilTagDetected;
+    }
+
+    public int goldenBarrelNumberOfTags() {
+        return inputs.goldenBarrelNumberOfTags;
+    }
+
+    public int goldenBarrelAprilTagDetected() {
+        return inputs.goldenBarrelAprilTagDetected;
     }
 
     public boolean lifeCamHastargets() {

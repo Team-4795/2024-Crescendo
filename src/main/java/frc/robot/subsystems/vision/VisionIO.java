@@ -13,12 +13,16 @@ public interface VisionIO {
     public static class VisionIOInputs {
         Optional<EstimatedPose> barbaryFigPose = Optional.empty();
         Optional<EstimatedPose> saguaroPose = Optional.empty();
+        Optional<EstimatedPose> goldenBarrelPose = Optional.empty();
 
         int barbaryFigAprilTagDetected = 0;
         int barbaryFigNumberOfTags = 0;
 
         int saguaroAprilTagDetected = 0;
         int saguaroNumberOfTags = 0;
+
+        int goldenBarrelAprilTagDetected = 0;
+        int goldenBarrelNumberOfTags = 0;
 
         boolean lifeCamHastargets = false;
         double lifeCamyaw = 0;
@@ -32,6 +36,9 @@ public interface VisionIO {
 
             table.put("saguaroPose", saguaroPose.map((pose) -> pose.pose()).orElse(null));
             saguaroPose.ifPresent((pose) -> table.put("saguaroFigTimestamp", pose.timestamp()));
+
+            table.put("goldenBarrelPose", goldenBarrelPose.map((pose) -> pose.pose()).orElse(null));
+            goldenBarrelPose.ifPresent((pose) -> table.put("goldenBarrelFigTimestamp", pose.timestamp()));
         }
 
         private Optional<EstimatedPose> getEstimatedPose(LogTable table, String poseKey, String timestampKey) {
@@ -53,6 +60,7 @@ public interface VisionIO {
         public void fromLog(LogTable table) {
             barbaryFigPose = getEstimatedPose(table, "barbaryFigPose", "barbaryFigPoseTimestamp");
             saguaroPose = getEstimatedPose(table, "saguaroPose", "saguaroPoseTimestamp");
+            goldenBarrelPose = getEstimatedPose(table, "goldenBarrelPose", "saguaroPoseTimestamp");
         }
 
         @Override
@@ -60,6 +68,7 @@ public interface VisionIO {
             VisionIOInputsAutoLogged copy = new VisionIOInputsAutoLogged();
             copy.barbaryFigPose = this.barbaryFigPose;
             copy.saguaroPose = this.saguaroPose;
+            copy.goldenBarrelPose = this.goldenBarrelPose;
             return copy;
         }
     }

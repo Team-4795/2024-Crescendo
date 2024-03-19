@@ -23,9 +23,11 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("AlignGP3", AutoCommands.setPivotAndShooter(0.2)); // change later
 
-        NamedCommands.registerCommand("Align Far Source", AutoCommands.setPivotAndShooter(0.15));
+        NamedCommands.registerCommand("Align Far Source", AutoCommands.setPivotAndShooter(0.1115));
 
-        NamedCommands.registerCommand("Align Under Stage", AutoCommands.setPivotAndShooter(0.235));
+        NamedCommands.registerCommand("Align Under Stage", AutoCommands.setPivotAndShooter(0.16));
+
+        NamedCommands.registerCommand("Stow", AutoCommands.SetPivotAngle(0.08));
 
         NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.58)); // change later
 
@@ -49,5 +51,10 @@ public class NamedCommandManager {
                 AutoCommands.aimSpeakerDynamic().withTimeout(0.5)
                 .alongWith(Commands.runOnce(
                         () -> Shooter.getInstance().setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom))));
+                    
+        NamedCommands.registerCommand("Align Wing Amp", AutoCommands.setPivotAndShooter(0.133));
+
+        NamedCommands.registerCommand("Align Wing Amp Blue", AutoCommands.setPivotAndShooter(0.1295));
+
     }
 }
