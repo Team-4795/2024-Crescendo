@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.870990641150915,
-        "y": 5.774748251750359
+        "x": 7.82,
+        "y": 4.13
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.9022798640215335,
-        "y": 6.165986213012647
+        "x": 8.82,
+        "y": 4.13
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 6.36
       },
       "prevControl": {
-        "x": 5.365305300254883,
-        "y": 6.389772295515274
+        "x": 2.93935385724081,
+        "y": 3.4658210282431305
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "AS GP 145",
+  "folder": "AS GP 1456",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.19,
-        "y": 6.36
+        "x": 2.6162688461334,
+        "y": 4.023876956519567
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.870990641150915,
-        "y": 5.774748251750359
+        "x": 7.815000388498094,
+        "y": 4.126676732781015
       },
       "prevControl": {
-        "x": 6.936124145083404,
-        "y": 6.261657885118854
+        "x": 6.581403073360708,
+        "y": 3.7154776277352206
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,9 +43,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "AS GP 145",
+  "folder": "AS GP 1456",
   "previewStartingState": {
-    "rotation": 10.239034419210947,
+    "rotation": 10.032623406045643,
     "velocity": 0
   },
   "useDefaultConstraints": true
