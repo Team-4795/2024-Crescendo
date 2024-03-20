@@ -35,10 +35,10 @@ import frc.robot.subsystems.indexer.*;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.leds.LEDs;
 import frc.robot.subsystems.pivot.*;
-import frc.robot.subsystems.vision.Vision;
-import frc.robot.subsystems.vision.VisionIO;
-import frc.robot.subsystems.vision.VisionIOReal;
-import frc.robot.subsystems.vision.VisionIOSim;
+import frc.robot.subsystems.vision.AprilTagVision.Vision;
+import frc.robot.subsystems.vision.AprilTagVision.VisionIO;
+import frc.robot.subsystems.vision.AprilTagVision.VisionIOReal;
+import frc.robot.subsystems.vision.AprilTagVision.VisionIOSim;
 import frc.robot.util.NamedCommandManager;
 import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -256,10 +256,6 @@ public class RobotContainer {
 
     timeRumble.onTrue(rumbleCommand(0.3).withTimeout(0.5));
     continuousRumble.whileTrue(rumbleCommand(0.6));
-  }
-
-  public AprilTagFieldLayout getAprilTagFieldLayout() {
-    return 
   }
 
   private void setBothRumble(double amount) {

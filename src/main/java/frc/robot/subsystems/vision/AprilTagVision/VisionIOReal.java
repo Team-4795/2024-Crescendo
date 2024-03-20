@@ -1,4 +1,4 @@
-package frc.robot.subsystems.vision;
+package frc.robot.subsystems.vision.AprilTagVision;
 
 import java.io.IOException;
 import org.photonvision.PhotonCamera;
@@ -30,7 +30,7 @@ public class VisionIOReal implements VisionIO {
         poseEstimator = new PhotonPoseEstimator(VisionConstants.aprilTagFieldLayout,
                     PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, VisionConstants.cameraPoses[camIndex]);
 
-        poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
+        poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     }
 
     @Override

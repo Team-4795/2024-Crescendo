@@ -1,4 +1,4 @@
-package frc.robot.subsystems.vision;
+package frc.robot.subsystems.vision.AprilTagVision;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.MAXSwerve.Drive;
-import frc.robot.subsystems.vision.VisionIO.VisionIOInputsAutoLogged;
+import frc.robot.subsystems.vision.AprilTagVision.VisionIOInputsAutoLogged;
 
 public class Vision extends SubsystemBase {
     private VisionIO io[];

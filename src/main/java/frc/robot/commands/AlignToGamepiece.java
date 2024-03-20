@@ -13,11 +13,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.MAXSwerve.Drive;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.AprilTagVision.Vision;
+import frc.robot.subsystems.vision.intakeCam.IntakeCamVision;
 
 public class AlignToGamepiece extends Command {
     private Drive drive = Drive.getInstance();
-    private Vision vision = Vision.getInstance();
+    private IntakeCamVision vision = IntakeCamVision.getInstance();
 
     private PIDController rotationPID = new PIDController(0.35, 0, 0); 
 
@@ -28,7 +29,7 @@ public class AlignToGamepiece extends Command {
     public AlignToGamepiece() {
         addRequirements(drive);
         if(Constants.hasVision){
-            vision = Vision.getInstance();
+            vision = IntakeCamVision.getInstance();
             addRequirements(vision);
         }
         rotationPID.enableContinuousInput(-180, 180);
@@ -44,8 +45,8 @@ public class AlignToGamepiece extends Command {
 
     @Override
     public void execute() {
-       double lifecamYaw = vision.getLifecamYaw();
-       boolean hasTargets = vision.lifeCamHastargets();
+       double lifecamYaw = vision.getIntakeCamYaw();
+       boolean hasTargets = vision.intakeCamHasTargets();
 
        double distanceToSource = drive.getPose().getTranslation().getDistance(sourcePose.getTranslation());
        double driveHeading = Units.degreesToRadians(drive.getWrappedHeading());
