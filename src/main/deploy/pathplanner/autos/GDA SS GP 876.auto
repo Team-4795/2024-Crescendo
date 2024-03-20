@@ -49,10 +49,35 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SS GP 876 P2"
+                  "pathName": "SS GP 876 P1"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SS GP 876 P2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Far Source"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
           }
         },
         {
@@ -68,16 +93,10 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Align Far Source"
+                  "name": "Intake"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score"
           }
         },
         {
@@ -93,25 +112,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SS GP 876 P5"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Align Far Source"
                 }
               }
@@ -131,7 +131,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SS GP 876 P6"
+                  "pathName": "SS GP 876 P5"
                 }
               },
               {
@@ -150,7 +150,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SS GP 876 P7"
+                  "pathName": "SS GP 876 P6"
                 }
               },
               {

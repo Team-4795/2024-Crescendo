@@ -7,6 +7,8 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -24,7 +26,6 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.util.NoteVisualizer;
 
 public class AutoCommands {
-  private HashMap<String, PathPlannerTrajectory> paths = new HashMap<>();
 
   private static Drive drive = Drive.getInstance();
   private static Shooter shooter = Shooter.getInstance();
@@ -32,11 +33,20 @@ public class AutoCommands {
   private static Pivot pivot = Pivot.getInstance();
   private static Indexer indexer = Indexer.getInstance();
 
-  public AutoCommands() {
+  private AutoCommands() {
   }
 
-  public static Command followTrajectory(String PathName) {
-    PathPlannerPath path = PathPlannerPath.fromPathFile(PathName);
+  public static Command followTrajectory(String pathName) {
+    PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+    // DriverStation.getAlliance().ifPresent((alliance) -> {
+    //   if(alliance == Alliance.Red){
+    //     path.flipPath();
+    //   }
+    // });
+    return AutoBuilder.followPath(path);
+  }
+
+  public static Command followTrajectory(PathPlannerPath path){
     return AutoBuilder.followPath(path);
   }
 
@@ -75,7 +85,7 @@ public class AutoCommands {
   }
 
   public static Command resetOdometry(Pose2d pose) {
-    return new InstantCommand(() -> {
+    return Commands.runOnce(() -> {
       drive.resetOdometry(pose);
     });
   }
