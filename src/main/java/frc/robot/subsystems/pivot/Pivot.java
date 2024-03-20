@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants;
 import frc.robot.StateManager;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
@@ -191,7 +192,7 @@ public class Pivot extends SubsystemBase {
         
         double v1 = controller.getSetpoint().velocity;
         double PIDVolts = controller.calculate(getPosition(), goal);
-        double FFVolts = motorFeedforward.calculate(v1, controller.getSetpoint().velocity, 0.02);
+        double FFVolts = Constants.useLQR ? 0 : motorFeedforward.calculate(v1, controller.getSetpoint().velocity, 0.02);
 
         if (!disableArm) {
             io.setVoltage(PIDVolts + FFVolts + linearFF(getPosition()));

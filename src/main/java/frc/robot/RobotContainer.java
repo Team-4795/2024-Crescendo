@@ -88,7 +88,6 @@ public class RobotContainer {
                 DriveConstants.kBackLeftChassisAngularOffset),
             new ModuleIOSparkMax(DriveConstants.kRearRightDrivingCanId, DriveConstants.kRearRightTurningCanId,
                 DriveConstants.kBackRightChassisAngularOffset));
-        leds = LEDs.getInstance();
         break;
 
       case SIM:
@@ -104,8 +103,6 @@ public class RobotContainer {
             new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
             new ModuleIOSim(DriveConstants.kBackLeftChassisAngularOffset),
             new ModuleIOSim(DriveConstants.kBackRightChassisAngularOffset));
-        leds = LEDs.getInstance();
-
         break;
 
       default:
@@ -117,6 +114,8 @@ public class RobotContainer {
         drive = Drive.initialize(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
         break;
     }
+
+    leds = LEDs.getInstance();
 
     NamedCommandManager.registerAll();
     NoteVisualizer.setPivotPoseSupplier(pivot::getPose);

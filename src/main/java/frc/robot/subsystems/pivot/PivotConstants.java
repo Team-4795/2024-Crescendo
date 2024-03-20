@@ -7,9 +7,9 @@ import edu.wpi.first.math.util.Units;
 public final class PivotConstants {
     public static final int leftCanID = 11;
     public static final int rightCanID = 12;
-    public static final double kA = 0.14;
-    public static final double kV = 2.35;
-    public static final double kS = 0.15;
+    public static final double kA = 0.02;
+    public static final double kV = 2.4;
+    public static final double kS = 0.0;
     public static final double kP = 10;
     public static final double kI = 0;
     public static final double kD = 0;

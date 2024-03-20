@@ -28,14 +28,14 @@ public final class PivotController {
     private TrapezoidProfile.State lastState = new TrapezoidProfile.State();
 
     private final LinearSystem<N2, N1, N1> armPlant =
-        LinearSystemId.createSingleJointedArmSystem(DCMotor.getNEO(2), PivotConstants.inertia, PivotConstants.gearing);
+        LinearSystemId.createSingleJointedArmSystem(DCMotor.getNeoVortex(2), PivotConstants.inertia, PivotConstants.gearing);
 
     private final KalmanFilter<N2, N1, N1> observer =
         new KalmanFilter<>(
             Nat.N2(),
             Nat.N1(),
             armPlant,
-            VecBuilder.fill(0.5, 0.5), // How accurate we
+            VecBuilder.fill(0.1, 0.2), // How accurate we
             // think our model is, in radians and radians/sec
             VecBuilder.fill(0.02), // How accurate we think our encoder position
             // data is. In this case we very highly trust our encoder position reading.
@@ -52,8 +52,6 @@ public final class PivotController {
         new LinearSystemLoop<>(armPlant, lqr, observer, 12.0, 0.02);
 
     public PivotController() {
-        // lastState = new TrapezoidProfile.State(measurement, 0);
-
         System.out.println(loop.getController().getK());
     }
 
@@ -82,6 +80,7 @@ public final class PivotController {
 
     public void reset(double measurement) {
         if (Constants.useLQR) {
+            lastState = new TrapezoidProfile.State(measurement, 0);
             loop.reset(VecBuilder.fill(measurement, 0));
         } else {
             normalController.reset(measurement);
