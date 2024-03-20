@@ -14,6 +14,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -28,6 +29,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
@@ -217,23 +220,6 @@ public class Drive extends SubsystemBase {
 
         Vision.getInstance().setReferencePose(m_poseEstimator.getEstimatedPosition());
         
-        for(int camIndex = 0; camIndex < 3; camIndex++) {
-            int i = camIndex;
-            Vision.getInstance().getCamPose(camIndex).ifPresent(visionPose -> {
-                    double poseDiff = visionPose.pose().getTranslation().getDistance(this.getPose().getTranslation());
-                    double gyroDiff = Math.abs(visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees());
-                    double distanceToAprilTag = Vision.getInstance().distanceToTag(i, vision.aprilTagDetected(i));
-                    // int numOfTags = Vision.getInstance().barbaryFigNumberOfTags();
-                    double stddev = getVisionStd(distanceToAprilTag);
-                    Logger.recordOutput("Vision/Barbary Fig Std Dev", stddev);
-
-                    m_poseEstimator.addVisionMeasurement(
-                        visionPose.pose(), 
-                        visionPose.timestamp(),
-                        VecBuilder.fill(stddev, stddev, Units.degreesToRadians(20))); //Do math to find Std
-                });
-        }
-        
         LoggedTunableNumber.ifChanged(
             hashCode(),
             () -> translationController.setPID(linearkP.get(), 0, linearkD.get()),
@@ -275,8 +261,8 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput("Swerve/OptimizedStates", this.getOptimizedStates());
     }
 
-    public double getVisionStd(double distance) {
-        return distance * 0.25 + 0.1;
+    public void addVisionMeasurement(Pose2d pose, double timestamp, Matrix<N3, N1> stddevs) {
+        m_poseEstimator.addVisionMeasurement(pose, timestamp, stddevs);
     }
 
     public void setAtTarget(Optional<Boolean> atTarget) {

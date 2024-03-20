@@ -1,16 +1,26 @@
 package frc.robot.subsystems.vision;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.vision.VisionIO.EstimatedPose;
+import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.vision.VisionIO.VisionIOInputsAutoLogged;
 
 public class Vision extends SubsystemBase {
@@ -47,14 +57,6 @@ public class Vision extends SubsystemBase {
         setSpeakerPos();
     }
 
-    public Optional<EstimatedPose> getCamPose(int camIndex) {
-        return inputs[camIndex].visionPose;
-    }
-
-    public Optional<EstimatedPose> getGoldenBarrelPose() {
-        return inputs.goldenBarrelPose;
-    }
-
     public double getDistancetoSpeaker(Pose2d robotPose) {
         if(speakerPosition == null){
             return 0;
@@ -81,23 +83,26 @@ public class Vision extends SubsystemBase {
     }
 
     public void setReferencePose(Pose2d reference) {
-        for(int i = 0; i < io.length; i++)
-        {
+        for(int i = 0; i < io.length; i++) {
             io[i].setReferencePose(reference);
         }
     }
 
-    public double distanceToTag(int camIndex, int tag) {
-        return io[camIndex].getDistanceToTag(tag);
+    public double getVisionStd(double distance) {
+        return distance * 0.25;
     }
 
-    public int numberOfTags(int camindex) {
-        return inputs[camindex].numberOfTags;
-    } 
+    // public double distanceToTag(int camIndex, int tag) {
+    //     return io[camIndex].getDistanceToTag(tag);
+    // }
 
-    public int aprilTagDetected(int camIndex) {
-        return inputs[camIndex].aprilTagDetected;
-    }
+    // public int numberOfTags(int camindex) {
+    //     return inputs[camindex].numberOfTags;
+    // } 
+
+    // public int aprilTagDetected(int camIndex) {
+    //     return inputs[camIndex].aprilTagDetected;
+    // }
 
     // public boolean lifeCamHastargets() {
     //     return inputs.lifeCamHastargets;
@@ -110,9 +115,33 @@ public class Vision extends SubsystemBase {
     public void periodic() {
         for (int i = 0; i < io.length; i++) {
             io[i].updateInputs(inputs[i]);
-            Logger.processInputs("Vision/Inst" + i, inputs[i]);
+            Logger.processInputs("Vision/" + VisionConstants.cameraIds[i], inputs[i]);
         }
         
         setSpeakerPos();
+
+        for (int i = 0; i < io.length; i++) {
+            for (int p = 0; p < inputs[i].pose.length; p++) {
+                Pose3d robotPose = inputs[i].pose[p];
+
+                List<Pose3d> tagPoses = new ArrayList<>();
+                for (int tag : inputs[i].tags) {
+                    VisionConstants.aprilTagFieldLayout.getTagPose(tag).ifPresent(tagPoses::add);
+                }
+
+                if (tagPoses.isEmpty()) continue;
+
+                double distance = 0.0;
+                for (var tag : tagPoses) {
+                    distance += tag.getTranslation().getDistance(robotPose.getTranslation());
+                }
+
+                distance /= tagPoses.size();
+
+                double xyStdDev = getVisionStd(distance) / tagPoses.size();
+                var stddevs = VecBuilder.fill(xyStdDev, xyStdDev, Units.degreesToRadians(40));
+                Drive.getInstance().addVisionMeasurement(robotPose.toPose2d(), inputs[i].timestamp[p], stddevs);
+            }
+        }
     }
 }

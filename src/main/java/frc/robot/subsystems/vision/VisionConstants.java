@@ -1,5 +1,10 @@
 package frc.robot.subsystems.vision;
 
+import java.io.IOException;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -44,4 +49,15 @@ public class VisionConstants {
                 Units.degreesToRadians(20), 
                 Math.PI))
     };
+
+    public static AprilTagFieldLayout aprilTagFieldLayout;
+
+    static {
+        try {
+            aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+            aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

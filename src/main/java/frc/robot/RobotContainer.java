@@ -16,6 +16,8 @@ package frc.robot;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -254,6 +256,10 @@ public class RobotContainer {
 
     timeRumble.onTrue(rumbleCommand(0.3).withTimeout(0.5));
     continuousRumble.whileTrue(rumbleCommand(0.6));
+  }
+
+  public AprilTagFieldLayout getAprilTagFieldLayout() {
+    return 
   }
 
   private void setBothRumble(double amount) {
