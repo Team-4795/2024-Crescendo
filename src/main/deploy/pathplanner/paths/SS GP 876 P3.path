@@ -30,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.2,
+      "waypointRelativePos": 0.3,
       "rotationDegrees": 12.612120331247002,
       "rotateFast": true
     }
@@ -39,7 +39,7 @@
   "eventMarkers": [
     {
       "name": "Detect Note",
-      "waypointRelativePos": 0.2,
+      "waypointRelativePos": 0.3,
       "command": {
         "type": "sequential",
         "data": {
