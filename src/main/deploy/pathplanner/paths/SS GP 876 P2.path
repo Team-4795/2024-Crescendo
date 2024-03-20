@@ -28,9 +28,26 @@
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.55,
+      "rotationDegrees": -18.561117677175066,
+      "rotateFast": true
+    }
+  ],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Detect Note",
+      "waypointRelativePos": 0.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 5.0,
@@ -43,7 +60,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "SS GP 876",
+  "folder": "GDA SS GP 876",
   "previewStartingState": {
     "rotation": -42.709389957361445,
     "velocity": 0

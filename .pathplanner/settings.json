@@ -3,17 +3,9 @@
   "robotLength": 0.79,
   "holonomicMode": true,
   "pathFolders": [
-    "AS GP 123",
-    "AS GP 145",
-    "AS Preload + Move",
-    "Event Markers Experimentation",
-    "M GP 123",
-    "M GP 2145",
-    "M GP1234",
-    "PathFinding",
-    "SS GP 38 (intake 7)",
-    "SS GP 876",
-    "SS GP78"
+    "GDA AS GP 145",
+    "GDA M GP 2145",
+    "GDA SS GP 876"
   ],
   "autoFolders": [],
   "defaultMaxVel": 5.0,
