@@ -1,4 +1,4 @@
-package frc.robot.subsystems.vision;
+package frc.robot.subsystems.vision.AprilTagVision;
 
 import java.util.Optional;
 
@@ -9,6 +9,7 @@ import org.photonvision.EstimatedRobotPose;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import frc.robot.subsystems.vision.AprilTagVision.VisionIOInputsAutoLogged;
  
 public interface VisionIO {
     @AutoLog

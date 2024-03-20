@@ -39,7 +39,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoAlignAmp;
 import java.util.Optional;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.AutoConstants;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.Command;
