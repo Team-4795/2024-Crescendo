@@ -27,8 +27,8 @@ public class Vision extends SubsystemBase {
     private VisionIO io[];
     private VisionIOInputsAutoLogged inputs[];
 
-    private Translation3d redSpeaker = new Translation3d(16.579342, 5.547868, 2);
-    private Translation3d blueSpeaker = new Translation3d(-0.0381, 5.547868, 2);
+    private Translation3d redSpeaker = new Translation3d(16.379342, 5.547868, 2);
+    private Translation3d blueSpeaker = new Translation3d(0.1619, 5.547868, 2);
     
     @AutoLogOutput
     private Translation3d speakerPosition = new Translation3d();
