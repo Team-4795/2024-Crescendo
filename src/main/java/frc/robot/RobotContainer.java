@@ -44,6 +44,8 @@ import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AlignToGamepiece;
 import frc.robot.commands.ArmFeedForwardCharacterization;
+import frc.robot.commands.AutoAlignAmp;
+import frc.robot.commands.AutoCommands;
 import frc.robot.commands.RainbowCommand;
 import frc.robot.commands.AlignSpeaker;
 
@@ -182,6 +184,7 @@ public class RobotContainer {
     }));
 
     OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));
+    //OIConstants.driverController.b().whileTrue(new AlignToGamepiece());
 
     OIConstants.driverController.y().whileTrue(pivot.aimAmp().alongWith(shooter.revAmp()));
     // Speaker aim and rev up

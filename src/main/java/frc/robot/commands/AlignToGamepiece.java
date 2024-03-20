@@ -57,7 +57,7 @@ public class AlignToGamepiece extends Command {
        if (hasTargets) {
             output = MathUtil.clamp(rotationPID.calculate(Units.degreesToRadians(lifecamYaw), 0), -1, 1);
        } 
-       else if (!hasTargets && distanceToSource < 10000) {
+       else if (!hasTargets && distanceToSource < 7) {
             output = MathUtil.clamp(rotationPID.calculate(driveHeading, sourcePose.getRotation().getRadians()), -1, 1);
        }
 

@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,6 +42,7 @@ public class AutoAlignAmp extends Command{
 
     public AutoAlignAmp(ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;
+        translationController.setTolerance(0.1);
         rotationController = rotation;
         drive = Drive.getInstance();
         pivot = Pivot.getInstance();
@@ -48,6 +50,7 @@ public class AutoAlignAmp extends Command{
         indexer = Indexer.getInstance();
         addRequirements(drive, pivot, shooter);
     }
+
 
     @Override
     public void initialize(){
