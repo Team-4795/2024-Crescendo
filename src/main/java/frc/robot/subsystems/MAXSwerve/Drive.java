@@ -14,6 +14,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -28,6 +29,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
@@ -36,7 +39,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoAlignAmp;
 import java.util.Optional;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.AutoConstants;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -85,6 +88,12 @@ public class Drive extends SubsystemBase {
     private Optional<Boolean> atTarget; 
 
     private Vision vision;
+
+    //Cam indexes for vision
+    private int barbaryFig = 0;
+    private int saguaro = 1;
+    private int goldenBarrel = 2;
+
     // Odometry class for tracking robot pose
     SwerveDriveOdometry m_odometry;
     private Pose2d pose = new Pose2d();
@@ -129,8 +138,8 @@ public class Drive extends SubsystemBase {
 
         this.zeroHeading();
 
-        translationController = new ProfiledPIDController(linearkP.get(), 0, linearkD.get(), new Constraints(4.5, 4.5));
-        rotationController = new ProfiledPIDController(thetakP.get(), 0, thetakD.get(), new Constraints(4, 5));
+        translationController = new ProfiledPIDController(linearkP.get(), 0, linearkD.get(), new Constraints(2.5, 3.5));
+        rotationController = new ProfiledPIDController(thetakP.get(), 0, thetakD.get(), new Constraints(3, 4));
         translationController.setTolerance(linearTolerance.get());
         rotationController.setTolerance(thetaTolerance.get());
 
@@ -211,57 +220,6 @@ public class Drive extends SubsystemBase {
 
         Vision.getInstance().setReferencePose(m_poseEstimator.getEstimatedPosition());
         
-        Vision.getInstance().getBarbaryFigPose().ifPresent(visionPose -> {
-
-            double poseDiff = visionPose.pose().getTranslation().getDistance(this.getPose().getTranslation());
-            double gyroDiff = Math.abs(visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees());
-            double distanceToAprilTag = Vision.getInstance().distanceToTag(vision.barbaryFigAprilTagDetected());
-            double stddev = getVisionStd(distanceToAprilTag);
-            Logger.recordOutput("Vision/Barbary Fig Std Dev", stddev);
-
-            //if(poseDiff < 1 && gyroDiff < 20)
-            //{
-                m_poseEstimator.addVisionMeasurement(
-                    visionPose.pose(), 
-                    visionPose.timestamp(),
-                    VecBuilder.fill(stddev, stddev, Units.degreesToRadians(40))); //Do math to find Std
-            //}
-            // int numOfTags = Vision.getInstance().barbaryFigNumberOfTags();      
-        });
-        
-        Vision.getInstance().getSaguaroPose().ifPresent(visionPose -> {
-            double poseDiff = visionPose.pose().getTranslation().getDistance(this.getPose().getTranslation());
-            double gyroDiff = Math.abs(visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees());
-            double distanceToAprilTag = Vision.getInstance().distanceToTag(vision.saguaroAprilTagDetected());
-            int numOfTags = Vision.getInstance().saguaroNumberOfTags();
-            double stddev = getVisionStd(distanceToAprilTag);
-
-            //if(poseDiff < 1 && gyroDiff < 20)
-            //{
-            m_poseEstimator.addVisionMeasurement(
-                visionPose.pose(), 
-                visionPose.timestamp(),
-                VecBuilder.fill(2 * stddev, 2 * stddev, Units.degreesToRadians(40))); //Do math to find Std
-            //}
-
-        });
-
-        Vision.getInstance().getGoldenBarrelPose().ifPresent(visionPose -> {
-            double poseDiff = visionPose.pose().getTranslation().getDistance(this.getPose().getTranslation());
-            double gyroDiff = Math.abs(visionPose.pose().getRotation().getDegrees() - this.getPose().getRotation().getDegrees());
-            double distanceToAprilTag = Vision.getInstance().distanceToTag(vision.goldenBarrelAprilTagDetected());
-            int numOfTags = Vision.getInstance().goldenBarrelNumberOfTags();
-            double stddev = getVisionStd(distanceToAprilTag);
-
-           // if(poseDiff < 1 && gyroDiff < 20)
-            //{
-            m_poseEstimator.addVisionMeasurement(
-                visionPose.pose(), 
-                visionPose.timestamp(),
-                VecBuilder.fill(stddev, stddev, Units.degreesToRadians(40))); //Do math to find Std
-            // }
-        });
-        
         LoggedTunableNumber.ifChanged(
             hashCode(),
             () -> translationController.setPID(linearkP.get(), 0, linearkD.get()),
@@ -303,8 +261,8 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput("Swerve/OptimizedStates", this.getOptimizedStates());
     }
 
-    public double getVisionStd(double distance) {
-        return distance * 0.25 + 0.1;
+    public void addVisionMeasurement(Pose2d pose, double timestamp, Matrix<N3, N1> stddevs) {
+        m_poseEstimator.addVisionMeasurement(pose, timestamp, stddevs);
     }
 
     public void setAtTarget(Optional<Boolean> atTarget) {

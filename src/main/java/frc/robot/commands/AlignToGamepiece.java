@@ -13,11 +13,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.MAXSwerve.Drive;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.AprilTagVision.Vision;
+import frc.robot.subsystems.vision.intakeCam.IntakeCamVision;
 
 public class AlignToGamepiece extends Command {
-    private Drive drive = Drive.getInstance();
-    private Vision vision = Vision.getInstance();
+    private Drive drive;
+    private IntakeCamVision vision = IntakeCamVision.getInstance();
 
     private PIDController rotationPID = new PIDController(0.35, 0, 0); 
 
@@ -25,10 +26,10 @@ public class AlignToGamepiece extends Command {
     private Pose2d RED_SOURCE = new Pose2d(0.8,0.5, Rotation2d.fromDegrees(45));
     private Pose2d sourcePose;
     
-    public AlignToGamepiece() {
+    public AlignToGamepiece(Drive drive) {
         addRequirements(drive);
         if(Constants.hasVision){
-            vision = Vision.getInstance();
+            vision = IntakeCamVision.getInstance();
             addRequirements(vision);
         }
         rotationPID.enableContinuousInput(-180, 180);
@@ -44,8 +45,8 @@ public class AlignToGamepiece extends Command {
 
     @Override
     public void execute() {
-       double lifecamYaw = vision.getLifecamYaw();
-       boolean hasTargets = vision.lifeCamHastargets();
+       double lifecamYaw = vision.getIntakeCamYaw();
+       boolean hasTargets = vision.intakeCamHasTargets();
 
        double distanceToSource = drive.getPose().getTranslation().getDistance(sourcePose.getTranslation());
        double driveHeading = Units.degreesToRadians(drive.getWrappedHeading());
@@ -57,7 +58,7 @@ public class AlignToGamepiece extends Command {
        if (hasTargets) {
             output = MathUtil.clamp(rotationPID.calculate(Units.degreesToRadians(lifecamYaw), 0), -1, 1);
        } 
-       else if (!hasTargets && distanceToSource < 10000) {
+       else if (!hasTargets && distanceToSource < 7) {
             output = MathUtil.clamp(rotationPID.calculate(driveHeading, sourcePose.getRotation().getRadians()), -1, 1);
        }
 
