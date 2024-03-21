@@ -3,7 +3,6 @@ package frc.robot.subsystems.vision.intakeCam;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.vision.IntakeCamVisionIOInputsAutoLogged;;
 
 public class IntakeCamVision extends SubsystemBase {
     private static IntakeCamVisionIO io;
@@ -15,7 +14,7 @@ public class IntakeCamVision extends SubsystemBase {
         return instance;
     }
 
-    public static IntakeCamVision initialize() {
+    public static IntakeCamVision initialize(IntakeCamVisionIO io) {
         if (instance == null) {
             instance = new IntakeCamVision(io);
         }

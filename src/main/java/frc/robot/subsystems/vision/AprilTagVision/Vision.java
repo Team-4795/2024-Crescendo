@@ -50,6 +50,8 @@ public class Vision extends SubsystemBase {
 
     private Vision(VisionIO visionIO[]) {
         io = visionIO;
+
+        inputs = new VisionIOInputsAutoLogged[io.length];
         for (int i = 0; i < io.length; i++) {
             inputs[i] = new VisionIOInputsAutoLogged();
         }

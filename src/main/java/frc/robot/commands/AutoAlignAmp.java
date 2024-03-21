@@ -25,8 +25,8 @@ import frc.robot.subsystems.pivot.Pivot;
 
 public class AutoAlignAmp extends Command{
 
-    private static final Pose2d RED_AMP = new Pose2d(14.7, 7.6, Rotation2d.fromRadians(Math.PI / 2));
-    private static final Pose2d BLUE_AMP = new Pose2d(1.86, 7.6, Rotation2d.fromRadians(Math.PI / 2));
+    private static final Pose2d RED_AMP = new Pose2d(14.7, 5.6, Rotation2d.fromRadians(Math.PI / 2));
+    private static final Pose2d BLUE_AMP = new Pose2d(1.86, 5.6, Rotation2d.fromRadians(Math.PI / 2));
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
@@ -64,7 +64,7 @@ public class AutoAlignAmp extends Command{
         Logger.recordOutput("AutoAlign/Translation", targetPose.getTranslation().minus(currentPose.getTranslation()));
         Logger.recordOutput("AutoAlign/velocity", velocity);
         distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
-        translationController.reset(distance, velocity);
+        translationController.reset(distance, 0);
         rotationController.reset(MathUtil.angleModulus(currentPose.getRotation().getRadians()), drive.getTurnRate());
     }
 
@@ -81,7 +81,7 @@ public class AutoAlignAmp extends Command{
         double scalar = scalar(distance);
         double drivePIDOutput = translationController.calculate(distance, 0);
         double driveSpeed = scalar * translationController.getSetpoint().velocity + drivePIDOutput;
-        Rotation2d direction = new Rotation2d(currentPose.getX() - targetPose.getX(), currentPose.getY() - targetPose.getY());
+        Rotation2d direction = new Rotation2d(targetPose.getX() - currentPose.getX(), targetPose.getY() - currentPose.getY());
 
         drive.runVelocity(new ChassisSpeeds(driveSpeed * direction.getCos(), driveSpeed * direction.getSin(), omega));
 
@@ -94,7 +94,7 @@ public class AutoAlignAmp extends Command{
         }
 
         Logger.recordOutput("AutoAlign/target pose", targetPose);
-
+        Logger.recordOutput("AutoAlign/Translation direction", direction);
         Logger.recordOutput("AutoAlign/Rotation setpoint position", rotationController.getSetpoint().position);
         Logger.recordOutput("AutoAlign/Rotation setpoint velocity", rotationController.getSetpoint().velocity);
         Logger.recordOutput("AutoAlign/Rotation", MathUtil.angleModulus(currentPose.getRotation().getRadians()));

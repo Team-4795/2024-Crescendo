@@ -39,6 +39,9 @@ import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.subsystems.vision.AprilTagVision.VisionIO;
 import frc.robot.subsystems.vision.AprilTagVision.VisionIOReal;
 import frc.robot.subsystems.vision.AprilTagVision.VisionIOSim;
+import frc.robot.subsystems.vision.intakeCam.IntakeCamVision;
+import frc.robot.subsystems.vision.intakeCam.IntakeCamVisionIO;
+import frc.robot.subsystems.vision.intakeCam.IntakeCamVisionIOReal;
 import frc.robot.util.NamedCommandManager;
 import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -62,6 +65,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Vision vision;
+  private final IntakeCamVision intakeCamVision;
   private final Shooter shooter;
   private final Pivot pivot;
   private final Indexer indexer;
@@ -78,10 +82,11 @@ public class RobotContainer {
       case REAL:
         // Real robot, instantiate hardware IO implementations
         intake = Intake.initialize(new IntakeIOReal());
-        shooter = Shooter.initialize(new ShooterIOReal());
-        pivot = Pivot.initialize(new PivotIOReal());
-        indexer = Indexer.initialize(new IndexerIOReal());
+        shooter = Shooter.initialize(new ShooterIOSim());
+        pivot = Pivot.initialize(new PivotIOSim());
+        indexer = Indexer.initialize(new IndexerIOSim());
         vision = Vision.initialize(new VisionIOReal(0), new VisionIOReal(1), new VisionIOReal(2));
+        intakeCamVision = IntakeCamVision.initialize(new IntakeCamVisionIOReal());
         drive = Drive.initialize(
             new GyroIOPigeon2(),
             new ModuleIOSparkMax(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId,
@@ -102,6 +107,7 @@ public class RobotContainer {
         pivot = Pivot.initialize(new PivotIOSim());
         indexer = Indexer.initialize(new IndexerIOSim());
         vision = Vision.initialize(new VisionIOSim());
+        intakeCamVision = IntakeCamVision.initialize(new IntakeCamVisionIO() {});
         drive = Drive.initialize(
             new GyroIOSim(),
             new ModuleIOSim(DriveConstants.kFrontLeftChassisAngularOffset),
@@ -119,6 +125,7 @@ public class RobotContainer {
         indexer = Indexer.initialize(new IndexerIO() {});
         vision = Vision.initialize(new VisionIO() {});
         drive = Drive.initialize(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+        intakeCamVision = IntakeCamVision.initialize(new IntakeCamVisionIO() {});
         break;
     }
 
@@ -152,7 +159,7 @@ public class RobotContainer {
     Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint() && drive.isAtTarget());
 
     // Zero drive heading
-    OIConstants.driverController.rightBumper().whileTrue(new AlignToGamepiece());
+    OIConstants.driverController.rightBumper().whileTrue(new AlignToGamepiece(drive));
 
     //Align Amp / Speaker
     OIConstants.driverController.leftBumper().whileTrue(
@@ -184,7 +191,7 @@ public class RobotContainer {
     }));
 
     OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));
-    //OIConstants.driverController.b().whileTrue(new AlignToGamepiece());
+    OIConstants.driverController.b().whileTrue(drive.AutoAlignAmp());
 
     OIConstants.driverController.y().whileTrue(pivot.aimAmp().alongWith(shooter.revAmp()));
     // Speaker aim and rev up

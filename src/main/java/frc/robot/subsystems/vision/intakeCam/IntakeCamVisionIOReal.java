@@ -7,7 +7,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class IntakeCamVisionIOReal implements IntakeCamVisionIO{
     PhotonCamera camera;
 
-    private IntakeCamVisionIOReal() {
+    public IntakeCamVisionIOReal() {
         camera = new PhotonCamera("Queen of the Night"); 
     }
 

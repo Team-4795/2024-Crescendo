@@ -17,7 +17,7 @@ import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.subsystems.vision.intakeCam.IntakeCamVision;
 
 public class AlignToGamepiece extends Command {
-    private Drive drive = Drive.getInstance();
+    private Drive drive;
     private IntakeCamVision vision = IntakeCamVision.getInstance();
 
     private PIDController rotationPID = new PIDController(0.35, 0, 0); 
@@ -26,7 +26,7 @@ public class AlignToGamepiece extends Command {
     private Pose2d RED_SOURCE = new Pose2d(0.8,0.5, Rotation2d.fromDegrees(45));
     private Pose2d sourcePose;
     
-    public AlignToGamepiece() {
+    public AlignToGamepiece(Drive drive) {
         addRequirements(drive);
         if(Constants.hasVision){
             vision = IntakeCamVision.getInstance();
