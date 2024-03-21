@@ -33,6 +33,10 @@ public class IntakeCamVision extends SubsystemBase {
         return inputs.hasTargets;
     }
 
+    public boolean isNoteInFront() {
+        return intakeCamHasTargets() && Math.abs(getIntakeCamYaw()) < 30;
+    }
+
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Intake Cam", inputs);

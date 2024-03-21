@@ -3,50 +3,56 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.8,
-        "y": 7.439979197870614
+        "x": 1.481754296841927,
+        "y": 6.79248158496317
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.680107843252461,
-        "y": 7.420502812535874
+        "x": 2.2000677334687984,
+        "y": 6.512619207056597
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.194885422581115,
-        "y": 6.358984244359359
+        "x": 2.6513193714406413,
+        "y": 6.9141167938326396
       },
       "prevControl": {
-        "x": 4.944726257968594,
-        "y": 6.485580749035168
+        "x": 2.0946267347080147,
+        "y": 6.586094626734709
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "AS GP145 P1 END"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 29.27178218844804,
+      "rotateFast": true
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 6.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 520.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 10.24,
+    "rotation": 30.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "GDA AS GP 145",
+  "folder": "AS GP 1456",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 49.6,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

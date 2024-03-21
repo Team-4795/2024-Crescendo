@@ -2,13 +2,18 @@ package frc.robot.util;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants.Mode;
 import frc.robot.Constants.ShooterSetpoints;
+import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.autoPaths.AutoGamepieces;
 import frc.robot.commands.AutoCommands;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
+import frc.robot.subsystems.vision.intakeCam.IntakeCamVision;
 
 public class NamedCommandManager {
     public static void registerAll() {
@@ -54,16 +59,24 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("Align Wing Amp Blue", AutoCommands.setPivotAndShooter(0.1295));
 
-        NamedCommands.registerCommand("Detect Note", Commands.parallel(
-            Commands.print("Event Marker 1 Executed")
-            // ,
-            // Commands.runOnce(() -> AutoGamepieces.setNoteGone(8))
-        ));
+        NamedCommands.registerCommand("Detect Note 4", detectNote(4, true));
 
-        NamedCommands.registerCommand("Detect Note 2", Commands.parallel(
-            Commands.print("Event Marker 2 Executed"),
-            Commands.runOnce(() -> AutoGamepieces.setNoteGone(7))
-        ));
+        NamedCommands.registerCommand("Detect Note 5", detectNote(5, false));
 
+        NamedCommands.registerCommand("Detect Note 6", detectNote(6, false));
+
+        NamedCommands.registerCommand("Detect Note 7", detectNote(7, false));
+
+        NamedCommands.registerCommand("Detect Note 8", detectNote(8, false));
+    }
+
+    private static Command detectNote(int note, boolean simDetect) {
+        return Commands.parallel(
+            Commands.print("Event Marker Executed"),
+            Commands.either(
+                Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)).onlyIf(() -> !simDetect), 
+                Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)).onlyIf(IntakeCamVision.getInstance()::isNoteInFront), 
+                () -> Constants.currentMode == Mode.SIM)
+        );
     }
 }
