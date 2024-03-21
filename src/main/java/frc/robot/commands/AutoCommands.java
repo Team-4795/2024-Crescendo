@@ -1,19 +1,12 @@
 package frc.robot.commands;
 
-import java.util.HashMap;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.PathPlannerTrajectory;
-
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.IndexerSetpoints;
 import frc.robot.Constants.ShooterSetpoints;
 import frc.robot.subsystems.MAXSwerve.Drive;
@@ -48,6 +41,15 @@ public class AutoCommands {
 
   public static Command followTrajectory(PathPlannerPath path){
     return AutoBuilder.followPath(path);
+  }
+
+  public static Command intakeTrajectory(PathPlannerPath path){
+    return Commands.race(
+      Commands.sequence(
+        followTrajectory(path),
+        Commands.waitSeconds(0.5)
+      ), 
+      intake());
   }
 
   public static Command score() {
@@ -108,7 +110,7 @@ public class AutoCommands {
         Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
         Commands.runOnce(() -> pivot.setGoal(0.45))
       ),
-      Commands.either(Commands.waitUntil(indexer::isStoring), Commands.waitSeconds(1), Robot::isReal),
+      Commands.either(Commands.waitUntil(indexer::isStoring), Commands.waitSeconds(6), Robot::isReal),
       indexer.reverse().withTimeout(0.1));
   }
 
@@ -123,12 +125,17 @@ public class AutoCommands {
     return Commands.waitUntil(() -> indexer.isStoring());
   }
 
-  public static Command aimSpeakerDynamic(){
-    return Commands.run(() -> {
-            double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
-            double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker + PivotConstants.offset));
-            pivot.setGoal(angleCalc - PivotConstants.angleOffset);
-        });
+  public static Command aimSpeakerDynamic(boolean timeout){
+    double timeLimit = (timeout) ? 0.5 : 15;
+    return Commands.parallel(
+      Commands.runOnce(() -> shooter.setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom)),
+      Commands.run(() -> {
+              double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
+              if(distanceToSpeaker < 6.2){
+                pivot.setGoal(PivotConstants.armAngleMap.get(distanceToSpeaker));
+              }
+      }).withTimeout(timeLimit)
+    );
   }
 
   public static Command rotateToSpeaker(){

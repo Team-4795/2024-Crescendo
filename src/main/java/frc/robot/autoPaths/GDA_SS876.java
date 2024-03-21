@@ -16,9 +16,44 @@ public class GDA_SS876 {
         paths = PathPlannerAuto.getPathGroupFromAutoFile("GDA SS GP 876");
         
         return Commands.sequence(
-            AutoCommands.followTrajectory(paths.get(0)).until(AutoPath::next),
-            AutoCommands.followTrajectory(paths.get(2)).until(AutoPath::next2),
-            AutoCommands.followTrajectory(paths.get(4))
+            Commands.parallel(
+                AutoCommands.rotateToSpeaker(),
+                AutoCommands.aimSpeakerDynamic(true)
+            ),
+            AutoCommands.score(),
+            
+            Commands.sequence(
+                AutoCommands.intakeTrajectory(paths.get(0)),
+                Commands.deadline(
+                    Commands.sequence(
+                        AutoCommands.followTrajectory(paths.get(1)), //contains a instant command to start vision align near the end
+                        Commands.waitSeconds(0.2)
+                    ), AutoCommands.aimSpeakerDynamic(false)
+                ),
+                AutoCommands.score()
+            ).until(() -> AutoGamepieces.isGone(8)),
+
+            Commands.sequence(
+                AutoCommands.intakeTrajectory(paths.get(2)),
+                Commands.deadline(
+                    Commands.sequence(
+                        AutoCommands.followTrajectory(paths.get(3)), //contains a instant command to start vision align near the end
+                        Commands.waitSeconds(0.2)
+                    ), AutoCommands.aimSpeakerDynamic(false)
+                ),
+                AutoCommands.score()
+            ).until(() -> AutoGamepieces.isGone(7)),
+
+            Commands.sequence(
+                AutoCommands.intakeTrajectory(paths.get(4)),
+                Commands.deadline(
+                    Commands.sequence(
+                        AutoCommands.followTrajectory(paths.get(5)), //contains a instant command to start vision align near the end
+                        Commands.waitSeconds(0.2)
+                    ), AutoCommands.aimSpeakerDynamic(false)
+                ),
+                AutoCommands.score()
+            )
         );
     }
 }

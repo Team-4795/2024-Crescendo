@@ -5,7 +5,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ShooterSetpoints;
-import frc.robot.autoPaths.AutoPath;
+import frc.robot.autoPaths.AutoGamepieces;
 import frc.robot.commands.AutoCommands;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
@@ -48,23 +48,21 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("Align Speaker", AutoCommands.rotateToSpeaker());
 
-        NamedCommands.registerCommand("VisionAlign",
-                AutoCommands.aimSpeakerDynamic().withTimeout(0.5)
-                .alongWith(Commands.runOnce(
-                        () -> Shooter.getInstance().setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom))));
+        NamedCommands.registerCommand("VisionAlign", AutoCommands.aimSpeakerDynamic(true));
                     
         NamedCommands.registerCommand("Align Wing Amp", AutoCommands.setPivotAndShooter(0.133));
 
         NamedCommands.registerCommand("Align Wing Amp Blue", AutoCommands.setPivotAndShooter(0.1295));
 
         NamedCommands.registerCommand("Detect Note", Commands.parallel(
-            Commands.print("Event Marker 1 Executed"),
-            Commands.runOnce(() -> AutoPath.setNext(true))
+            Commands.print("Event Marker 1 Executed")
+            // ,
+            // Commands.runOnce(() -> AutoGamepieces.setNoteGone(8))
         ));
 
         NamedCommands.registerCommand("Detect Note 2", Commands.parallel(
             Commands.print("Event Marker 2 Executed"),
-            Commands.runOnce(() -> AutoPath.setNext2(true))
+            Commands.runOnce(() -> AutoGamepieces.setNoteGone(7))
         ));
 
     }
