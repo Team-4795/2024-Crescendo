@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
@@ -35,7 +36,7 @@ import frc.robot.Constants.OIConstants;
 
 public class ShootAtSpeaker extends Command {
     private Vision vision;
-    private static ProfiledPIDController rotationPID = new ProfiledPIDController(12, 0, 0, new Constraints(10, 8)); // Change Values
+    private static ProfiledPIDController rotationPID = new ProfiledPIDController(16, 0, 4, new Constraints(4, 12)); // Change Values
 
     private final Drive drive = Drive.getInstance();
     private final Pivot pivot = Pivot.getInstance(); 
@@ -92,10 +93,11 @@ public class ShootAtSpeaker extends Command {
         // double ff = rotationPID.getSetpoint().velocity;
 
         Translation2d driveVelocity = drive.getDriveTranslation();
+        Logger.recordOutput("Vision/ff", ff);
 
         drive.runVelocity(new ChassisSpeeds(
-            driveVelocity.getX() * DriveConstants.kMaxSpeedMetersPerSecond,
-            driveVelocity.getY() * DriveConstants.kMaxSpeedMetersPerSecond,
+            driveVelocity.getX() * 3,
+            driveVelocity.getY() * 3,
             MathUtil.clamp(ff + pid, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed)
         ));
 
@@ -117,7 +119,6 @@ public class ShootAtSpeaker extends Command {
     }
 
     // https://stackoverflow.com/questions/17204513/how-to-find-the-interception-coordinates-of-a-moving-target-in-3d-space
-    // Returns [time, vel x, vel y, robot rotation, pivot angle]
     private AimData shootingRotation(Pose2d pose) {
         Translation3d speakerPose = vision.getSpeakerPos();
 
