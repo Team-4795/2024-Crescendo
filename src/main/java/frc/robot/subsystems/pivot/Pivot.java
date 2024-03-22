@@ -14,15 +14,13 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants;
 import frc.robot.StateManager;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PivotSetpoints;
 import frc.robot.subsystems.MAXSwerve.Drive;
-import frc.robot.subsystems.Shooter.ShooterConstants;
 import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.util.LoggedTunableNumber;
 
@@ -37,6 +35,8 @@ public class Pivot extends SubsystemBase {
     LoggedTunableNumber kV = new LoggedTunableNumber("Pivot/kV", PivotConstants.kV);
     LoggedTunableNumber kA = new LoggedTunableNumber("Pivot/kA", PivotConstants.kA);
     LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", PivotConstants.kS);
+
+    LoggedTunableNumber regressionSetpoint = new LoggedTunableNumber("Pivot/Regression setpoint", 0.15);
 
     private ProfiledPIDController controller = new ProfiledPIDController(
             kP.get(), kI.get(), kD.get(),
@@ -139,14 +139,12 @@ public class Pivot extends SubsystemBase {
     private Command aimSpeakerDynamic(){
         return Commands.either(
             Commands.run(() -> {
-                double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
-                // System.out.println(distanceToSpeaker);
-                // double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker));
-                // double angleCalc = this.aimSpeaker(distanceToSpeaker);
-                // if(angleCalc != Double.NaN){
-                //     this.setGoal(angleCalc - PivotConstants.angleOffset);
-                // }
-                this.setGoal(PivotConstants.armAngleMap.get(distanceToSpeaker));
+                if(Constants.tuningMode){
+                    this.setGoal(regressionSetpoint.get());
+                } else {
+                    double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
+                    this.setGoal(PivotConstants.armAngleMap.get(distanceToSpeaker));
+                }
             }).finallyDo(() -> setGoal(PivotSetpoints.stow)), 
             Commands.startEnd(
                 () -> setGoal(PivotSetpoints.speaker),
@@ -185,9 +183,9 @@ public class Pivot extends SubsystemBase {
         Logger.processInputs("Pivot", inputs);
         visualizer.update(Units.radiansToDegrees(getTruePosition()), Units.radiansToDegrees(controller.getSetpoint().position + PivotConstants.angleOffset));
 
-        // LoggedTunableNumber.ifChanged(hashCode(), () -> controller.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
-        // LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);
-        
+        LoggedTunableNumber.ifChanged(hashCode(), () -> controller.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
+        LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);
+
         double v1 = controller.getSetpoint().velocity;
         double PIDVolts = controller.calculate(getPosition());
         double FFVolts = motorFeedforward.calculate(v1, controller.getSetpoint().velocity, 0.02);
@@ -198,10 +196,10 @@ public class Pivot extends SubsystemBase {
 
         Logger.recordOutput("Pivot/PID Volts", PIDVolts);
         Logger.recordOutput("Pivot/FF Volts", FFVolts);
+        Logger.recordOutput("Pivot/Static gain volts", linearFF(getPosition()));
         Logger.recordOutput("Pivot/Setpoint Position", controller.getSetpoint().position);
         Logger.recordOutput("Pivot/Setpoint Velocity", controller.getSetpoint().velocity);
         Logger.recordOutput("Pivot/Goal", goal);
-        Logger.recordOutput("Pivot/Gravity setpoint", this.aimSpeaker(Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose())));
     }
     
     public void toggleIdleMode() {
@@ -228,14 +226,6 @@ public class Pivot extends SubsystemBase {
         } else {
             throw new IllegalArgumentException("Setting direct pivot voltage without disabling arm!");
         }
-    }
-
-    public double aimSpeaker(double distance){
-        double h = FieldConstants.speakerHeight - PivotConstants.height;
-        double c = h + (distance * distance * 9.8 / (ShooterConstants.initialVelocity * ShooterConstants.initialVelocity));
-        double det = Math.pow(2 * c * h, 2) - 4 * (Math.pow(h, 2) + Math.pow(distance, 2)) * (c * c - distance * distance);
-        double cos = (-2 * c * h + Math.sqrt(det)) / (2 * (h * h + distance * distance));
-        return Math.acos(cos) / 2;
     }
 
     // Choose between motor position or absolute encoder position 

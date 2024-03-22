@@ -68,8 +68,8 @@ public final class Constants {
   }
 
   public static final class ShooterSetpoints {
-    public static final double speakerTop = -4000;
-    public static final double speakerBottom = 4000;
+    public static final double speakerTop = -5000;
+    public static final double speakerBottom = 5000;
 
     public static final double ampTop = 500;
     public static final double ampBottom = 500;
@@ -82,8 +82,8 @@ public final class Constants {
   }
 
   public static final class IntakeSetpoints {
-    public static final double intake = -0.6;
-    public static final double reverse = 0.6;
+    public static final double intake = -0.7;
+    public static final double reverse = 0.7;
     public static final double slowReverse = 0.4;
   }
 
