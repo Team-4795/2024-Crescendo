@@ -64,7 +64,7 @@ public class AutoAlignAmp extends Command{
         Logger.recordOutput("AutoAlign/Translation", targetPose.getTranslation().minus(currentPose.getTranslation()));
         Logger.recordOutput("AutoAlign/velocity", velocity);
         distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
-        translationController.reset(distance, 0);
+        translationController.reset(distance, velocity);
         rotationController.reset(MathUtil.angleModulus(currentPose.getRotation().getRadians()), drive.getTurnRate());
     }
 
@@ -81,6 +81,7 @@ public class AutoAlignAmp extends Command{
         double scalar = scalar(distance);
         double drivePIDOutput = translationController.calculate(distance, 0);
         double driveSpeed = scalar * translationController.getSetpoint().velocity + drivePIDOutput;
+        // Rotation2d direction = new Rotation2d(currentPose.getX() - targetPose.getX(), currentPose.getY() - targetPose.getY());
         Rotation2d direction = new Rotation2d(targetPose.getX() - currentPose.getX(), targetPose.getY() - currentPose.getY());
 
         drive.runVelocity(new ChassisSpeeds(driveSpeed * direction.getCos(), driveSpeed * direction.getSin(), omega));
@@ -94,7 +95,8 @@ public class AutoAlignAmp extends Command{
         }
 
         Logger.recordOutput("AutoAlign/target pose", targetPose);
-        Logger.recordOutput("AutoAlign/Translation direction", direction);
+        Logger.recordOutput("AutoAlign/Translation x direction", direction.getCos());
+        Logger.recordOutput("AutoAlign/Translation y direction", direction.getSin());
         Logger.recordOutput("AutoAlign/Rotation setpoint position", rotationController.getSetpoint().position);
         Logger.recordOutput("AutoAlign/Rotation setpoint velocity", rotationController.getSetpoint().velocity);
         Logger.recordOutput("AutoAlign/Rotation", MathUtil.angleModulus(currentPose.getRotation().getRadians()));
@@ -104,6 +106,7 @@ public class AutoAlignAmp extends Command{
         Logger.recordOutput("AutoAlign/Translation setpoint velocity", translationController.getSetpoint().velocity);
         Logger.recordOutput("AutoAlign/Distance", currentPose.getTranslation().getDistance(targetPose.getTranslation()));
         Logger.recordOutput("AutoAlign/Distance at goal", translationController.atGoal());
+        Logger.recordOutput("AutoAlign/PID input", drivePIDOutput);
     }
 
     @Override
