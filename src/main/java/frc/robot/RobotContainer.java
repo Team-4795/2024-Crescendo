@@ -88,13 +88,13 @@ public class RobotContainer {
         intakeCamVision = IntakeCamVision.initialize(new IntakeCamVisionIOReal());
         drive = Drive.initialize(
             new GyroIOPigeon2(),
-            new ModuleIOSparkMax(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId,
+            new ModuleIOSparkFlex(DriveConstants.kFrontLeftDrivingCanId, DriveConstants.kFrontLeftTurningCanId,
                 DriveConstants.kFrontLeftChassisAngularOffset),
-            new ModuleIOSparkMax(DriveConstants.kFrontRightDrivingCanId, DriveConstants.kFrontRightTurningCanId,
+            new ModuleIOSparkFlex(DriveConstants.kFrontRightDrivingCanId, DriveConstants.kFrontRightTurningCanId,
                 DriveConstants.kFrontRightChassisAngularOffset),
-            new ModuleIOSparkMax(DriveConstants.kRearLeftDrivingCanId, DriveConstants.kRearLeftTurningCanId,
+            new ModuleIOSparkFlex(DriveConstants.kRearLeftDrivingCanId, DriveConstants.kRearLeftTurningCanId,
                 DriveConstants.kBackLeftChassisAngularOffset),
-            new ModuleIOSparkMax(DriveConstants.kRearRightDrivingCanId, DriveConstants.kRearRightTurningCanId,
+            new ModuleIOSparkFlex(DriveConstants.kRearRightDrivingCanId, DriveConstants.kRearRightTurningCanId,
                 DriveConstants.kBackRightChassisAngularOffset));
         leds = LEDs.getInstance();
         break;
