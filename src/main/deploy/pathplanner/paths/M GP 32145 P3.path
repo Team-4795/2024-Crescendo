@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2782342053414837,
-        "y": 5.574358195791997
+        "x": 2.6513193714406413,
+        "y": 5.570246205735591
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3962681940913795,
-        "y": 5.574358195791997
+        "x": 2.105980582067926,
+        "y": 5.3949587377229316
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.7196527120326968,
-        "y": 5.574358195791997
+        "x": 2.476031903427983,
+        "y": 6.78752028915683
       },
       "prevControl": {
-        "x": 1.2414617460457789,
-        "y": 5.57998439840296
+        "x": 1.8722639580510483,
+        "y": 6.164275958445155
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,21 +32,21 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.5,
-    "maxAcceleration": 4.5,
-    "maxAngularVelocity": 270.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 6.0,
+    "maxAngularVelocity": 520.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 30.27,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "GDA M GP 2145",
+  "folder": "GDA M GP 32145",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -3.0127875041833447,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

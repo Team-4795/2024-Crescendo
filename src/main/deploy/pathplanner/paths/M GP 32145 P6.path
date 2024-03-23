@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.51,
-        "y": 6.78
+        "x": 5.270893198963147,
+        "y": 6.953069564502119
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.919771795811262,
-        "y": 6.967799233334169
+        "x": 5.572777171651615,
+        "y": 6.77778209648946
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.743268895952912,
-        "y": 7.3
+        "x": 7.880728833818285,
+        "y": 5.881868371091429
       },
       "prevControl": {
-        "x": 6.866366778512314,
-        "y": 7.262685016279122
+        "x": 6.984815108420252,
+        "y": 6.212966921782006
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,38 +33,31 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.6,
+      "waypointRelativePos": 0.7,
       "command": {
         "type": "parallel",
         "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Detect Note 4"
-              }
-            }
-          ]
+          "commands": []
         }
       }
     }
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 4.0,
-    "maxAngularVelocity": 270.0,
+    "maxAcceleration": 6.0,
+    "maxAngularVelocity": 520.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": -9.819300638757841,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "GDA M GP 2145",
+  "folder": "GDA M GP 32145",
   "previewStartingState": {
-    "rotation": 29.26,
+    "rotation": 18.0041616059132,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
