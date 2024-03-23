@@ -63,6 +63,7 @@ public class ModuleIOSparkFlex implements ModuleIO {
 
     // in meters and meters per second
     m_drivingEncoder.setPositionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
+    m_drivingEncoder.setVelocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
 
     // in radians and radians per second
     m_turningEncoder.setPositionConversionFactor(ModuleConstants.kTurningEncoderPositionFactor);

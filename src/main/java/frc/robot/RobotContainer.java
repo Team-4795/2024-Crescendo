@@ -81,9 +81,9 @@ public class RobotContainer {
       case REAL:
         // Real robot, instantiate hardware IO implementations
         intake = Intake.initialize(new IntakeIOReal());
-        shooter = Shooter.initialize(new ShooterIOSim());
-        pivot = Pivot.initialize(new PivotIOSim());
-        indexer = Indexer.initialize(new IndexerIOSim());
+        shooter = Shooter.initialize(new ShooterIOReal());
+        pivot = Pivot.initialize(new PivotIOReal());
+        indexer = Indexer.initialize(new IndexerIOReal());
         vision = Vision.initialize(new VisionIOReal(0), new VisionIOReal(1), new VisionIOReal(2));
         intakeCamVision = IntakeCamVision.initialize(new IntakeCamVisionIOReal());
         drive = Drive.initialize(

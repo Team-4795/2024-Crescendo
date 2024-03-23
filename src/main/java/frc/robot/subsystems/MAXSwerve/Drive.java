@@ -85,7 +85,7 @@ public class Drive extends SubsystemBase {
     private EstimatedRobotPose visionPose = new EstimatedRobotPose(new Pose3d(), m_currentRotation, null, null);
 
     // Used for targeting a heading
-    private Optional<Boolean> atTarget; 
+    private Optional<Boolean> atTarget = Optional.empty(); 
 
     private Vision vision;
 
