@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2782342053414837,
-        "y": 5.574358195791997
+        "x": 2.5,
+        "y": 6.78
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3962681940913795,
-        "y": 5.574358195791997
+        "x": 3.9097717958112623,
+        "y": 6.967799233334169
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.7196527120326968,
-        "y": 5.574358195791997
+        "x": 7.54,
+        "y": 7.41
       },
       "prevControl": {
-        "x": 1.2414617460457789,
-        "y": 5.57998439840296
+        "x": 6.663097882559402,
+        "y": 7.372685016279123
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,9 +30,27 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.6,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Detect Note 4"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 2.5,
+    "maxVelocity": 4.5,
     "maxAcceleration": 4.5,
     "maxAngularVelocity": 270.0,
     "maxAngularAcceleration": 720.0
@@ -43,9 +61,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "GDA M GP 2145",
+  "folder": "M GP 2145",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 28.39,
     "velocity": 0
   },
   "useDefaultConstraints": false

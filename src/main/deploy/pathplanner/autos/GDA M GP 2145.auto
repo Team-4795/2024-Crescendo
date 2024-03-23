@@ -48,7 +48,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "M GP214 P1"
+                  "pathName": "M GP2145 P1"
                 }
               }
             ]
@@ -79,7 +79,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "M GP214 P2 Red"
+                  "pathName": "M GP2145 P2 Red"
                 }
               },
               {
@@ -116,7 +116,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "M GP214 P3 Red"
+                  "pathName": "M GP2145 P3 Red"
                 }
               },
               {
@@ -141,7 +141,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "M GP214 P4 Red"
+                  "pathName": "M GP2145 P4 Red"
                 }
               }
             ]
@@ -166,7 +166,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "M GP214 P5"
+                  "pathName": "M GP2145 P5"
                 }
               }
             ]
@@ -179,7 +179,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "M GP214 P6"
+                  "pathName": "M GP2145 P6"
                 }
               },
               {

@@ -30,6 +30,7 @@ import frc.robot.Constants.Mode;
 import frc.robot.Constants.OIConstants;
 import frc.robot.StateManager.State;
 import frc.robot.autoPaths.GDA_AS145;
+import frc.robot.autoPaths.GDA_M2145;
 import frc.robot.autoPaths.GDA_SS876;
 import frc.robot.subsystems.MAXSwerve.*;
 import frc.robot.subsystems.Shooter.*;
@@ -141,7 +142,9 @@ public class RobotContainer {
     autoChooser.addOption("Pivot SysIs (Dynamic Forward)", pivot.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption("Pivot SysIs (Dynamic Reverse)", pivot.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     autoChooser.addOption("Pivot Model", new ArmFeedForwardCharacterization(pivot, (volts) -> pivot.runVoltage(volts), () -> pivot.getVelocity(), () -> pivot.getPosition(), (x) -> 0.0));
-    autoChooser.addDefaultOption("TEST - SS GP 876", GDA_AS145.load());
+    autoChooser.addOption("TEST - SS GP 876", GDA_AS145.load());
+    autoChooser.addOption("TEST - M GP 2145", GDA_M2145.load());
+
     // Configure the button bindings
     configureButtonBindings();
 
