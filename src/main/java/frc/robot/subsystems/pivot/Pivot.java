@@ -110,13 +110,6 @@ public class Pivot extends SubsystemBase {
         controller.setGoal(goal);
     }
 
-    public Command aimSpeaker() {
-        return Commands.startEnd(
-            () -> setGoal(PivotSetpoints.speaker),
-            () -> setGoal(PivotSetpoints.stow)
-        );
-    }
-
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
         return sysid.quasistatic(direction);
     }
@@ -131,12 +124,14 @@ public class Pivot extends SubsystemBase {
                 return this.aimAmp();
             case SPEAKER:
                 return this.aimSpeakerDynamic();
+            case SHUTTLE:
+                return this.aimShuttle();
             default:
                 return null;
         }
     }
 
-    private Command aimSpeakerDynamic(){
+    public Command aimSpeakerDynamic(){
         return Commands.either(
             Commands.run(() -> {
                 if(Constants.tuningMode){
@@ -150,6 +145,13 @@ public class Pivot extends SubsystemBase {
                 () -> setGoal(PivotSetpoints.speaker),
                 () -> setGoal(PivotSetpoints.stow)),
             () -> StateManager.isAutomate());
+    }
+
+    public Command aimShuttle(){
+        return Commands.startEnd(
+            () -> setGoal(PivotSetpoints.shuttle), 
+            () -> setGoal(PivotSetpoints.stow)
+        );
     }
 
     public Command aimAmp() {

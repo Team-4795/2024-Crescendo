@@ -55,6 +55,7 @@ public final class Constants {
   public static final class PivotSetpoints {
     public static final double speaker = 0.56;
     public static final double amp = 1.15;
+    public static final double shuttle = 0.894;
     public static final double stow = 0.08;
     public static final double intake = 0.3;
     public static final double source = 0.96;
@@ -70,6 +71,9 @@ public final class Constants {
   public static final class ShooterSetpoints {
     public static final double speakerTop = -5000;
     public static final double speakerBottom = 5000;
+
+    public static final double shuttleTop = -3500;
+    public static final double shuttleBottom = 3500;
 
     public static final double ampTop = 500;
     public static final double ampBottom = 500;

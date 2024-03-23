@@ -64,6 +64,8 @@ public class Shooter extends SubsystemBase {
                 return this.revAmp();
             case SPEAKER:
                 return this.revSpeaker();
+            case SHUTTLE:
+                return this.revShuttle();
             default:
                 return null;
         }
@@ -79,6 +81,13 @@ public class Shooter extends SubsystemBase {
     public Command revAmp() {
         return startEnd(
             () -> setShootingSpeedRPM(ShooterSetpoints.ampTop, ShooterSetpoints.ampBottom),
+            () -> setShootingSpeedRPM(0, 0)
+        );
+    }
+
+    public Command revShuttle() {
+        return startEnd(
+            () -> setShootingSpeedRPM(ShooterSetpoints.shuttleTop, ShooterSetpoints.shuttleBottom),
             () -> setShootingSpeedRPM(0, 0)
         );
     }

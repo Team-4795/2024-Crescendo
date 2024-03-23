@@ -13,11 +13,12 @@
 
 package frc.robot;
 
+import java.util.Map;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -47,8 +48,6 @@ import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AlignToGamepiece;
 import frc.robot.commands.ArmFeedForwardCharacterization;
-import frc.robot.commands.AutoAlignAmp;
-import frc.robot.commands.AutoCommands;
 import frc.robot.commands.RainbowCommand;
 import frc.robot.commands.AlignSpeaker;
 
@@ -156,19 +155,24 @@ public class RobotContainer {
   private void configureButtonBindings() {
     Trigger timeRumble = new Trigger(() -> between(DriverStation.getMatchTime(), 19, 21) || between(DriverStation.getMatchTime(), 39, 41));
     Trigger continuousRumble = new Trigger(() -> DriverStation.getMatchTime() <= 5);
-    Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint() && drive.isAtTarget());
-
+    Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint() && drive.isAtTarget() && StateManager.isAiming());
     // Zero drive heading
     OIConstants.driverController.rightBumper().whileTrue(new AlignToGamepiece(drive));
 
     //Align Amp / Speaker
     OIConstants.driverController.leftBumper().whileTrue(
           Commands.either(
-            Commands.either(
-              new AlignSpeaker().alongWith(shooter.rev()).alongWith(pivot.aim()), 
-              drive.AutoAlignAmp().alongWith(leds.pathfinding()), 
-              () -> StateManager.getState() == State.SPEAKER
-            ),
+            Commands.select(
+              Map.ofEntries(
+                Map.entry(State.AMP, drive.AutoAlignAmp()),
+                Map.entry(State.SPEAKER, Commands.parallel(
+                  new AlignSpeaker(),
+                  pivot.aimSpeakerDynamic(),
+                  shooter.rev(),
+                  Commands.runOnce(() -> StateManager.setAim(true))
+                ).finallyDo(() -> StateManager.setAim(false))),
+                Map.entry(State.SHUTTLE, pivot.aimShuttle().alongWith(shooter.revShuttle()))),
+                StateManager::getState),
             shooter.rev().alongWith(pivot.aim()),
             () -> StateManager.isAutomate()
           )
@@ -184,7 +188,7 @@ public class RobotContainer {
       .onTrue(Commands.runOnce(() -> drive.setFieldRelative(false)))
       .onFalse(Commands.runOnce(() -> drive.setFieldRelative(true)));
 
-    //SADDEST BUTTON IN EXISTENCE ON PERSEUS, PLEASE DON'T PRESS! :Cry: :Sob:
+    //SADDEST BUTTON IN EXISTENCE ON PERSEUS
     OIConstants.driverController.x().onTrue(Commands.runOnce(() -> {
       StateManager.toggleAutomate();
       leds.toggleYellow();
@@ -194,11 +198,12 @@ public class RobotContainer {
     OIConstants.driverController.b().whileTrue(drive.AutoAlignAmp());
 
     OIConstants.driverController.y().whileTrue(pivot.aimAmp().alongWith(shooter.revAmp()));
-    // Speaker aim and rev up
+    
+    // State swapping
     OIConstants.operatorController.leftBumper().onTrue(Commands.runOnce(() -> StateManager.setState(State.SPEAKER)));
-      
-    // Amp aim and rev up
-    OIConstants.operatorController.rightBumper().whileTrue(pivot.aimAmp().alongWith(shooter.revAmp()));
+    OIConstants.operatorController.rightBumper().onTrue(Commands.runOnce(() -> StateManager.setState(State.AMP)));
+    OIConstants.operatorController.leftBumper().and(OIConstants.operatorController.rightBumper())
+      .onTrue(Commands.runOnce(() -> StateManager.setState(State.SHUTTLE)));
 
     //Source Intake
     OIConstants.operatorController.povUp().onTrue(
@@ -265,7 +270,8 @@ public class RobotContainer {
     }
 
     timeRumble.onTrue(rumbleCommand(0.3).withTimeout(0.5));
-    continuousRumble.whileTrue(rumbleCommand(0.6));
+    continuousRumble.whileTrue(rumbleCommand(0.4));
+    isReady.whileTrue(rumbleCommand(0.6));
   }
 
   private void setBothRumble(double amount) {

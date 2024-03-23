@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.MAXSwerve.Drive;
+import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.util.LocalADStarAK;
 import frc.robot.util.NoteVisualizer;
@@ -145,6 +147,7 @@ public class Robot extends LoggedRobot {
     Logger.recordOutput("Free memory", (double)Runtime.getRuntime().freeMemory() / 1024 / 1024);
     Logger.recordOutput("Current State", StateManager.getState());
     Logger.recordOutput("Automate", StateManager.isAutomate());
+    Logger.recordOutput("isReady?", Pivot.getInstance().atSetpoint() && Shooter.getInstance().atSetpoint() && Drive.getInstance().isAtTarget() && StateManager.isAiming());
     Threads.setCurrentThreadPriority(true, 10);
   }
 
