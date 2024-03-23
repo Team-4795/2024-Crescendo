@@ -22,7 +22,7 @@ public class ModuleIOSim implements ModuleIO {
 
     private PIDController turnController = new PIDController(3, 0, 0);
     private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 2.002); //2.002
-    private PIDController driveController = new PIDController(0.04, 0, 0);
+    private PIDController driveController = new PIDController(0.1, 0, 0);
 
     public ModuleIOSim(double chassisAngularOffset) {
         turnController.enableContinuousInput(0, 2 * Math.PI);
