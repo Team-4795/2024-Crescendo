@@ -10,6 +10,7 @@ public interface GyroIO {
         public boolean connected = false;
         public Rotation2d yaw = new Rotation2d();
         public double yawVelocity = 0.0; //degrees per second
+        public double[] accel = new double[] {0, 0, 0};
     }
 
     public default void updateInputs(GyroIOInputs inputs){}
