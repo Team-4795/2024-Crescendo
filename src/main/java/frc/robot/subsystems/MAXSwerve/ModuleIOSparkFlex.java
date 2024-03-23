@@ -150,7 +150,7 @@ public class ModuleIOSparkFlex implements ModuleIO {
         new Rotation2d(m_turningEncoder.getPosition()));
 
     optimizedState = optimizedDesiredState;
-    optimizedState.angle = optimizedState.angle.minus(m_chassisAngularOffset);
+    // optimizedState.angle = optimizedState.angle.minus(m_chassisAngularOffset);
 
     // Command driving and turning SPARKS MAX towards their respective setpoints.
     m_drivingPIDController.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
