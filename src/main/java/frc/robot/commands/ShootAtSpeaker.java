@@ -30,13 +30,13 @@ import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.leds.LEDs;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.pivot.PivotConstants;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 
 public class ShootAtSpeaker extends Command {
     private Vision vision;
-    private static ProfiledPIDController rotationPID = new ProfiledPIDController(16, 0, 4, new Constraints(4, 12)); // Change Values
+    private static ProfiledPIDController rotationPID = new ProfiledPIDController(12, 0, 2, new Constraints(4, 8)); // Change Values
 
     private final Drive drive = Drive.getInstance();
     private final Pivot pivot = Pivot.getInstance(); 
@@ -55,10 +55,7 @@ public class ShootAtSpeaker extends Command {
         rotationPID.enableContinuousInput(-Math.PI, Math.PI);
         rotationPID.setTolerance(Units.degreesToRadians(5));
 
-        if(Constants.hasVision){
-            vision = Vision.getInstance();
-            addRequirements(vision);
-        }
+        vision = Vision.getInstance();
     }
 
     @Override
@@ -89,8 +86,9 @@ public class ShootAtSpeaker extends Command {
         Rotation2d driveHeading = drive.getRotationHeading().plus(new Rotation2d(Math.PI));
 
         double pid = rotationPID.calculate(driveHeading.getRadians(), results.heading.getRadians());
-        double ff = results.heading.minus(previousAngle).getRadians() / 0.02;
+        // double ff = results.heading.minus(previousAngle).getRadians() / 0.02;
         // double ff = rotationPID.getSetpoint().velocity;
+        double ff = drive.getRobotRelativeSpeeds().omegaRadiansPerSecond;
 
         Translation2d driveVelocity = drive.getDriveTranslation();
         Logger.recordOutput("Vision/ff", ff);

@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -244,19 +245,22 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput("Vision/Distance to speaker", vision.getDistancetoSpeaker(getPose()));
 
         Logger.recordOutput("Swerve/Setpoint", currentSetpoint.moduleStates());
-        
+
+        Logger.recordOutput("Swerve/SetpointSpeeds", currentSetpoint.chassisSpeeds());
+        Logger.recordOutput("Swerve/DriveSpeeds", DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates()));
+
         // Read wheel deltas from each module
         SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
         wheelDeltas[0] = m_frontLeft.getPositionDelta();
         wheelDeltas[1] = m_frontRight.getPositionDelta();
         wheelDeltas[2] = m_rearLeft.getPositionDelta();
         wheelDeltas[3] = m_rearRight.getPositionDelta();
-
+        
         // The twist represents the motion of the robot since the last
         // sample in x, y, and theta based only on the modules, without
         // the gyro.
         var twist = DriveConstants.kDriveKinematics.toTwist2d(wheelDeltas);
-
+        
         if (!gyroInputs.connected) {
             gyro.addOffset(Rotation2d.fromRadians(twist.dtheta));
         }
@@ -282,7 +286,7 @@ public class Drive extends SubsystemBase {
             .transformBy(new Transform2d(speed, 0, new Rotation2d()))
             .getTranslation();
     }
-    
+
     public void addVisionMeasurement(Pose2d pose, double timestamp, Matrix<N3, N1> stddevs) {
         m_poseEstimator.addVisionMeasurement(pose, timestamp, stddevs);
     }
@@ -522,11 +526,10 @@ public class Drive extends SubsystemBase {
         return gyroInputs.yawVelocity;
     }
 
-    private ChassisSpeeds getRobotRelativeSpeeds() {
+    public ChassisSpeeds getRobotRelativeSpeeds() {
         // Uses forward kinematics to calculate the robot's speed given the states of
         // the swerve modules.
-        return DriveConstants.kDriveKinematics.toChassisSpeeds(m_frontLeft.getState(), m_frontRight.getState(),
-                m_rearLeft.getState(), m_rearRight.getState());
+        return DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
     }
 
      /*private void driveRobotRelative(ChassisSpeeds speeds) {
