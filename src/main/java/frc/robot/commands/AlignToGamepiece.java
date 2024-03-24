@@ -27,12 +27,10 @@ public class AlignToGamepiece extends Command {
     private Pose2d sourcePose;
     
     public AlignToGamepiece(Drive drive) {
-        addRequirements(drive);
-        if(Constants.hasVision){
-            vision = IntakeCamVision.getInstance();
-            addRequirements(vision);
-        }
+        this.drive = drive;
+        vision = IntakeCamVision.getInstance();
         rotationPID.enableContinuousInput(-180, 180);
+        addRequirements(vision, drive);
     }
 
     @Override

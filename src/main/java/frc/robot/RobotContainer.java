@@ -185,9 +185,9 @@ public class RobotContainer {
       .onTrue(NoteVisualizer.shoot());
     
     //Drive robot relative
-    OIConstants.driverController.leftTrigger(0.3)
-      .onTrue(Commands.runOnce(() -> drive.setFieldRelative(false)))
-      .onFalse(Commands.runOnce(() -> drive.setFieldRelative(true)));
+    // OIConstants.driverController.leftTrigger(0.3)
+    //   .onTrue(Commands.runOnce(() -> drive.setFieldRelative(false)))
+    //   .onFalse(Commands.runOnce(() -> drive.setFieldRelative(true)));
 
     //SADDEST BUTTON IN EXISTENCE ON PERSEUS
     OIConstants.driverController.x().onTrue(Commands.runOnce(() -> {
@@ -224,14 +224,7 @@ public class RobotContainer {
         .andThen(Commands.parallel(
           rumbleCommand(0.5).withTimeout(0.5),
           indexer.reverse().withTimeout(0.05))
-        ).onlyIf(() -> !intake.getIdleMode())
-    );
-
-    OIConstants.operatorController.povLeft().onTrue(
-      Commands.sequence(
-        Commands.runOnce(() -> intake.setIdleMode(!intake.getIdleMode())),
-        Commands.runOnce(() -> intake.setIntakeSpeed(0))
-      )  
+        )
     );
 
     // Slow reverse tower
