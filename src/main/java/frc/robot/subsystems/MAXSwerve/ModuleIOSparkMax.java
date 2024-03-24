@@ -120,16 +120,16 @@ public class ModuleIOSparkMax implements ModuleIO {
 
       m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
       m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 1000);
-      m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 65535);
-      m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
-      m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+      m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
+      m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
+      m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 1000);
       m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
       m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
-      m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
-      m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
-      m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
-      m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
+      m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
+      m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 1000);
+      m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 1000);
+      m_drivingSpark.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 1000);
 
       Timer.delay(Constants.configDelay);
     }

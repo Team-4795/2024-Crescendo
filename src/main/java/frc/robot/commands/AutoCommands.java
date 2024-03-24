@@ -20,7 +20,7 @@ import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.pivot.PivotConstants;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.util.NoteVisualizer;
 
 public class AutoCommands {
@@ -32,11 +32,6 @@ public class AutoCommands {
   private static Pivot pivot = Pivot.getInstance();
   private static Indexer indexer = Indexer.getInstance();
 
-  public enum OutakePlace {
-    amp,
-    speaker;
-  }
-
   public AutoCommands() {
   }
 
@@ -47,7 +42,7 @@ public class AutoCommands {
 
   public static Command score() {
     return Commands.sequence(
-          indexer.forwards().withTimeout(0.5).alongWith(Commands.waitSeconds(0.1).andThen(NoteVisualizer.shoot())),
+          indexer.forwards().withTimeout(0.4).alongWith(Commands.waitSeconds(0.1).andThen(NoteVisualizer.shoot())),
           Commands.runOnce(() -> shooter.setShootingSpeedRPM(0.0, 0.0))
     );
   }
@@ -71,11 +66,11 @@ public class AutoCommands {
         SetPivotAngle(setpoint));
   };
 
-  public static Command initialize(double speed) {
+  public static Command 
+  initialize(double speed) {
     return Commands.parallel(
       Commands.runOnce(() -> intake.setIntakeSpeed(-1)),
-      Commands.runOnce(() -> shooter.setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom)),
-      Commands.runOnce(() -> drive.zeroHeading())
+      Commands.runOnce(() -> shooter.setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom))
     );
   }
 
@@ -87,7 +82,7 @@ public class AutoCommands {
 
   public static Command runIndexer(double speed) {
     return new InstantCommand(() -> {
-      indexer.setIndexerSpeed(0.7);
+      indexer.setIndexerSpeed(1);
     });
   }
 
@@ -101,8 +96,15 @@ public class AutoCommands {
     return Commands.sequence(
       Commands.parallel(
         Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
-        Commands.runOnce(() -> pivot.setGoal(0.55))
+        Commands.runOnce(() -> pivot.setGoal(0.45))
       ),
+      Commands.either(Commands.waitUntil(indexer::isStoring), Commands.waitSeconds(1), Robot::isReal),
+      indexer.reverse().withTimeout(0.1));
+  }
+
+  public static Command intakeWithoutPivot(){
+    return Commands.sequence(
+      Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
       Commands.either(Commands.waitUntil(indexer::isStoring), Commands.waitSeconds(1), Robot::isReal),
       indexer.reverse().withTimeout(0.1));
   }
@@ -117,6 +119,10 @@ public class AutoCommands {
             double angleCalc = Math.atan((FieldConstants.speakerHeight - PivotConstants.height) / (distanceToSpeaker + PivotConstants.offset));
             pivot.setGoal(angleCalc - PivotConstants.angleOffset);
         });
+  }
+
+  public static Command rotateToSpeaker(){
+    return new AlignSpeaker().withTimeout(0.7);
   }
 
 }

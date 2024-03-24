@@ -10,12 +10,16 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.util.swerve.ModuleLimits;
 
 public final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 5.6;
+    public static final double kMaxSpeedMetersPerSecond = 5.5;
+    public static final double kMaxDriveAcceleration = 22;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
+
+    public static final ModuleLimits kModuleLimits = new ModuleLimits(kMaxSpeedMetersPerSecond, kMaxDriveAcceleration, kMaxAngularSpeed);
 
     public static final double kDirectionSlewRate = 10.0; // radians per second
     public static final double kMagnitudeSlewRate = 10.0; // percent per second (1 = 100%)
@@ -28,11 +32,16 @@ public final class DriveConstants {
     // Distance between front and back wheels on robot
     
     public static final double kTrackRadius = Units.inchesToMeters(21.5 * Math.sqrt(2)/2); 
-    public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-            new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-            new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
+
+    public static final Translation2d[] kModuleTranslations = 
+        new Translation2d[] {
+            new Translation2d(kWheelBase / 2.0, kTrackWidth / 2.0),
+            new Translation2d(kWheelBase / 2.0, -kTrackWidth / 2.0),
+            new Translation2d(-kWheelBase / 2.0, kTrackWidth / 2.0),
+            new Translation2d(-kWheelBase / 2.0, -kTrackWidth / 2.0)
+        };
+
+    public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(kModuleTranslations);
 
     // Angular offsets of the modules relative to the chassis in radians
     public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;

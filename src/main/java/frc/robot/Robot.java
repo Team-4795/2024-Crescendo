@@ -144,6 +144,7 @@ public class Robot extends LoggedRobot {
 
     Logger.recordOutput("Free memory", (double)Runtime.getRuntime().freeMemory() / 1024 / 1024);
     Logger.recordOutput("Current State", StateManager.getState());
+    Logger.recordOutput("Automate", StateManager.isAutomate());
     Threads.setCurrentThreadPriority(true, 10);
   }
 

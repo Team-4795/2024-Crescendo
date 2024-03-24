@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.StateManager;
+import frc.robot.StateManager.State;
+import frc.robot.subsystems.indexer.Indexer;
 
 public class LEDs extends SubsystemBase {
     private final int LED_LENGTH = 27;
@@ -44,16 +47,30 @@ public class LEDs extends SubsystemBase {
         led.setLength(buffer.getLength());
 
         setDefaultCommand(run(() -> {
-            if (canShoot) {
-                setColor(Color.kMagenta);
-            } else if (revving) {
-                setColor(Color.kFirstBlue);  
-            } else if (pathfinding) {
-                setColor(Color.kOrange);
-            } else if (yellow) {
-                setColor(Color.kYellow);
-            } else {
+            if (DriverStation.isDisabled()) {
                 setTeamColors();
+            } else {
+                if (canShoot) {
+                    setColor(Color.kMagenta);
+                } else if (revving) {
+                    setColor(Color.kFirstBlue);
+                } else if (pathfinding) {
+                    setColor(Color.kOrange);
+                } else if (yellow) {
+                    setColor(Color.kYellow);
+                } else {
+                    if (StateManager.getState() == State.SPEAKER) {
+                        setBottomColor(Color.kViolet);
+                    } else {
+                        setBottomColor(Color.kBlue);
+                    }
+
+                    if (Indexer.getInstance().isStoring()){
+                        setTopColor(Color.kGreen);
+                    } else {
+                        setTopColor(Color.kRed);
+                    }
+                }
             }
         }).ignoringDisable(true));
 
@@ -74,13 +91,37 @@ public class LEDs extends SubsystemBase {
         setOutput();
     }
 
+    public void setTopColor(Color color) {
+        setColorNoOutput((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), false, 8, 14);
+        setColorNoOutput((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), false, 14, 20);
+        setOutput();
+    }
+
+    public void setBottomColor(Color color) {
+        setColorNoOutput((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), false, 1, 8);
+        setColorNoOutput((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), false, 20, 27);
+        setOutput();
+    }
+
+    private void setColors(Color top, Color bottom) {
+        setTopColor(top);
+        setBottomColor(bottom);
+    }
+
+    public Command intaking() {
+        return Commands.repeatingSequence(
+                runOnce(() -> setColor(Color.kTurquoise)),
+                Commands.waitSeconds(0.2),
+                runOnce(() -> setColor(Color.kBlack)),
+                Commands.waitSeconds(0.1));
+    }
+
     public Command intook() {
         return Commands.repeatingSequence(
-            runOnce(() -> setColor(Color.kGreen)), 
-            Commands.waitSeconds(0.3),
-            runOnce(() -> setColor(Color.kBlack)),
-            Commands.waitSeconds(0.3)
-        ).withTimeout(3);
+                runOnce(() -> setColor(Color.kGreen)),
+                Commands.waitSeconds(0.2),
+                runOnce(() -> setColor(Color.kBlack)),
+                Commands.waitSeconds(0.1)).withTimeout(3);
     }
 
     public Command pathfinding() {
@@ -103,13 +144,18 @@ public class LEDs extends SubsystemBase {
         setStripRGB((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255));
     }
 
-    private void setColorNoOutput(int a0, int a1, int a2, boolean colorModel, int start, int end) /* false: RGB; true: HSV */ {
+    private void setColorNoOutput(int a0, int a1, int a2, boolean colorModel, int start, int end) /*
+                                                                                                   * false: RGB; true:
+                                                                                                   * HSV
+                                                                                                   */ {
         start = MathUtil.clamp(start, 0, LED_LENGTH);
         end = MathUtil.clamp(end, start, LED_LENGTH);
 
         for (int i = start; i < end; i++) {
-            if (colorModel) buffer.setHSV(i, a0, a1, a2);
-            else buffer.setRGB(i, a0, a1, a2);
+            if (colorModel)
+                buffer.setHSV(i, a0, a1, a2);
+            else
+                buffer.setRGB(i, a0, a1, a2);
         }
     }
 
@@ -125,17 +171,17 @@ public class LEDs extends SubsystemBase {
     public void setPartRGB(int r, int g, int b, int start, int end) {
         setColor(r, g, b, false, start, end);
     }
-    
+
     public void setStripRGB(int r, int g, int b) {
         setColor(r, g, b, false, 0, LED_LENGTH);
     }
 
     public void setTopColorRGB(int r, int g, int b) {
-        setColor(r, g, b, false, LED_LENGTH/2, LED_LENGTH);
+        setColor(r, g, b, false, LED_LENGTH / 2, LED_LENGTH);
     }
 
     public void setBottomColorRGB(int r, int g, int b) {
-        setColor(r, g, b, false, 0, LED_LENGTH/2);
+        setColor(r, g, b, false, 0, LED_LENGTH / 2);
     }
 
     public void setPartHSV(int h, int s, int v, int start, int end) {
@@ -147,36 +193,34 @@ public class LEDs extends SubsystemBase {
     }
 
     public void setTopColorHSV(int h, int s, int v) {
-        setColor(h, s, v, true, LED_LENGTH/2, LED_LENGTH);
+        setColor(h, s, v, true, LED_LENGTH / 2, LED_LENGTH);
     }
 
     public void setBottomColorHSV(int h, int s, int v) {
-        setColor(h, s, v, true, 0, LED_LENGTH/2);
+        setColor(h, s, v, true, 0, LED_LENGTH / 2);
     }
 
     // public void setStripAlliance() {
-    //     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-    //         setStripRGB(255, 0, 0);
-    //     }
-    //     else {
-    //         setStripRGB(0, 0, 255);
-    //     }
+    // if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+    // setStripRGB(255, 0, 0);
     // }
-    
+    // else {
+    // setStripRGB(0, 0, 255);
+    // }
+    // }
+
     public void toggleTeamColorsAnimation() {
         if (teamColorsAnimation) {
             teamColorsAnimation = false;
-        }
-        else {
+        } else {
             teamColorsAnimation = true;
         }
     }
 
     private void updateTeamColor() {
-        if ((frame/10) % 2 == 0) {
+        if ((frame / 10) % 2 == 0) {
             setStripRGB(143, 139, 189);
-        }
-        else {
+        } else {
             setStripRGB(1, 195, 203);
         }
     }
@@ -196,20 +240,20 @@ public class LEDs extends SubsystemBase {
 
     // @Override
     // public void periodic() {
-    //     // updates LEDs to show state of intake
-    //     if (Indexer.getInstance().isStoring()) {
-    //         setStripRGB(0, 255, 0);
-    //     } 
-    //     else {
-    //         setStripRGB(255, 0, 0);
-    //     }
-    //     if (teamColorsAnimation) {
-    //         updateTeamColor();
-    //     }
+    // // updates LEDs to show state of intake
+    // if (Indexer.getInstance().isStoring()) {
+    // setStripRGB(0, 255, 0);
+    // }
+    // else {
+    // setStripRGB(255, 0, 0);
+    // }
+    // if (teamColorsAnimation) {
+    // updateTeamColor();
+    // }
     // }
 
 }
-//143 139 189
-//1 195 203
+// 143 139 189
+// 1 195 203
 
-//142, 46, 14, ratio is 71:23:7
+// 142, 46, 14, ratio is 71:23:7

@@ -16,7 +16,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.MAXSwerve.DriveConstants;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.AprilTagVision.Vision;
 
 import java.util.Optional;
 
@@ -73,6 +73,8 @@ public class AlignSpeaker extends Command {
 
         // double driveHeading = drive.getWrappedHeading();
         // double output = rotationPID.calculate(driveHeading, angle.getDegrees());
+        // double x = (DriverStation.isTeleop()) ? MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband) : 0;
+        // double y = (DriverStation.isTeleop()) ? MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband) : 0;
 
         // drive.runVelocity(new ChassisSpeeds(
         //         -MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband)

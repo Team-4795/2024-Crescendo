@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,8 +25,8 @@ import frc.robot.subsystems.pivot.Pivot;
 
 public class AutoAlignAmp extends Command{
 
-    private static final Pose2d RED_AMP = new Pose2d(14.7, 7.5, Rotation2d.fromRadians(Math.PI / 2));
-    private static final Pose2d BLUE_AMP = new Pose2d(2.2, 7.5, Rotation2d.fromRadians(Math.PI / 2));
+    private static final Pose2d RED_AMP = new Pose2d(14.7, 5.6, Rotation2d.fromRadians(Math.PI / 2));
+    private static final Pose2d BLUE_AMP = new Pose2d(1.86, 5.6, Rotation2d.fromRadians(Math.PI / 2));
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
@@ -41,13 +42,15 @@ public class AutoAlignAmp extends Command{
 
     public AutoAlignAmp(ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;
+        translationController.setTolerance(0.1);
         rotationController = rotation;
         drive = Drive.getInstance();
         pivot = Pivot.getInstance();
         shooter = Shooter.getInstance();
         indexer = Indexer.getInstance();
-        addRequirements(drive, pivot, shooter, indexer);
+        addRequirements(drive, pivot, shooter);
     }
+
 
     @Override
     public void initialize(){
@@ -56,11 +59,12 @@ public class AutoAlignAmp extends Command{
         });
         currentPose = Drive.getInstance().getPose();
         double velocity = projection(drive.getFieldRelativeTranslationVelocity(), targetPose.getTranslation().minus(currentPose.getTranslation()));
+        rotationController.enableContinuousInput(-Math.PI, Math.PI);
         Logger.recordOutput("AutoAlign/Robot velocity", drive.getFieldRelativeTranslationVelocity());
         Logger.recordOutput("AutoAlign/Translation", targetPose.getTranslation().minus(currentPose.getTranslation()));
         Logger.recordOutput("AutoAlign/velocity", velocity);
         distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
-        translationController.reset(distance, velocity);
+        translationController.reset(distance, 0);
         rotationController.reset(MathUtil.angleModulus(currentPose.getRotation().getRadians()), drive.getTurnRate());
     }
 
@@ -77,7 +81,7 @@ public class AutoAlignAmp extends Command{
         double scalar = scalar(distance);
         double drivePIDOutput = translationController.calculate(distance, 0);
         double driveSpeed = scalar * translationController.getSetpoint().velocity + drivePIDOutput;
-        Rotation2d direction = new Rotation2d(currentPose.getX() - targetPose.getX(), currentPose.getY() - targetPose.getY());
+        Rotation2d direction = new Rotation2d(targetPose.getX() - currentPose.getX(), targetPose.getY() - currentPose.getY());
 
         drive.runVelocity(new ChassisSpeeds(driveSpeed * direction.getCos(), driveSpeed * direction.getSin(), omega));
 
@@ -85,12 +89,12 @@ public class AutoAlignAmp extends Command{
                 pivot.setGoal(PivotSetpoints.amp);
                 shooter.setShootingSpeedRPM(ShooterSetpoints.ampTop, ShooterSetpoints.ampBottom);
         }
-        if(rotationController.atGoal() && distance < 0.06){
+        if(rotationController.atGoal() && distance < 0.1){
                 indexer.setIndexerSpeed(IndexerSetpoints.shoot);
         }
 
         Logger.recordOutput("AutoAlign/target pose", targetPose);
-
+        Logger.recordOutput("AutoAlign/Translation direction", direction);
         Logger.recordOutput("AutoAlign/Rotation setpoint position", rotationController.getSetpoint().position);
         Logger.recordOutput("AutoAlign/Rotation setpoint velocity", rotationController.getSetpoint().velocity);
         Logger.recordOutput("AutoAlign/Rotation", MathUtil.angleModulus(currentPose.getRotation().getRadians()));

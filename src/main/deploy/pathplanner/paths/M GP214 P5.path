@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.96,
-        "y": 6.48
+        "x": 4.98,
+        "y": 6.59
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.682161663895367,
-        "y": 6.522935956000301
+        "x": 5.939800067902559,
+        "y": 6.347273407813577
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.86,
-        "y": 5.785153253616065
+        "x": 7.743268895952912,
+        "y": 5.8788399459823175
       },
       "prevControl": {
-        "x": 6.794313874333882,
-        "y": 5.703177397795595
+        "x": 6.914619548437054,
+        "y": 5.9442289229941725
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.7,
+      "waypointRelativePos": 0.5,
       "rotationDegrees": -11.310000000000002,
       "rotateFast": false
     }
@@ -49,9 +49,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "M GP 21(4)",
+  "folder": "M GP 2145",
   "previewStartingState": {
-    "rotation": 11.105149745032135,
+    "rotation": 16.37669658975352,
     "velocity": 0
   },
   "useDefaultConstraints": false

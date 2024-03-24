@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.45,
-        "y": 6.9
+        "x": 2.5,
+        "y": 6.78
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8597717958112625,
-        "y": 7.087799233334169
+        "x": 3.9097717958112623,
+        "y": 6.967799233334169
       },
       "isLocked": false,
       "linkedName": null
@@ -32,8 +32,8 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 4.5,
+    "maxAcceleration": 4.5,
     "maxAngularVelocity": 270.0,
     "maxAngularAcceleration": 720.0
   },
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "M GP 21(4)",
+  "folder": "M GP 2145",
   "previewStartingState": {
     "rotation": 28.39,
     "velocity": 0
