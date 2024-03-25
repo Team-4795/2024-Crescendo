@@ -50,6 +50,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.AlignToGamepiece;
 import frc.robot.commands.ArmFeedForwardCharacterization;
 import frc.robot.commands.RainbowCommand;
+import frc.robot.commands.AlignPose;
 import frc.robot.commands.AlignShuttle;
 import frc.robot.commands.AlignSpeaker;
 
@@ -159,7 +160,7 @@ public class RobotContainer {
     Trigger timeRumble = new Trigger(() -> between(DriverStation.getMatchTime(), 19, 21) || between(DriverStation.getMatchTime(), 39, 41));
     Trigger continuousRumble = new Trigger(() -> DriverStation.getMatchTime() <= 5);
     
-    Trigger isReady = new Trigger(() -> pivot.atGoal() && shooter.atGoal() && drive.atSpeakerAngle() && drive.slowMoving());
+    Trigger isReady = new Trigger(() -> pivot.atGoal() && shooter.atGoal() && AlignPose.atGoal() && drive.slowMoving());
     Trigger isReadyRumble = isReady.and(StateManager::isAiming);
 
     // Gamepiece align
