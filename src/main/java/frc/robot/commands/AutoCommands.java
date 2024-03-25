@@ -20,7 +20,7 @@ import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.pivot.PivotConstants;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.util.NoteVisualizer;
 
 public class AutoCommands {

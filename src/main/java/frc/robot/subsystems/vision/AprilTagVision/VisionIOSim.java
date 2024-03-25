@@ -1,4 +1,4 @@
-package frc.robot.subsystems.vision;
+package frc.robot.subsystems.vision.AprilTagVision;
 
 public class VisionIOSim implements VisionIO {
     @Override

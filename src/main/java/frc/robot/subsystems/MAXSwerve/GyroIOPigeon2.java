@@ -10,12 +10,20 @@ public class GyroIOPigeon2 implements GyroIO{
     private Pigeon2 pigeon = new Pigeon2(DriveConstants.kPigeonCanId);
     private final StatusSignal<Double> yaw = pigeon.getYaw();
     private final StatusSignal<Double> rate = pigeon.getAngularVelocityZDevice();
-    // private final StatusSignal<Double> rate = pigeon.getAngularVelocityZDevice();
+    private final StatusSignal<Double> accelX = pigeon.getAccelerationX();
+    private final StatusSignal<Double> accelY = pigeon.getAccelerationY();
+    private final StatusSignal<Double> accelZ = pigeon.getAccelerationZ();
 
     public GyroIOPigeon2(){
         pigeon.reset();
 
-        BaseStatusSignal.setUpdateFrequencyForAll(50, yaw, rate);
+        BaseStatusSignal.setUpdateFrequencyForAll(
+            50, 
+            yaw, 
+            rate,
+            accelX,
+            accelY,
+            accelZ);
 
         pigeon.optimizeBusUtilization(1.0);
     }
@@ -30,6 +38,7 @@ public class GyroIOPigeon2 implements GyroIO{
         inputs.connected = BaseStatusSignal.refreshAll(yaw, rate).isOK();
         inputs.yaw = Rotation2d.fromDegrees(pigeon.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0));
         inputs.yawVelocity = -Units.degreesToRadians(rate.getValueAsDouble()) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+        inputs.accel = new double[] {accelX.getValueAsDouble(), accelY.getValueAsDouble(), accelZ.getValueAsDouble()};
     }
 
 }

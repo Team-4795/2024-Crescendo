@@ -5,9 +5,10 @@
 package frc.robot.subsystems.MAXSwerve;
 
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
@@ -16,8 +17,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.CurrentLimits;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.ModuleConstants;
 
-public class ModuleIOSparkMax implements ModuleIO {
-  private final CANSparkMax m_drivingSpark;
+public class ModuleIOSparkFlex implements ModuleIO {
+  private final CANSparkFlex m_drivingSpark;
   private final CANSparkMax m_turningSparkMax;
 
   private final RelativeEncoder m_drivingEncoder;
@@ -31,8 +32,8 @@ public class ModuleIOSparkMax implements ModuleIO {
   private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
   private SwerveModuleState optimizedState = new SwerveModuleState(0.0, new Rotation2d());
 
-  public ModuleIOSparkMax(int drivingCANId, int turningCANId, double chassisAngularOffset) {
-    m_drivingSpark = new CANSparkMax(drivingCANId, MotorType.kBrushless);
+  public ModuleIOSparkFlex(int drivingCANId, int turningCANId, double chassisAngularOffset) {
+    m_drivingSpark = new CANSparkFlex(drivingCANId, MotorType.kBrushless);
     m_turningSparkMax = new CANSparkMax(turningCANId, MotorType.kBrushless);
 
     // Factory reset, so we get the SPARKS MAX to a known state before configuring
@@ -149,7 +150,7 @@ public class ModuleIOSparkMax implements ModuleIO {
         new Rotation2d(m_turningEncoder.getPosition()));
 
     optimizedState = optimizedDesiredState;
-    optimizedState.angle = optimizedState.angle.minus(m_chassisAngularOffset);
+    // optimizedState.angle = optimizedState.angle.minus(m_chassisAngularOffset);
 
     // Command driving and turning SPARKS MAX towards their respective setpoints.
     m_drivingPIDController.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);

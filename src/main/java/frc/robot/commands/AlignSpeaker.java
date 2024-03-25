@@ -4,55 +4,51 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.MAXSwerve.DriveConstants;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.AprilTagVision.Vision;
 
 import java.util.Optional;
 
 public class AlignSpeaker extends Command {
 
-    public final double speakerHeight = 2.06;
-    public final double pivotHeight = 0.29;
-    public double distanceToSpeaker = 0.0;
-    public double angleCalc = 0.0;
-
     private double previousAngle;
     private double mult;
 
-    private Vision vision;
+    private Vision vision = Vision.getInstance();
     private Drive drive = Drive.getInstance();
-    private PIDController rotationPID = new PIDController(0.09, 0, 0); // 0.09, 0, 0
+    private PIDController rotationPID = new PIDController(34*0.6, 0, 34*0.49/8);
 
     public AlignSpeaker() {
         addRequirements(drive);
-        if(Constants.hasVision){
-            vision = Vision.getInstance();
-            addRequirements(vision);
-        }
-        rotationPID.enableContinuousInput(-180, 180);
-        rotationPID.setTolerance(5);
+
+        rotationPID.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     @Override
     public void initialize(){
-            DriverStation.getAlliance().ifPresent(alliance -> mult = (alliance == Alliance.Red) ? -1.0 : 1.0);
+        DriverStation.getAlliance().ifPresent(alliance -> mult = (alliance == Alliance.Red) ? -1.0 : 1.0);
+        // rotationPID.reset(drive.getRotationHeading().getRadians(), drive.getTurnRate());
+
         Pose2d currentPose = drive.getPose();
         Translation2d velocity = drive.getTranslationVelocity();
         Pose2d newPose = new Pose2d(currentPose.getX() + (velocity.getX() * 0.02),
                 currentPose.getY() + (velocity.getY() * 0.02),
                 currentPose.getRotation());
         double deltaY = vision.getSpeakerPos().getY() - newPose.getY();
-        previousAngle = mult * Units.radiansToDegrees(Math.asin(deltaY / vision.getDistancetoSpeaker(newPose)));
+        previousAngle = mult * Math.asin(deltaY / vision.getDistancetoSpeaker(newPose));
+        
     }
 
     @Override
@@ -64,12 +60,12 @@ public class AlignSpeaker extends Command {
                 currentPose.getRotation());
 
         double deltaY = vision.getSpeakerPos().getY() - newPose.getY();
-        double angle = mult * Units.radiansToDegrees(-Math.asin(deltaY / vision.getDistancetoSpeaker(newPose)));
+        double angle = mult * -Math.asin(deltaY / vision.getDistancetoSpeaker(newPose));
 
-        double deltaAngle = Units.degreesToRadians(angle - previousAngle);
+        double deltaAngle = angle - previousAngle;
         double omega = deltaAngle / 0.02;
 
-        double driveHeading = drive.getWrappedHeading();
+        double driveHeading = drive.getRotationHeading().getRadians();
         double output = rotationPID.calculate(driveHeading, angle);
 
         double x = (DriverStation.isTeleop()) ? MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband) : 0;
@@ -78,9 +74,7 @@ public class AlignSpeaker extends Command {
         drive.runVelocity(new ChassisSpeeds(
                 -Math.copySign(x * x, x) * DriveConstants.kMaxSpeedMetersPerSecond,
                 -Math.copySign(y * y, y) * DriveConstants.kMaxSpeedMetersPerSecond,
-                MathUtil.clamp(omega + output, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed)));
-
-        drive.setAtTarget(Optional.of(rotationPID.atSetpoint()));
+                MathUtil.clamp(output, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed)));
 
         Logger.recordOutput("Vision/drive heading", driveHeading);
         Logger.recordOutput("Vision/Speaker Position", vision.getSpeakerPos());
@@ -88,6 +82,8 @@ public class AlignSpeaker extends Command {
         Logger.recordOutput("Vision/output", output);
         Logger.recordOutput("Vision/NewPose", newPose);
         Logger.recordOutput("Vision/previous angle", previousAngle);
+        // Logger.recordOutput("Vision/Setpoint angle", rotationPID.getSetpoint().position);
+
         Logger.recordOutput("Vision/omega", omega);
 
         previousAngle = angle;

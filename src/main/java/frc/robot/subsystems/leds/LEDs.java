@@ -1,11 +1,12 @@
 package frc.robot.subsystems.leds;
 
+import java.util.Map;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,6 +15,12 @@ import frc.robot.StateManager.State;
 import frc.robot.subsystems.indexer.Indexer;
 
 public class LEDs extends SubsystemBase {
+
+    public enum BlinkState {
+        SOLID,
+        FAST,
+        SlOW;
+    }
     private final int LED_LENGTH = 27;
     private final int PORT = 0;
 
@@ -31,6 +38,9 @@ public class LEDs extends SubsystemBase {
     private boolean revving = false;
     private boolean canShoot = false;
 
+    private Color color = Color.kBlack;
+    private BlinkState blink = BlinkState.SOLID;
+
     private static LEDs instance;
 
     public static LEDs getInstance() {
@@ -46,33 +56,15 @@ public class LEDs extends SubsystemBase {
         buffer = new AddressableLEDBuffer(LED_LENGTH);
         led.setLength(buffer.getLength());
 
-        setDefaultCommand(run(() -> {
-            if (DriverStation.isDisabled()) {
-                setTeamColors();
-            } else {
-                if (canShoot) {
-                    setColor(Color.kMagenta);
-                } else if (revving) {
-                    setColor(Color.kFirstBlue);
-                } else if (pathfinding) {
-                    setColor(Color.kOrange);
-                } else if (yellow) {
-                    setColor(Color.kYellow);
-                } else {
-                    if (StateManager.getState() == State.SPEAKER) {
-                        setBottomColor(Color.kViolet);
-                    } else {
-                        setBottomColor(Color.kBlue);
-                    }
-
-                    if (Indexer.getInstance().isStoring()){
-                        setTopColor(Color.kGreen);
-                    } else {
-                        setTopColor(Color.kRed);
-                    }
-                }
-            }
-        }).ignoringDisable(true));
+        setDefaultCommand(Commands.either(
+            Commands.runOnce(this::setTeamColors), 
+            Commands.select(Map.ofEntries(
+                Map.entry(BlinkState.SOLID, this.setSolidColor()),
+                Map.entry(BlinkState.SlOW, this.blink(0.12)),
+                Map.entry(BlinkState.FAST, this.blink(0.06))
+            ), () -> blink), 
+            DriverStation::isDisabled
+        ).ignoringDisable(true));
 
         setTeamColors();
     };
@@ -106,6 +98,19 @@ public class LEDs extends SubsystemBase {
     private void setColors(Color top, Color bottom) {
         setTopColor(top);
         setBottomColor(bottom);
+    }
+
+    public Command blink(double pause){
+        return Commands.repeatingSequence(
+            runOnce(() -> setColor(color)),
+            Commands.waitSeconds(pause),
+            runOnce(() -> setColor(Color.kBlack)),
+            Commands.waitSeconds(pause)
+        );
+    }
+
+    public Command setSolidColor(){
+        return Commands.runOnce(() -> this.setColor(color));
     }
 
     public Command intaking() {
@@ -238,19 +243,30 @@ public class LEDs extends SubsystemBase {
         led.start();
     }
 
-    // @Override
-    // public void periodic() {
-    // // updates LEDs to show state of intake
-    // if (Indexer.getInstance().isStoring()) {
-    // setStripRGB(0, 255, 0);
-    // }
-    // else {
-    // setStripRGB(255, 0, 0);
-    // }
-    // if (teamColorsAnimation) {
-    // updateTeamColor();
-    // }
-    // }
+    @Override
+    public void periodic() {
+    // updates LEDs to show state of intake
+        switch(StateManager.getState()){
+            case AMP:
+                color = Color.kMidnightBlue;
+                break;
+            case SHUTTLE:
+                color = Color.kCrimson;
+                break;
+            case SPEAKER:
+                color = Color.kSkyBlue;
+                break;
+            default:
+                break;      
+        }
+        if(Indexer.getInstance().handoff() && !Indexer.getInstance().isStoring()){
+            blink = BlinkState.FAST;
+        } else if (Indexer.getInstance().isStoring()){
+            blink = BlinkState.SlOW;
+        } else {
+            blink = BlinkState.SOLID;
+        }
+    }
 
 }
 // 143 139 189

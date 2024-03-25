@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,13 +24,13 @@ import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.pivot.Pivot;
 
 public class AutoAlignAmp extends Command{
-
     private static final Pose2d RED_AMP = new Pose2d(14.7, 7.6, Rotation2d.fromRadians(Math.PI / 2));
     private static final Pose2d BLUE_AMP = new Pose2d(1.86, 7.6, Rotation2d.fromRadians(Math.PI / 2));
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
 
+    private double mult;
     private Pose2d currentPose;
     private Pose2d targetPose;
     private double distance;
@@ -41,6 +42,7 @@ public class AutoAlignAmp extends Command{
 
     public AutoAlignAmp(ProfiledPIDController translation, ProfiledPIDController rotation) {
         translationController = translation;
+        translationController.setTolerance(0.1);
         rotationController = rotation;
         drive = Drive.getInstance();
         pivot = Pivot.getInstance();
@@ -49,13 +51,15 @@ public class AutoAlignAmp extends Command{
         addRequirements(drive, pivot, shooter);
     }
 
+
     @Override
     public void initialize(){
         DriverStation.getAlliance().ifPresent((alliance) -> {
             targetPose = (alliance == Alliance.Blue) ? BLUE_AMP : RED_AMP;
+            mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
         });
         currentPose = Drive.getInstance().getPose();
-        double velocity = projection(drive.getFieldRelativeTranslationVelocity(), targetPose.getTranslation().minus(currentPose.getTranslation()));
+        double velocity = mult * projection(drive.getFieldRelativeTranslationVelocity(), targetPose.getTranslation().minus(currentPose.getTranslation()));
         rotationController.enableContinuousInput(-Math.PI, Math.PI);
         Logger.recordOutput("AutoAlign/Robot velocity", drive.getFieldRelativeTranslationVelocity());
         Logger.recordOutput("AutoAlign/Translation", targetPose.getTranslation().minus(currentPose.getTranslation()));
@@ -77,8 +81,9 @@ public class AutoAlignAmp extends Command{
         
         double scalar = scalar(distance);
         double drivePIDOutput = translationController.calculate(distance, 0);
-        double driveSpeed = scalar * translationController.getSetpoint().velocity + drivePIDOutput;
+        double driveSpeed = mult * scalar * translationController.getSetpoint().velocity + drivePIDOutput;
         Rotation2d direction = new Rotation2d(currentPose.getX() - targetPose.getX(), currentPose.getY() - targetPose.getY());
+        // Rotation2d direction = new Rotation2d(targetPose.getX() - currentPose.getX(), targetPose.getY() - currentPose.getY());
 
         drive.runVelocity(new ChassisSpeeds(driveSpeed * direction.getCos(), driveSpeed * direction.getSin(), omega));
 
@@ -91,7 +96,8 @@ public class AutoAlignAmp extends Command{
         }
 
         Logger.recordOutput("AutoAlign/target pose", targetPose);
-
+        Logger.recordOutput("AutoAlign/Translation x direction", driveSpeed * direction.getCos());
+        Logger.recordOutput("AutoAlign/Translation y direction", driveSpeed * direction.getSin());
         Logger.recordOutput("AutoAlign/Rotation setpoint position", rotationController.getSetpoint().position);
         Logger.recordOutput("AutoAlign/Rotation setpoint velocity", rotationController.getSetpoint().velocity);
         Logger.recordOutput("AutoAlign/Rotation", MathUtil.angleModulus(currentPose.getRotation().getRadians()));
@@ -101,6 +107,7 @@ public class AutoAlignAmp extends Command{
         Logger.recordOutput("AutoAlign/Translation setpoint velocity", translationController.getSetpoint().velocity);
         Logger.recordOutput("AutoAlign/Distance", currentPose.getTranslation().getDistance(targetPose.getTranslation()));
         Logger.recordOutput("AutoAlign/Distance at goal", translationController.atGoal());
+        Logger.recordOutput("AutoAlign/PID input", drivePIDOutput);
     }
 
     @Override

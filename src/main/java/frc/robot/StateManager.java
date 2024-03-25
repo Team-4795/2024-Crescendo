@@ -2,12 +2,14 @@ package frc.robot;
 
 public class StateManager {
 
-    private static State state = State.SPEAKER;
+    private static State state = State.AMP;
+    private static boolean aiming = false;
     private static boolean automate = true;
 
     public enum State {
         SPEAKER,
-        AMP;
+        AMP,
+        SHUTTLE;
     }
 
     public static void setState(State desired) {
@@ -24,5 +26,13 @@ public class StateManager {
 
     public static void toggleAutomate() {
         automate = !automate;
+    }
+
+    public static boolean isAiming(){
+        return aiming;
+    }
+
+    public static void setAim(boolean aim){
+        aiming = aim;
     }
 }

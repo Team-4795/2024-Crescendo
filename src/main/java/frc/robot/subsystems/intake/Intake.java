@@ -1,21 +1,15 @@
 package frc.robot.subsystems.intake;
 
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.IndexerSetpoints;
 import frc.robot.Constants.IntakeSetpoints;
-import frc.robot.subsystems.indexer.Indexer;
 
 public class Intake extends SubsystemBase{
     private IntakeIO io;
     private IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
     private double intakeSpeed = 0.0;
-
-    @AutoLogOutput
-    private boolean idle = false;
 
     private static Intake instance;
 
@@ -43,14 +37,6 @@ public class Intake extends SubsystemBase{
         return inputs.currentAmps > IntakeConstants.intakeCurrent && inputs.angularVelocityRPM > 2400;
     }
 
-    public void setIdleMode(boolean mode){
-        idle = mode;
-    }
-
-    public boolean getIdleMode(){
-        return idle;
-    }
-
     public Command intake() {
         return startEnd(() -> setIntakeSpeed(IntakeSetpoints.intake), () -> setIntakeSpeed(0));
     }
@@ -69,9 +55,5 @@ public class Intake extends SubsystemBase{
         Logger.processInputs("Intake", inputs);
         io.setMotorSpeed(intakeSpeed);
         Logger.recordOutput("Intake/Intake speed", intakeSpeed);
-        if(idle){
-            this.setIntakeSpeed((Indexer.getInstance().isStoring()) ? 0 : IntakeSetpoints.intake);
-            Indexer.getInstance().setIndexerSpeed(IndexerSetpoints.shoot);
-        }
     }
 }
