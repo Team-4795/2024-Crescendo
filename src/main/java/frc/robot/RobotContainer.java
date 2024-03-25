@@ -87,8 +87,8 @@ public class RobotContainer {
         shooter = Shooter.initialize(new ShooterIOReal());
         pivot = Pivot.initialize(new PivotIOReal());
         indexer = Indexer.initialize(new IndexerIOReal());
-        // vision = Vision.initialize(new VisionIOReal(0), new VisionIOReal(1), new VisionIOReal(2));
-        vision = Vision.initialize(new VisionIOSim());
+        vision = Vision.initialize(new VisionIOReal(0), new VisionIOReal(1), new VisionIOReal(2));
+        // vision = Vision.initialize(new VisionIOReal());
         intakeCamVision = IntakeCamVision.initialize(new IntakeCamVisionIOReal());
         drive = Drive.initialize(
             new GyroIOPigeon2(),

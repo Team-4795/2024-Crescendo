@@ -27,6 +27,7 @@ import frc.robot.subsystems.Shooter.ShooterConstants;
 import frc.robot.util.EqualsUtil;
 import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.util.LoggedTunableNumber;
+import frc.robot.util.Util;
 
 public class Pivot extends SubsystemBase {
     private PivotIO io;
@@ -73,7 +74,6 @@ public class Pivot extends SubsystemBase {
         io.updateInputs(inputs);
 
         visualizer.update(360 * getTruePosition() / (Math.PI * 2), Units.radiansToDegrees(controller.getSetpoint().position + PivotConstants.angleOffset));
-        controller.setTolerance(Tolerances.pivotSetpoint, Tolerances.driveVelocity);
 
         sysid = new SysIdRoutine(
             new SysIdRoutine.Config(Volts.of(0.2).per(Seconds.of(1)), Volts.of(2), null, (state) -> Logger.recordOutput("Pivot/SysIdState", state.toString())),
@@ -182,7 +182,7 @@ public class Pivot extends SubsystemBase {
 
     @AutoLogOutput
     public boolean atGoal() {
-        return controller.atGoal();
+        return Util.epsilonEquals(goal, getPosition(), Tolerances.pivotSetpoint);
     }
 
     @Override
@@ -191,7 +191,6 @@ public class Pivot extends SubsystemBase {
         Logger.processInputs("Pivot", inputs);
         visualizer.update(Units.radiansToDegrees(getTruePosition()), Units.radiansToDegrees(controller.getSetpoint().position + PivotConstants.angleOffset));
 
-        LoggedTunableNumber.ifChanged(hashCode(), () -> controller.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
         LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);
 
         double v1 = controller.getSetpoint().velocity;
