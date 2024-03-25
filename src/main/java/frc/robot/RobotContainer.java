@@ -174,14 +174,12 @@ public class RobotContainer {
             Map.entry(State.SPEAKER, Commands.parallel(
               new AlignSpeaker(),
               pivot.aimSpeakerDynamic(),
-              shooter.rev(),
-              Commands.runOnce(() -> StateManager.setAim(true))
-            ).finallyDo(() -> StateManager.setAim(false))),
+              shooter.rev()
+            )),
             Map.entry(State.SHUTTLE, pivot.aimShuttle().alongWith(shooter.revShuttle()))),
             StateManager::getState),
         shooter.rev()
-          .alongWith(pivot.aim(), Commands.runOnce(() -> StateManager.setAim(true)))
-          .finallyDo(() -> StateManager.setAim(false)),
+          .alongWith(pivot.aim()),
         () -> StateManager.isAutomate()
       )
     );

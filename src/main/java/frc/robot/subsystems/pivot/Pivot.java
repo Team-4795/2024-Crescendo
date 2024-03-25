@@ -153,21 +153,21 @@ public class Pivot extends SubsystemBase {
         return Commands.startEnd(
             () -> setGoal(PivotSetpoints.shuttle), 
             () -> setGoal(PivotSetpoints.stow)
-        );
+        ).alongWith(aiming());
     }
 
     public Command aimAmp() {
         return Commands.startEnd(
             () -> setGoal(PivotSetpoints.amp),
             () -> setGoal(PivotSetpoints.stow)
-        );
+        ).alongWith(aiming());
     }
 
     public Command aimSource() {
         return Commands.startEnd(
             () -> setGoal(PivotSetpoints.source),
             () -> setGoal(PivotSetpoints.stow)
-        );
+        ).alongWith(aiming());
     }
 
     public Command aimIntake() {
@@ -175,6 +175,10 @@ public class Pivot extends SubsystemBase {
             () -> setGoal(PivotSetpoints.intake),
             () -> setGoal(PivotSetpoints.stow)
         );
+    }
+
+    public Command aiming() {
+        return Commands.startEnd(() -> StateManager.setAim(true), () -> StateManager.setAim(false));
     }
 
     @AutoLogOutput
