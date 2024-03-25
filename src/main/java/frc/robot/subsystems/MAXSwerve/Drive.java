@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.MAXSwerve;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 
@@ -36,6 +37,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.Tolerances;
 import frc.robot.commands.AutoAlignAmp;
 import java.util.Optional;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.AutoConstants;
@@ -83,9 +85,6 @@ public class Drive extends SubsystemBase {
       // Odometry class for tracking robot pose
     SwerveDrivePoseEstimator m_poseEstimator;
     private EstimatedRobotPose visionPose = new EstimatedRobotPose(new Pose3d(), m_currentRotation, null, null);
-
-    // Used for targeting a heading
-    private Optional<Boolean> atTarget = Optional.empty(); 
 
     private Vision vision;
 
@@ -189,8 +188,6 @@ public class Drive extends SubsystemBase {
                 .transformBy(new Transform2d(speed, 0, new Rotation2d()))
                 .getTranslation();
 
-            setAtTarget(Optional.empty());
-
             this.drive(
                 velocity.getX(),
                 velocity.getY(),
@@ -265,13 +262,12 @@ public class Drive extends SubsystemBase {
         m_poseEstimator.addVisionMeasurement(pose, timestamp, stddevs);
     }
 
-    public void setAtTarget(Optional<Boolean> atTarget) {
-        this.atTarget = atTarget;
-    }
-
-    public boolean isAtTarget() {
-        return atTarget.orElse(true);
-    }
+    @AutoLogOutput
+    public boolean willMakeShot() {
+        return vision.willMakeShot(new Pose2d(getPose().getTranslation(), getPose().getRotation().rotateBy(new Rotation2d(Math.PI)))) 
+            && getTranslationVelocity().getNorm() < Tolerances.driveVelocity
+            && getTurnRate() < Tolerances.turningSpeed;
+    }   
 
     /**
      * Returns the currently-estimated pose of the robot.

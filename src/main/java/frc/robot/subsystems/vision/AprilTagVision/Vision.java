@@ -8,35 +8,37 @@ import java.util.Optional;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.Utils;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.Tolerances;
 import frc.robot.subsystems.MAXSwerve.Drive;
-import frc.robot.subsystems.vision.AprilTagVision.VisionIOInputsAutoLogged;
 
 public class Vision extends SubsystemBase {
     private VisionIO io[];
     private VisionIOInputsAutoLogged inputs[];
 
-    private Translation3d redSpeaker = new Translation3d(16.379342, 5.547868, 2);
-    private Translation3d blueSpeaker = new Translation3d(0.1619, 5.547868, 2);
+    private final Translation3d redSpeaker = new Translation3d(16.379342, 5.547868, 2.06);
+    private final Translation3d blueSpeaker = new Translation3d(0.1619, 5.547868, 2.06);
     
     @AutoLogOutput
     private Translation3d speakerPosition = new Translation3d();
 
     public static Vision instance;
     
-    public double distanceToTarget;
-
     public static Vision getInstance() {
         return instance;
     }
@@ -63,8 +65,7 @@ public class Vision extends SubsystemBase {
         if(speakerPosition == null){
             return 0;
         }
-        distanceToTarget = robotPose.getTranslation().getDistance(speakerPosition.toTranslation2d());
-        return distanceToTarget;
+        return robotPose.getTranslation().getDistance(speakerPosition.toTranslation2d());
     }
 
     public void setSpeakerPos(){
@@ -94,25 +95,25 @@ public class Vision extends SubsystemBase {
         return distance * 0.25;
     }
 
-    // public double distanceToTag(int camIndex, int tag) {
-    //     return io[camIndex].getDistanceToTag(tag);
-    // }
+    public double wrapDeg(double angle) {
+        return angle < 0 ? angle + 360 : angle;
+    }
 
-    // public int numberOfTags(int camindex) {
-    //     return inputs[camindex].numberOfTags;
-    // } 
+    /* Returns if a shot at an angle will go into the speaker */
+    public boolean willMakeShot(Pose2d pose) {
+        Rotation2d min = speakerPosition.toTranslation2d().plus(new Translation2d(0, Tolerances.speakerWidth)).minus(pose.getTranslation()).getAngle();
+        Rotation2d max = speakerPosition.toTranslation2d().plus(new Translation2d(0, -Tolerances.speakerWidth)).minus(pose.getTranslation()).getAngle();
 
-    // public int aprilTagDetected(int camIndex) {
-    //     return inputs[camIndex].aprilTagDetected;
-    // }
+        return between(pose.getRotation(), min, max);
+    }
 
-    // public boolean lifeCamHastargets() {
-    //     return inputs.lifeCamHastargets;
-    // }
+    public boolean between(Rotation2d x, Rotation2d min, Rotation2d max) {
+        if (max.minus(min).getSin() < 0.0) {
+            return between(x, max, min);
+        }
 
-    // public double getLifecamYaw () {
-    //     return inputs.lifeCamyaw;
-    // }
+        return wrapDeg(x.getDegrees() - min.getDegrees()) <= wrapDeg(max.getDegrees() - min.getDegrees());
+    }
 
     public void periodic() {
         for (int i = 0; i < io.length; i++) {

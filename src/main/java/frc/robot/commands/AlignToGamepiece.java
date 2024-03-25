@@ -30,13 +30,7 @@ public class AlignToGamepiece extends Command {
 
     @Override
     public void initialize() {
-        DriverStation.getAlliance().ifPresent((alliance) -> {
-            if (alliance == Alliance.Blue) {
-                AlignPose.setTarget(FieldConstants.BLUE_SOURCE, false, Alliance.Blue);
-            } else {
-                AlignPose.setTarget(FieldConstants.RED_SOURCE, false, Alliance.Red);
-            }
-        });
+        AlignPose.setState(AlignPose.State.SOURCE);
         rotationPID.reset();
     }
 

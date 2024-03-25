@@ -3,6 +3,7 @@ package frc.robot.subsystems.pivot;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
@@ -20,6 +21,7 @@ import frc.robot.Constants;
 import frc.robot.StateManager;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PivotSetpoints;
+import frc.robot.Constants.Tolerances;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.util.LoggedTunableNumber;
@@ -71,7 +73,7 @@ public class Pivot extends SubsystemBase {
         io.updateInputs(inputs);
 
         visualizer.update(360 * getTruePosition() / (Math.PI * 2), Units.radiansToDegrees(controller.getSetpoint().position + PivotConstants.angleOffset));
-        controller.setTolerance(Units.degreesToRadians(3));
+        controller.setTolerance(Tolerances.pivotSetpoint, Tolerances.driveVelocity);
 
         sysid = new SysIdRoutine(
             new SysIdRoutine.Config(Volts.of(0.2).per(Seconds.of(1)), Volts.of(2), null, (state) -> Logger.recordOutput("Pivot/SysIdState", state.toString())),
@@ -175,7 +177,8 @@ public class Pivot extends SubsystemBase {
         );
     }
 
-    public boolean atSetpoint() {
+    @AutoLogOutput
+    public boolean atGoal() {
         return controller.atGoal();
     }
 

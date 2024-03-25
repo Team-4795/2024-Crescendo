@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import javax.swing.GroupLayout.Alignment;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
@@ -36,11 +38,7 @@ public class AlignShuttle extends Command{
     @Override
     public void initialize() {
         DriverStation.getAlliance().ifPresent((alliance) -> {
-            if(alliance == Alliance.Blue){
-                AlignPose.setTarget(FieldConstants.BLUE_SHUTTLE, true, Alliance.Blue);
-            } else {
-                AlignPose.setTarget(FieldConstants.RED_SHUTTLE, true, Alliance.Red);
-            }
+            AlignPose.setState(AlignPose.State.SHUTTLE);
             this.alliance = alliance;
         });
         pivot.setGoal(PivotSetpoints.shuttle);
@@ -62,11 +60,11 @@ public class AlignShuttle extends Command{
         Logger.recordOutput("AlignShuttle/shootingSpeed", shootingSpeed);
 
         if(alliance == Alliance.Blue){
-            if(drive.getPose().getX() < FieldConstants.RED_WING_X && drive.getTranslationVelocity().getNorm() < velocityCutoff && drive.isAtTarget()){
+            if(drive.getPose().getX() < FieldConstants.RED_WING_X && drive.getTranslationVelocity().getNorm() < velocityCutoff && AlignPose.atGoal()){
                 indexer.setIndexerSpeed(IndexerSetpoints.shoot);
             }
         } else {
-            if(drive.getPose().getX() > FieldConstants.BLUE_WING_X && drive.getTranslationVelocity().getNorm() < velocityCutoff && drive.isAtTarget()){
+            if(drive.getPose().getX() > FieldConstants.BLUE_WING_X && drive.getTranslationVelocity().getNorm() < velocityCutoff && AlignPose.atGoal()){
                 indexer.setIndexerSpeed(IndexerSetpoints.shoot);
             }
         }

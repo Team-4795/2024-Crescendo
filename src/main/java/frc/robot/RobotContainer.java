@@ -158,32 +158,37 @@ public class RobotContainer {
   private void configureButtonBindings() {
     Trigger timeRumble = new Trigger(() -> between(DriverStation.getMatchTime(), 19, 21) || between(DriverStation.getMatchTime(), 39, 41));
     Trigger continuousRumble = new Trigger(() -> DriverStation.getMatchTime() <= 5);
-    Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint() && drive.isAtTarget() && StateManager.isAiming());
+    
+    Trigger isReady = new Trigger(() -> pivot.atGoal() && shooter.atGoal() && drive.willMakeShot());
+    Trigger isReadyRumble = isReady.and(StateManager::isAiming);
 
-    //Align to source/gamepiece
+    // Gamepiece align
     OIConstants.driverController.rightBumper().whileTrue(new AlignToGamepiece());
 
-    //Align Amp / Speaker
+    // Align Amp / Speaker
     OIConstants.driverController.leftBumper().whileTrue(
-          Commands.either(
-            Commands.select(
-              Map.ofEntries(
-                Map.entry(State.AMP, drive.AutoAlignAmp()),
-                Map.entry(State.SPEAKER, Commands.parallel(
-                  new AlignSpeaker(),
-                  pivot.aimSpeakerDynamic(),
-                  shooter.rev(),
-                  Commands.runOnce(() -> StateManager.setAim(true))
-                ).finallyDo(() -> StateManager.setAim(false))),
-                Map.entry(State.SHUTTLE, new AlignShuttle())),
-                StateManager::getState),
-            shooter.rev().alongWith(pivot.aim()),
-            () -> StateManager.isAutomate()
-          )
+      Commands.either(
+        Commands.select(
+          Map.ofEntries(
+            Map.entry(State.AMP, drive.AutoAlignAmp()),
+            Map.entry(State.SPEAKER, Commands.parallel(
+              new AlignSpeaker(),
+              pivot.aimSpeakerDynamic(),
+              shooter.rev(),
+              Commands.runOnce(() -> StateManager.setAim(true))
+            ).finallyDo(() -> StateManager.setAim(false))),
+            Map.entry(State.SHUTTLE, pivot.aimShuttle().alongWith(shooter.revShuttle()))),
+            StateManager::getState),
+        shooter.rev()
+          .alongWith(pivot.aim(), Commands.runOnce(() -> StateManager.setAim(true)))
+          .finallyDo(() -> StateManager.setAim(false)),
+        () -> StateManager.isAutomate()
+      )
     );
 
-    //Shoot
+    // Auto Shoot
     OIConstants.driverController.rightTrigger(0.3)
+      .and(isReady)
       .whileTrue(indexer.forwards())
       .onTrue(NoteVisualizer.shoot());
     
@@ -192,21 +197,37 @@ public class RobotContainer {
       .onTrue(Commands.runOnce(() -> drive.setFieldRelative(false)))
       .onFalse(Commands.runOnce(() -> drive.setFieldRelative(true)));
 
-    //SADDEST BUTTON IN EXISTENCE ON PERSEUS
+    // Normal Shoot (Might switch onto different button as a toggle mode)
+    OIConstants.driverController.leftTrigger(0.3)
+      .whileTrue(indexer.forwards())
+      .onTrue(NoteVisualizer.shoot());
+
+    // SADDEST BUTTON IN EXISTENCE ON PERSEUS
     OIConstants.driverController.x().onTrue(Commands.runOnce(() -> {
       StateManager.toggleAutomate();
       leds.toggleYellow();
     }));
 
+    // Zero heading
     OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));
+
+    // Auto amp align
     OIConstants.driverController.b().whileTrue(drive.AutoAlignAmp());
 
+    // Non auto amp align
     OIConstants.driverController.y().whileTrue(pivot.aimAmp().alongWith(shooter.revAmp()));
     
     // State swapping
-    OIConstants.operatorController.leftBumper().onTrue(Commands.runOnce(() -> StateManager.setState(State.SPEAKER)));
-    OIConstants.operatorController.rightBumper().onTrue(Commands.runOnce(() -> StateManager.setState(State.AMP)));
-    OIConstants.operatorController.leftBumper().and(OIConstants.operatorController.rightBumper())
+    OIConstants.operatorController.leftBumper()
+      .and(OIConstants.operatorController.rightBumper().negate())
+      .onTrue(Commands.runOnce(() -> StateManager.setState(State.SPEAKER)));
+
+    OIConstants.operatorController.rightBumper()
+      .and(OIConstants.operatorController.leftBumper().negate()) // Make sure there is no funkiness when pressing both buttons
+      .onTrue(Commands.runOnce(() -> StateManager.setState(State.AMP)));
+
+    OIConstants.operatorController.leftBumper()
+      .and(OIConstants.operatorController.rightBumper())
       .onTrue(Commands.runOnce(() -> StateManager.setState(State.SHUTTLE)));
 
     //Source Intake
@@ -268,7 +289,7 @@ public class RobotContainer {
 
     timeRumble.onTrue(rumbleCommand(0.3).withTimeout(0.5));
     continuousRumble.whileTrue(rumbleCommand(0.4));
-    isReady.whileTrue(rumbleCommand(0.6));
+    isReadyRumble.whileTrue(rumbleCommand(0.6));
   }
 
   private void setBothRumble(double amount) {

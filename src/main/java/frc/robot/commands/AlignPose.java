@@ -11,11 +11,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.MAXSwerve.DriveConstants;
+import frc.robot.util.Util.AllianceFlipUtil;
 
-public class AlignPose{
-    
+public class AlignPose {
     private static double mult = 1;
     private static Alliance alliance;
 
@@ -34,14 +35,28 @@ public class AlignPose{
     private static Pose2d augmentedPose;
     private static boolean inverted; //intake facing or shooter facing (true for shooter)
     private static Translation2d velocity;
-    private static final PIDController rotationPID = new PIDController(0.09, 0, 0);
+    private static final PIDController rotationPID = new PIDController(34*0.6, 0, 34*0.49/8);
 
-    public static void setTarget(Pose2d target, boolean invert, Alliance ally) {
-        targetPose = target;
-        inverted = invert;
-        alliance = ally;
-        rotationPID.enableContinuousInput(-180, 180);
+    private static State state = State.SPEAKER;
+
+    public enum State {
+        SPEAKER,
+        SOURCE,
+        SHUTTLE;
+    }
+
+    public static void setState(State newState) {
+        rotationPID.enableContinuousInput(-Math.PI, Math.PI);
         rotationPID.setTolerance(5);
+        state = newState;
+
+        switch (state) {
+            case SPEAKER: targetPose = FieldConstants.BLUE_SPEAKER; break;
+            case SOURCE: targetPose = FieldConstants.BLUE_SOURCE; break;
+            case SHUTTLE: targetPose = FieldConstants.BLUE_SHUTTLE; break;
+        }
+
+        targetPose = AllianceFlipUtil.apply(targetPose);
         initialize();
     }
 
@@ -56,7 +71,7 @@ public class AlignPose{
         deltaX = targetPose.getX() - augmentedPose.getX();
         deltaX *= (inverted) ? -mult : mult;
         deltaY *= (inverted) ? -mult : mult;
-        previousAngle = Units.radiansToDegrees(Math.atan2(deltaY, deltaX));
+        previousAngle = Math.atan2(deltaY, deltaX);
     }
 
     public static double calculateRotationSpeed() {        
@@ -72,26 +87,30 @@ public class AlignPose{
         deltaY *= (inverted) ? -mult : mult;
         // deltaX *= (alliance == Alliance.Red) ? -1 : 1;
         // deltaY *= (alliance == Alliance.Red) ? -1 : 1;
-        desiredAngle = Units.radiansToDegrees(Math.atan2(deltaY, deltaX));
+        desiredAngle = Math.atan2(deltaY, deltaX);
 
-        deltaAngle = Units.degreesToRadians(desiredAngle - previousAngle);
-        omega = deltaAngle / 0.02;
+        // deltaAngle = Units.degreesToRadians(desiredAngle - previousAngle);
+        // omega = deltaAngle / 0.02;
 
         driveHeading = Drive.getInstance().getWrappedHeading();
-        output = omega + rotationPID.calculate(driveHeading, desiredAngle);
+        output = rotationPID.calculate(driveHeading, desiredAngle);
 
         previousAngle = desiredAngle;
 
-        Drive.getInstance().setAtTarget(Optional.of(rotationPID.atSetpoint()));
+        // Drive.getInstance().setAtTarget(Optional.of(rotationPID.atSetpoint()));
         
         return MathUtil.clamp(output, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed);
+    }
+
+    public static boolean atGoal() {
+        return rotationPID.atSetpoint();
     }
 
     public static double getDistanceToTarget(){
         return targetPose.getTranslation().getDistance(currentPose.getTranslation());
     }
 
-    public static void periodic(){
+    public static void periodic() {
         Logger.recordOutput("Pose Align/drive heading", driveHeading);
         Logger.recordOutput("Pose Align/desired angle", desiredAngle);
         Logger.recordOutput("Pose Align/output", output);
