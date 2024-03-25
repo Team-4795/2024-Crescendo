@@ -193,9 +193,9 @@ public class RobotContainer {
       .onTrue(NoteVisualizer.shoot());
     
     //Drive robot relative
-    OIConstants.driverController.leftTrigger(0.3)
-      .onTrue(Commands.runOnce(() -> drive.setFieldRelative(false)))
-      .onFalse(Commands.runOnce(() -> drive.setFieldRelative(true)));
+    // OIConstants.driverController.leftTrigger(0.3)
+    //   .onTrue(Commands.runOnce(() -> drive.setFieldRelative(false)))
+    //   .onFalse(Commands.runOnce(() -> drive.setFieldRelative(true)));
 
     // Normal Shoot (Might switch onto different button as a toggle mode)
     OIConstants.driverController.leftTrigger(0.3)
