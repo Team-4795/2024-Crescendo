@@ -95,26 +95,6 @@ public class Vision extends SubsystemBase {
         return distance * 0.25;
     }
 
-    public double wrapDeg(double angle) {
-        return angle < 0 ? angle + 360 : angle;
-    }
-
-    /* Returns if a shot at an angle will go into the speaker */
-    public boolean willMakeShot(Pose2d pose) {
-        Rotation2d min = speakerPosition.toTranslation2d().plus(new Translation2d(0, Tolerances.speakerWidth)).minus(pose.getTranslation()).getAngle();
-        Rotation2d max = speakerPosition.toTranslation2d().plus(new Translation2d(0, -Tolerances.speakerWidth)).minus(pose.getTranslation()).getAngle();
-
-        return between(pose.getRotation(), min, max);
-    }
-
-    public boolean between(Rotation2d x, Rotation2d min, Rotation2d max) {
-        if (max.minus(min).getSin() < 0.0) {
-            return between(x, max, min);
-        }
-
-        return wrapDeg(x.getDegrees() - min.getDegrees()) <= wrapDeg(max.getDegrees() - min.getDegrees());
-    }
-
     public void periodic() {
         for (int i = 0; i < io.length; i++) {
             io[i].updateInputs(inputs[i]);

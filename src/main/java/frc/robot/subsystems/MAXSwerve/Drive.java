@@ -36,6 +36,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import frc.robot.Constants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.Tolerances;
 import frc.robot.commands.AutoAlignAmp;
@@ -44,6 +45,7 @@ import frc.robot.subsystems.MAXSwerve.DriveConstants.AutoConstants;
 import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.SwerveUtils;
+import frc.robot.util.Util.AllianceFlipUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -262,10 +264,33 @@ public class Drive extends SubsystemBase {
         m_poseEstimator.addVisionMeasurement(pose, timestamp, stddevs);
     }
 
-    @AutoLogOutput
-    public boolean willMakeShot() {
-        return vision.willMakeShot(new Pose2d(getPose().getTranslation(), getPose().getRotation().rotateBy(new Rotation2d(Math.PI)))) 
-            && getTranslationVelocity().getNorm() < Tolerances.driveVelocity
+    /* Returns if a shot at an angle will go into the speaker */
+    public boolean atSpeakerAngle() {
+        Rotation2d min = AllianceFlipUtil.apply(FieldConstants.BLUE_SPEAKER).getTranslation()
+            .plus(new Translation2d(0, Tolerances.speakerWidth))
+            .minus(pose.getTranslation()).getAngle();
+
+        Rotation2d max = AllianceFlipUtil.apply(FieldConstants.BLUE_SPEAKER).getTranslation()
+            .plus(new Translation2d(0, -Tolerances.speakerWidth))
+            .minus(pose.getTranslation()).getAngle();
+
+        return between(pose.getRotation(), min, max);
+    }
+
+    public double wrapDeg(double angle) {
+        return angle < 0 ? angle + 360 : angle;
+    }
+
+    public boolean between(Rotation2d x, Rotation2d min, Rotation2d max) {
+        if (max.minus(min).getSin() < 0.0) {
+            return between(x, max, min);
+        }
+
+        return wrapDeg(x.getDegrees() - min.getDegrees()) <= wrapDeg(max.getDegrees() - min.getDegrees());
+    }
+
+    public boolean slowMoving() {
+        return getTranslationVelocity().getNorm() < Tolerances.driveVelocity
             && getTurnRate() < Tolerances.turningSpeed;
     }   
 

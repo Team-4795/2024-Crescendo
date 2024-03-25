@@ -159,7 +159,7 @@ public class RobotContainer {
     Trigger timeRumble = new Trigger(() -> between(DriverStation.getMatchTime(), 19, 21) || between(DriverStation.getMatchTime(), 39, 41));
     Trigger continuousRumble = new Trigger(() -> DriverStation.getMatchTime() <= 5);
     
-    Trigger isReady = new Trigger(() -> pivot.atGoal() && shooter.atGoal() && drive.willMakeShot());
+    Trigger isReady = new Trigger(() -> pivot.atGoal() && shooter.atGoal() && drive.atSpeakerAngle() && drive.slowMoving());
     Trigger isReadyRumble = isReady.and(StateManager::isAiming);
 
     // Gamepiece align

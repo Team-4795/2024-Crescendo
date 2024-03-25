@@ -7,6 +7,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -38,6 +39,8 @@ public class AlignPose {
     private static final PIDController rotationPID = new PIDController(34*0.6, 0, 34*0.49/8);
 
     private static State state = State.SPEAKER;
+
+    private static Drive drive = Drive.getInstance();
 
     public enum State {
         SPEAKER,
@@ -103,7 +106,11 @@ public class AlignPose {
     }
 
     public static boolean atGoal() {
-        return rotationPID.atSetpoint();
+        if (state == State.SPEAKER) {
+            return drive.atSpeakerAngle();
+        } else {
+            return rotationPID.atSetpoint();
+        }
     }
 
     public static double getDistanceToTarget(){
