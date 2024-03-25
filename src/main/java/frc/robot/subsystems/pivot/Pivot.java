@@ -192,10 +192,10 @@ public class Pivot extends SubsystemBase {
         
         double v1 = controller.getSetpoint().velocity;
         double PIDVolts = controller.calculate(getPosition(), goal);
-        double FFVolts = Constants.useLQR ? 0 : motorFeedforward.calculate(v1, controller.getSetpoint().velocity, 0.02);
+        double FFVolts = motorFeedforward.calculate(v1, controller.getSetpoint().velocity, 0.02);
 
         if (!disableArm) {
-            io.setVoltage(PIDVolts + FFVolts + linearFF(getPosition()));
+            io.setVoltage(PIDVolts);
         }
 
         Logger.recordOutput("Pivot/PID Volts", PIDVolts);
