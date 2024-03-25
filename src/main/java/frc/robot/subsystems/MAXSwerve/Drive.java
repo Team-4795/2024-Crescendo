@@ -134,12 +134,12 @@ public class Drive extends SubsystemBase {
                         m_frontRight.getPosition(),
                         m_rearLeft.getPosition(),
                         m_rearRight.getPosition()
-                }, new Pose2d(0,0, new Rotation2d(0)));
+                }, new Pose2d(0,0, Rotation2d.fromDegrees(0)));
 
         this.zeroHeading();
 
-        translationController = new ProfiledPIDController(linearkP.get(), 0, linearkD.get(), new Constraints(2.5, 3.5));
-        rotationController = new ProfiledPIDController(thetakP.get(), 0, thetakD.get(), new Constraints(3, 4));
+        translationController = new ProfiledPIDController(linearkP.get(), 0, linearkD.get(), new Constraints(4.5, 5.5));
+        rotationController = new ProfiledPIDController(thetakP.get(), 0, thetakD.get(), new Constraints(5.5, 6.5));
         translationController.setTolerance(linearTolerance.get());
         rotationController.setTolerance(thetaTolerance.get());
 

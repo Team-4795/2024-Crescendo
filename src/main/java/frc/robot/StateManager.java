@@ -2,7 +2,7 @@ package frc.robot;
 
 public class StateManager {
 
-    private static State state = State.SPEAKER;
+    private static State state = State.AMP;
     private static boolean aiming = false;
     private static boolean automate = true;
 

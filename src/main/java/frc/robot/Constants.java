@@ -20,6 +20,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -55,7 +56,7 @@ public final class Constants {
   public static final class PivotSetpoints {
     public static final double speaker = 0.56;
     public static final double amp = 1.15;
-    public static final double shuttle = 0.894;
+    public static final double shuttle = 0.72;
     public static final double stow = 0.08;
     public static final double intake = 0.3;
     public static final double source = 0.96;
@@ -133,8 +134,16 @@ public final class Constants {
   }
 
   public static final class FieldConstants {
-    public static final double speakerHeight = 1.98; //meters
+    public static final double speakerHeight = 2; //meters
     public static final double fieldLength = Units.inchesToMeters(651.223);
+    public static final Pose2d BLUE_SOURCE = new Pose2d(15.9,0.4, Rotation2d.fromDegrees(-45));
+    public static final Pose2d RED_SOURCE = new Pose2d(0.6,0.25, Rotation2d.fromDegrees(45));
+    public static final Pose2d BLUE_SHUTTLE = new Pose2d(2.9, 7, new Rotation2d());
+    public static final Pose2d RED_SHUTTLE = new Pose2d(13.8, 7, new Rotation2d());
+    public static final Pose2d RED_SPEAKER = new Pose2d(16.379342, 5.547868, new Rotation2d());
+    public static final Pose2d BLUE_SPEAKER = new Pose2d(0.1619, 5.547868, new Rotation2d());
+    public static double RED_WING_X = 10.0;
+    public static double BLUE_WING_X = 6.5;
 
     public static final class StagingLocations {
       public static final double centerlineX = fieldLength / 2.0;

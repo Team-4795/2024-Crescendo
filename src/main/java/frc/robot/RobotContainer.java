@@ -46,9 +46,11 @@ import frc.robot.subsystems.vision.intakeCam.IntakeCamVisionIOReal;
 import frc.robot.util.NamedCommandManager;
 import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.AlignToGamepiece;
 import frc.robot.commands.ArmFeedForwardCharacterization;
 import frc.robot.commands.RainbowCommand;
+import frc.robot.commands.AlignShuttle;
 import frc.robot.commands.AlignSpeaker;
 
 /**
@@ -157,8 +159,9 @@ public class RobotContainer {
     Trigger timeRumble = new Trigger(() -> between(DriverStation.getMatchTime(), 19, 21) || between(DriverStation.getMatchTime(), 39, 41));
     Trigger continuousRumble = new Trigger(() -> DriverStation.getMatchTime() <= 5);
     Trigger isReady = new Trigger(() -> pivot.atSetpoint() && shooter.atSetpoint() && drive.isAtTarget() && StateManager.isAiming());
-    // Zero drive heading
-    OIConstants.driverController.rightBumper().whileTrue(new AlignToGamepiece(drive));
+
+    //Align to source/gamepiece
+    OIConstants.driverController.rightBumper().whileTrue(new AlignToGamepiece());
 
     //Align Amp / Speaker
     OIConstants.driverController.leftBumper().whileTrue(
@@ -172,7 +175,7 @@ public class RobotContainer {
                   shooter.rev(),
                   Commands.runOnce(() -> StateManager.setAim(true))
                 ).finallyDo(() -> StateManager.setAim(false))),
-                Map.entry(State.SHUTTLE, pivot.aimShuttle().alongWith(shooter.revShuttle()))),
+                Map.entry(State.SHUTTLE, new AlignShuttle())),
                 StateManager::getState),
             shooter.rev().alongWith(pivot.aim()),
             () -> StateManager.isAutomate()
@@ -185,9 +188,9 @@ public class RobotContainer {
       .onTrue(NoteVisualizer.shoot());
     
     //Drive robot relative
-    // OIConstants.driverController.leftTrigger(0.3)
-    //   .onTrue(Commands.runOnce(() -> drive.setFieldRelative(false)))
-    //   .onFalse(Commands.runOnce(() -> drive.setFieldRelative(true)));
+    OIConstants.driverController.leftTrigger(0.3)
+      .onTrue(Commands.runOnce(() -> drive.setFieldRelative(false)))
+      .onFalse(Commands.runOnce(() -> drive.setFieldRelative(true)));
 
     //SADDEST BUTTON IN EXISTENCE ON PERSEUS
     OIConstants.driverController.x().onTrue(Commands.runOnce(() -> {
