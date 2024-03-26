@@ -20,14 +20,29 @@ public class GDA_SS87 {
             AutoCommands.aimSpeakerDynamic(true),
             AutoCommands.score(),
 
-        Commands.sequence(AutoCommands.intakeTrajectory(paths.get(0))
-            
-            )
-            
+            Commands.sequence(
+                AutoCommands.intakeTrajectory(paths.get(0)),
+                Commands.waitSeconds(0.2),
+                    Commands.sequence(
+                        //AutoCommands.SetPivotAngle(.129),
+                        AutoCommands.followTrajectory(paths.get(1))
+                    ),
+            AutoCommands.aimSpeakerDynamic(true),
+            AutoCommands.score()
+            ).until(() -> AutoGamepieces.isGone(8)),
 
-            );
 
+            Commands.sequence(
+                AutoCommands.intakeTrajectory(paths.get(2)),
+                Commands.waitSeconds(0.2),
+                    Commands.sequence(
+                        //AutoCommands.SetPivotAngle(.129),
+                        AutoCommands.followTrajectory(paths.get(3))
+                    ),
+            AutoCommands.aimSpeakerDynamic(true),
+            AutoCommands.score()
+            ).until(() -> AutoGamepieces.isGone(7)),
 
-        
+            AutoCommands.intakeTrajectory(paths.get(4)));
     }
 }

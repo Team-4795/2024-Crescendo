@@ -35,7 +35,7 @@ public class GDA_AS145 {
                     Commands.sequence(
                         AutoCommands.followTrajectory(paths.get(2)), //contains a instant command to start vision align near the end
                         Commands.waitSeconds(0.2)
-                    ), AutoCommands.aimSpeakerDynamic(false)
+                    ), AutoCommands.aimSpeakerDynamic(true)
                 ),
                 AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(4)),
@@ -46,7 +46,7 @@ public class GDA_AS145 {
                     Commands.sequence(
                         AutoCommands.followTrajectory(paths.get(4)), //contains a instant command to start vision align near the end
                         Commands.waitSeconds(0.2)
-                    ), AutoCommands.aimSpeakerDynamic(false)
+                    ), AutoCommands.aimSpeakerDynamic(true)
                 ),
                 AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(5)),
@@ -57,7 +57,7 @@ public class GDA_AS145 {
                     Commands.sequence(
                         AutoCommands.followTrajectory(paths.get(6)), //contains a instant command to start vision align near the end
                         Commands.waitSeconds(0.2)
-                    ), AutoCommands.aimSpeakerDynamic(false)
+                    ), AutoCommands.aimSpeakerDynamic(true)
                 ),
                 AutoCommands.score()
             )

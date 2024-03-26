@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AutoCommands;
 
-public class GDA_M2145 {
+public class GDA_M2145_RunEverything {
     private static List<PathPlannerPath> paths;
     PathPlannerAuto auto;
 
@@ -17,26 +17,23 @@ public class GDA_M2145 {
 
         return Commands.sequence(
             AutoCommands.aimSpeakerDynamic(true),
-            AutoCommands.score(),
+            AutoCommands.runEverything(1),
 
         Commands.sequence(
-            AutoCommands.intakeTrajectory(paths.get(0)),
-            Commands.waitSeconds(0.2), 
-            AutoCommands.aimSpeakerDynamic(true)),
-
-            AutoCommands.score(),
+            AutoCommands.SetPivotAngle(.2425)),
+            AutoCommands.followTrajectory(paths.get(0)),
+            Commands.waitSeconds(0.5),
             
         Commands.sequence(
-            AutoCommands.intakeTrajectory(paths.get(1)),
-            Commands.waitSeconds(0.2)),
-            AutoCommands.aimSpeakerDynamic(true),
-
-            AutoCommands.score(),
+            AutoCommands.SetPivotAngle(.25),
+            AutoCommands.followTrajectory(paths.get(1)),
+            Commands.waitSeconds(0.5),
             
             Commands.sequence(
                 AutoCommands.intakeTrajectory(paths.get(2)),
                 Commands.deadline(
                     Commands.sequence(
+                        AutoCommands.runIndexer(0),
                         AutoCommands.followTrajectory(paths.get(3)), 
                         Commands.waitSeconds(0.2)
                     ), 
@@ -54,7 +51,7 @@ public class GDA_M2145 {
                     ), AutoCommands.aimSpeakerDynamic(true)
                 ),
                 AutoCommands.score()
-            ).until(() -> AutoGamepieces.isGone(5)));
+            ).until(() -> AutoGamepieces.isGone(5))));
 
     }
 }
