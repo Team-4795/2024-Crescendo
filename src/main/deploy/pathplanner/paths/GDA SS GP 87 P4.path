@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2684960126741138,
-        "y": 5.55076982040085
+        "x": 7.987848953159354,
+        "y": 2.210569735492972
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8527875727163086,
-        "y": 4.947001875023917
+        "x": 6.682931135731786,
+        "y": 1.7333982947918447
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.5052464814300928,
-        "y": 4.440615856320681
+        "x": 4.1,
+        "y": 1.7431364874592163
       },
       "prevControl": {
-        "x": 1.901478536053158,
-        "y": 5.063860187032355
+        "x": 5.416966088973696,
+        "y": 1.674969138787625
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -28.350000000000023,
+    "rotation": -45.89999999999998,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "GDA M GP 32145",
+  "folder": "GDA SS GP 87",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 29.445428729925556,
     "velocity": 0
   },
   "useDefaultConstraints": true

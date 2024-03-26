@@ -5,8 +5,9 @@
   "pathFolders": [
     "GDA AS GP 145",
     "GDA M GP 2145",
+    "GDA M GP 32145",
     "GDA SS GP 876",
-    "GDA M GP 32145"
+    "GDA SS GP 87"
   ],
   "autoFolders": [],
   "defaultMaxVel": 5.0,

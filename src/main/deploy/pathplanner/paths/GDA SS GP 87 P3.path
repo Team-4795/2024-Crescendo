@@ -1,0 +1,69 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.102310078878758,
+        "y": 1.7431364874592163
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.718850061662163,
+        "y": 0.9446046887348817
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.987848953159354,
+        "y": 2.210569735492972
+      },
+      "prevControl": {
+        "x": 6.9848151084202525,
+        "y": 1.431514322103378
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.65,
+      "rotationDegrees": 21.80140948635184,
+      "rotateFast": true
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 6.0,
+    "maxAngularVelocity": 520.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 30.650667957052868,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "GDA SS GP 87",
+  "previewStartingState": {
+    "rotation": -47.726310993906246,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

@@ -3,34 +3,51 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2684960126741138,
-        "y": 5.55076982040085
+        "x": 1.4632598660263798,
+        "y": 4.070564534960625
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8527875727163086,
-        "y": 4.947001875023917
+        "x": 2.105980582072794,
+        "y": 1.9476385334739843
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.5052464814300928,
-        "y": 4.440615856320681
+        "x": 7.861252448488411,
+        "y": 0.856960954728552
       },
       "prevControl": {
-        "x": 1.901478536053158,
-        "y": 5.063860187032355
+        "x": 7.023767879094598,
+        "y": 1.03224842274121
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.6,
+      "rotationDegrees": -15.838788675034289,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.7,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 6.0,
@@ -39,11 +56,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -28.350000000000023,
+    "rotation": -14.57421619803871,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "GDA M GP 32145",
+  "folder": "GDA SS GP 87",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
