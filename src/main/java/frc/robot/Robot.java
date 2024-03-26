@@ -130,6 +130,8 @@ public class Robot extends LoggedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
+
+    robotContainer.init();
     Pivot.getInstance().setGoal(0.15);
   }
 
@@ -148,12 +150,7 @@ public class Robot extends LoggedRobot {
     Logger.recordOutput("Free memory", (double)Runtime.getRuntime().freeMemory() / 1024 / 1024);
     Logger.recordOutput("Current State", StateManager.getState());
     Logger.recordOutput("Automate", StateManager.isAutomate());
-    Logger.recordOutput("isReady?", 
-      Pivot.getInstance().atGoal() 
-      && Shooter.getInstance().atGoal() 
-      && Drive.getInstance().atSpeakerAngle() 
-      && Drive.getInstance().slowMoving() 
-      && StateManager.isAiming());
+    Logger.recordOutput("isReady?", robotContainer.readyToShoot());
     AlignPose.periodic();
     Threads.setCurrentThreadPriority(true, 10);
   }
@@ -176,6 +173,8 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     NoteVisualizer.resetAutoNotes();
     NoteVisualizer.showAutoNotes();
+
+    robotContainer.init();
     Pivot.getInstance().setGoal(0.15);
     autonomousCommand = robotContainer.getAutonomousCommand();
 
@@ -201,7 +200,7 @@ public class Robot extends LoggedRobot {
       autonomousCommand.cancel();
     }
 
-    robotContainer.teleopInit();
+    robotContainer.init();
   }
 
   /** This function is called periodically during operator control. */

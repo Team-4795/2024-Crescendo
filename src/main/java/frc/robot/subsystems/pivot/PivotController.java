@@ -37,14 +37,14 @@ public final class PivotController {
             armPlant,
             VecBuilder.fill(0.1, 0.2), // How accurate we
             // think our model is, in radians and radians/sec
-            VecBuilder.fill(0.01), // How accurate we think our encoder position
+            VecBuilder.fill(0.008), // How accurate we think our encoder position
             // data is. In this case we very highly trust our encoder position reading.
             0.02);
 
     private final LinearQuadraticRegulator<N2, N1, N1> lqr =
         new LinearQuadraticRegulator<>(
             armPlant,
-            VecBuilder.fill(0.02, 0.5), // Position, Velocity weight (Lower is more penalized)
+            VecBuilder.fill(0.04, 0.3), // Position, Velocity weight (Lower is more penalized)
             VecBuilder.fill(12.0), // Voltage weight
             0.02);
 
@@ -53,6 +53,7 @@ public final class PivotController {
 
     public PivotController() {
         Logger.recordOutput("Pivot/LQR P", loop.getController().getK().get(0, 0));
+        Logger.recordOutput("Pivot/LQR D", loop.getController().getK().get(1, 0));
     }
 
     public double calculate(double measurement, double goal) {

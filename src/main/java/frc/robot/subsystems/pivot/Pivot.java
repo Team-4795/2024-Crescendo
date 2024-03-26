@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -195,10 +196,14 @@ public class Pivot extends SubsystemBase {
 
         double v1 = controller.getSetpoint().velocity;
         double PIDVolts = controller.calculate(getPosition(), goal);
-        double FFVolts = motorFeedforward.calculate(v1, controller.getSetpoint().velocity, 0.02);
+        double FFVolts = Constants.useLQR ? kS.get() * Math.signum(controller.getSetpoint().velocity) : motorFeedforward.calculate(v1, controller.getSetpoint().velocity, 0.02);
 
         if (!disableArm) {
-            io.setVoltage(PIDVolts);
+            if (DriverStation.isDisabled()) {
+                io.setVoltage(0);
+            } else {
+                io.setVoltage(PIDVolts);
+            }
         }
 
         Logger.recordOutput("Pivot/PID Volts", PIDVolts);
@@ -214,14 +219,14 @@ public class Pivot extends SubsystemBase {
         io.setIdleMode(idleMode);
     }
 
-    public double torqueFromAngle(double angleRad) {
-        double springAngle = Math.atan2(
-                PivotConstants.d * Math.sin(angleRad) + PivotConstants.y,
-                -PivotConstants.d * Math.cos(angleRad) + PivotConstants.x);
-        double Tg = -PivotConstants.M * PivotConstants.R * PivotConstants.g * Math.cos(angleRad);
-        double Ts = PivotConstants.d * PivotConstants.F * Math.sin(springAngle - (Math.PI - angleRad));
-        return Tg + Ts;
-    }
+    // public double torqueFromAngle(double angleRad) {
+    //     double springAngle = Math.atan2(
+    //             PivotConstants.d * Math.sin(angleRad) + PivotConstants.y,
+    //             -PivotConstants.d * Math.cos(angleRad) + PivotConstants.x);
+    //     double Tg = -PivotConstants.M * PivotConstants.R * PivotConstants.g * Math.cos(angleRad);
+    //     double Ts = PivotConstants.d * PivotConstants.F * Math.sin(springAngle - (Math.PI - angleRad));
+    //     return Tg + Ts;
+    // }
 
     public double linearFF(double angle) {
         return -0.14 * angle - 0.03;

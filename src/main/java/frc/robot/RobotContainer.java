@@ -147,6 +147,11 @@ public class RobotContainer {
 
   }
 
+  /* Returns if the robot is ready to outtake */
+  public boolean readyToShoot() {
+    return pivot.atGoal() && shooter.atGoal() && (AlignPose.atGoal() || !StateManager.isAutomate()) && (drive.slowMoving() || StateManager.getState() == StateManager.State.SHUTTLE);
+  }
+
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by
@@ -159,7 +164,7 @@ public class RobotContainer {
     Trigger timeRumble = new Trigger(() -> between(DriverStation.getMatchTime(), 19, 21) || between(DriverStation.getMatchTime(), 39, 41));
     Trigger continuousRumble = new Trigger(() -> DriverStation.getMatchTime() <= 5);
     
-    Trigger isReady = new Trigger(() -> pivot.atGoal() && shooter.atGoal() && AlignPose.atGoal() && drive.slowMoving());
+    Trigger isReady = new Trigger(this::readyToShoot);
     Trigger isReadyRumble = isReady.and(StateManager::isAiming);
 
     // Gamepiece align
@@ -299,7 +304,7 @@ public class RobotContainer {
     return Commands.startEnd(() -> setBothRumble(amount), () -> setBothRumble(0));
   }
 
-  public void teleopInit() {
+  public void init() {
     shooter.setShootingSpeedRPM(0, 0);
     indexer.setIndexerSpeed(0);
     intake.setIntakeSpeed(0);
