@@ -19,7 +19,7 @@ public final class DriveConstants {
     public static final double kMaxDriveAcceleration = 22;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
-    public static final ModuleLimits kModuleLimits = new ModuleLimits(kMaxSpeedMetersPerSecond, kMaxDriveAcceleration / 2, 4  * Math.PI);
+    public static final ModuleLimits kModuleLimits = new ModuleLimits(kMaxSpeedMetersPerSecond, kMaxDriveAcceleration, 4  * Math.PI);
 
     public static final double kDirectionSlewRate = 10.0; // radians per second
     public static final double kMagnitudeSlewRate = 10.0; // percent per second (1 = 100%)

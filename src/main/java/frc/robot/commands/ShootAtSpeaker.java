@@ -36,7 +36,7 @@ import frc.robot.Constants.OIConstants;
 
 public class ShootAtSpeaker extends Command {
     private Vision vision;
-    private static ProfiledPIDController rotationPID = new ProfiledPIDController(12, 0, 2, new Constraints(4, 8)); // Change Values
+    private static PIDController rotationPID = new PIDController(30, 0, 30*0.68/8); // Change Values
 
     private final Drive drive = Drive.getInstance();
     private final Pivot pivot = Pivot.getInstance(); 
@@ -64,7 +64,6 @@ public class ShootAtSpeaker extends Command {
 
         Pose2d robotPose = drive.getPose();
         Translation2d velocity = drive.getTranslationVelocity().rotateBy(drive.getRotationHeading());
-        rotationPID.reset(drive.getRotationHeading().getRadians() + Math.PI, drive.getTurnRate());
         Pose2d nextPose = robotPose.plus(new Transform2d(velocity.times(0.02), new Rotation2d()));
         AimData results = shootingRotation(nextPose);
         previousAngle = results.heading;
@@ -96,7 +95,7 @@ public class ShootAtSpeaker extends Command {
         drive.runVelocity(new ChassisSpeeds(
             driveVelocity.getX() * 3,
             driveVelocity.getY() * 3,
-            MathUtil.clamp(ff + pid, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed)
+            MathUtil.clamp(pid, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed)
         ));
 
         pivot.setGoal(results.pivotAngle - PivotConstants.angleOffset);
@@ -111,7 +110,7 @@ public class ShootAtSpeaker extends Command {
 
         // Logger.recordOutput("Vision/Collision pos", collisionPos);
         // Logger.recordOutput("Vision/omega", output);
-        Logger.recordOutput("Vision/Setpoint", rotationPID.getSetpoint().position);
+        // Logger.recordOutput("Vision/Setpoint", rotationPID.getSetpoint().position);
         Logger.recordOutput("Vision/Altered angle", results.heading.getRadians());
         Logger.recordOutput("Vision/Current angle", driveHeading.getRadians());
     }
