@@ -7,7 +7,6 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -24,8 +23,6 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PivotSetpoints;
 import frc.robot.Constants.Tolerances;
 import frc.robot.subsystems.MAXSwerve.Drive;
-import frc.robot.subsystems.Shooter.ShooterConstants;
-import frc.robot.util.EqualsUtil;
 import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.Util;
