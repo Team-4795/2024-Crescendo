@@ -85,7 +85,7 @@ public class AutoAlignAmp extends Command{
         Rotation2d direction = new Rotation2d(currentPose.getX() - targetPose.getX(), currentPose.getY() - targetPose.getY());
         // Rotation2d direction = new Rotation2d(targetPose.getX() - currentPose.getX(), targetPose.getY() - currentPose.getY());
 
-        drive.runVelocity(new ChassisSpeeds(driveSpeed * direction.getCos(), driveSpeed * direction.getSin(), omega));
+        drive.runVelocity(new ChassisSpeeds(driveSpeed * direction.getCos(), driveSpeed * direction.getSin(), omega), true);
 
         if(distance < 1.0){
                 pivot.setGoal(PivotSetpoints.amp);

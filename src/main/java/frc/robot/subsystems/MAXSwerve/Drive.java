@@ -43,6 +43,7 @@ import frc.robot.commands.AutoAlignAmp;
 import java.util.Optional;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.AutoConstants;
 import frc.robot.subsystems.vision.AprilTagVision.Vision;
+import frc.robot.util.ChassisSpeedsUtil;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.SwerveUtils;
 import frc.robot.util.Util.AllianceFlipUtil;
@@ -391,31 +392,21 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput("Swerve/XspeedCommanded", xSpeedDelivered);
         Logger.recordOutput("Swerve/YspeedCommanded", ySpeedDelivered);
 
-        Rotation2d fieldRelativeRotation;
-        switch(Constants.currentMode){
-            case REAL:
-                fieldRelativeRotation = gyroInputs.yaw;
-                break;
-            case SIM:
-                fieldRelativeRotation = pose.getRotation();
-                break;
-            default:
-                fieldRelativeRotation = new Rotation2d();
-                break;
+        // Rotation2d fieldRelativeRotation;
+        // switch(Constants.currentMode){
+        //     case REAL:
+        //         fieldRelativeRotation = gyroInputs.yaw;
+        //         break;
+        //     case SIM:
+        //         fieldRelativeRotation = pose.getRotation();
+        //         break;
+        //     default:
+        //         fieldRelativeRotation = new Rotation2d();
+        //         break;
+        // }
 
-        }
-
-        var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
-                fieldRelative
-                        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                                fieldRelativeRotation)
-                        : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
-        SwerveDriveKinematics.desaturateWheelSpeeds(
-                swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
-        m_frontLeft.setDesiredState(swerveModuleStates[0]);
-        m_frontRight.setDesiredState(swerveModuleStates[1]);
-        m_rearLeft.setDesiredState(swerveModuleStates[2]);
-        m_rearRight.setDesiredState(swerveModuleStates[3]);
+        ChassisSpeeds speeds = new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered);
+        runVelocity(speeds, fieldRelative);
     }
 
     /**
@@ -548,14 +539,13 @@ public class Drive extends SubsystemBase {
         setModuleStates(moduleStates);
     }
     
-    public void runVelocity(ChassisSpeeds speeds) {
-        SwerveModuleState[] swerveStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
-            ChassisSpeeds.fromFieldRelativeSpeeds(speeds, gyroInputs.yaw)
-        );
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveStates, DriveConstants.kMaxSpeedMetersPerSecond);
-        m_frontLeft.setDesiredState(swerveStates[0]);
-        m_frontRight.setDesiredState(swerveStates[1]);
-        m_rearLeft.setDesiredState(swerveStates[2]);
-        m_rearRight.setDesiredState(swerveStates[3]);
+    public void runVelocity(ChassisSpeeds speeds, boolean fieldRelative) {
+        speeds = fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(speeds, gyroInputs.yaw)
+            : speeds;
+
+        speeds = ChassisSpeedsUtil.correctForDynamics(speeds, 0.02, DriveConstants.driftRate);
+        SwerveModuleState[] swerveStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+        setModuleStates(swerveStates);
     }
 }

@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import javax.swing.GroupLayout.Alignment;
-
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
@@ -53,7 +51,8 @@ public class AlignShuttle extends Command{
         drive.runVelocity(new ChassisSpeeds(
                 -Math.copySign(x * x, x) * DriveConstants.kMaxSpeedMetersPerSecond,
                 -Math.copySign(y * y, y) * DriveConstants.kMaxSpeedMetersPerSecond,
-                output));
+                output),
+                true);
 
         shootingSpeed = ShooterConstants.shuttleSpeeds.get(AlignPose.getDistanceToTarget()); //always positive
         shooter.setShootingSpeedRPM(-shootingSpeed, shootingSpeed);

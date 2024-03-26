@@ -52,7 +52,7 @@ public class AlignToGamepiece extends Command {
         drive.runVelocity(new ChassisSpeeds(
                 -Math.copySign(x * x, x) * DriveConstants.kMaxSpeedMetersPerSecond,
                 -Math.copySign(y * y, y) * DriveConstants.kMaxSpeedMetersPerSecond,
-                output));
+                output), true);
 
         Logger.recordOutput("Vision/Note Yaw", lifecamYaw);
         Logger.recordOutput("Vision/Note PID", output);

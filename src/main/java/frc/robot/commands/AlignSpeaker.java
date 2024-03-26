@@ -74,7 +74,8 @@ public class AlignSpeaker extends Command {
         drive.runVelocity(new ChassisSpeeds(
                 -Math.copySign(x * x, x) * DriveConstants.kMaxSpeedMetersPerSecond,
                 -Math.copySign(y * y, y) * DriveConstants.kMaxSpeedMetersPerSecond,
-                MathUtil.clamp(output, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed)));
+                MathUtil.clamp(output, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed)), 
+                true);
 
         Logger.recordOutput("Vision/drive heading", driveHeading);
         Logger.recordOutput("Vision/Speaker Position", vision.getSpeakerPos());
