@@ -32,22 +32,22 @@ public class VisionConstants {
                 Math.PI)),
         new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(-10), 
-                Units.inchesToMeters(-6.5), 
-                Units.inchesToMeters(11)), 
-            new Rotation3d(
-                0, 
-                Units.degreesToRadians(20), 
-                Units.degreesToRadians(-110))),
-        new Transform3d(
-            new Translation3d(
                 Units.inchesToMeters(-11.5),
                 Units.inchesToMeters(5), 
                 Units.inchesToMeters(11)), 
             new Rotation3d(
                 0, 
                 Units.degreesToRadians(20), 
-                Math.PI))
+                Math.PI)),
+        new Transform3d(
+            new Translation3d(
+                Units.inchesToMeters(-10), 
+                Units.inchesToMeters(-6.5), 
+                Units.inchesToMeters(11)), 
+            new Rotation3d(
+                0, 
+                Units.degreesToRadians(20), 
+                Units.degreesToRadians(-110)))
     };
 
     public static AprilTagFieldLayout aprilTagFieldLayout;

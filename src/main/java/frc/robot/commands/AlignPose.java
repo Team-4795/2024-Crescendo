@@ -125,5 +125,6 @@ public class AlignPose {
         Logger.recordOutput("Pose Align/targetPose", targetPose);
         Logger.recordOutput("Pose Align/previous angle", previousAngle);
         Logger.recordOutput("Pose Align/omega", omega);
+        Logger.recordOutput("Pose Align/At goal", atGoal());
     }
 }

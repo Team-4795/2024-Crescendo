@@ -89,7 +89,6 @@ public class RobotContainer {
                 DriveConstants.kBackLeftChassisAngularOffset),
             new ModuleIOSparkFlex(DriveConstants.kRearRightDrivingCanId, DriveConstants.kRearRightTurningCanId,
                 DriveConstants.kBackRightChassisAngularOffset));
-        leds = LEDs.getInstance();
         break;
 
       case SIM:
@@ -106,8 +105,6 @@ public class RobotContainer {
             new ModuleIOSim(DriveConstants.kFrontRightChassisAngularOffset),
             new ModuleIOSim(DriveConstants.kBackLeftChassisAngularOffset),
             new ModuleIOSim(DriveConstants.kBackRightChassisAngularOffset));
-        leds = LEDs.getInstance();
-
         break;
 
       default:
@@ -121,20 +118,26 @@ public class RobotContainer {
         break;
     }
 
+    leds = LEDs.getInstance();
+
     NamedCommandManager.registerAll();
     NoteVisualizer.setPivotPoseSupplier(pivot::getPose);
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("SS GP 876"));
 
-
-    autoChooser.addOption("Pivot SysIs (Quasistatic Forward)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption("Pivot SysIs (Quasistatic Reverse)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption("Pivot SysIs (Dynamic Forward)", pivot.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption("Pivot SysIs (Dynamic Reverse)", pivot.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption("Pivot Model", new ArmFeedForwardCharacterization(pivot, (volts) -> pivot.runVoltage(volts), () -> pivot.getVelocity(), () -> pivot.getPosition(), (x) -> 0.0));
+    // autoChooser.addOption("Pivot SysIs (Quasistatic Forward)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption("Pivot SysIs (Quasistatic Reverse)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption("Pivot SysIs (Dynamic Forward)", pivot.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption("Pivot SysIs (Dynamic Reverse)", pivot.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption("Pivot Model", new ArmFeedForwardCharacterization(pivot, (volts) -> pivot.runVoltage(volts), () -> pivot.getVelocity(), () -> pivot.getPosition(), (x) -> 0.0));
 
     // Configure the button bindings
     configureButtonBindings();
 
+  }
+
+  /* Returns if the robot is ready to outtake */
+  public boolean readyToShoot() {
+    return pivot.atGoal() && shooter.atGoal() && (AlignPose.atGoal() || !StateManager.isAutomate()) && (drive.slowMoving() || StateManager.getState() == StateManager.State.SHUTTLE);
   }
 
   /**
@@ -149,7 +152,7 @@ public class RobotContainer {
     Trigger timeRumble = new Trigger(() -> between(DriverStation.getMatchTime(), 19, 21) || between(DriverStation.getMatchTime(), 39, 41));
     Trigger continuousRumble = new Trigger(() -> DriverStation.getMatchTime() <= 5);
     
-    Trigger isReady = new Trigger(() -> pivot.atGoal() && shooter.atGoal() && AlignPose.atGoal() && drive.slowMoving());
+    Trigger isReady = new Trigger(this::readyToShoot);
     Trigger isReadyRumble = isReady.and(StateManager::isAiming);
 
     // Gamepiece align
@@ -289,7 +292,7 @@ public class RobotContainer {
     return Commands.startEnd(() -> setBothRumble(amount), () -> setBothRumble(0));
   }
 
-  public void teleopInit() {
+  public void init() {
     shooter.setShootingSpeedRPM(0, 0);
     indexer.setIndexerSpeed(0);
     intake.setIntakeSpeed(0);

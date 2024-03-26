@@ -7,12 +7,12 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,6 +25,7 @@ import frc.robot.Constants.Tolerances;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.util.LoggedTunableNumber;
+import frc.robot.util.Util;
 
 public class Pivot extends SubsystemBase {
     private PivotIO io;
@@ -40,12 +41,10 @@ public class Pivot extends SubsystemBase {
 
     LoggedTunableNumber regressionSetpoint = new LoggedTunableNumber("Pivot/Regression setpoint", 0.15);
 
-    private ProfiledPIDController controller = new ProfiledPIDController(
-            kP.get(), kI.get(), kD.get(),
-            PivotConstants.constraints);
-
     private SimpleMotorFeedforward motorFeedforward = new SimpleMotorFeedforward(
             kS.get(), kV.get(), kA.get());
+
+    private PivotController controller = new PivotController();
 
     private double goal = 0;
     private final boolean disableArm = false;
@@ -73,7 +72,6 @@ public class Pivot extends SubsystemBase {
         io.updateInputs(inputs);
 
         visualizer.update(360 * getTruePosition() / (Math.PI * 2), Units.radiansToDegrees(controller.getSetpoint().position + PivotConstants.angleOffset));
-        controller.setTolerance(Tolerances.pivotSetpoint, Tolerances.driveVelocity);
 
         sysid = new SysIdRoutine(
             new SysIdRoutine.Config(Volts.of(0.2).per(Seconds.of(1)), Volts.of(2), null, (state) -> Logger.recordOutput("Pivot/SysIdState", state.toString())),
@@ -109,7 +107,6 @@ public class Pivot extends SubsystemBase {
 
     public void setGoal(double goal) {
         this.goal = MathUtil.clamp(goal, PivotConstants.lowLimit, PivotConstants.highLimit);
-        controller.setGoal(goal);
     }
 
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
@@ -183,7 +180,7 @@ public class Pivot extends SubsystemBase {
 
     @AutoLogOutput
     public boolean atGoal() {
-        return controller.atGoal();
+        return Util.epsilonEquals(goal, getPosition(), Tolerances.pivotSetpoint);
     }
 
     @Override
@@ -192,15 +189,18 @@ public class Pivot extends SubsystemBase {
         Logger.processInputs("Pivot", inputs);
         visualizer.update(Units.radiansToDegrees(getTruePosition()), Units.radiansToDegrees(controller.getSetpoint().position + PivotConstants.angleOffset));
 
-        LoggedTunableNumber.ifChanged(hashCode(), () -> controller.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
         LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);
 
         double v1 = controller.getSetpoint().velocity;
-        double PIDVolts = controller.calculate(getPosition());
-        double FFVolts = motorFeedforward.calculate(v1, controller.getSetpoint().velocity, 0.02);
+        double PIDVolts = controller.calculate(getPosition(), goal);
+        double FFVolts = Constants.useLQR ? kS.get() * Math.signum(controller.getSetpoint().velocity) : motorFeedforward.calculate(v1, controller.getSetpoint().velocity, 0.02);
 
         if (!disableArm) {
-            io.setVoltage(PIDVolts + FFVolts + linearFF(getPosition()));
+            if (DriverStation.isDisabled()) {
+                io.setVoltage(0);
+            } else {
+                io.setVoltage(PIDVolts);
+            }
         }
 
         Logger.recordOutput("Pivot/PID Volts", PIDVolts);
@@ -216,14 +216,14 @@ public class Pivot extends SubsystemBase {
         io.setIdleMode(idleMode);
     }
 
-    public double torqueFromAngle(double angleRad) {
-        double springAngle = Math.atan2(
-                PivotConstants.d * Math.sin(angleRad) + PivotConstants.y,
-                -PivotConstants.d * Math.cos(angleRad) + PivotConstants.x);
-        double Tg = -PivotConstants.M * PivotConstants.R * PivotConstants.g * Math.cos(angleRad);
-        double Ts = PivotConstants.d * PivotConstants.F * Math.sin(springAngle - (Math.PI - angleRad));
-        return Tg + Ts;
-    }
+    // public double torqueFromAngle(double angleRad) {
+    //     double springAngle = Math.atan2(
+    //             PivotConstants.d * Math.sin(angleRad) + PivotConstants.y,
+    //             -PivotConstants.d * Math.cos(angleRad) + PivotConstants.x);
+    //     double Tg = -PivotConstants.M * PivotConstants.R * PivotConstants.g * Math.cos(angleRad);
+    //     double Ts = PivotConstants.d * PivotConstants.F * Math.sin(springAngle - (Math.PI - angleRad));
+    //     return Tg + Ts;
+    // }
 
     public double linearFF(double angle) {
         return -0.14 * angle - 0.03;

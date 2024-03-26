@@ -8,6 +8,7 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 
+import com.fasterxml.jackson.databind.deser.std.ContainerDeserializerBase;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -18,6 +19,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -37,6 +39,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import frc.robot.Constants;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.Mode;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.Tolerances;
 import frc.robot.commands.AutoAlignAmp;
@@ -269,17 +272,17 @@ public class Drive extends SubsystemBase {
     public boolean atSpeakerAngle() {
         Rotation2d min = AllianceFlipUtil.apply(FieldConstants.BLUE_SPEAKER).getTranslation()
             .plus(new Translation2d(0, Tolerances.speakerWidth))
-            .minus(pose.getTranslation()).getAngle();
+            .minus(getPose().getTranslation()).getAngle();
 
         Rotation2d max = AllianceFlipUtil.apply(FieldConstants.BLUE_SPEAKER).getTranslation()
             .plus(new Translation2d(0, -Tolerances.speakerWidth))
-            .minus(pose.getTranslation()).getAngle();
+            .minus(getPose().getTranslation()).getAngle();
 
-        return between(pose.getRotation(), min, max);
+        return between(getPose().getRotation().rotateBy(new Rotation2d(Math.PI)), min, max);
     }
 
     public double wrapDeg(double angle) {
-        return angle < 0 ? angle + 360 : angle;
+        return MathUtil.inputModulus(angle, 0, 360);
     }
 
     public boolean between(Rotation2d x, Rotation2d min, Rotation2d max) {
@@ -485,8 +488,17 @@ public class Drive extends SubsystemBase {
 
     /** Zeroes the heading of the robot. */
     public void zeroHeading() {
+        if (Constants.currentMode == Mode.SIM) {
+            m_poseEstimator.resetPosition(new Rotation2d(), 
+                new SwerveModulePosition[] {
+                    m_frontLeft.getPosition(),
+                    m_frontRight.getPosition(),
+                    m_rearLeft.getPosition(),
+                    m_rearRight.getPosition()
+                }, getPose());
+        }
+        
         gyro.reset();
-        pose.rotateBy(pose.getRotation().times(-1)); //This may not work
     }
 
     public void setFieldRelative(boolean fieldRelative){

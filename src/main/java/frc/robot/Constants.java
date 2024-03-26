@@ -42,6 +42,8 @@ public final class Constants {
   public static final int paramApplyAttemptLimit = 5;
   public static final double paramApplyTimemout = 0.05;
 
+  public static final boolean useLQR = true;
+  
   public static final class Tolerances {
     public static final double turningSpeed = 0.2;
     public static final double driveVelocity = 0.2;
