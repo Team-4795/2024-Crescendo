@@ -33,7 +33,6 @@ public class GDA_M2145_RunEverything {
                 AutoCommands.intakeTrajectory(paths.get(2)),
                 Commands.deadline(
                     Commands.sequence(
-                        AutoCommands.runIndexer(0),
                         AutoCommands.followTrajectory(paths.get(3)), 
                         Commands.waitSeconds(0.2)
                     ), 

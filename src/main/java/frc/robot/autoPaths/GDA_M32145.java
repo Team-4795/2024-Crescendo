@@ -42,24 +42,25 @@ public class GDA_M32145 {
             
             Commands.sequence(
                 AutoCommands.intakeTrajectory(paths.get(3)),
+                Commands.deadline( 
                     Commands.sequence(
-                        AutoCommands.SetPivotAngle(.129),
+                        //AutoCommands.SetPivotAngle(.129),
                         AutoCommands.followTrajectory(paths.get(4)), 
                         Commands.waitSeconds(0.2)
-                    ),//AutoCommands.aimSpeakerDynamic(true),
+                    ), AutoCommands.aimSpeakerDynamic(true)),
                 AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(4)),
 
             Commands.sequence(
                 AutoCommands.intakeTrajectory(paths.get(5)),
+                Commands.deadline(
                     Commands.sequence(
                         AutoCommands.followTrajectory(paths.get(6)), 
                         Commands.waitSeconds(0.2)
-                    ),
-                     AutoCommands.aimSpeakerDynamic(true)
-                ),
+                    ), AutoCommands.aimSpeakerDynamic(true)),
+
                 AutoCommands.score()
-            ).until(() -> AutoGamepieces.isGone(5));
+            ).until(() -> AutoGamepieces.isGone(5)));
 
     }
 }
