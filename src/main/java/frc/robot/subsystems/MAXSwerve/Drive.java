@@ -4,11 +4,9 @@
 
 package frc.robot.subsystems.MAXSwerve;
 
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 
-import com.fasterxml.jackson.databind.deser.std.ContainerDeserializerBase;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -17,9 +15,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -43,7 +39,6 @@ import frc.robot.Constants.Mode;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.Tolerances;
 import frc.robot.commands.AutoAlignAmp;
-import java.util.Optional;
 import frc.robot.subsystems.MAXSwerve.DriveConstants.AutoConstants;
 import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.util.ChassisSpeedsUtil;
@@ -515,8 +510,7 @@ public class Drive extends SubsystemBase {
 
     //between -180 and 180
     public double getWrappedHeading(){
-        double rotation = MathUtil.angleModulus(gyroInputs.yaw.getRadians());
-        return Units.radiansToDegrees(rotation);
+        return MathUtil.angleModulus(gyroInputs.yaw.getRadians());
     }
 
     /**

@@ -1,13 +1,10 @@
 package frc.robot.commands;
 
-import java.util.Optional;
-
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -19,10 +16,9 @@ import frc.robot.util.Util.AllianceFlipUtil;
 
 public class AlignPose {
     private static double mult = 1;
-    private static Alliance alliance;
 
     private static double driveHeading;
-    private static double deltaAngle;
+    // private static double deltaAngle;
     private static double previousAngle;
     private static double deltaY;
     private static double deltaX;
@@ -50,13 +46,22 @@ public class AlignPose {
 
     public static void setState(State newState) {
         rotationPID.enableContinuousInput(-Math.PI, Math.PI);
-        rotationPID.setTolerance(5);
+        rotationPID.setTolerance(Units.degreesToRadians(3));
         state = newState;
 
         switch (state) {
-            case SPEAKER: targetPose = FieldConstants.BLUE_SPEAKER; break;
-            case SOURCE: targetPose = FieldConstants.BLUE_SOURCE; break;
-            case SHUTTLE: targetPose = FieldConstants.BLUE_SHUTTLE; break;
+            case SPEAKER: 
+                targetPose = FieldConstants.BLUE_SPEAKER; 
+                inverted = true; 
+                break;
+            case SOURCE: 
+                targetPose = FieldConstants.BLUE_SOURCE; 
+                inverted = false; 
+                break;
+            case SHUTTLE: 
+                targetPose = FieldConstants.BLUE_SHUTTLE; 
+                inverted = true;
+                break;
         }
 
         targetPose = AllianceFlipUtil.apply(targetPose);
@@ -88,8 +93,6 @@ public class AlignPose {
         deltaX = targetPose.getX() - augmentedPose.getX();
         deltaX *= (inverted) ? -mult : mult;
         deltaY *= (inverted) ? -mult : mult;
-        // deltaX *= (alliance == Alliance.Red) ? -1 : 1;
-        // deltaY *= (alliance == Alliance.Red) ? -1 : 1;
         desiredAngle = Math.atan2(deltaY, deltaX);
 
         // deltaAngle = Units.degreesToRadians(desiredAngle - previousAngle);

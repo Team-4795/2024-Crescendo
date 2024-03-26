@@ -149,7 +149,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    Trigger timeRumble = new Trigger(() -> between(DriverStation.getMatchTime(), 19, 21) || between(DriverStation.getMatchTime(), 39, 41));
+    Trigger timeRumble = new Trigger(() -> between(DriverStation.getMatchTime(), 19.5, 20.5) || between(DriverStation.getMatchTime(), 39.5, 40.5));
     Trigger continuousRumble = new Trigger(() -> DriverStation.getMatchTime() <= 5);
     
     Trigger isReady = new Trigger(this::readyToShoot);
