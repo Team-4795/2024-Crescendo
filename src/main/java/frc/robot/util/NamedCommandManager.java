@@ -3,10 +3,8 @@ package frc.robot.util;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ShooterSetpoints;
 import frc.robot.commands.AutoCommands;
-import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
 
 public class NamedCommandManager {

@@ -5,17 +5,18 @@
   "pathFolders": [
     "AS GP 123",
     "AS GP 1456",
-    "AS Preload + Move",
-    "Event Markers Experimentation",
     "M GP 123",
     "M GP 2145",
     "M GP1234",
     "PathFinding",
-    "SS GP 38 (intake 7)",
     "SS GP 876",
     "SS GP78"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "Amp",
+    "Center",
+    "Source"
+  ],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 5.0,
   "defaultMaxAngVel": 520.0,

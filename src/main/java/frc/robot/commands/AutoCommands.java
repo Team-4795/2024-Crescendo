@@ -24,7 +24,6 @@ import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.util.NoteVisualizer;
 
 public class AutoCommands {
-  private HashMap<String, PathPlannerTrajectory> paths = new HashMap<>();
 
   private static Drive drive = Drive.getInstance();
   private static Shooter shooter = Shooter.getInstance();
@@ -32,7 +31,7 @@ public class AutoCommands {
   private static Pivot pivot = Pivot.getInstance();
   private static Indexer indexer = Indexer.getInstance();
 
-  public AutoCommands() {
+  private AutoCommands() {
   }
 
   public static Command followTrajectory(String PathName) {
@@ -66,8 +65,7 @@ public class AutoCommands {
         SetPivotAngle(setpoint));
   };
 
-  public static Command 
-  initialize(double speed) {
+  public static Command initialize(double speed) {
     return Commands.parallel(
       Commands.runOnce(() -> intake.setIntakeSpeed(-1)),
       Commands.runOnce(() -> shooter.setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom))
@@ -81,8 +79,8 @@ public class AutoCommands {
   }
 
   public static Command runIndexer(double speed) {
-    return new InstantCommand(() -> {
-      indexer.setIndexerSpeed(1);
+    return Commands.runOnce(() -> {
+      indexer.setIndexerSpeed(speed);
     });
   }
 

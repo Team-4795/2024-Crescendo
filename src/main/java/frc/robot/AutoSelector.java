@@ -17,7 +17,6 @@ public class AutoSelector {
 
     public AutoSelector() {
         chooser = new LoggedDashboardChooser<>("Auto Selector");
-        autoCommands = new AutoCommands();
 
         chooser.addOption("Close3PAuto", new Close3PAuto());
         chooser.addDefaultOption("Testing auto", new testingPath());
