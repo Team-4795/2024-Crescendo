@@ -41,7 +41,6 @@ public class VisionIOReal implements VisionIO {
     @Override
     public void updateInputs(VisionIOInputs inputs) {
         poseEstimator.update().ifPresentOrElse((pose) -> {
-            System.out.println("Got pose");
             inputs.pose = new Pose3d[] {pose.estimatedPose};
             inputs.timestamp = new double[] {pose.timestampSeconds};
             inputs.tags = pose.targetsUsed.stream().mapToInt((target) -> target.getFiducialId()).toArray();
@@ -50,12 +49,5 @@ public class VisionIOReal implements VisionIO {
             inputs.timestamp = new double[] {};
             inputs.tags = new int[] {};
         });
-
-        // PhotonPipelineResult lifecamResult = LifeCam.getLatestResult();
-        // inputs.lifeCamHastargets = lifecamResult.hasTargets();
-        // if (inputs.lifeCamHastargets) {
-        //     lifecamTarget = lifecamResult.getBestTarget();
-        //     inputs.lifeCamyaw = lifecamTarget.getYaw();
-        // }
     }
 }

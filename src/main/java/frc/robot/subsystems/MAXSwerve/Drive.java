@@ -550,7 +550,7 @@ public class Drive extends SubsystemBase {
             ? ChassisSpeeds.fromFieldRelativeSpeeds(speeds, gyroInputs.yaw)
             : speeds;
 
-        speeds = ChassisSpeedsUtil.correctForDynamics(speeds, 0.02, DriveConstants.driftRate);
+        // speeds = ChassisSpeedsUtil.correctForDynamics(speeds, 0.02, DriveConstants.driftRate);
         SwerveModuleState[] swerveStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
         setModuleStates(swerveStates);
     }

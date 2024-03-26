@@ -199,7 +199,7 @@ public class Pivot extends SubsystemBase {
             if (DriverStation.isDisabled()) {
                 io.setVoltage(0);
             } else {
-                io.setVoltage(PIDVolts);
+                io.setVoltage(PIDVolts + FFVolts);
             }
         }
 
@@ -226,7 +226,7 @@ public class Pivot extends SubsystemBase {
     // }
 
     public double linearFF(double angle) {
-        return -0.14 * angle - 0.03;
+        return -0.12 * angle - 0.03;
     }
 
     public void runVoltage(double volts) {

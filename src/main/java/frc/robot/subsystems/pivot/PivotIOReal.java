@@ -49,7 +49,7 @@ public class PivotIOReal implements PivotIO {
 
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
-    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
+    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 1000);
     pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 1000);
@@ -95,12 +95,7 @@ public class PivotIOReal implements PivotIO {
     inputs.pivotAppliedVolts = pivotLeft.getAppliedOutput() * pivotLeft.getBusVoltage();
     inputs.pivotPositionRads = getAbsolutePosition();
     inputs.pivotCurrent = pivotLeft.getOutputCurrent();
-
-    // Cut off weird jumps
-    if (Math.abs(motorEncoder.getPosition()) < 2.0) {
-      inputs.pivotMotorPositionRads = motorEncoder.getPosition();
-    }
-    
+    inputs.pivotMotorPositionRads = motorEncoder.getPosition();
     inputs.pivotMotorVelocityRadPerSec = motorEncoder.getVelocity();
   }
   
