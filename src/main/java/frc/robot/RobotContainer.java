@@ -36,23 +36,12 @@ import frc.robot.subsystems.indexer.*;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.leds.LEDs;
 import frc.robot.subsystems.pivot.*;
-import frc.robot.subsystems.vision.AprilTagVision.Vision;
-import frc.robot.subsystems.vision.AprilTagVision.VisionIO;
-import frc.robot.subsystems.vision.AprilTagVision.VisionIOReal;
-import frc.robot.subsystems.vision.AprilTagVision.VisionIOSim;
-import frc.robot.subsystems.vision.intakeCam.IntakeCamVision;
-import frc.robot.subsystems.vision.intakeCam.IntakeCamVisionIO;
-import frc.robot.subsystems.vision.intakeCam.IntakeCamVisionIOReal;
+import frc.robot.subsystems.vision.intakeCam.*;
+import frc.robot.subsystems.vision.AprilTagVision.*;
 import frc.robot.util.NamedCommandManager;
 import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.AlignToGamepiece;
-import frc.robot.commands.ArmFeedForwardCharacterization;
-import frc.robot.commands.RainbowCommand;
-import frc.robot.commands.AlignPose;
-import frc.robot.commands.AlignShuttle;
-import frc.robot.commands.AlignSpeaker;
+import frc.robot.commands.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -87,8 +76,8 @@ public class RobotContainer {
         shooter = Shooter.initialize(new ShooterIOReal());
         pivot = Pivot.initialize(new PivotIOReal());
         indexer = Indexer.initialize(new IndexerIOReal());
-        // vision = Vision.initialize(new VisionIOReal(0), new VisionIOReal(1), new VisionIOReal(2));
-        vision = Vision.initialize(new VisionIOSim());
+        vision = Vision.initialize(new VisionIOReal(0), new VisionIOReal(1), new VisionIOReal(2));
+        // vision = Vision.initialize(new VisionIOSim());
         intakeCamVision = IntakeCamVision.initialize(new IntakeCamVisionIOReal());
         drive = Drive.initialize(
             new GyroIOPigeon2(),
@@ -210,19 +199,17 @@ public class RobotContainer {
     // Zero heading
     OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));
 
-    // Auto amp align
-    OIConstants.driverController.b().whileTrue(drive.AutoAlignAmp());
-
     // Non auto amp align
     OIConstants.driverController.y().whileTrue(pivot.aimAmp().alongWith(shooter.revAmp()));
     
     // State swapping
+    // Make sure there is no funkiness when pressing or unpressing both buttons
     OIConstants.operatorController.leftBumper()
-      .and(OIConstants.operatorController.rightBumper().negate())
+      .and(OIConstants.operatorController.rightBumper().negate()).debounce(0.1)
       .onTrue(Commands.runOnce(() -> StateManager.setState(State.SPEAKER)));
 
     OIConstants.operatorController.rightBumper()
-      .and(OIConstants.operatorController.leftBumper().negate()) // Make sure there is no funkiness when pressing both buttons
+      .and(OIConstants.operatorController.leftBumper().negate()).debounce(0.1) 
       .onTrue(Commands.runOnce(() -> StateManager.setState(State.AMP)));
 
     OIConstants.operatorController.leftBumper()
@@ -235,7 +222,7 @@ public class RobotContainer {
             shooter.slowReverse(),
             indexer.slowReverse(),
             pivot.aimSource()));
-
+    
     //Ground Intake
     OIConstants.operatorController.povDown().or(OIConstants.operatorController.povDownLeft()).or(OIConstants.operatorController.povDownRight())
     .whileTrue(
@@ -244,10 +231,9 @@ public class RobotContainer {
             intake.intake(),
             indexer.forwards())
         .until(indexer::isStoring)
-        .andThen(Commands.parallel(
-          rumbleCommand(0.5).withTimeout(0.5),
-          indexer.reverse().withTimeout(0.05))
-        )
+        .andThen(
+          indexer.reverse().withTimeout(0.05)
+        ).onlyIf(() -> !indexer.isStoring())
     );
 
     // Slow reverse tower
@@ -281,12 +267,15 @@ public class RobotContainer {
       .whileTrue(
         new RainbowCommand(() -> MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(), 0.15)));
 
-    // if (Constants.currentMode == Mode.REAL){
-    //   new Trigger(indexer::isStoring).onTrue(leds.intook().withTimeout(1));
-    //   new Trigger(intake::isIntaking).debounce(0.1).whileTrue(leds.intaking());
-    // }
+    if (Constants.currentMode == Mode.REAL){
+      new Trigger(indexer::isStoring).onTrue(rumbleCommand(0.6).withTimeout(0.75));
+      new Trigger(intake::isIntaking).debounce(0.1).whileTrue(Commands.parallel(
+        new RainbowCommand(() -> 0.8),
+        rumbleCommand(0.4)
+      ));
+    }
 
-    timeRumble.onTrue(rumbleCommand(0.3).withTimeout(0.5));
+    timeRumble.onTrue(rumbleCommand(0.3).withTimeout(1));
     continuousRumble.whileTrue(rumbleCommand(0.4));
     isReadyRumble.whileTrue(rumbleCommand(0.6));
   }

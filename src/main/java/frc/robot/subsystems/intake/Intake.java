@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeSetpoints;
+import frc.robot.subsystems.indexer.Indexer;
 
 public class Intake extends SubsystemBase{
     private IntakeIO io;
@@ -34,7 +35,7 @@ public class Intake extends SubsystemBase{
     }
 
     public boolean isIntaking() {
-        return inputs.currentAmps > IntakeConstants.intakeCurrent && inputs.angularVelocityRPM > 2400;
+        return inputs.currentAmps > IntakeConstants.intakeCurrent && inputs.angularVelocityRPM > 2400 && !Indexer.getInstance().isStoring();
     }
 
     public Command intake() {

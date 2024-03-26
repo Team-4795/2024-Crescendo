@@ -101,7 +101,7 @@ public class LEDs extends SubsystemBase {
     }
 
     public Command blink(double pause){
-        return Commands.repeatingSequence(
+        return Commands.sequence(
             runOnce(() -> setColor(color)),
             Commands.waitSeconds(pause),
             runOnce(() -> setColor(Color.kBlack)),
@@ -259,9 +259,8 @@ public class LEDs extends SubsystemBase {
             default:
                 break;      
         }
-        if(Indexer.getInstance().handoff() && !Indexer.getInstance().isStoring()){
-            blink = BlinkState.FAST;
-        } else if (Indexer.getInstance().isStoring()){
+        
+        if (Indexer.getInstance().isStoring()){
             blink = BlinkState.SlOW;
         } else {
             blink = BlinkState.SOLID;
