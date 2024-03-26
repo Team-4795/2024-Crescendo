@@ -19,7 +19,7 @@ public class PivotIOSim implements PivotIO {
         Units.degreesToRadians(75), 
         false,
         Units.degreesToRadians(5),
-        VecBuilder.fill(0.002));
+        VecBuilder.fill(0.001));
 
     private double pivotAppliedVolts = 0.0;
 

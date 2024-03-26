@@ -53,12 +53,10 @@ public final class PivotController {
 
     public PivotController() {
         Logger.recordOutput("Pivot/LQR P", loop.getController().getK().get(0, 0));
-        Logger.recordOutput("Pivot/LQR D", loop.getController().getK().get(1, 0));
+        Logger.recordOutput("Pivot/LQR D", loop.getController().getK().get(0, 1));
     }
 
     public double calculate(double measurement, double goal) {
-        Logger.recordOutput("Trapezoidal pos", lastState.position);
-
         if (Constants.useLQR) {
             Logger.recordOutput("Pivot/LQR Pos", loop.getXHat(0));
             Logger.recordOutput("Pivot/LQR Vel", loop.getXHat(1));
