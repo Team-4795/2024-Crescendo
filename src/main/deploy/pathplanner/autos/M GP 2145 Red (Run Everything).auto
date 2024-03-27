@@ -94,7 +94,7 @@
         {
           "type": "named",
           "data": {
-            "name": "StopIndexer"
+            "name": "Stop Shooting"
           }
         },
         {
@@ -130,15 +130,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "M GP214 P4 Red"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "M GP214 P4 Red"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Wing Amp"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "VisionAlign"
+            "waitTime": 0.2
           }
         },
         {
@@ -180,15 +193,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "M GP214 P6"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "M GP214 P6"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Wing Amp"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "VisionAlign"
+            "waitTime": 0.2
           }
         },
         {

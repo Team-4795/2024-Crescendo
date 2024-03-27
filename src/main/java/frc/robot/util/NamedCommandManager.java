@@ -33,7 +33,7 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(1));
 
-        NamedCommands.registerCommand("StopIndexer", AutoCommands.runIndexer(0));
+        NamedCommands.registerCommand("Stop Shooting", AutoCommands.stopShooting());
 
         NamedCommands.registerCommand("SensePiece", AutoCommands.sensingPiece());
 

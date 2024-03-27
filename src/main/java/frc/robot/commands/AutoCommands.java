@@ -1,11 +1,7 @@
 package frc.robot.commands;
 
-import java.util.HashMap;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.PathPlannerTrajectory;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -78,15 +74,16 @@ public class AutoCommands {
     });
   }
 
-  public static Command runIndexer(double speed) {
-    return Commands.runOnce(() -> {
-      indexer.setIndexerSpeed(speed);
-    });
+  public static Command stopShooting() {
+    return Commands.parallel(
+      Commands.runOnce(() -> indexer.setIndexerSpeed(0)),
+      Commands.runOnce(() -> shooter.setShootingSpeedRPM(0, 0))
+    );
   }
 
   public static Command runEverything(double speed) {
     return Commands.parallel(
-        runIndexer(speed),
+        Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
         initialize(speed));
   }
 
