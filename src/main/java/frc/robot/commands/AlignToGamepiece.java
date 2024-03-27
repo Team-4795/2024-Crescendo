@@ -6,9 +6,11 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.ADXL345_I2C.AllAxes;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.MAXSwerve.Drive;
@@ -20,6 +22,9 @@ public class AlignToGamepiece extends Command {
     private IntakeCamVision vision = IntakeCamVision.getInstance();
 
     private PIDController rotationPID = new PIDController(0.35, 0, 0);
+    private boolean hasTargets;
+    private boolean startTimer;
+    private double time;
 
     public AlignToGamepiece() {
         vision = IntakeCamVision.getInstance();
@@ -37,13 +42,26 @@ public class AlignToGamepiece extends Command {
     @Override
     public void execute() {
         double lifecamYaw = vision.getIntakeCamYaw();
-        boolean hasTargets = vision.intakeCamHasTargets();
 
         double x = MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband);
         double y = MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband);
         double output = AlignPose.calculateRotationSpeed();
 
-        if (hasTargets) {
+        if (vision.intakeCamHasTargets()) {
+            hasTargets = true;
+            startTimer = true;
+        }
+
+        if (!vision.intakeCamHasTargets() && startTimer) {
+            startTimer = false;
+            time = Timer.getFPGATimestamp();
+        }
+
+        if(time >= 0.5){
+            hasTargets = false;
+        }
+
+        if(hasTargets){
             output = rotationPID.calculate(lifecamYaw, 0) * DriveConstants.kMaxAngularSpeed;
         }
 
@@ -56,6 +74,7 @@ public class AlignToGamepiece extends Command {
 
         Logger.recordOutput("Vision/Note Yaw", lifecamYaw);
         Logger.recordOutput("Vision/Note PID", output);
+        Logger.recordOutput("Vision/HasTargets", hasTargets);
     }
 
     @Override
