@@ -11,7 +11,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N2;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,6 +25,9 @@ import frc.robot.subsystems.pivot.Pivot;
 public class AutoAlignAmp extends Command{
     private static final Pose2d RED_AMP = new Pose2d(14.7, 7.6, Rotation2d.fromRadians(Math.PI / 2));
     private static final Pose2d BLUE_AMP = new Pose2d(1.86, 7.6, Rotation2d.fromRadians(Math.PI / 2));
+
+    private final double maxDistance = 1.0;
+    private final double minDistance = 0.0;
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
@@ -129,6 +131,12 @@ public class AutoAlignAmp extends Command{
     }
 
     private double scalar(double distance){
-        return 1 / (1 + Math.exp(-6.5 * (distance - 0.6)));
+        if(distance > maxDistance){
+            return 1.0;
+        } else if (minDistance < distance && distance < maxDistance){
+            return MathUtil.clamp((1 / (maxDistance - minDistance)) * (distance - minDistance), 0, 1);
+        } else {
+            return 0.0;
+        }
     }
 }
