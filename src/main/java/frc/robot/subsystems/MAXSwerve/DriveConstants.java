@@ -12,7 +12,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class DriveConstants {
-    public static final double driftRate = 8.0;
+    public static final double driftRate = 1.0;
 
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
