@@ -23,5 +23,7 @@ public interface PivotIO {
     
     // True is brake, false is coast
     public default void setIdleMode(boolean mode) {}
+
+    public default void resetEncoders() {}
 } 
 

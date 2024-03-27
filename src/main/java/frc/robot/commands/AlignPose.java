@@ -10,6 +10,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.Tolerances;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.MAXSwerve.DriveConstants;
 import frc.robot.util.Util.AllianceFlipUtil;
@@ -32,7 +33,7 @@ public class AlignPose {
     private static Pose2d augmentedPose;
     private static boolean inverted; //intake facing or shooter facing (true for shooter)
     private static Translation2d velocity;
-    private static final PIDController rotationPID = new PIDController(34*0.6, 0, 34*0.49/8);
+    private static final PIDController rotationPID = new PIDController(15, 0, 0);
 
     private static State state = State.SPEAKER;
 
@@ -46,7 +47,7 @@ public class AlignPose {
 
     public static void setState(State newState) {
         rotationPID.enableContinuousInput(-Math.PI, Math.PI);
-        rotationPID.setTolerance(Units.degreesToRadians(3));
+        rotationPID.setTolerance(Tolerances.rotationDefault);
         state = newState;
 
         switch (state) {

@@ -199,7 +199,7 @@ public class Pivot extends SubsystemBase {
             if (DriverStation.isDisabled()) {
                 io.setVoltage(0);
             } else {
-                io.setVoltage(PIDVolts + FFVolts);
+                io.setVoltage(PIDVolts);
             }
         }
 
@@ -226,7 +226,7 @@ public class Pivot extends SubsystemBase {
     // }
 
     public double linearFF(double angle) {
-        return -0.12 * angle - 0.03;
+        return -0.16 * angle;
     }
 
     public void runVoltage(double volts) {
@@ -239,7 +239,7 @@ public class Pivot extends SubsystemBase {
 
     // Choose between motor position or absolute encoder position 
     public double getPosition() {
-        return inputs.pivotPositionRads;
+        return inputs.pivotMotorPositionRads;
     }
 
     public double getTruePosition() {
@@ -252,6 +252,7 @@ public class Pivot extends SubsystemBase {
 
     public void reset() {
         controller.reset(getPosition());
+        io.resetEncoders();
         this.setGoal(getPosition());
     }
 }

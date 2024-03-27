@@ -42,7 +42,7 @@ public final class Constants {
   public static final int paramApplyAttemptLimit = 5;
   public static final double paramApplyTimemout = 0.05;
 
-  public static final boolean useLQR = true;
+  public static final boolean useLQR = false;
 
   public static final class Tolerances {
     public static final double turningSpeed = 0.2;
@@ -51,6 +51,7 @@ public final class Constants {
     public static final double pivotVelocity = Units.degreesToRadians(20);
     public static final double shooterToleranceRPM = 150;
     public static final double speakerWidth = Units.inchesToMeters(10); // Acceptable range from center of speaker
+    public static final double rotationDefault = Units.degreesToRadians(3);
   }
 
   public static final class CurrentLimits {
