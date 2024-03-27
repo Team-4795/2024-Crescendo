@@ -60,4 +60,7 @@ public class VisionConstants {
             e.printStackTrace();
         }
     }
+
+    public static final double areaCutoff = 40;
+    public static final double timeDelay = 0.8;
 }

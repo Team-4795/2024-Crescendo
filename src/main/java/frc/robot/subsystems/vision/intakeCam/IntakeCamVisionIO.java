@@ -6,6 +6,7 @@ public interface IntakeCamVisionIO {
     @AutoLog
     public static class IntakeCamVisionIOInputs {
         public double camYaw = 0;
+        public double area = 0;
         public boolean hasTargets = false;
     }
 
