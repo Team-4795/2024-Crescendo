@@ -8,6 +8,7 @@ public interface PivotIO {
         public double pivotInputVolts = 0.0;
         public double pivotAppliedVolts = 0.0;
         public double pivotPositionRads = 0.0;
+        public double pivotVelocityRads = 0.0;
         public double pivotCurrent = 0.0;
 
         public double pivotMotorVelocityRadPerSec = 0.0;

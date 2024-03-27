@@ -1,5 +1,6 @@
 package frc.robot.subsystems.pivot;
 
+import com.revrobotics.AbsoluteEncoder;
 // import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
@@ -15,8 +16,8 @@ public class PivotIOReal implements PivotIO {
   private CANSparkFlex pivotLeft = new CANSparkFlex(PivotConstants.leftCanID, MotorType.kBrushless);
   private CANSparkFlex pivotRight = new CANSparkFlex(PivotConstants.rightCanID, MotorType.kBrushless);
   private RelativeEncoder motorEncoder = pivotLeft.getEncoder(SparkRelativeEncoder.Type.kQuadrature, 7168);
-  // private AbsoluteEncoder encoder = pivotRight.getAbsoluteEncoder();
-  private DutyCycleEncoder encoder = new DutyCycleEncoder(9);
+  private AbsoluteEncoder encoder = pivotRight.getAbsoluteEncoder();
+  // private DutyCycleEncoder encoder = new DutyCycleEncoder(9);
   private double inputVolts = 0.0;
 
   public PivotIOReal() {
@@ -32,13 +33,15 @@ public class PivotIOReal implements PivotIO {
     pivotLeft.setSmartCurrentLimit(CurrentLimits.pivot);
     pivotRight.setSmartCurrentLimit(CurrentLimits.pivot);
 
-    // encoder.setPositionConversionFactor(PivotConstants.positionConversionFactor);
-    // encoder.setVelocityConversionFactor(PivotConstants.velocityConversionFactor);
+    encoder.setPositionConversionFactor(PivotConstants.positionConversionFactor);
+    encoder.setVelocityConversionFactor(PivotConstants.velocityConversionFactor);
 
     pivotLeft.setIdleMode(IdleMode.kBrake);
     pivotRight.setIdleMode(IdleMode.kBrake);
 
     pivotRight.follow(pivotLeft, true);
+
+    // encoder.setAverageDepth(2);
 
     motorEncoder.setAverageDepth(2);
     motorEncoder.setMeasurementPeriod(20);
@@ -65,6 +68,8 @@ public class PivotIOReal implements PivotIO {
     pivotLeft.burnFlash();
     pivotRight.burnFlash();
 
+    motorEncoder.setPosition(encoder.getPosition());
+
     pivotLeft.setCANTimeout(0);
     pivotRight.setCANTimeout(0);
   }
@@ -81,8 +86,16 @@ public class PivotIOReal implements PivotIO {
     pivotLeft.setVoltage(volts);
   }
 
+  // private double getAbsolutePosition() {
+  //   double rotation = -encoder.getAbsolutePosition() * PivotConstants.positionConversionFactor - 3.1293;
+  //   if(rotation < -1){
+  //     rotation += 2 * Math.PI;
+  //   }
+  //   return rotation;
+  // }
+
   private double getAbsolutePosition() {
-    double rotation = -encoder.getAbsolutePosition() * PivotConstants.positionConversionFactor - 3.1293;
+    double rotation = -encoder.getPosition();
     if(rotation < -1){
       rotation += 2 * Math.PI;
     }
@@ -94,6 +107,7 @@ public class PivotIOReal implements PivotIO {
     inputs.pivotInputVolts = inputVolts;
     inputs.pivotAppliedVolts = pivotLeft.getAppliedOutput() * pivotLeft.getBusVoltage();
     inputs.pivotPositionRads = getAbsolutePosition();
+    inputs.pivotVelocityRads = encoder.getVelocity();
     inputs.pivotCurrent = pivotLeft.getOutputCurrent();
     inputs.pivotMotorPositionRads = motorEncoder.getPosition();
     inputs.pivotMotorVelocityRadPerSec = motorEncoder.getVelocity();
