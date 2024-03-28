@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.102310078878758,
-        "y": 1.7431364874592163
+        "x": 5.0,
+        "y": 6.6
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.718850061662163,
-        "y": 0.9446046887348817
+        "x": 6.023728202064106,
+        "y": 6.727803446362954
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.987848953159354,
-        "y": 2.210569735492972
+        "x": 7.767042457161838,
+        "y": 5.939899572106838
       },
       "prevControl": {
-        "x": 6.9848151084202525,
-        "y": 1.431514322103378
+        "x": 6.790567007009138,
+        "y": 6.3228805235181
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,20 +30,27 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.65,
-      "rotationDegrees": 21.80140948635184,
+      "waypointRelativePos": 0.35,
+      "rotationDegrees": -18.50043963992277,
       "rotateFast": true
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0.55,
+      "name": "Detect Note 5",
+      "waypointRelativePos": 0.35,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Detect Note 5"
+              }
+            }
+          ]
         }
       }
     }
@@ -51,18 +58,18 @@
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 6.0,
-    "maxAngularVelocity": 520.0,
+    "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 30.650667957052868,
+    "rotation": -15.945395900922936,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "GDA SS GP 87",
+  "folder": "AS 1456",
   "previewStartingState": {
-    "rotation": -47.726310993906246,
+    "rotation": 10.239034419210947,
     "velocity": 0
   },
   "useDefaultConstraints": true

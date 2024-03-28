@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.861252448488411,
-        "y": 0.856960954728552
+        "x": 7.544184674674627,
+        "y": 7.41
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.478429089717017,
-        "y": 1.0419866154085817
+        "x": 6.782980299198829,
+        "y": 7.131899456380939
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.102310078878758,
-        "y": 1.7431364874592163
+        "x": 5.0,
+        "y": 6.6
       },
       "prevControl": {
-        "x": 4.852150914266242,
-        "y": 1.5288962487770767
+        "x": 5.690450827349585,
+        "y": 6.810574360007492
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,20 +33,20 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 6.0,
-    "maxAngularVelocity": 520.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 270.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -45.89999999999998,
+    "rotation": 12.64,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "GDA SS GP 87",
+  "folder": "M 2145",
   "previewStartingState": {
-    "rotation": -14.534455080668709,
+    "rotation": 0.0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

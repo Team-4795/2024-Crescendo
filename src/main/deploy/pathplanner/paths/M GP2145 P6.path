@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.74,
-        "y": 5.88
+        "x": 7.66,
+        "y": 5.96
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.993775357022895,
-        "y": 6.05450249416904
+        "x": 6.94693201083977,
+        "y": 6.335562571267796
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.98,
-        "y": 6.57
+        "x": 5.0,
+        "y": 6.6
       },
       "prevControl": {
-        "x": 6.373101020096476,
-        "y": 6.241875878901544
+        "x": 6.451655202825382,
+        "y": 6.459249263634047
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 13.31,
+    "rotation": 12.64,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "GDA M GP 2145",
+  "folder": "M 2145",
   "previewStartingState": {
-    "rotation": -4.639999999999986,
+    "rotation": -11.183864557562066,
     "velocity": 0
   },
   "useDefaultConstraints": false

@@ -13,7 +13,7 @@ public class GDA_AS145 {
     PathPlannerAuto auto;
 
     public static Command load(){
-        paths = PathPlannerAuto.getPathGroupFromAutoFile("GDA AS GP 145");
+        paths = PathPlannerAuto.getPathGroupFromAutoFile("AS GP 145");
         
         return Commands.sequence(
             Commands.parallel(

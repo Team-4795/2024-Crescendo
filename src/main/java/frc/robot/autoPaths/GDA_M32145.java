@@ -13,7 +13,7 @@ public class GDA_M32145 {
     PathPlannerAuto auto;
 
     public static Command load(){
-        paths = PathPlannerAuto.getPathGroupFromAutoFile("GDA M GP 32145");
+        paths = PathPlannerAuto.getPathGroupFromAutoFile("M GP 32145");
 
         return Commands.sequence(
             AutoCommands.aimSpeakerDynamic(true),

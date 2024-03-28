@@ -45,7 +45,7 @@
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 6.0,
-    "maxAngularVelocity": 520.0,
+    "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
@@ -54,7 +54,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "GDA M GP 32145",
+  "folder": "M 32145",
   "previewStartingState": {
     "rotation": 32.38067770656932,
     "velocity": 0

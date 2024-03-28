@@ -26,13 +26,19 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.4
+            "waitTime": 0.7
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Score"
+            "name": "RunEverything"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
           }
         },
         {
@@ -40,24 +46,43 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Intake"
+                  "pathName": "M GP2145 P1"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "M GP214 P1"
+                  "name": "AlignGP2"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "AlignGP2"
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "M GP2145 P2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AlignGP1"
+                }
+              }
+            ]
           }
         },
         {
@@ -69,17 +94,30 @@
         {
           "type": "named",
           "data": {
-            "name": "Score"
+            "name": "Stop Shooting"
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "M GP214 P2 Blue"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "M GP2145 P3"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -92,15 +130,28 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "AlignGP1"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "M GP2145 P4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Wing Amp"
+                }
+              }
+            ]
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.4
+            "waitTime": 0.2
           }
         },
         {
@@ -110,13 +161,26 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "M GP214 P3 Blue"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "M GP2145 P5"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -135,60 +199,22 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "M GP214 P4 Blue"
+                  "pathName": "M GP2145 P6"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Align Wing Blue"
+                  "name": "Align Wing Amp"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "Score"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "M GP214 P5"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "M GP214 P6"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Wing Amp Blue"
-                }
-              }
-            ]
+            "waitTime": 0.2
           }
         },
         {
@@ -200,6 +226,6 @@
       ]
     }
   },
-  "folder": "Center",
+  "folder": "Middle",
   "choreoAuto": false
 }

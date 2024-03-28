@@ -33,24 +33,68 @@
         {
           "type": "named",
           "data": {
-            "name": "Score"
+            "name": "RunEverything"
           }
         },
         {
           "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AS GP1456 P1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align GP1"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.3
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Shooting"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "AS GP1456 P2"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    }
+                  ]
+                }
+              },
               {
                 "type": "named",
                 "data": {
                   "name": "Intake"
                 }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SS GP 876 P1"
-                }
               }
             ]
           }
@@ -62,16 +106,22 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SS GP 876 P2"
+                  "pathName": "AS GP1456 P3"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Align Far Source"
+                  "name": "Align Wing Amp"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
           }
         },
         {
@@ -81,13 +131,26 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "SS GP 876 P3"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "AS GP1456 P4"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -106,16 +169,22 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SS GP 876 P4"
+                  "pathName": "AS GP1456 P5"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Align Far Source"
+                  "name": "Align Wing Amp"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
           }
         },
         {
@@ -125,13 +194,26 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "SS GP 876 P5"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "AS GP1456 P6"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -150,7 +232,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SS GP 876 P6"
+                  "pathName": "AS GP1456 P7"
                 }
               },
               {
@@ -183,6 +265,6 @@
       ]
     }
   },
-  "folder": "Source",
+  "folder": "Amp",
   "choreoAuto": false
 }

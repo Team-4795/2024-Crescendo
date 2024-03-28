@@ -13,7 +13,7 @@ public class GDA_SS876 {
     PathPlannerAuto auto;
 
     public static Command load(){
-        paths = PathPlannerAuto.getPathGroupFromAutoFile("GDA SS GP 876");
+        paths = PathPlannerAuto.getPathGroupFromAutoFile("SS GP 876");
         
         return Commands.sequence(
             Commands.parallel(

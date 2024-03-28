@@ -1,16 +1,29 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 0.904140353216511,
-      "y": 6.499514282908736
-    },
-    "rotation": 58.0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "VisionAlign"
+                }
+              }
+            ]
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -20,18 +33,6 @@
         {
           "type": "named",
           "data": {
-            "name": "AlignClose"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Score"
           }
         },
@@ -48,22 +49,35 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AS GP1456 P1"
+                  "pathName": "SS GP 876 P1"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "AlignGP1"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SS GP 876 P2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Far Source"
+                }
+              }
+            ]
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.2
           }
         },
         {
@@ -79,7 +93,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AS GP1456 P2"
+                  "pathName": "SS GP 876 P3"
                 }
               },
               {
@@ -92,21 +106,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "AS GP1456 P3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AlignGP1"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SS GP 876 P4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Far Source"
+                }
+              }
+            ]
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.2
           }
         },
         {
@@ -118,6 +139,6 @@
       ]
     }
   },
-  "folder": "Amp",
+  "folder": "Source",
   "choreoAuto": false
 }
