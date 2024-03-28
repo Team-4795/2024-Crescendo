@@ -525,8 +525,7 @@ public class Drive extends SubsystemBase {
     private ChassisSpeeds getRobotRelativeSpeeds() {
         // Uses forward kinematics to calculate the robot's speed given the states of
         // the swerve modules.
-        return DriveConstants.kDriveKinematics.toChassisSpeeds(m_frontLeft.getState(), m_frontRight.getState(),
-                m_rearLeft.getState(), m_rearRight.getState());
+        return DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
     }
 
      /*private void driveRobotRelative(ChassisSpeeds speeds) {

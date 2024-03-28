@@ -104,8 +104,10 @@ public class PivotIOReal implements PivotIO {
 
   private double getAbsolutePosition() {
     double rotation = encoder.getPosition();
-    if(rotation < -1){
+    if(rotation < -2){
       rotation += 2 * Math.PI;
+    } else if (rotation > 4) {
+      rotation -= 2 * Math.PI;
     }
     return rotation;
   }
