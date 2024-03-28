@@ -508,7 +508,6 @@ public class Drive extends SubsystemBase {
         return gyroInputs.yaw;
     }
 
-    //between -180 and 180
     public double getWrappedHeading(){
         return MathUtil.angleModulus(gyroInputs.yaw.getRadians());
     }
