@@ -52,8 +52,12 @@ public final class PivotController {
         new LinearSystemLoop<>(armPlant, lqr, observer, 12.0, 0.02);
 
     public PivotController() {
-        Logger.recordOutput("Pivot/LQR P", loop.getController().getK().get(0, 0));
-        Logger.recordOutput("Pivot/LQR D", loop.getController().getK().get(0, 1));
+        if (Constants.useLQR) {
+            Logger.recordOutput("Pivot/LQR P", loop.getController().getK().get(0, 0));
+            Logger.recordOutput("Pivot/LQR D", loop.getController().getK().get(0, 1));
+        }
+
+        // normalController.enableContinuousInput(0, 2 * Math.PI);
     }
 
     public double calculate(double measurement, double goal) {
