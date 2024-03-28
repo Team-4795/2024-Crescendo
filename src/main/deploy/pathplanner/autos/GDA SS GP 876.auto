@@ -6,6 +6,25 @@
     "data": {
       "commands": [
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "VisionAlign"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Initialize"
@@ -14,18 +33,6 @@
         {
           "type": "named",
           "data": {
-            "name": "AlignClose"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Score"
           }
         },
@@ -42,22 +49,29 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AS GP145 P1"
+                  "pathName": "SS GP 876 P1"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "VisionAlign"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SS GP 876 P2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Far Source"
+                }
+              }
+            ]
           }
         },
         {
@@ -73,7 +87,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AS GP145 P2"
+                  "pathName": "SS GP 876 P3"
                 }
               },
               {
@@ -86,21 +100,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "AS GP145 P3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "VisionAlign"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SS GP 876 P4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Far Source"
+                }
+              }
+            ]
           }
         },
         {
@@ -114,65 +129,60 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Intake"
+                  "pathName": "SS GP 876 P5"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "AS GP145 P4"
+                  "name": "Intake"
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "AS GP 145 P5"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SS GP 876 P6"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stow"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "VisionAlign"
+            "name": "Align Under Stage"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.4
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Score"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AS GP145 P6"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AS GP 145 P7"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AS GP 2145 (miss 4)"
           }
         }
       ]
     }
   },
-  "folder": "Amp",
+  "folder": "Source",
   "choreoAuto": false
 }

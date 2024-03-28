@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.2782342053414837,
+      "y": 5.574358195791997
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,19 +14,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Initialize"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "AlignClose"
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Initialize"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.4
           }
         },
         {
@@ -42,7 +48,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AS GP145 P1"
+                  "pathName": "M GP2145 P1"
                 }
               }
             ]
@@ -51,7 +57,7 @@
         {
           "type": "named",
           "data": {
-            "name": "VisionAlign"
+            "name": "AlignGP2"
           }
         },
         {
@@ -73,7 +79,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AS GP145 P2"
+                  "pathName": "M GP2145 P2 Red"
                 }
               },
               {
@@ -86,21 +92,59 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "AS GP145 P3"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "VisionAlign"
+            "name": "AlignGP1"
           }
         },
         {
           "type": "wait",
           "data": {
             "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "M GP2145 P3 Red"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Wing Amp"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "M GP2145 P4 Red"
+                }
+              }
+            ]
           }
         },
         {
@@ -122,57 +166,40 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AS GP145 P4"
+                  "pathName": "M GP2145 P5"
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "AS GP 145 P5"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "VisionAlign"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "M GP2145 P6"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Wing Amp"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Score"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AS GP145 P6"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AS GP 145 P7"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AS GP 2145 (miss 4)"
           }
         }
       ]
     }
   },
-  "folder": "Amp",
+  "folder": "Center",
   "choreoAuto": false
 }

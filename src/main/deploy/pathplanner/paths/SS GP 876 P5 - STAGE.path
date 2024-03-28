@@ -8,51 +8,45 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.841534481927736,
-        "y": 0.9837102698456457
+        "x": 3.9255361820281403,
+        "y": 3.18534754045257
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.894258231264555,
-        "y": 3.676427912652264
+        "x": 7.708136386315569,
+        "y": 4.122214464115091
       },
       "prevControl": {
-        "x": 7.239702924484309,
-        "y": 3.1619258673610067
+        "x": 4.721873067141283,
+        "y": 4.731177964495728
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.55,
-      "rotationDegrees": 42.438744045322785,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 4.5,
-    "maxAngularVelocity": 480.0,
-    "maxAngularAcceleration": 540.0
+    "maxVelocity": 5.0,
+    "maxAcceleration": 6.0,
+    "maxAngularVelocity": 520.0,
+    "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 49.46715906138925,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "GDA SS GP 876",
   "previewStartingState": {
-    "rotation": -43.14999999999998,
+    "rotation": -35.08258670375117,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

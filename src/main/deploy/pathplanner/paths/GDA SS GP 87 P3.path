@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.7,
-        "y": 1.8
+        "x": 4.102310078878758,
+        "y": 1.7431364874592163
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.583896077920542,
-        "y": 1.5341195874973776
+        "x": 5.718850061662163,
+        "y": 0.9446046887348817
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.684714713224005,
-        "y": 2.4007214918852084
+        "x": 7.987848953159354,
+        "y": 2.210569735492972
       },
       "prevControl": {
-        "x": 7.005486193568677,
-        "y": 2.4709865111598974
+        "x": 6.9848151084202525,
+        "y": 1.431514322103378
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,47 +30,40 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.3,
-      "rotationDegrees": 12.612120331247002,
+      "waypointRelativePos": 0.65,
+      "rotationDegrees": 21.80140948635184,
       "rotateFast": true
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Detect Note",
-      "waypointRelativePos": 0.3,
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.55,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Detect Note 2"
-              }
-            }
-          ]
+          "commands": []
         }
       }
     }
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
+    "maxAcceleration": 6.0,
     "maxAngularVelocity": 520.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 2.123791123616674,
+    "rotation": 30.650667957052868,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "GDA SS GP 876",
+  "folder": "GDA SS GP 87",
   "previewStartingState": {
-    "rotation": -30.409479236944293,
+    "rotation": -47.726310993906246,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

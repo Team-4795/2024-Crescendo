@@ -11,6 +11,11 @@
     "PathFinding",
     "SS GP 876",
     "SS GP78"
+    "GDA AS GP 145",
+    "GDA M GP 2145",
+    "GDA M GP 32145",
+    "GDA SS GP 876",
+    "GDA SS GP 87"
   ],
   "autoFolders": [
     "Amp",
@@ -18,7 +23,7 @@
     "Source"
   ],
   "defaultMaxVel": 5.0,
-  "defaultMaxAccel": 5.0,
+  "defaultMaxAccel": 6.0,
   "defaultMaxAngVel": 520.0,
   "defaultMaxAngAccel": 720.0,
   "maxModuleSpeed": 4.5

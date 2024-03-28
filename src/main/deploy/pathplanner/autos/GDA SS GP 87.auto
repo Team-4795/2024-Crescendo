@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GDA SS GP 87 P1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GDA SS GP 87 P2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GDA SS GP 87 P3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GDA SS GP 87 P4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GDA SS GP 87 P5"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
