@@ -7,6 +7,8 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -44,7 +46,8 @@ public class Pivot extends SubsystemBase {
     private SimpleMotorFeedforward motorFeedforward = new SimpleMotorFeedforward(
             kS.get(), kV.get(), kA.get());
 
-    private PivotController controller = new PivotController();
+    private ProfiledPIDController posController = new ProfiledPIDController(0, 0, 0, PivotConstants.constraints);
+    private PIDController velController = new PIDController(0, 0, 0);
 
     private double goal = 0;
     private final boolean disableArm = false;
@@ -71,7 +74,7 @@ public class Pivot extends SubsystemBase {
         io = pivotIO;
         io.updateInputs(inputs);
 
-        visualizer.update(360 * getTruePosition() / (Math.PI * 2), Units.radiansToDegrees(controller.getSetpoint().position + PivotConstants.angleOffset));
+        visualizer.update(360 * getTruePosition() / (Math.PI * 2), Units.radiansToDegrees(posController.getSetpoint().position + PivotConstants.angleOffset));
 
         sysid = new SysIdRoutine(
             new SysIdRoutine.Config(Volts.of(0.2).per(Seconds.of(1)), Volts.of(2), null, (state) -> Logger.recordOutput("Pivot/SysIdState", state.toString())),
@@ -187,27 +190,30 @@ public class Pivot extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Pivot", inputs);
-        visualizer.update(Units.radiansToDegrees(getTruePosition()), Units.radiansToDegrees(controller.getSetpoint().position + PivotConstants.angleOffset));
+        visualizer.update(Units.radiansToDegrees(getTruePosition()), Units.radiansToDegrees(posController.getSetpoint().position + PivotConstants.angleOffset));
 
         LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);
 
-        double v1 = controller.getSetpoint().velocity;
-        double PIDVolts = controller.calculate(getPosition(), goal);
-        double FFVolts = Constants.useLQR ? kS.get() * Math.signum(controller.getSetpoint().velocity) : motorFeedforward.calculate(v1, controller.getSetpoint().velocity, 0.02);
+        double pidVel = posController.calculate(inputs.pivotPositionRads);
+        double pidVolts = velController.calculate(pidVel, posController.getSetpoint().velocity);
+
+        // double v1 = controller.getSetpoint().velocity;
+        // double PIDVolts = controller.calculate(getPosition(), goal);
+        // double FFVolts = Constants.useLQR ? kS.get() * Math.signum(controller.getSetpoint().velocity) : motorFeedforward.calculate(v1, controller.getSetpoint().velocity, 0.02);
 
         if (!disableArm) {
             if (DriverStation.isDisabled()) {
                 io.setVoltage(0);
             } else {
-                io.setVoltage(PIDVolts);
+                io.setVoltage(pidVolts);
             }
         }
 
-        Logger.recordOutput("Pivot/PID Volts", PIDVolts);
-        Logger.recordOutput("Pivot/FF Volts", FFVolts);
+        // Logger.recordOutput("Pivot/PID Volts", PIDVolts);
+        // Logger.recordOutput("Pivot/FF Volts", FFVolts);
         Logger.recordOutput("Pivot/Static gain volts", linearFF(getPosition()));
-        Logger.recordOutput("Pivot/Setpoint Position", controller.getSetpoint().position);
-        Logger.recordOutput("Pivot/Setpoint Velocity", controller.getSetpoint().velocity);
+        // Logger.recordOutput("Pivot/Setpoint Position", controller.getSetpoint().position);
+        // Logger.recordOutput("Pivot/Setpoint Velocity", controller.getSetpoint().velocity);
         Logger.recordOutput("Pivot/Goal", goal);
     }
     
@@ -251,7 +257,8 @@ public class Pivot extends SubsystemBase {
     }
 
     public void reset() {
-        controller.reset(getPosition());
+        // controller.reset(getPosition());
+        posController.reset(getPosition());
         io.resetEncoders();
         this.setGoal(getPosition());
     }
