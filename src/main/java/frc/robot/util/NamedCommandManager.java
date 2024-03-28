@@ -70,10 +70,14 @@ public class NamedCommandManager {
 
     private static Command detectNote(int note, boolean simDetect) {
         return Commands.parallel(
-            Commands.print("Event Marker Executed"),
+            Commands.print("Event Marker Executed For Note " + note),
             Commands.either(
-                Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)).onlyIf(() -> !simDetect), 
-                Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)).onlyIf(IntakeCamVision.getInstance()::isNoteInFront), 
+                Commands.parallel(
+                    Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)),
+                    Commands.print("Note " + Integer.toString(note) + " not detected")).onlyIf(() -> !simDetect), 
+                Commands.parallel(
+                    Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)),
+                    Commands.print("Note " + Integer.toString(note) + " not detected")).onlyIf(() -> !IntakeCamVision.getInstance().isNoteInFront()), 
                 () -> Constants.currentMode == Mode.SIM)
         );
     }

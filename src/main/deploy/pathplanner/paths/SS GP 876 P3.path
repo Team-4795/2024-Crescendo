@@ -47,7 +47,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Detect Note 2"
+                "name": "Detect Note 7"
               }
             }
           ]
@@ -57,8 +57,8 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
-    "maxAngularVelocity": 520.0,
+    "maxAcceleration": 6.0,
+    "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
@@ -67,10 +67,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "SS 876",
+  "folder": "SS 8765",
   "previewStartingState": {
     "rotation": -30.409479236944293,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

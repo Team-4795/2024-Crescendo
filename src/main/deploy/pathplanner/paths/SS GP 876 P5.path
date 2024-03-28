@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.841534481927736,
-        "y": 0.9837102698456457
+        "x": 6.630739424103669,
+        "y": 1.0305536160287727
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 3.676427912652264
       },
       "prevControl": {
-        "x": 7.239702924484309,
-        "y": 3.1619258673610067
+        "x": 7.02890786666024,
+        "y": 2.775468261350217
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,29 +30,59 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.55,
-      "rotationDegrees": 42.438744045322785,
-      "rotateFast": false
+      "waypointRelativePos": 0.4,
+      "rotationDegrees": 46.46892687507806,
+      "rotateFast": true
     }
   ],
-  "constraintZones": [],
-  "eventMarkers": [],
+  "constraintZones": [
+    {
+      "name": "Rotation Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.25,
+      "constraints": {
+        "maxVelocity": 3.5,
+        "maxAcceleration": 4.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "Detect Note",
+      "waypointRelativePos": 0.4,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Detect Note 6"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 4.5,
-    "maxAngularVelocity": 480.0,
-    "maxAngularAcceleration": 540.0
+    "maxVelocity": 5.0,
+    "maxAcceleration": 6.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 49.46715906138925,
+    "rotation": 51.28648757618715,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "SS 876",
+  "folder": "SS 8765",
   "previewStartingState": {
     "rotation": -43.14999999999998,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

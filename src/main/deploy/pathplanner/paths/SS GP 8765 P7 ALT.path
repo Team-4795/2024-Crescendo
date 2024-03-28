@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.2,
-        "y": 5.2
+        "x": 4.487656336225653,
+        "y": 5.920165686485219
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.787225728297611,
-        "y": 6.670053340106681
+        "x": 5.002933144240039,
+        "y": 6.604911811820771
       },
       "isLocked": false,
       "linkedName": null
@@ -59,7 +59,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "SS 876",
+  "folder": "SS 8765",
   "previewStartingState": {
     "rotation": -2.116339641124944,
     "velocity": 0

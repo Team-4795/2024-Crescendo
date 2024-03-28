@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.843437994568298,
-        "y": 2.7627439870264356
+        "x": 3.831849489661888,
+        "y": 1.7800471549587875
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8893339325140204,
-        "y": 1.7563158203239486
+        "x": 4.61647553822925,
+        "y": 1.6043846067720653
       },
       "isLocked": false,
       "linkedName": null
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.35,
-      "rotationDegrees": -18.561117677175066,
+      "rotationDegrees": -14.17772690292062,
       "rotateFast": true
     }
   ],
@@ -47,7 +47,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Detect Note"
+                "name": "Detect Note 8"
               }
             }
           ]
@@ -57,8 +57,8 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
-    "maxAngularVelocity": 520.0,
+    "maxAcceleration": 6.0,
+    "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
@@ -67,10 +67,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "SS 876",
+  "folder": "SS 8765",
   "previewStartingState": {
-    "rotation": -32.47119229084846,
+    "rotation": -18.434948822921786,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

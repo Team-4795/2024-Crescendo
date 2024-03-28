@@ -47,7 +47,7 @@ public class AutoCommands {
     return Commands.race(
       Commands.sequence(
         followTrajectory(path),
-        Commands.waitSeconds(0.5)
+        Commands.waitSeconds(0.25)
       ), 
       intake());
   }
@@ -108,17 +108,17 @@ public class AutoCommands {
     return Commands.sequence(
       Commands.parallel(
         Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
-        Commands.runOnce(() -> pivot.setGoal(0.45))
+        Commands.runOnce(() -> pivot.setGoal(0.3))
       ),
       Commands.either(Commands.waitUntil(indexer::isStoring), Commands.waitSeconds(6), Robot::isReal),
-      indexer.reverse().withTimeout(0.1));
+      indexer.reverse().withTimeout(0.05));
   }
 
   public static Command intakeWithoutPivot(){
     return Commands.sequence(
       Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
       Commands.either(Commands.waitUntil(indexer::isStoring), Commands.waitSeconds(1), Robot::isReal),
-      indexer.reverse().withTimeout(0.1));
+      indexer.reverse().withTimeout(0.05));
   }
 
   public static Command sensingPiece() {
@@ -139,7 +139,7 @@ public class AutoCommands {
   }
 
   public static Command rotateToSpeaker(){
-    return new AlignSpeaker().withTimeout(0.7);
+    return new AlignSpeaker().withTimeout(0.6);
   }
 
 }

@@ -33,7 +33,7 @@ public class AlignPose {
     private static Pose2d augmentedPose;
     private static boolean inverted; //intake facing or shooter facing (true for shooter)
     private static Translation2d velocity;
-    private static final PIDController rotationPID = new PIDController(15, 0, 0);
+    private static final PIDController rotationPID = new PIDController(15, 0, 1.7);
 
     private static State state = State.SPEAKER;
 
