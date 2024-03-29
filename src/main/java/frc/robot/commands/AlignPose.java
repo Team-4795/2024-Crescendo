@@ -13,6 +13,7 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.Tolerances;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.MAXSwerve.DriveConstants;
+import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.Util.AllianceFlipUtil;
 
 public class AlignPose {
@@ -32,8 +33,14 @@ public class AlignPose {
     private static Pose2d currentPose;
     private static Pose2d augmentedPose;
     private static boolean inverted; //intake facing or shooter facing (true for shooter)
+
+    private static final LoggedTunableNumber kP =
+        new LoggedTunableNumber("HeadingController/kP", 30*0.6);
+    private static final LoggedTunableNumber kD =
+        new LoggedTunableNumber("HeadingController/kD", 30*0.49/8);
+
     private static Translation2d velocity;
-    private static final PIDController rotationPID = new PIDController(30*0.6, 0, 30*0.8/8);
+    private static final PIDController rotationPID = new PIDController(30*0.6, 0, 30*0.49/8);
 
     private static State state = State.SPEAKER;
 
@@ -83,7 +90,7 @@ public class AlignPose {
         previousAngle = Math.atan2(deltaY, deltaX);
     }
 
-    public static double calculateRotationSpeed() {        
+    public static double calculateRotationSpeed() {         
         currentPose = Drive.getInstance().getPose();
         velocity = Drive.getInstance().getTranslationVelocity();
         augmentedPose = new Pose2d(currentPose.getX() + (velocity.getX() * 0.02),
@@ -122,6 +129,8 @@ public class AlignPose {
     }
 
     public static void periodic() {
+        rotationPID.setPID(kP.get(), 0, kD.get());
+
         Logger.recordOutput("Pose Align/drive heading", driveHeading);
         Logger.recordOutput("Pose Align/desired angle", desiredAngle);
         Logger.recordOutput("Pose Align/output", output);
