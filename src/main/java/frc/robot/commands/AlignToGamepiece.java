@@ -21,7 +21,7 @@ public class AlignToGamepiece extends Command {
     private Drive drive = Drive.getInstance();
     private IntakeCamVision vision = IntakeCamVision.getInstance();
 
-    private PIDController rotationPID = new PIDController(0.35, 0, 0);
+    private PIDController rotationPID = new PIDController(1, 0, 0);
     private boolean hasTargets;
     private boolean startTimer;
     private double time;
@@ -41,25 +41,26 @@ public class AlignToGamepiece extends Command {
 
     @Override
     public void execute() {
-        double lifecamYaw = vision.getIntakeCamYaw();
+        double lifecamYaw = Units.degreesToRadians(vision.getIntakeCamYaw());
 
         double x = MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband);
         double y = MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband);
         double output = AlignPose.calculateRotationSpeed();
 
-        if (vision.intakeCamHasTargets()) {
-            hasTargets = true;
-            startTimer = true;
-        }
+        // if (vision.intakeCamHasTargets()) {
+        //     hasTargets = true;
+        //     startTimer = true;
+        // }
 
-        if (!vision.intakeCamHasTargets() && startTimer) {
-            startTimer = false;
-            time = Timer.getFPGATimestamp();
-        }
+        // if (!vision.intakeCamHasTargets() && startTimer) {
+        //     startTimer = false;
+        //     time = Timer.getFPGATimestamp();
+        // }
 
-        if(time >= 0.5){
-            hasTargets = false;
-        }
+        // if(time >= 0.5){
+        //     hasTargets = false;
+        // }
+        hasTargets = vision.intakeCamHasTargets();
 
         if(hasTargets){
             output = rotationPID.calculate(lifecamYaw, 0) * DriveConstants.kMaxAngularSpeed;

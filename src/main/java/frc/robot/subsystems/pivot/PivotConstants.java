@@ -10,7 +10,7 @@ public final class PivotConstants {
     public static final double kA = 0.1;
     public static final double kV = 2.35;
     public static final double kS = 0.1;
-    public static final double kP = 40;
+    public static final double kP = 30;
     public static final double kI = 0;
     public static final double kD = 0;
 
@@ -42,14 +42,14 @@ public final class PivotConstants {
     public static final InterpolatingDoubleTreeMap armAngleMap = new InterpolatingDoubleTreeMap();
 
     static {
-        armAngleMap.put(1.3, 0.6);
-        armAngleMap.put(1.7, 0.427);
-        armAngleMap.put(2.6, 0.28);
-        armAngleMap.put(3.75, 0.185);
-        armAngleMap.put(4.6, 0.135);
-        armAngleMap.put(4.9, 0.13);
-        armAngleMap.put(5.7, 0.112);
-        armAngleMap.put(6.1, 0.107);
-        armAngleMap.put(6.4, 0.095);
+        armAngleMap.put(1.2, 0.56);
+        armAngleMap.put(1.87, 0.42);
+        armAngleMap.put(2.6, 0.27);
+        armAngleMap.put(3.25, 0.22);
+        armAngleMap.put(3.87, 0.18);
+        armAngleMap.put(5.0, 0.121);
+        // armAngleMap.put(5.7, 0.112);
+        // armAngleMap.put(6.1, 0.107);
+        // armAngleMap.put(6.4, 0.095);
     }
 }

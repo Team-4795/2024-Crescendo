@@ -24,6 +24,7 @@ public class IntakeCamVisionIOReal implements IntakeCamVisionIO{
         intakeCamResult = camera.getLatestResult();
         inputs.hasTargets = intakeCamResult.hasTargets();
         
+        
         if (inputs.hasTargets) {
             PhotonTrackedTarget intakeCamTarget = intakeCamResult.getBestTarget();
             inputs.camYaw = intakeCamTarget.getYaw();

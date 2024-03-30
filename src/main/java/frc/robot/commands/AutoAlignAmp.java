@@ -23,8 +23,8 @@ import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.pivot.Pivot;
 
 public class AutoAlignAmp extends Command{
-    private static final Pose2d RED_AMP = new Pose2d(14.7, 7.6, Rotation2d.fromRadians(Math.PI / 2));
-    private static final Pose2d BLUE_AMP = new Pose2d(1.86, 7.6, Rotation2d.fromRadians(Math.PI / 2));
+    private static final Pose2d RED_AMP = new Pose2d(14.7, 7.68, Rotation2d.fromRadians(Math.PI / 2));
+    private static final Pose2d BLUE_AMP = new Pose2d(1.86, 7.68, Rotation2d.fromRadians(Math.PI / 2));
 
     private final double maxDistance = 1.0;
     private final double minDistance = 0.0;

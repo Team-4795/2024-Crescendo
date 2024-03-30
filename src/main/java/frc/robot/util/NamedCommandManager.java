@@ -23,7 +23,7 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("AlignCommunityLine", AutoCommands.setPivotAndShooter(0.25)); // change later
 
-        NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.2425)); // change later
+        NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.2525)); // change later
 
         NamedCommands.registerCommand("AlignGP3", AutoCommands.setPivotAndShooter(0.2)); // change later
 
@@ -33,7 +33,7 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("Stow", AutoCommands.SetPivotAngle(0.08));
 
-        NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.58)); // change later
+        NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.6)); // change later
 
         NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
 

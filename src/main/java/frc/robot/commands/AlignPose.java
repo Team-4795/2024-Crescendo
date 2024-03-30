@@ -35,12 +35,12 @@ public class AlignPose {
     private static boolean inverted; //intake facing or shooter facing (true for shooter)
 
     private static final LoggedTunableNumber kP =
-        new LoggedTunableNumber("HeadingController/kP", 30*0.6);
+        new LoggedTunableNumber("HeadingController/kP", 12);
     private static final LoggedTunableNumber kD =
-        new LoggedTunableNumber("HeadingController/kD", 30*0.49/8);
+        new LoggedTunableNumber("HeadingController/kD", 0.9);
 
     private static Translation2d velocity;
-    private static final PIDController rotationPID = new PIDController(30*0.6, 0, 30*0.42/8);
+    private static final PIDController rotationPID = new PIDController(12, 0, 0.9);
 
     private static State state = State.SPEAKER;
 

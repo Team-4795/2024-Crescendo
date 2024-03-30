@@ -35,7 +35,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public final class Constants {
   // Mode of the robot, set to Mode.REPLAY for replay
   public static final Mode currentMode = Mode.fromState();
-  public static final boolean tuningMode = true;
+  public static final boolean tuningMode = false;
   public static final boolean hasVision = true;
   public static final int tryConfigCount = 5;
   public static final double configDelay = 0.1;
@@ -47,9 +47,9 @@ public final class Constants {
   public static final class Tolerances {
     public static final double turningSpeed = 0.2;
     public static final double driveVelocity = 0.2;
-    public static final double pivotSetpoint = Units.degreesToRadians(2);
+    public static final double pivotSetpoint = Units.degreesToRadians(1.5);
     public static final double pivotVelocity = Units.degreesToRadians(20);
-    public static final double shooterToleranceRPM = 150;
+    public static final double shooterToleranceRPM = 100;
     public static final double speakerWidth = Units.inchesToMeters(10); // Acceptable range from center of speaker
     public static final double rotationDefault = Units.degreesToRadians(3);
   }
@@ -88,8 +88,8 @@ public final class Constants {
     public static final double shuttleTop = -3500;
     public static final double shuttleBottom = 3500;
 
-    public static final double ampTop = 500;
-    public static final double ampBottom = 500;
+    public static final double ampTop = 700;
+    public static final double ampBottom = 700;
 
     public static final double reverseTop = 1000;
     public static final double reverseBottom = -1000;
@@ -99,7 +99,7 @@ public final class Constants {
   }
 
   public static final class IntakeSetpoints {
-    public static final double intake = -0.7;
+    public static final double intake = -0.85;
     public static final double reverse = 0.7;
     public static final double slowReverse = 0.4;
   }
