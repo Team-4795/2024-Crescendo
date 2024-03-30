@@ -40,7 +40,7 @@ public class AlignPose {
         new LoggedTunableNumber("HeadingController/kD", 30*0.49/8);
 
     private static Translation2d velocity;
-    private static final PIDController rotationPID = new PIDController(30*0.6, 0, 30*0.49/8);
+    private static final PIDController rotationPID = new PIDController(30*0.6, 0, 30*0.42/8);
 
     private static State state = State.SPEAKER;
 

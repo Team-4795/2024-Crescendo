@@ -246,6 +246,7 @@ public class LEDs extends SubsystemBase {
     @Override
     public void periodic() {
     // updates LEDs to show state of intake
+
         switch(StateManager.getState()){
             case AMP:
                 color = Color.kMidnightBlue;
@@ -254,10 +255,14 @@ public class LEDs extends SubsystemBase {
                 color = Color.kCrimson;
                 break;
             case SPEAKER:
-                color = Color.kSkyBlue;
+                color = Color.kFuchsia;
                 break;
             default:
                 break;      
+        }
+
+        if(yellow){
+            color = Color.kYellow;
         }
         
         if (Indexer.getInstance().isStoring()){
