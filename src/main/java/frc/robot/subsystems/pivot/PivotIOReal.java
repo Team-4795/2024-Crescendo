@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
+import edu.wpi.first.math.MathUtil;
 // import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.Constants.CurrentLimits;
 
@@ -90,6 +91,7 @@ public class PivotIOReal implements PivotIO {
 
   @Override
   public void setVoltage(double volts) {
+    // volts = MathUtil.clamp(volts, -12, 12);
     inputVolts = volts;
     pivotLeft.setVoltage(volts);
   }
