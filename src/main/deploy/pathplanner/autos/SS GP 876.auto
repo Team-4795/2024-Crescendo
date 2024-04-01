@@ -64,20 +64,14 @@
                 "data": {
                   "pathName": "SS GP 876 P2"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Far Source"
-                }
               }
             ]
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.2
+            "name": "VisionAlign"
           }
         },
         {
@@ -114,20 +108,14 @@
                 "data": {
                   "pathName": "SS GP 876 P4"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Far Source"
-                }
               }
             ]
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.2
+            "name": "VisionAlign"
           }
         },
         {
@@ -183,7 +171,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.4
+            "waitTime": 0.5
           }
         },
         {

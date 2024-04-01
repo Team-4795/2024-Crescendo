@@ -49,8 +49,8 @@ public class GyroIOPigeon2 implements GyroIO{
         inputs.connected = BaseStatusSignal.refreshAll(yaw, pitch, roll, rate, accelX, accelY, accelZ).isOK();
         inputs.yaw = Rotation2d.fromDegrees(pigeon.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0));
         inputs.yawVelocity = -Units.degreesToRadians(rate.getValueAsDouble()) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
-        inputs.pitch = pitch.getValueAsDouble();
-        inputs.roll = roll.getValueAsDouble();
+        inputs.pitch = Units.degreesToRadians(pitch.getValueAsDouble());
+        inputs.roll = Units.degreesToRadians(roll.getValueAsDouble());
         inputs.accel = new double[] {accelX.getValueAsDouble() * G, accelY.getValueAsDouble() * G, accelZ.getValueAsDouble() * G};
     }
 

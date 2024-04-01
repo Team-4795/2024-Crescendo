@@ -30,15 +30,15 @@ public class AlignShuttle extends Command{
     private Alliance alliance;
 
     public AlignShuttle(){
-        addRequirements(drive, pivot, shooter, indexer);
+        addRequirements(drive, pivot, shooter);
     }
 
     @Override
     public void initialize() {
         DriverStation.getAlliance().ifPresent((alliance) -> {
-            AlignPose.setState(AlignPose.State.SHUTTLE);
             this.alliance = alliance;
         });
+        AlignPose.setState(AlignPose.State.SHUTTLE);
         pivot.setGoal(PivotSetpoints.shuttle);
     }
 

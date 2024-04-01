@@ -220,10 +220,10 @@ public class Drive extends SubsystemBase {
         if (ticks % 200 == 0) {
             updateGyro();
         } else {
-            var accel = new Translation3d(gyroInputs.accel[0], gyroInputs.accel[1], gyroInputs.accel[2])
-                .plus(new Translation3d(0, 0, -1.0).rotateBy(new Rotation3d(gyroInputs.roll, Units.degreesToRadians(gyroInputs.pitch), gyroInputs.yaw.getRotations())));
-            Logger.recordOutput("Gyro Accel", accel);
-            gyroVel = new Transform2d(new Translation2d(gyroVel.getX() + (accel.getX() - 0.037) * 9.81 * 0.02, gyroVel.getY() + (accel.getY() + 0.02) * 9.81 * 0.02), new Rotation2d());
+            // var accel = new Translation3d(gyroInputs.accel[0], gyroInputs.accel[1], gyroInputs.accel[2])
+            //     .plus(new Translation3d(0, 0, -9.80665).rotateBy(new Rotation3d(gyroInputs.roll, gyroInputs.pitch, gyroInputs.yaw.getRotations())));
+            // Logger.recordOutput("Gyro Accel", accel);
+            gyroVel = new Transform2d(new Translation2d(gyroVel.getX() + gyroInputs.accel[0] * 0.02, gyroVel.getY() + (gyroInputs.accel[1] + 0.23) * 0.02), new Rotation2d());
             gyroPos = new Pose2d(gyroPos.getTranslation(), getRotationHeading()).transformBy(gyroVel.times(0.02));
         }
 

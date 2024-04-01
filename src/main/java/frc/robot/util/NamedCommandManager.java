@@ -19,25 +19,25 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.2)); // change later
 
-        NamedCommands.registerCommand("AlignGP1", AutoCommands.setPivotAndShooter(0.25, 3000)); // change later
+        NamedCommands.registerCommand("AlignGP1", AutoCommands.setPivotAndShooter(0.265, 4000)); // change later
 
-        NamedCommands.registerCommand("AlignCommunityLine", AutoCommands.setPivotAndShooter(0.25, 3000)); // change later
+        NamedCommands.registerCommand("AlignCommunityLine", AutoCommands.setPivotAndShooter(0.25, 4000)); // change later
 
-        NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.2525, 3000)); // change later
+        NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.26, 4000)); // change later
 
-        NamedCommands.registerCommand("AlignGP3", AutoCommands.setPivotAndShooter(0.2, 3000)); // change later
+        NamedCommands.registerCommand("AlignGP3", AutoCommands.setPivotAndShooter(0.2, 4000)); // change later
 
-        NamedCommands.registerCommand("Align Far Source", AutoCommands.setPivotAndShooter(0.1115, 5000));
+        NamedCommands.registerCommand("Align Far Source", AutoCommands.setPivotAndShooter(0.135, 5000));
 
-        NamedCommands.registerCommand("Align Under Stage", AutoCommands.setPivotAndShooter(0.16, 3000));
+        NamedCommands.registerCommand("Align Under Stage", AutoCommands.setPivotAndShooter(0.17, 4500));
 
         NamedCommands.registerCommand("Stow", AutoCommands.SetPivotAngle(0.08));
 
         NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.6)); // change later
 
-        NamedCommands.registerCommand("Initialize", AutoCommands.initialize(3000));
+        NamedCommands.registerCommand("Initialize", AutoCommands.initialize(4000));
 
-        NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(3000));
+        NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(4000));
 
         NamedCommands.registerCommand("Stop Shooting", AutoCommands.stopShooting());
 

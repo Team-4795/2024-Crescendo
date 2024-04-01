@@ -175,15 +175,15 @@ public class RobotContainer {
       Commands.either(
         Commands.select(
           Map.ofEntries(
-            Map.entry(State.AMP, drive.AutoAlignAmp()),
+            Map.entry(State.AMP, drive.AutoAlignAmp().finallyDo(() -> StateManager.setState(State.SPEAKER))),
             Map.entry(State.SPEAKER, Commands.parallel(
               new AlignSpeaker(),
               pivot.aimSpeakerDynamic(),
-              shooter.rev()
+              shooter.revSpeaker()
             )),
-            Map.entry(State.SHUTTLE, pivot.aimShuttle().alongWith(shooter.revShuttle()))),
+            Map.entry(State.SHUTTLE, new AlignShuttle())),
             StateManager::getState),
-        shooter.rev()
+        shooter.revSpeaker()
           .alongWith(pivot.aim()),
         () -> StateManager.isAutomate()
       )
@@ -192,7 +192,7 @@ public class RobotContainer {
     // Auto Shoot
     OIConstants.driverController.rightTrigger(0.3)
       .and(isReady)
-      .whileTrue(indexer.forwards())
+      .whileTrue(indexer.forwards().finallyDo(() -> StateManager.setState(State.SPEAKER)))
       .onTrue(NoteVisualizer.shoot());
     
     //Drive robot relative
@@ -202,7 +202,7 @@ public class RobotContainer {
 
     // Normal Shoot (Might switch onto different button as a toggle mode)
     OIConstants.driverController.leftTrigger(0.3)
-      .whileTrue(indexer.forwards())
+      .whileTrue(indexer.forwards().finallyDo(() -> StateManager.setState(State.SPEAKER)))
       .onTrue(NoteVisualizer.shoot());
 
     // SADDEST BUTTON IN EXISTENCE ON PERSEUS

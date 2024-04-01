@@ -88,13 +88,14 @@ public class Shooter extends SubsystemBase {
         shootingSpeed = MathUtil.clamp(shootingSpeed, minSpeed, maxSpeed);
         topShootingSpeed = -shootingSpeed;
         bottomShootingSpeed = shootingSpeed;
-        return Commands.run(() -> {
-            setShootingSpeedRPM(topShootingSpeed, bottomShootingSpeed);
-        }).finallyDo(() -> setShootingSpeedRPM(0, 0));
-        // return startEnd(
-        //     () -> setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom),
+        // return Commands.startEnd(
+        //     () -> setShootingSpeedRPM(topShootingSpeed, bottomShootingSpeed),
         //     () -> setShootingSpeedRPM(0, 0)
         // );
+        return startEnd(
+            () -> setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom),
+            () -> setShootingSpeedRPM(0, 0)
+        );
     }
 
     public Command revAmp() {

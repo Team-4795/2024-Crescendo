@@ -57,6 +57,8 @@ public final class PivotController {
             Logger.recordOutput("Pivot/LQR D", loop.getController().getK().get(0, 1));
         }
 
+        normalController.setIntegratorRange(-1, 1);
+
         // normalController.enableContinuousInput(0, 2 * Math.PI);
     }
 
@@ -96,5 +98,9 @@ public final class PivotController {
         } else {
             return normalController.getSetpoint();
         }
+    }
+
+    public void setPID(double kp, double ki, double kd) {
+        normalController.setPID(kp, ki, kd);
     }
 }

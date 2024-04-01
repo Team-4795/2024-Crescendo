@@ -3,6 +3,8 @@ package frc.robot.subsystems.pivot;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.nio.channels.ServerSocketChannel;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -39,13 +41,17 @@ public class Pivot extends SubsystemBase {
     LoggedTunableNumber kA = new LoggedTunableNumber("Pivot/kA", PivotConstants.kA);
     LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", PivotConstants.kS);
 
-    LoggedTunableNumber regressionSetpoint = new LoggedTunableNumber("Pivot/Regression setpoint", 0.15);
+    LoggedTunableNumber regressionSetpoint = new LoggedTunableNumber("Pivot/Regression setpoint", 0.5);
 
     private SimpleMotorFeedforward motorFeedforward = new SimpleMotorFeedforward(
             kS.get(), kV.get(), kA.get());
 
     private PivotController controller = new PivotController();
 
+    @AutoLogOutput
+    private double lastGoal = 0;
+
+    @AutoLogOutput
     private double goal = 0;
     private final boolean disableArm = false;
     private boolean idleMode = true;
@@ -106,7 +112,11 @@ public class Pivot extends SubsystemBase {
     }
 
     public void setGoal(double goal) {
-        this.goal = MathUtil.clamp(goal, PivotConstants.lowLimit, PivotConstants.highLimit);
+        if (goal != this.goal) {
+            // this.lastGoal = this.goal;
+            
+            this.goal = MathUtil.clamp(goal, PivotConstants.lowLimit, PivotConstants.highLimit);
+        }
     }
 
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
@@ -183,12 +193,19 @@ public class Pivot extends SubsystemBase {
         return Util.epsilonEquals(goal, getPosition(), Tolerances.pivotSetpoint);
     }
 
+    public void setScheduledP() {
+        double distance = Math.abs(goal - controller.getSetpoint().position);
+        double x = MathUtil.clamp((0.3 - distance) / 0.3, 0, 1);
+        controller.setPID(x * kP.get(), kI.get(), kD.get());
+    }
+
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Pivot", inputs);
         visualizer.update(Units.radiansToDegrees(getTruePosition()), Units.radiansToDegrees(controller.getSetpoint().position + PivotConstants.angleOffset));
 
+        setScheduledP();
         LoggedTunableNumber.ifChanged(hashCode(), () -> motorFeedforward = new SimpleMotorFeedforward(kS.get(), kV.get(), kA.get()), kS, kV, kA);
 
         double v1 = controller.getSetpoint().velocity;
@@ -203,6 +220,7 @@ public class Pivot extends SubsystemBase {
             }
         }
 
+        Logger.recordOutput("Pivot/Position", getPosition());
         Logger.recordOutput("Pivot/PID Volts", PIDVolts);
         Logger.recordOutput("Pivot/FF Volts", FFVolts);
         Logger.recordOutput("Pivot/Static gain volts", linearFF(getPosition()));
@@ -226,7 +244,7 @@ public class Pivot extends SubsystemBase {
     // }
 
     public double linearFF(double angle) {
-        return -0.16 * angle;
+        return -0.14 * angle;
     }
 
     public void runVoltage(double volts) {
@@ -239,7 +257,9 @@ public class Pivot extends SubsystemBase {
 
     // Choose between motor position or absolute encoder position 
     public double getPosition() {
-        return inputs.pivotMotorPositionRads;
+        double distance = Math.abs(goal - controller.getSetpoint().position);
+        double x = MathUtil.clamp((0.3 - distance) / 0.3, 0, 1);
+        return inputs.pivotPositionRads * x + inputs.pivotMotorPositionRads * (1 - x);
     }
 
     public double getTruePosition() {
