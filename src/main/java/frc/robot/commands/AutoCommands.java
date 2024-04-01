@@ -65,10 +65,10 @@ public class AutoCommands {
     });
   }
 
-  public static Command setPivotAndShooter(double setpoint){
+  public static Command setPivotAndShooter(double setpoint, double shooterRPM){
     return Commands.parallel(
       Commands.runOnce(() -> pivot.setGoal(setpoint)),
-      Commands.runOnce(() -> shooter.setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom))
+      Commands.runOnce(() -> shooter.setShootingSpeedRPM(-shooterRPM, shooterRPM))
     );
   }
 
@@ -78,10 +78,10 @@ public class AutoCommands {
         SetPivotAngle(setpoint));
   };
 
-  public static Command initialize(double speed) {
+  public static Command initialize(double shooterRPM) {
     return Commands.parallel(
-      Commands.runOnce(() -> intake.setIntakeSpeed(-1)),
-      Commands.runOnce(() -> shooter.setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom))
+      Commands.runOnce(() -> intake.setIntakeSpeed(-0.9)),
+      Commands.runOnce(() -> shooter.setShootingSpeedRPM(-shooterRPM, shooterRPM))
     );
   }
 
@@ -98,10 +98,10 @@ public class AutoCommands {
     );
   }
 
-  public static Command runEverything(double speed) {
+  public static Command runEverything(double shooterRPM) {
     return Commands.parallel(
         Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
-        initialize(speed));
+        initialize(shooterRPM));
   }
 
   public static Command intake() {

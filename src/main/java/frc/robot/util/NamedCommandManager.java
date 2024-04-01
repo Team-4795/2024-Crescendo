@@ -19,25 +19,25 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.2)); // change later
 
-        NamedCommands.registerCommand("AlignGP1", AutoCommands.setPivotAndShooter(0.25)); // change later
+        NamedCommands.registerCommand("AlignGP1", AutoCommands.setPivotAndShooter(0.25, 3000)); // change later
 
-        NamedCommands.registerCommand("AlignCommunityLine", AutoCommands.setPivotAndShooter(0.25)); // change later
+        NamedCommands.registerCommand("AlignCommunityLine", AutoCommands.setPivotAndShooter(0.25, 3000)); // change later
 
-        NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.2525)); // change later
+        NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.2525, 3000)); // change later
 
-        NamedCommands.registerCommand("AlignGP3", AutoCommands.setPivotAndShooter(0.2)); // change later
+        NamedCommands.registerCommand("AlignGP3", AutoCommands.setPivotAndShooter(0.2, 3000)); // change later
 
-        NamedCommands.registerCommand("Align Far Source", AutoCommands.setPivotAndShooter(0.1115));
+        NamedCommands.registerCommand("Align Far Source", AutoCommands.setPivotAndShooter(0.1115, 5000));
 
-        NamedCommands.registerCommand("Align Under Stage", AutoCommands.setPivotAndShooter(0.16));
+        NamedCommands.registerCommand("Align Under Stage", AutoCommands.setPivotAndShooter(0.16, 3000));
 
         NamedCommands.registerCommand("Stow", AutoCommands.SetPivotAngle(0.08));
 
         NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.6)); // change later
 
-        NamedCommands.registerCommand("Initialize", AutoCommands.initialize(1));
+        NamedCommands.registerCommand("Initialize", AutoCommands.initialize(3000));
 
-        NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(1));
+        NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(3000));
 
         NamedCommands.registerCommand("Stop Shooting", AutoCommands.stopShooting());
 
@@ -53,9 +53,9 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("VisionAlign", AutoCommands.aimSpeakerDynamic(true));
                     
-        NamedCommands.registerCommand("Align Wing Amp", AutoCommands.setPivotAndShooter(0.133));
+        NamedCommands.registerCommand("Align Wing Amp", AutoCommands.setPivotAndShooter(0.133, 4500));
 
-        NamedCommands.registerCommand("Align Wing Amp Blue", AutoCommands.setPivotAndShooter(0.1295));
+        NamedCommands.registerCommand("Align Wing Amp Blue", AutoCommands.setPivotAndShooter(0.1295, 4500));
 
         NamedCommands.registerCommand("Detect Note 4", detectNote(4, true));
 

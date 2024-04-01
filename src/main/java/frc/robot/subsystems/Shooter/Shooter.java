@@ -3,11 +3,15 @@ package frc.robot.subsystems.Shooter;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.StateManager;
 import frc.robot.Constants.ShooterSetpoints;
 import frc.robot.Constants.Tolerances;
+import frc.robot.subsystems.MAXSwerve.Drive;
+import frc.robot.subsystems.vision.AprilTagVision.Vision;
 
 public class Shooter extends SubsystemBase {
     private ShooterIO io;
@@ -18,6 +22,11 @@ public class Shooter extends SubsystemBase {
 
     @AutoLogOutput
     private double bottomShootingSpeed = 0.0;
+
+    private double minDistance = 1.5;
+    private double minSpeed = 3000;
+    private double maxDistance = 5.0;
+    private double maxSpeed = 5000;
 
     private static Shooter instance;
     
@@ -74,10 +83,18 @@ public class Shooter extends SubsystemBase {
     }
 
     public Command revSpeaker() {
-        return startEnd(
-            () -> setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom),
-            () -> setShootingSpeedRPM(0, 0)
-        );
+        double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
+        double shootingSpeed = ((maxSpeed - minSpeed) / (maxDistance - minDistance)) * (distanceToSpeaker - minDistance) + minSpeed;
+        shootingSpeed = MathUtil.clamp(shootingSpeed, minSpeed, maxSpeed);
+        topShootingSpeed = -shootingSpeed;
+        bottomShootingSpeed = shootingSpeed;
+        return Commands.run(() -> {
+            setShootingSpeedRPM(topShootingSpeed, bottomShootingSpeed);
+        }).finallyDo(() -> setShootingSpeedRPM(0, 0));
+        // return startEnd(
+        //     () -> setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom),
+        //     () -> setShootingSpeedRPM(0, 0)
+        // );
     }
 
     public Command revAmp() {
