@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.MAXSwerve;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 
@@ -21,8 +22,10 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -85,14 +88,14 @@ public class Drive extends SubsystemBase {
 
       // Odometry class for tracking robot pose
     SwerveDrivePoseEstimator m_poseEstimator;
-    private EstimatedRobotPose visionPose = new EstimatedRobotPose(new Pose3d(), m_currentRotation, null, null);
+
+    private Transform2d lastGyroVel = new Transform2d();
+    private Transform2d gyroVel = new Transform2d();
+    @AutoLogOutput
+    private Pose2d gyroPos = new Pose2d();
+    private int ticks = 0; 
 
     private Vision vision;
-
-    //Cam indexes for vision
-    private int barbaryFig = 0;
-    private int saguaro = 1;
-    private int goldenBarrel = 2;
 
     // Odometry class for tracking robot pose
     SwerveDriveOdometry m_odometry;
@@ -198,6 +201,12 @@ public class Drive extends SubsystemBase {
         }, this));
     }
 
+    private void updateGyro() {
+        lastGyroVel = new Transform2d(getTranslationVelocity(), new Rotation2d());
+        gyroVel = lastGyroVel;
+        gyroPos = getPose();
+    }
+
     @Override
     public void periodic() {
         gyro.updateInputs(gyroInputs);
@@ -206,6 +215,17 @@ public class Drive extends SubsystemBase {
         m_frontRight.updateInputs();
         m_rearLeft.updateInputs();
         m_rearRight.updateInputs();
+
+        ticks += 1;
+        if (ticks % 200 == 0) {
+            updateGyro();
+        } else {
+            var accel = new Translation3d(gyroInputs.accel[0], gyroInputs.accel[1], gyroInputs.accel[2])
+                .plus(new Translation3d(0, 0, -1.0).rotateBy(new Rotation3d(gyroInputs.roll, Units.degreesToRadians(gyroInputs.pitch), gyroInputs.yaw.getRotations())));
+            Logger.recordOutput("Gyro Accel", accel);
+            gyroVel = new Transform2d(new Translation2d(gyroVel.getX() + (accel.getX() - 0.037) * 9.81 * 0.02, gyroVel.getY() + (accel.getY() + 0.02) * 9.81 * 0.02), new Rotation2d());
+            gyroPos = new Pose2d(gyroPos.getTranslation(), getRotationHeading()).transformBy(gyroVel.times(0.02));
+        }
 
         m_poseEstimator.update(
                 gyroInputs.yaw,
@@ -232,7 +252,6 @@ public class Drive extends SubsystemBase {
             hashCode(), () -> rotationController.setTolerance(thetaTolerance.get()), thetaTolerance);
 
         Logger.recordOutput("Estimated Pose", getPose());
-        Logger.recordOutput("Vision pose", visionPose.estimatedPose);
         Logger.recordOutput("Vision/Distance to speaker", vision.getDistancetoSpeaker(getPose()));
         
         // Read wheel deltas from each module

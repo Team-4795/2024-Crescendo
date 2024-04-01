@@ -34,7 +34,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  */
 public final class Constants {
   // Mode of the robot, set to Mode.REPLAY for replay
-  public static final Mode currentMode = Mode.fromState();
+  public static final Mode currentMode = Mode.REPLAY;
   public static final boolean tuningMode = false;
   public static final boolean hasVision = true;
   public static final int tryConfigCount = 5;
@@ -148,6 +148,7 @@ public final class Constants {
   public static final class FieldConstants {
     public static final double speakerHeight = 2; //meters
     public static final double fieldLength = Units.inchesToMeters(651.223);
+    public static final double fieldWidth = Units.inchesToMeters(323.277);
     public static final Pose2d BLUE_SOURCE = new Pose2d(15.9,0.4, Rotation2d.fromDegrees(-45));
     public static final Pose2d RED_SOURCE = new Pose2d(0.6,0.25, Rotation2d.fromDegrees(45));
     public static final Pose2d BLUE_SHUTTLE = new Pose2d(2.9, 7, new Rotation2d());

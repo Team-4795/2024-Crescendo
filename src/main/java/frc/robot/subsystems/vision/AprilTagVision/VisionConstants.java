@@ -11,6 +11,12 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 
 public class VisionConstants {
+    public static final double fieldBorderMargin = 0.5;
+    public static final double zMargin = 0.75;
+
+    public static final double xyStdDevSingleTag = 0.03;
+    public static final double xyStdDevMultiTag = 0.012;
+
     public static final String[] cameraIds =
     new String[] {
         "Barbary Fig",

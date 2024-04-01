@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
+import static frc.robot.subsystems.vision.AprilTagVision.VisionConstants.*;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -15,6 +17,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.MAXSwerve.Drive;
 
 public class Vision extends SubsystemBase {
@@ -81,10 +84,6 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    public double getVisionStd(double distance) {
-        return distance * 0.25;
-    }
-
     public void periodic() {
         for (int i = 0; i < io.length; i++) {
             io[i].updateInputs(inputs[i]);
@@ -96,6 +95,14 @@ public class Vision extends SubsystemBase {
         for (int i = 0; i < io.length; i++) {
             for (int p = 0; p < inputs[i].pose.length; p++) {
                 Pose3d robotPose = inputs[i].pose[p];
+
+                if (robotPose.getX() < -fieldBorderMargin
+                    || robotPose.getX() > FieldConstants.fieldLength + fieldBorderMargin
+                    || robotPose.getY() < -fieldBorderMargin
+                    || robotPose.getY() > FieldConstants.fieldWidth + fieldBorderMargin
+                    || robotPose.getZ() < -zMargin
+                    || robotPose.getZ() > zMargin
+                ) continue;
 
                 List<Pose3d> tagPoses = new ArrayList<>();
                 for (int tag : inputs[i].tags) {
@@ -110,9 +117,12 @@ public class Vision extends SubsystemBase {
                 }
 
                 distance /= tagPoses.size();
-
-                double xyStdDev = getVisionStd(distance) / tagPoses.size();
+                double xyStdDev = (tagPoses.size() == 1 ? xyStdDevSingleTag : xyStdDevMultiTag) * Math.pow(distance, 2);
                 var stddevs = VecBuilder.fill(xyStdDev, xyStdDev, Units.degreesToRadians(40));
+
+                Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/Avg distance", distance);
+                Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/xy std dev", xyStdDev);
+                
                 Drive.getInstance().addVisionMeasurement(robotPose.toPose2d(), inputs[i].timestamp[p], stddevs);
             }
         }
