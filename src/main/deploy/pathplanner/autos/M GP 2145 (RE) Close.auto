@@ -1,27 +1,20 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.2782342053414837,
+      "y": 5.574358195791997
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "VisionAlign"
-                }
-              }
-            ]
+            "name": "AlignClose"
           }
         },
         {
@@ -33,13 +26,75 @@
         {
           "type": "wait",
           "data": {
+            "waitTime": 0.7
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunEverything"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.4
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "M GP2145 P1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AlignGP2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
             "waitTime": 0.2
           }
         },
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "M GP2145 P2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AlignGP1"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.7
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Score"
+            "name": "Stop Shooting"
           }
         },
         {
@@ -53,7 +108,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "AS GP456 P1"
+                        "pathName": "M GP2145 P3"
                       }
                     },
                     {
@@ -75,21 +130,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Closer AS GP45 P2"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Closer M GP214 P4"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "VisionAlign 5k"
+            "name": "0.24"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.3
+            "waitTime": 0.7
           }
         },
         {
@@ -109,7 +171,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Closer AS GP45 P3"
+                        "pathName": "Closer M GP214 P5"
                       }
                     },
                     {
@@ -128,35 +190,11 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Closer AS GP45 P4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "VisionAlign 5k"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.3
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score"
           }
         }
       ]
     }
   },
-  "folder": "Amp",
+  "folder": "Middle",
   "choreoAuto": false
 }

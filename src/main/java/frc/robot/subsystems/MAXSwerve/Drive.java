@@ -77,7 +77,7 @@ public class Drive extends SubsystemBase {
     //PID controllers for auto-alignment
     private static final LoggedTunableNumber linearkP = new LoggedTunableNumber("AutoAlign/drivekP", 1.0);
     private static final LoggedTunableNumber linearkD = new LoggedTunableNumber("AutoAlign/drivekD", 0.0);
-    private static final LoggedTunableNumber thetakP = new LoggedTunableNumber("AutoAlign/thetakP", 1.0);
+    private static final LoggedTunableNumber thetakP = new LoggedTunableNumber("AutoAlign/thetakP", 3.0);
     private static final LoggedTunableNumber thetakD = new LoggedTunableNumber("AutoAlign/thetakD", 0.5);
     private static final LoggedTunableNumber linearTolerance = new LoggedTunableNumber(
             "AutoAlign/translationalTolerance", 0.1);

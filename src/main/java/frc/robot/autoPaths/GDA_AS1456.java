@@ -19,7 +19,7 @@ public class GDA_AS1456 {
         return Commands.sequence(
             Commands.parallel(
                 AutoCommands.rotateToSpeaker(),
-                AutoCommands.aimSpeakerDynamic(true)
+                AutoCommands.aimSpeakerDynamic(true, 5000)
             ),
             AutoCommands.score(),
 
@@ -29,7 +29,7 @@ public class GDA_AS1456 {
                     Commands.sequence(
                         AutoCommands.followTrajectory(paths.get(1)),
                         Commands.waitSeconds(0.2)
-                    ), AutoCommands.aimSpeakerDynamic(false)
+                    ), AutoCommands.aimSpeakerDynamic(false, 5000)
                 ),
                 AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(4)),
@@ -40,7 +40,7 @@ public class GDA_AS1456 {
                     Commands.sequence(
                         AutoCommands.followTrajectory(paths.get(3)), 
                         Commands.waitSeconds(0.2)
-                    ), AutoCommands.aimSpeakerDynamic(false)
+                    ), AutoCommands.aimSpeakerDynamic(false, 5000)
                 ),
                 AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(5)),
@@ -49,7 +49,7 @@ public class GDA_AS1456 {
                 AutoCommands.intakeTrajectory(paths.get(4)),
                 AutoCommands.SetPivotAngle(PivotSetpoints.stow),
                 AutoCommands.followTrajectory(paths.get(5)),
-                AutoCommands.aimSpeakerDynamic(true)
+                AutoCommands.aimSpeakerDynamic(true, 5000)
             ),
             AutoCommands.score()
         );

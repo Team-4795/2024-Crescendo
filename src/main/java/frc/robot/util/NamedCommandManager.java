@@ -16,13 +16,13 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.2)); // change later
 
-        NamedCommands.registerCommand("AlignGP1", AutoCommands.setPivotAndShooter(0.265, 4000)); // change later
+        NamedCommands.registerCommand("AlignGP1", AutoCommands.setPivotAndShooter(0.275, 4000)); // change later
 
         NamedCommands.registerCommand("AlignCommunityLine", AutoCommands.setPivotAndShooter(0.25, 4000)); // change later
 
-        NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.26, 4000)); // change later
+        NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.27, 4000)); // change later
 
-        NamedCommands.registerCommand("AlignGP3", AutoCommands.setPivotAndShooter(0.2, 4000)); // change later
+        NamedCommands.registerCommand("AlignGP3", AutoCommands.setPivotAndShooter(0.21, 4000)); // change later
 
         NamedCommands.registerCommand("Align Far Source", AutoCommands.setPivotAndShooter(0.135, 5000));
 
@@ -46,9 +46,13 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("SetIntakePose", AutoCommands.SetPivotAngle(0.6));
 
+        NamedCommands.registerCommand("0.24", AutoCommands.setPivotAndShooter(0.24, 4500));
+
         NamedCommands.registerCommand("Align Speaker", AutoCommands.rotateToSpeaker());
 
-        NamedCommands.registerCommand("VisionAlign", AutoCommands.aimSpeakerDynamic(true));
+        NamedCommands.registerCommand("VisionAlign", AutoCommands.aimSpeakerDynamic(true, 4500));
+
+        NamedCommands.registerCommand("VisionAlign 5k", AutoCommands.aimSpeakerDynamic(true, 5000));
                     
         NamedCommands.registerCommand("Align Wing Amp", AutoCommands.setPivotAndShooter(0.133, 4500));
 

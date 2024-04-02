@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 7.825244751773384,
-        "y": 2.2
+        "x": 7.7315580594071305,
+        "y": 2.4007214918852084
       },
       "prevControl": {
-        "x": 7.263124597575872,
-        "y": 1.7198557016229583
+        "x": 7.169437905209619,
+        "y": 1.9205771935081666
       },
       "nextControl": null,
       "isLocked": false,
@@ -69,7 +69,7 @@
   "reversed": false,
   "folder": "SS 8765",
   "previewStartingState": {
-    "rotation": -30.409479236944293,
+    "rotation": -45.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

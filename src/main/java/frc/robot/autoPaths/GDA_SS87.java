@@ -17,7 +17,7 @@ public class GDA_SS87 {
 
         return Commands.sequence(
             AutoCommands.rotateToSpeaker(),
-            AutoCommands.aimSpeakerDynamic(true),
+            AutoCommands.aimSpeakerDynamic(true, 5000),
             AutoCommands.score(),
 
             Commands.sequence(
@@ -27,7 +27,7 @@ public class GDA_SS87 {
                         //AutoCommands.SetPivotAngle(.129),
                         AutoCommands.followTrajectory(paths.get(1))
                     ),
-            AutoCommands.aimSpeakerDynamic(true),
+            AutoCommands.aimSpeakerDynamic(true, 5000),
             AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(8)),
 
@@ -39,7 +39,7 @@ public class GDA_SS87 {
                         //AutoCommands.SetPivotAngle(.129),
                         AutoCommands.followTrajectory(paths.get(3))
                     ),
-            AutoCommands.aimSpeakerDynamic(true),
+            AutoCommands.aimSpeakerDynamic(true, 5000),
             AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(7)),
 

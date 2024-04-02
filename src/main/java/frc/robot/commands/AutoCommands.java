@@ -54,7 +54,7 @@ public class AutoCommands {
 
   public static Command score() {
     return Commands.sequence(
-          indexer.forwards().withTimeout(0.4).alongWith(Commands.waitSeconds(0.1).andThen(NoteVisualizer.shoot())),
+          indexer.forwards().withTimeout(0.5).alongWith(Commands.waitSeconds(0.1).andThen(NoteVisualizer.shoot())),
           Commands.runOnce(() -> shooter.setShootingSpeedRPM(0.0, 0.0))
     );
   }
@@ -107,28 +107,28 @@ public class AutoCommands {
   public static Command intake() {
     return Commands.sequence(
       Commands.parallel(
-        Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
+        indexer.forwards(),
         Commands.runOnce(() -> pivot.setGoal(0.3))
-      ),
-      Commands.either(Commands.waitUntil(indexer::isStoring), Commands.waitSeconds(6), Robot::isReal),
-      indexer.reverse().withTimeout(0.05));
+      ).until(indexer::isStoring),
+      // Commands.either(Commands.waitUntil(indexer::isStoring), Commands.waitSeconds(6), Robot::isReal),
+      indexer.reverse().withTimeout(0.1));
   }
 
   public static Command intakeWithoutPivot(){
     return Commands.sequence(
       Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
       Commands.either(Commands.waitUntil(indexer::isStoring), Commands.waitSeconds(1), Robot::isReal),
-      indexer.reverse().withTimeout(0.05));
+      indexer.reverse().withTimeout(0.1));
   }
 
   public static Command sensingPiece() {
     return Commands.waitUntil(() -> indexer.isStoring());
   }
 
-  public static Command aimSpeakerDynamic(boolean timeout){
+  public static Command aimSpeakerDynamic(boolean timeout, double speed){
     double timeLimit = (timeout) ? 0.5 : 15;
     return Commands.parallel(
-      Commands.runOnce(() -> shooter.setShootingSpeedRPM(ShooterSetpoints.speakerTop, ShooterSetpoints.speakerBottom)),
+      Commands.runOnce(() -> shooter.setShootingSpeedRPM(-speed, speed)),
       Commands.run(() -> {
               double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
               if(distanceToSpeaker < 6.2){

@@ -16,20 +16,20 @@ public class GDA_M2145 {
         paths = PathPlannerAuto.getPathGroupFromAutoFile("M GP 2145");
 
         return Commands.sequence(
-            AutoCommands.aimSpeakerDynamic(true),
+            AutoCommands.aimSpeakerDynamic(true, 5000),
             AutoCommands.score(),
 
         Commands.sequence(
             AutoCommands.intakeTrajectory(paths.get(0)),
             Commands.waitSeconds(0.2), 
-            AutoCommands.aimSpeakerDynamic(true)),
+            AutoCommands.aimSpeakerDynamic(true, 5000)),
 
             AutoCommands.score(),
             
         Commands.sequence(
             AutoCommands.intakeTrajectory(paths.get(1)),
             Commands.waitSeconds(0.2)),
-            AutoCommands.aimSpeakerDynamic(true),
+            AutoCommands.aimSpeakerDynamic(true, 5000),
 
             AutoCommands.score(),
             
@@ -40,7 +40,7 @@ public class GDA_M2145 {
                         AutoCommands.followTrajectory(paths.get(3)), 
                         Commands.waitSeconds(0.2)
                     ), 
-                    AutoCommands.aimSpeakerDynamic(true)
+                    AutoCommands.aimSpeakerDynamic(true, 5000)
                 ),
                 AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(4)),
@@ -51,7 +51,7 @@ public class GDA_M2145 {
                     Commands.sequence(
                         AutoCommands.followTrajectory(paths.get(5)), 
                         Commands.waitSeconds(0.2)
-                    ), AutoCommands.aimSpeakerDynamic(true)
+                    ), AutoCommands.aimSpeakerDynamic(true, 5000)
                 ),
                 AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(5)));

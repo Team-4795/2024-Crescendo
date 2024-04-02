@@ -34,7 +34,7 @@ public final class PivotConstants {
     public static final double velocityConversionFactor = Math.PI * 2.0;
 
     public static final double gearing = 144;
-    public static final double lowLimit = Units.degreesToRadians(3);
+    public static final double lowLimit = Units.degreesToRadians(2);
     public static final double highLimit = Units.degreesToRadians(80);
     public static final double height = 0.2794;
     public static final double offset = 0.25;
@@ -42,12 +42,13 @@ public final class PivotConstants {
     public static final InterpolatingDoubleTreeMap armAngleMap = new InterpolatingDoubleTreeMap();
 
     static {
-        armAngleMap.put(1.2, 0.56);
-        armAngleMap.put(1.87, 0.42);
-        armAngleMap.put(2.6, 0.27);
-        armAngleMap.put(3.25, 0.22);
-        armAngleMap.put(3.87, 0.18);
-        armAngleMap.put(5.0, 0.121);
+        armAngleMap.put(1.17, 0.6);
+        armAngleMap.put(2.0, 0.4);
+        armAngleMap.put(3.29, 0.2);
+        armAngleMap.put(3.88, 0.172);
+        armAngleMap.put(4.2, 0.14);
+        armAngleMap.put(5.0, 0.1);
+        armAngleMap.put(5.83, 0.07);
         // armAngleMap.put(5.7, 0.112);
         // armAngleMap.put(6.1, 0.107);
         // armAngleMap.put(6.4, 0.095);
