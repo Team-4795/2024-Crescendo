@@ -136,10 +136,8 @@ public class RobotContainer {
     // autoChooser.addOption("Pivot SysIs (Dynamic Reverse)", pivot.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     // autoChooser.addOption("Pivot Model", new ArmFeedForwardCharacterization(pivot, (volts) -> pivot.runVoltage(volts), () -> pivot.getVelocity(), () -> pivot.getPosition(), (x) -> 0.0));
     autoChooser.addDefaultOption("TEST - SS GP 8765", GDA_SS8765.load());
-    autoChooser.addOption("TEST - AS GP 1456", GDA_AS1456.load());
-    autoChooser.addOption("TEST - M GP 2145", GDA_M2145.load());
+    autoChooser.addOption("TEST - AS GP 456", GDA_AS1456.load());
     autoChooser.addOption("TEST - M GP 32145", GDA_M32145.load());
-    autoChooser.addOption("Test - M GP 2145 RunEverything", GDA_M2145_RunEverything.load());
 
 
     // Configure the button bindings

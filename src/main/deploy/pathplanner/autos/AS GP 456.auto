@@ -33,38 +33,7 @@
         {
           "type": "named",
           "data": {
-            "name": "RunEverything"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "AS GP1456 P1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align GP1"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.3
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop Shooting"
+            "name": "Score"
           }
         },
         {
@@ -78,7 +47,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "AS GP1456 P2"
+                        "pathName": "AS GP456 P1"
                       }
                     },
                     {
@@ -106,7 +75,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AS GP1456 P3"
+                  "pathName": "AS GP456 P2"
                 }
               },
               {
@@ -141,7 +110,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "AS GP1456 P4"
+                        "pathName": "AS GP456 P3"
                       }
                     },
                     {
@@ -169,7 +138,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AS GP1456 P5"
+                  "pathName": "AS GP456 P4"
                 }
               },
               {
@@ -185,6 +154,75 @@
           "type": "wait",
           "data": {
             "waitTime": 0.2
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "AS GP456 P5"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AS GP456 P6"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stow"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align Under Stage"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.4
           }
         },
         {

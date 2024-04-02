@@ -3,8 +3,6 @@ package frc.robot.subsystems.pivot;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
-import java.nio.channels.ServerSocketChannel;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -40,6 +38,9 @@ public class Pivot extends SubsystemBase {
     LoggedTunableNumber kV = new LoggedTunableNumber("Pivot/kV", PivotConstants.kV);
     LoggedTunableNumber kA = new LoggedTunableNumber("Pivot/kA", PivotConstants.kA);
     LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", PivotConstants.kS);
+
+    LoggedTunableNumber encoderDistance = new LoggedTunableNumber("Pivot/Rel. Encoder Interpolation Distance", 0.4);
+    LoggedTunableNumber absEncoderDistance = new LoggedTunableNumber("Pivot/Abs. Encoder Interpolation Distance", 0.0);
 
     LoggedTunableNumber regressionSetpoint = new LoggedTunableNumber("Pivot/Regression setpoint", 0.5);
 
@@ -258,7 +259,9 @@ public class Pivot extends SubsystemBase {
     // Choose between motor position or absolute encoder position 
     public double getPosition() {
         double distance = Math.abs(goal - controller.getSetpoint().position);
-        double x = MathUtil.clamp((0.3 - distance) / 0.3, 0, 1);
+        double x = (1.0 / (encoderDistance.get() - absEncoderDistance.get())) * (distance - absEncoderDistance.get());
+        x = MathUtil.clamp(x, 0, 1);
+        
         return inputs.pivotPositionRads * x + inputs.pivotMotorPositionRads * (1 - x);
     }
 

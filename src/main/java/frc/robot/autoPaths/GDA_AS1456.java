@@ -14,7 +14,7 @@ public class GDA_AS1456 {
     PathPlannerAuto auto;
 
     public static Command load(){
-        paths = PathPlannerAuto.getPathGroupFromAutoFile("AS GP 1456");
+        paths = PathPlannerAuto.getPathGroupFromAutoFile("AS GP 456");
         
         return Commands.sequence(
             Commands.parallel(
@@ -22,19 +22,12 @@ public class GDA_AS1456 {
                 AutoCommands.aimSpeakerDynamic(true)
             ),
             AutoCommands.score(),
-            
-            Commands.sequence(
-                AutoCommands.intakeTrajectory(paths.get(0)),
-                Commands.waitSeconds(0.2),
-                AutoCommands.aimSpeakerDynamic(true),
-                AutoCommands.score()
-            ),
 
             Commands.sequence(
-                AutoCommands.intakeTrajectory(paths.get(1)),
+                AutoCommands.intakeTrajectory(paths.get(0)),
                 Commands.deadline(
                     Commands.sequence(
-                        AutoCommands.followTrajectory(paths.get(2)),
+                        AutoCommands.followTrajectory(paths.get(1)),
                         Commands.waitSeconds(0.2)
                     ), AutoCommands.aimSpeakerDynamic(false)
                 ),
@@ -42,10 +35,10 @@ public class GDA_AS1456 {
             ).until(() -> AutoGamepieces.isGone(4)),
 
             Commands.sequence(
-                AutoCommands.intakeTrajectory(paths.get(3)),
+                AutoCommands.intakeTrajectory(paths.get(2)),
                 Commands.deadline(
                     Commands.sequence(
-                        AutoCommands.followTrajectory(paths.get(4)), 
+                        AutoCommands.followTrajectory(paths.get(3)), 
                         Commands.waitSeconds(0.2)
                     ), AutoCommands.aimSpeakerDynamic(false)
                 ),
@@ -53,9 +46,9 @@ public class GDA_AS1456 {
             ).until(() -> AutoGamepieces.isGone(5)),
 
             Commands.sequence(
-                AutoCommands.intakeTrajectory(paths.get(5)),
+                AutoCommands.intakeTrajectory(paths.get(4)),
                 AutoCommands.SetPivotAngle(PivotSetpoints.stow),
-                AutoCommands.followTrajectory(paths.get(6)),
+                AutoCommands.followTrajectory(paths.get(5)),
                 AutoCommands.aimSpeakerDynamic(true)
             ),
             AutoCommands.score()

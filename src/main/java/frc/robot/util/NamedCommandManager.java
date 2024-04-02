@@ -5,12 +5,9 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.Mode;
-import frc.robot.Constants.ShooterSetpoints;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.autoPaths.AutoGamepieces;
 import frc.robot.commands.AutoCommands;
-import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.vision.intakeCam.IntakeCamVision;
 
 public class NamedCommandManager {
