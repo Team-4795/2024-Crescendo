@@ -41,15 +41,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Intake"
+                  "pathName": "Closer SS GP 87 P3"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "SS GP 876 P1"
+                  "name": "Intake"
                 }
               }
             ]
@@ -62,7 +62,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Closer SS GP 87 P2"
+                  "pathName": "Closer SS GP 87 P4"
                 }
               }
             ]
@@ -91,15 +91,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "Closer SS GP 87 P3"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SS GP 876 P1"
                 }
               }
             ]
@@ -112,7 +112,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Closer SS GP 87 P4"
+                  "pathName": "Closer SS GP 87 P2"
                 }
               }
             ]
