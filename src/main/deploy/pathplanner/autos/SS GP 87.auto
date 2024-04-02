@@ -62,16 +62,16 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SS GP 876 P2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Far Source"
+                  "pathName": "Closer SS GP 876 P2"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionAlign"
           }
         },
         {
@@ -112,16 +112,16 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SS GP 876 P4"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Far Source"
+                  "pathName": "Closer SS GP 876 P4"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionAlign"
           }
         },
         {
