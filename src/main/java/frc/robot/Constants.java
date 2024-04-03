@@ -34,7 +34,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  */
 public final class Constants {
   // Mode of the robot, set to Mode.REPLAY for replay
-  public static final Mode currentMode = Mode.fromState();
+  public static final Mode currentMode = Mode.REPLAY;
   public static final boolean tuningMode = false;
   public static final boolean hasVision = true;
   public static final int tryConfigCount = 5;

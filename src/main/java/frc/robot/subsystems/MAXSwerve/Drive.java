@@ -16,6 +16,8 @@ import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -32,6 +34,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
@@ -472,6 +475,11 @@ public class Drive extends SubsystemBase {
         currentState[3] = m_rearRight.getFieldRelativeState(gyroInputs.yaw);
         ChassisSpeeds speed = DriveConstants.kDriveKinematics.toChassisSpeeds(currentState);
         return new Translation2d(speed.vxMetersPerSecond, speed.vyMetersPerSecond);
+    }
+
+    //(X, Y) - ignore Z 
+    public Vector<N2> getIMUAcceleration() {
+        return VecBuilder.fill(gyroInputs.accel[0], gyroInputs.accel[1]);
     }
 
     /**

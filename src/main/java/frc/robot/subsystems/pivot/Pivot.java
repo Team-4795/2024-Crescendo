@@ -7,10 +7,14 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,6 +42,8 @@ public class Pivot extends SubsystemBase {
     LoggedTunableNumber kV = new LoggedTunableNumber("Pivot/kV", PivotConstants.kV);
     LoggedTunableNumber kA = new LoggedTunableNumber("Pivot/kA", PivotConstants.kA);
     LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", PivotConstants.kS);
+
+    LoggedTunableNumber stabilizer = new LoggedTunableNumber("Pivot/Accel Stability", 0.125);
 
     LoggedTunableNumber encoderDistance = new LoggedTunableNumber("Pivot/Rel. Encoder Interpolation Distance", 0.4);
     LoggedTunableNumber absEncoderDistance = new LoggedTunableNumber("Pivot/Abs. Encoder Interpolation Distance", 0.0);
@@ -217,11 +223,12 @@ public class Pivot extends SubsystemBase {
             if (DriverStation.isDisabled()) {
                 io.setVoltage(0);
             } else {
-                io.setVoltage(PIDVolts + FFVolts + linearFF(getPosition()));
+                io.setVoltage(PIDVolts + FFVolts + linearFF(getPosition()) + getAccelerationCompensation());
             }
         }
 
         Logger.recordOutput("Pivot/Position", getPosition());
+        Logger.recordOutput("Pivot/Stabilization Compensation Voltage", getAccelerationCompensation());
         Logger.recordOutput("Pivot/PID Volts", PIDVolts);
         Logger.recordOutput("Pivot/FF Volts", FFVolts);
         Logger.recordOutput("Pivot/Static gain volts", linearFF(getPosition()));
@@ -263,6 +270,16 @@ public class Pivot extends SubsystemBase {
         x = MathUtil.clamp(x, 0, 1);
         
         return inputs.pivotPositionRads * x + inputs.pivotMotorPositionRads * (1 - x);
+    }
+
+    public double getAccelerationCompensation(){
+        var driveAccel = Drive.getInstance().getIMUAcceleration();
+        Rotation2d pivotHeading = Drive.getInstance().getRotationHeading().plus(Rotation2d.fromDegrees(180));
+        Vector<N2> pivotVector = VecBuilder.fill(pivotHeading.getCos(), pivotHeading.getSin());
+        var pivotAccel = driveAccel.projection(pivotVector);
+        double scalar = (pivotAccel.dot(pivotVector) >= 0) ? -1.0 : 1.0;
+        double accel = pivotAccel.norm() * Math.sin(getTruePosition());
+        return stabilizer.get() * scalar * accel;
     }
 
     public double getTruePosition() {
