@@ -133,7 +133,7 @@ public class RobotContainer {
     // autoChooser.addOption("Pivot SysIs (Quasistatic Forward)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     // autoChooser.addOption("Pivot SysIs (Quasistatic Reverse)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
     // autoChooser.addOption("Pivot SysIs (Dynamic Forward)", pivot.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    // autoChooser.addOption("Pivot SysIs (Dynamic Reverse)", pivot.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption("Pivot SysIs (Dynamic everse)", pivot.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     // autoChooser.addOption("Pivot Model", new ArmFeedForwardCharacterization(pivot, (volts) -> pivot.runVoltage(volts), () -> pivot.getVelocity(), () -> pivot.getPosition(), (x) -> 0.0));
     autoChooser.addDefaultOption("TEST - SS GP 8765", GDA_SS8765.load());
     autoChooser.addOption("TEST - AS GP 456", GDA_AS1456.load());
@@ -213,30 +213,31 @@ public class RobotContainer {
     OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));
 
     // Non auto amp align
-    OIConstants.driverController.y().whileTrue(pivot.aimAmp().alongWith(shooter.revAmp()));
+    OIConstants.operatorController.povLeft().whileTrue(pivot.aimAmp().alongWith(shooter.revAmp()));
     
-    // State swapping
-    // Make sure there is no funkiness when pressing or unpressing both buttons
+    // Speaker mode
     OIConstants.operatorController.leftBumper()
       .and(OIConstants.operatorController.rightBumper().negate()).debounce(0.1)
       .onTrue(Commands.runOnce(() -> StateManager.setState(State.SPEAKER)));
 
+    // Amp mode
     OIConstants.operatorController.rightBumper()
       .and(OIConstants.operatorController.leftBumper().negate()).debounce(0.1) 
       .onTrue(Commands.runOnce(() -> StateManager.setState(State.AMP)));
 
+    // Shuttle mode
     OIConstants.operatorController.leftBumper()
       .and(OIConstants.operatorController.rightBumper())
       .onTrue(Commands.runOnce(() -> StateManager.setState(State.SHUTTLE)));
 
-    //Source Intake
+    // Source Intake
     OIConstants.operatorController.povUp().onTrue(
         Commands.parallel(
             shooter.slowReverse(),
             indexer.slowReverse(),
             pivot.aimSource()));
     
-    //Ground Intake
+    // Ground Intake
     OIConstants.operatorController.povDown().or(OIConstants.operatorController.povDownLeft()).or(OIConstants.operatorController.povDownRight())
     .whileTrue(
         Commands.parallel(

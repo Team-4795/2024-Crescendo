@@ -108,10 +108,9 @@ public class AutoCommands {
     return Commands.sequence(
       Commands.parallel(
         indexer.forwards(),
-        Commands.runOnce(() -> pivot.setGoal(0.3))
-      ).until(indexer::isStoring),
-      // Commands.either(Commands.waitUntil(indexer::isStoring), Commands.waitSeconds(6), Robot::isReal),
-      indexer.reverse().withTimeout(0.1));
+        Commands.runOnce(() -> pivot.setGoal(0.3)),
+        Commands.runOnce(() -> intake.setIntakeSpeed(-1))
+      ).until(indexer::isStoring));
   }
 
   public static Command intakeWithoutPivot(){
@@ -131,7 +130,7 @@ public class AutoCommands {
       Commands.runOnce(() -> shooter.setShootingSpeedRPM(-speed, speed)),
       Commands.run(() -> {
               double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
-              if(distanceToSpeaker < 6.2){
+              if(distanceToSpeaker < 5.5){
                 pivot.setGoal(PivotConstants.armAngleMap.get(distanceToSpeaker));
               }
       }).withTimeout(timeLimit)

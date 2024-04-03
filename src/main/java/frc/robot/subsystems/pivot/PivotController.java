@@ -16,9 +16,10 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import frc.robot.Constants;
+import frc.robot.util.LoggedProfiledPIDController;
 
 public final class PivotController {
-    private ProfiledPIDController normalController = new ProfiledPIDController(
+    private LoggedProfiledPIDController normalController = new LoggedProfiledPIDController(
         PivotConstants.kP,
         PivotConstants.kI, 
         PivotConstants.kD,

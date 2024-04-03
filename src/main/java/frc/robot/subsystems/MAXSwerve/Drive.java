@@ -38,6 +38,7 @@ import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.CircularBuffer;
 import edu.wpi.first.util.WPIUtilJNI;
 import frc.robot.Constants;
 import frc.robot.Constants.FieldConstants;
@@ -89,6 +90,9 @@ public class Drive extends SubsystemBase {
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
 
+    
+    CircularBuffer<Double> Xaccel = new CircularBuffer<>(DriveConstants.accelSize);
+
       // Odometry class for tracking robot pose
     SwerveDrivePoseEstimator m_poseEstimator;
 
@@ -130,6 +134,9 @@ public class Drive extends SubsystemBase {
         m_rearLeft.updateInputs();
         m_rearRight.updateInputs();
         vision = Vision.getInstance();
+        for(int i = 0; i < DriveConstants.accelSize; i++){
+            Xaccel.addFirst(0.0);
+        }
 
           // Odometry class for tracking robot pose
         m_poseEstimator = new SwerveDrivePoseEstimator(
@@ -218,6 +225,8 @@ public class Drive extends SubsystemBase {
         m_frontRight.updateInputs();
         m_rearLeft.updateInputs();
         m_rearRight.updateInputs();
+
+        Xaccel.addLast(gyroInputs.accel[0]);
 
         ticks += 1;
         if (ticks % 200 == 0) {
@@ -480,6 +489,14 @@ public class Drive extends SubsystemBase {
     //(X, Y) - ignore Z 
     public Vector<N2> getIMUAcceleration() {
         return VecBuilder.fill(gyroInputs.accel[0], gyroInputs.accel[1]);
+    }
+
+    public double getXAccel(){
+        double sum = 0;
+        for(int i = 0; i < DriveConstants.accelSize; i++){
+            sum += Xaccel.get(i);
+        }
+        return sum / DriveConstants.accelSize;
     }
 
     /**

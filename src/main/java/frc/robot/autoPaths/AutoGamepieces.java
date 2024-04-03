@@ -11,4 +11,8 @@ public class AutoGamepieces {
     public static void setNoteGone(int note){
         piecesPresent[note - 4] = false;
     }
+
+    public static void resetNotes(){
+        piecesPresent = new boolean[] {true, true, true, true, true};
+    }
 }

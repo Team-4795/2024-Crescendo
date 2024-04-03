@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.290597959227301,
+      "y": 5.445538993788401
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -14,7 +20,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Align GP1"
+            "name": "AlignCloseGP"
           }
         },
         {
@@ -26,7 +32,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.1
+            "waitTime": 0.4
           }
         },
         {
@@ -52,7 +58,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0
+                        "waitTime": 1.0
                       }
                     }
                   ]
@@ -89,6 +95,18 @@
           "type": "named",
           "data": {
             "name": "Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M GP 32145 P6"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M GP 32145 P7"
           }
         }
       ]

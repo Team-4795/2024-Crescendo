@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.6,
-        "y": 6.6
+        "x": 2.3204900255954373,
+        "y": 2.7627439870264356
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.623728202064106,
-        "y": 6.727803446362954
+        "x": 3.105116074162799,
+        "y": 2.5870814388397134
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.9,
-        "y": 5.9
+        "x": 7.766690569044476,
+        "y": 0.9134452505709579
       },
       "prevControl": {
-        "x": 6.923524549847301,
-        "y": 6.282980951411262
+        "x": 6.255992654638661,
+        "y": 1.2179270007612764
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,17 +31,17 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.45,
-      "rotationDegrees": -19.735200746798977,
+      "rotationDegrees": -50.0,
       "rotateFast": true
     }
   ],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.2,
+      "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 0.5,
       "constraints": {
-        "maxVelocity": 4.0,
+        "maxVelocity": 3.5,
         "maxAcceleration": 4.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0
@@ -50,16 +50,50 @@
   ],
   "eventMarkers": [
     {
-      "name": "Detect Note 5",
-      "waypointRelativePos": 0.55,
+      "name": "New Event Marker",
+      "waypointRelativePos": 0,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
           "commands": [
             {
               "type": "named",
               "data": {
-                "name": "Detect Note 5"
+                "name": "VisionAlign 5k"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.25,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Score"
               }
             }
           ]
@@ -75,13 +109,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -15.945395900922936,
+    "rotation": -12.339087278326364,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "AS 456",
+  "folder": "SS 8765",
   "previewStartingState": {
-    "rotation": 16.0,
+    "rotation": -50.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

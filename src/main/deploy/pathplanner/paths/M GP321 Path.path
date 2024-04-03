@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 2.387572588481172,
-        "y": 4.5303414019276484
+        "x": 2.563293411886691,
+        "y": 4.356431195030721
       },
       "prevControl": {
-        "x": 2.260975318270076,
-        "y": 4.6406533320738745
+        "x": 2.309440738710292,
+        "y": 4.532093743217444
       },
       "nextControl": {
-        "x": 2.526141238067865,
-        "y": 4.409598078093132
+        "x": 2.714430109072627,
+        "y": 4.251846685362162
       },
       "isLocked": false,
       "linkedName": null
@@ -95,7 +95,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1.0,
-      "rotationDegrees": -42.07502205084371,
+      "rotationDegrees": -27.0,
       "rotateFast": true
     },
     {
@@ -142,7 +142,7 @@
   "eventMarkers": [
     {
       "name": "Start Scoring",
-      "waypointRelativePos": 0.65,
+      "waypointRelativePos": 0.6,
       "command": {
         "type": "sequential",
         "data": {
@@ -166,7 +166,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 23.69354019229976,
+    "rotation": 27.0,
     "rotateFast": false
   },
   "reversed": false,

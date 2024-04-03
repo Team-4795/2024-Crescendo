@@ -13,54 +13,37 @@ public class GDA_M32145 {
     PathPlannerAuto auto;
 
     public static Command load(){
-        paths = PathPlannerAuto.getPathGroupFromAutoFile("M GP 32145");
+        paths = PathPlannerAuto.getPathGroupFromAutoFile("M GP 3214");
 
         return Commands.sequence(
-            AutoCommands.aimSpeakerDynamic(true, 5000),
-            AutoCommands.score(),
+        AutoCommands.initialize(4500),
+        AutoCommands.SetPivotAngle(0.33),
 
         Commands.sequence(
-            AutoCommands.intakeTrajectory(paths.get(0)),
-            Commands.waitSeconds(0.2), 
-            AutoCommands.aimSpeakerDynamic(true, 5000)),
+            AutoCommands.followTrajectory(paths.get(0))),
+            Commands.waitSeconds(0.4),
 
-        AutoCommands.score(),
-            
-        Commands.sequence(
-            AutoCommands.intakeTrajectory(paths.get(1)),
-            Commands.waitSeconds(0.2), 
-            AutoCommands.aimSpeakerDynamic(true, 5000)),
-
-            AutoCommands.score(),
-            
-        Commands.sequence(
-            AutoCommands.intakeTrajectory(paths.get(2)),
-            Commands.waitSeconds(0.2)),
-            AutoCommands.aimSpeakerDynamic(true, 5000),
-
-            AutoCommands.score(),
-            
             Commands.sequence(
-                AutoCommands.intakeTrajectory(paths.get(3)),
+                AutoCommands.intakeTrajectory(paths.get(1)),
                 Commands.deadline( 
                     Commands.sequence(
                         //AutoCommands.SetPivotAngle(.129),
-                        AutoCommands.followTrajectory(paths.get(4)), 
+                        AutoCommands.followTrajectory(paths.get(2)), 
                         Commands.waitSeconds(0.2)
-                    ), AutoCommands.aimSpeakerDynamic(true, 5000)),
+                    ), AutoCommands.aimSpeakerDynamic(false, 5000)),
                 AutoCommands.score()
-            ).until(() -> AutoGamepieces.isGone(4)),
+            ),//.until(() -> AutoGamepieces.isGone(4)),
 
             Commands.sequence(
-                AutoCommands.intakeTrajectory(paths.get(5)),
+                AutoCommands.intakeTrajectory(paths.get(3)),
                 Commands.deadline(
                     Commands.sequence(
-                        AutoCommands.followTrajectory(paths.get(6)), 
-                        Commands.waitSeconds(0.2)
-                    ), AutoCommands.aimSpeakerDynamic(true, 5000)),
+                        AutoCommands.followTrajectory(paths.get(4)), 
+                        Commands.waitSeconds(0.3)
+                    )), AutoCommands.aimSpeakerDynamic(false, 5000)),
 
                 AutoCommands.score()
-            ).until(() -> AutoGamepieces.isGone(5)));
+            );//.until(() -> AutoGamepieces.isGone(5));
 
     }
 }

@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.autoPaths.AutoGamepieces;
 import frc.robot.commands.AlignPose;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
@@ -177,7 +178,7 @@ public class Robot extends LoggedRobot {
     robotContainer.init();
     Pivot.getInstance().setGoal(0.15);
     autonomousCommand = robotContainer.getAutonomousCommand();
-
+    AutoGamepieces.resetNotes();
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();

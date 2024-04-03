@@ -34,7 +34,7 @@ public class IntakeCamVision extends SubsystemBase {
     }
 
     public boolean isNoteInFront() {
-        return intakeCamHasTargets() && Math.abs(getIntakeCamYaw()) < 30;
+        return intakeCamHasTargets() && Math.abs(getIntakeCamYaw()) < 15;
     }
 
     public void periodic() {

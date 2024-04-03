@@ -11,13 +11,13 @@ public final class PivotConstants {
     public static final double kV = 2.3;
     public static final double kS = 0.1;
     public static final double kP = 20;
-    public static final double kI = 0.1;
-    public static final double kD = 0;
+    public static final double kI = 2;
+    public static final double kD = 0.2;
 
     public static final double angleOffset = 0.24;
     public static final double kDt = 0.02;
     public static final Constraints constraints = new Constraints(5.0, 7); //rad/s and rad/s^2
-    public static final double manualSpeed = 0.01;
+    public static final double manualSpeed = 0.02;
     
     // public static final double F = 178;
     // public static final double x = 0.438;

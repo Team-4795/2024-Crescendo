@@ -3,6 +3,7 @@ package frc.robot.commands;
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
@@ -27,6 +28,7 @@ public class AlignToGamepiece extends Command {
     private LoggedTunableNumber kP = new LoggedTunableNumber("Gamepiece Align/kP", 1.35);
     private LoggedTunableNumber kD = new LoggedTunableNumber("Gamepiece Align/kD", 0.1);
 
+    private boolean noteRelative = false;
     private PIDController rotationPID = new PIDController(kP.get(), 0, kD.get());
     private boolean hasTargets;
     private boolean startTimer;
@@ -63,6 +65,10 @@ public class AlignToGamepiece extends Command {
         double y = MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband);
         double output = -MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kAxisDeadband);
         fieldRelative = true;
+
+        Rotation2d driveRotation = new Rotation2d(x, y);
+        driveRotation.plus(Rotation2d.fromDegrees(IntakeCamVision.getInstance().getIntakeCamYaw()));
+        double speed = Math.sqrt(x * x + y * y);
         
         if(Drive.getInstance().getPose().getTranslation().getDistance(sourcePose) < 10){
             output = AlignPose.calculateRotationSpeed();
@@ -78,10 +84,16 @@ public class AlignToGamepiece extends Command {
 
         output = MathUtil.clamp(output, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed);
 
-        drive.runVelocity(new ChassisSpeeds(
+
+        if(noteRelative){
+            drive.runVelocity(new ChassisSpeeds(
+                speed * driveRotation.getCos(), speed * driveRotation.getSin(), output), fieldRelative);
+        } else {
+            drive.runVelocity(new ChassisSpeeds(
                 -Math.copySign(x * x, x) * DriveConstants.kMaxSpeedMetersPerSecond,
                 -Math.copySign(y * y, y) * DriveConstants.kMaxSpeedMetersPerSecond,
                 output), fieldRelative);
+        }
 
         Logger.recordOutput("Vision/Note Yaw", lifecamYaw);
         Logger.recordOutput("Vision/Note PID", output);
