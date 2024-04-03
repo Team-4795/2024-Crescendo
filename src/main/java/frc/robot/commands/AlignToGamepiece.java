@@ -66,9 +66,9 @@ public class AlignToGamepiece extends Command {
         double output = -MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kAxisDeadband);
         fieldRelative = true;
 
-        Rotation2d driveRotation = new Rotation2d(x, y);
-        driveRotation.plus(Rotation2d.fromDegrees(IntakeCamVision.getInstance().getIntakeCamYaw()));
-        double speed = Math.sqrt(x * x + y * y);
+        Rotation2d driveRotation = new Rotation2d(x, y); //X and Y may be flipped since X is technically forward, shouldn't matter though
+        driveRotation = driveRotation.minus(Rotation2d.fromDegrees(IntakeCamVision.getInstance().getIntakeCamYaw()));
+        double speed = StrictMath.hypot(x, y);
         
         if(Drive.getInstance().getPose().getTranslation().getDistance(sourcePose) < 10){
             output = AlignPose.calculateRotationSpeed();
