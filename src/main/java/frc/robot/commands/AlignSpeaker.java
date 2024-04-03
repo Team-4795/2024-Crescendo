@@ -35,6 +35,13 @@ public class AlignSpeaker extends Command {
     }
 
     @Override
+    public void end(boolean interrupted){
+        if(DriverStation.isAutonomous()){
+            drive.runVelocity(new ChassisSpeeds(0, 0, 0), false);
+        }
+    }
+
+    @Override
     public boolean isFinished() {
         return false;
     }
