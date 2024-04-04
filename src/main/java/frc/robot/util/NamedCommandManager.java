@@ -22,7 +22,7 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.27, 4000)); // change later
 
-        NamedCommands.registerCommand("AlignCloseGP", AutoCommands.setPivotAndShooter(0.31, 4500)); // change later
+        NamedCommands.registerCommand("AlignCloseGP", AutoCommands.setPivotAndShooter(0.3, 4500)); // change later
 
         NamedCommands.registerCommand("AlignGP3", AutoCommands.setPivotAndShooter(0.21, 4000)); // change later
 
@@ -34,9 +34,9 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("AlignClose", AutoCommands.SetPivotAngle(0.6)); // change later
 
-        NamedCommands.registerCommand("Initialize", AutoCommands.initialize(4000));
+        NamedCommands.registerCommand("Initialize", AutoCommands.initialize(4500));
 
-        NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(4000));
+        NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(4500));
 
         NamedCommands.registerCommand("Stop Shooting", AutoCommands.stopShooting());
 

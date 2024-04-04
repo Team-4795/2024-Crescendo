@@ -59,23 +59,23 @@ public class PivotIOReal implements PivotIO {
 
     motorEncoderRight.setPositionConversionFactor(Math.PI * 2 / PivotConstants.gearing);
     motorEncoderRight.setVelocityConversionFactor(Math.PI * 2 / 60 / PivotConstants.gearing);
-
-    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
-    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
-    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
-    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
-    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 1000);
-    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 1000);
-    pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 1000);
-
-    // pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
-    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
-    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
-    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
-    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 1000);
-    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
-    pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
-
+    for(int i = 0; i < 3; i++){
+      pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
+      pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
+      pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
+      pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
+      pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 1000);
+      pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 1000);
+      pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 1000);
+      
+      // pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+      pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
+      pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
+      pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 1000);
+      pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 1000);
+      pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+      pivotRight.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 20);
+    }
     pivotLeft.burnFlash();
     pivotRight.burnFlash();
 

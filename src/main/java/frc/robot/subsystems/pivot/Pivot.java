@@ -28,14 +28,20 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PivotSetpoints;
 import frc.robot.Constants.Tolerances;
 import frc.robot.subsystems.MAXSwerve.Drive;
+import frc.robot.subsystems.pivot.PivotConstants.PivotMode;
 import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.util.LoggedProfiledPIDController;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.Util;
 
 public class Pivot extends SubsystemBase {
+
+
     private PivotIO io;
     private PivotIOInputsAutoLogged inputs = new PivotIOInputsAutoLogged();
+
+    @AutoLogOutput
+    private PivotMode mode = PivotMode.FAST;
 
     LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", PivotConstants.kP);
     LoggedTunableNumber kI = new LoggedTunableNumber("Pivot/kI", PivotConstants.kI);
@@ -45,7 +51,7 @@ public class Pivot extends SubsystemBase {
     LoggedTunableNumber kA = new LoggedTunableNumber("Pivot/kA", PivotConstants.kA);
     LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", PivotConstants.kS);
 
-    LoggedTunableNumber stabilizer = new LoggedTunableNumber("Pivot/Accel Stability", 0.1);
+    LoggedTunableNumber stabilizer = new LoggedTunableNumber("Pivot/Accel Stability", 0.02);
 
     LoggedTunableNumber encoderDistance = new LoggedTunableNumber("Pivot/Rel. Encoder Interpolation Distance", 0.4);
     LoggedTunableNumber absEncoderDistance = new LoggedTunableNumber("Pivot/Abs. Encoder Interpolation Distance", 0.0);
@@ -68,6 +74,10 @@ public class Pivot extends SubsystemBase {
     private double goal = 0;
     private final boolean disableArm = false;
     private boolean idleMode = true;
+
+    private double maxDistance = 0.1;
+    private double minDistance = 0.0;
+    private double distance = 0.0;
 
     private SysIdRoutine sysid;
 
@@ -129,9 +139,20 @@ public class Pivot extends SubsystemBase {
     public void setGoal(double goal) {
         if (goal != this.goal) {
             // this.lastGoal = this.goal;
-            
             this.goal = MathUtil.clamp(goal, PivotConstants.lowLimit, PivotConstants.highLimit);
+            io.resetEncoders();
+            if(Math.abs(goal - this.getPosition()) < 0.4){
+                setPivotMode(PivotMode.SLOW);
+            } else {
+                setPivotMode(PivotMode.FAST);
+            }
         }
+    }
+
+    private void setPivotMode(PivotMode mode){
+        this.mode = mode;
+        controller.setPID(mode.getSettings().kP(), mode.getSettings().kI(), mode.getSettings().kD());
+        controller.setConstraints(mode.getSettings().constraints());
     }
 
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
@@ -232,7 +253,7 @@ public class Pivot extends SubsystemBase {
             if (DriverStation.isDisabled()) {
                 io.setVoltage(0);
             } else {
-                io.setVoltage(PIDVolts + FFVolts + 0.22 * Math.cos(getPosition() + 1.62));
+                io.setVoltage(PIDVolts + FFVolts + 0.22 * Math.cos(getPosition() + 1.62) + getAccelerationCompensation());
             }
         }
 
@@ -278,7 +299,7 @@ public class Pivot extends SubsystemBase {
 
     // Choose between motor position or absolute encoder position 
     public double getPosition() {
-        double distance = Math.abs(goal - controller.getSetpoint().position);
+        distance = Math.abs(goal - controller.getSetpoint().position);
         double x = (1.0 / (encoderDistance.get() - absEncoderDistance.get())) * (distance - absEncoderDistance.get());
         x = MathUtil.clamp(x, 0, 1);
         return inputs.pivotPositionRads * (1 - x) + inputs.pivotMotorPositionRads * x;
@@ -306,5 +327,15 @@ public class Pivot extends SubsystemBase {
         controller.reset(getPosition());
         io.resetEncoders();
         this.setGoal(getPosition());
+    }
+
+    private double scalar(){
+        if(distance > maxDistance){
+            return 1.0;
+        } else if (minDistance < distance && distance < maxDistance){
+            return MathUtil.clamp((1 / (maxDistance - minDistance)) * (distance - minDistance), 0, 1);
+        } else {
+            return 0.0;
+        }
     }
 }

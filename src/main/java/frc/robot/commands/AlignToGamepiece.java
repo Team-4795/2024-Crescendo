@@ -28,7 +28,7 @@ public class AlignToGamepiece extends Command {
     private LoggedTunableNumber kP = new LoggedTunableNumber("Gamepiece Align/kP", 1.35);
     private LoggedTunableNumber kD = new LoggedTunableNumber("Gamepiece Align/kD", 0.1);
 
-    private boolean noteRelative = false;
+    private boolean noteRelative = true;
     private PIDController rotationPID = new PIDController(kP.get(), 0, kD.get());
     private boolean hasTargets;
     private boolean startTimer;
@@ -87,7 +87,9 @@ public class AlignToGamepiece extends Command {
 
         if(noteRelative){
             drive.runVelocity(new ChassisSpeeds(
-                speed * driveRotation.getCos(), speed * driveRotation.getSin(), output), fieldRelative);
+                -speed * driveRotation.getCos() * DriveConstants.kMaxSpeedMetersPerSecond,
+                -speed * driveRotation.getSin() * DriveConstants.kMaxSpeedMetersPerSecond, 
+                output), fieldRelative);
         } else {
             drive.runVelocity(new ChassisSpeeds(
                 -Math.copySign(x * x, x) * DriveConstants.kMaxSpeedMetersPerSecond,

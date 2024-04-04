@@ -16,7 +16,7 @@ public class GDA_M32145 {
     PathPlannerAuto auto;
 
     public static Command load(){
-        paths = PathPlannerAuto.getPathGroupFromAutoFile("M GP 3214");
+        paths = PathPlannerAuto.getPathGroupFromAutoFile("M GP 32145");
         IntakeCamVision.getInstance().setTargetComparator(PhotonTargetSortMode.Centermost);
 
 
