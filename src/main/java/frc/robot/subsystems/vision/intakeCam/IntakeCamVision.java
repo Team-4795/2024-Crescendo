@@ -1,6 +1,7 @@
 package frc.robot.subsystems.vision.intakeCam;
 
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.PhotonTargetSortMode;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -31,6 +32,10 @@ public class IntakeCamVision extends SubsystemBase {
 
     public boolean intakeCamHasTargets() {
         return inputs.hasTargets;
+    }
+
+    public void setTargetComparator(PhotonTargetSortMode sortMode){
+        io.setTargetComparator(sortMode);
     }
 
     public boolean isNoteInFront() {

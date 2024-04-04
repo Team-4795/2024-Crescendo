@@ -16,6 +16,7 @@ package frc.robot;
 import java.util.Map;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import org.photonvision.PhotonTargetSortMode;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
@@ -304,6 +305,7 @@ public class RobotContainer {
   }
 
   public void init() {
+    intakeCamVision.setTargetComparator(PhotonTargetSortMode.Largest);
     shooter.setShootingSpeedRPM(0, 0);
     indexer.setIndexerSpeed(0);
     intake.setIntakeSpeed(0);

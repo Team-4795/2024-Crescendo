@@ -2,11 +2,14 @@ package frc.robot.autoPaths;
 
 import java.util.List;
 
+import org.photonvision.PhotonTargetSortMode;
+
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AutoCommands;
+import frc.robot.subsystems.vision.intakeCam.IntakeCamVision;
 
 public class GDA_M32145 {
     private static List<PathPlannerPath> paths;
@@ -14,6 +17,8 @@ public class GDA_M32145 {
 
     public static Command load(){
         paths = PathPlannerAuto.getPathGroupFromAutoFile("M GP 3214");
+        IntakeCamVision.getInstance().setTargetComparator(PhotonTargetSortMode.Centermost);
+
 
         return Commands.sequence(
         AutoCommands.initialize(4500),

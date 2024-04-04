@@ -66,6 +66,6 @@ public class VisionConstants {
         }
     }
 
-    public static final double areaCutoff = 40;
+    public static final double areaCutoff = 20;
     public static final double timeDelay = 0.8;
 }
