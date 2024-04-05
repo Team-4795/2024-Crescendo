@@ -69,18 +69,18 @@ public class Shooter extends SubsystemBase {
         return inputs.bottomShooterMotorVelocityRPM * Math.PI / 30.0;
     }
 
-    public Command rev(){
-        switch(StateManager.getState()){
-            case AMP:
-                return this.revAmp();
-            case SPEAKER:
-                return this.revSpeaker();
-            case SHUTTLE:
-                return this.revShuttle();
-            default:
-                return null;
-        }
-    }
+    // public Command rev(){
+    //     switch(StateManager.getState()){
+    //         case AMP:
+    //             return this.revAmp();
+    //         case SPEAKER:
+    //             return this.revSpeaker();
+    //         case SHUTTLE:
+    //             return this.revShuttle();
+    //         default:
+    //             return null;
+    //     }
+    // }
 
     public Command revSpeaker() {
         double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());

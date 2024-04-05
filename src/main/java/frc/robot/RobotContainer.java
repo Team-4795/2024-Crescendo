@@ -174,7 +174,7 @@ public class RobotContainer {
       Commands.either(
         Commands.select(
           Map.ofEntries(
-            Map.entry(State.AMP, drive.AutoAlignAmp().finallyDo(() -> StateManager.setState(State.SPEAKER))),
+            Map.entry(State.AMP, drive.AutoAlignAmp()),
             Map.entry(State.SPEAKER, Commands.parallel(
               new AlignSpeaker(),
               pivot.aimSpeakerDynamic(),
@@ -265,7 +265,7 @@ public class RobotContainer {
             shooter.reverse()));
 
     // Override storing (flips it)
-    OIConstants.operatorController.x().whileTrue(indexer.overrideStoring());
+    OIConstants.operatorController.x().whileTrue(indexer.overrideStoring().ignoringDisable(true));
 
     // Handoff unjam
     OIConstants.operatorController.y().whileTrue(

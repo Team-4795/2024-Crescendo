@@ -163,18 +163,18 @@ public class Pivot extends SubsystemBase {
         return sysid.dynamic(direction);
     }
 
-    public Command aim(){
-        switch(StateManager.getState()){
-            case AMP:
-                return this.aimAmp();
-            case SPEAKER:
-                return this.aimSpeakerDynamic();
-            case SHUTTLE:
-                return this.aimShuttle();
-            default:
-                return null;
-        }
-    }
+    // public Command aim(){
+    //     switch(StateManager.getState()){
+    //         case AMP:
+    //             return this.aimAmp();
+    //         case SPEAKER:
+    //             return this.aimSpeakerDynamic();
+    //         case SHUTTLE:
+    //             return this.aimShuttle();
+    //         default:
+    //             return null;
+    //     }
+    // } 
 
     public Command aimSpeakerDynamic(){
         return Commands.either(
