@@ -183,7 +183,7 @@ public class RobotContainer {
             Map.entry(State.SHUTTLE, new AlignShuttle())),
             StateManager::getState),
         shooter.revSpeaker()
-          .alongWith(pivot.aim()),
+          .alongWith(pivot.aimSpeakerDynamic()),
         () -> StateManager.isAutomate()
       )
     );
@@ -218,18 +218,20 @@ public class RobotContainer {
     
     // Speaker mode
     OIConstants.operatorController.leftBumper()
-      .and(OIConstants.operatorController.rightBumper().negate()).debounce(0.1)
+      .and(OIConstants.operatorController.rightBumper().negate()).debounce(0.06)
       .onTrue(Commands.runOnce(() -> StateManager.setState(State.SPEAKER)));
 
     // Amp mode
     OIConstants.operatorController.rightBumper()
-      .and(OIConstants.operatorController.leftBumper().negate()).debounce(0.1) 
+      .and(OIConstants.operatorController.leftBumper().negate()).debounce(0.06) 
       .onTrue(Commands.runOnce(() -> StateManager.setState(State.AMP)));
 
     // Shuttle mode
     OIConstants.operatorController.leftBumper()
       .and(OIConstants.operatorController.rightBumper())
-      .onTrue(Commands.runOnce(() -> StateManager.setState(State.SHUTTLE)));
+      .whileTrue((Commands.startEnd(
+        () -> StateManager.setState(State.SHUTTLE),
+        () -> StateManager.setState(State.SPEAKER))));
 
     // Source Intake
     OIConstants.operatorController.povUp().onTrue(
