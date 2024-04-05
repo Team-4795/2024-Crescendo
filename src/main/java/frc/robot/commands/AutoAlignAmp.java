@@ -15,9 +15,11 @@ import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.StateManager;
 import frc.robot.Constants.IndexerSetpoints;
 import frc.robot.Constants.PivotSetpoints;
 import frc.robot.Constants.ShooterSetpoints;
+import frc.robot.StateManager.State;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.indexer.Indexer;
@@ -33,6 +35,7 @@ public class AutoAlignAmp extends Command{
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
 
+    private boolean hasOuttook = false;
 
     private double mult;
     private Pose2d currentPose;
@@ -96,6 +99,7 @@ public class AutoAlignAmp extends Command{
                 shooter.setShootingSpeedRPM(ShooterSetpoints.ampTop, ShooterSetpoints.ampBottom);
         }
         if(rotationController.atGoal() && distance < 0.1){
+                hasOuttook = true;
                 indexer.setIndexerSpeed(IndexerSetpoints.shoot);
         }
 
@@ -116,6 +120,9 @@ public class AutoAlignAmp extends Command{
 
     @Override
     public void end(boolean interuppted){
+        if (hasOuttook) {
+            StateManager.setState(State.SPEAKER);
+        }
         indexer.setIndexerSpeed(0);
         pivot.setGoal(PivotSetpoints.stow);
         shooter.setShootingSpeedRPM(0, 0);
