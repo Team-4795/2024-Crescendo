@@ -136,9 +136,9 @@ public class RobotContainer {
     // autoChooser.addOption("Pivot SysIs (Dynamic Forward)", pivot.sysIdDynamic(SysIdRoutine.Direction.kForward));
     // autoChooser.addOption("Pivot SysIs (Dynamic everse)", pivot.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     // autoChooser.addOption("Pivot Model", new ArmFeedForwardCharacterization(pivot, (volts) -> pivot.runVoltage(volts), () -> pivot.getVelocity(), () -> pivot.getPosition(), (x) -> 0.0));
-    autoChooser.addDefaultOption("TEST - SS GP 8765", GDA_SS8765.load());
+    autoChooser.addOption("TEST - SS GP 8765", GDA_SS8765.load());
     autoChooser.addOption("TEST - AS GP 456", GDA_AS1456.load());
-    autoChooser.addOption("TEST - M GP 32145", GDA_M32145.load());
+    // autoChooser.addOption("TEST - M GP 32145", GDA_M32145.load());
 
 
     // Configure the button bindings
@@ -218,17 +218,16 @@ public class RobotContainer {
     
     // Speaker mode
     OIConstants.operatorController.leftBumper()
-      .and(OIConstants.operatorController.rightBumper().negate()).debounce(0.06)
+      .and(OIConstants.operatorController.rightBumper().negate())
       .onTrue(Commands.runOnce(() -> StateManager.setState(State.SPEAKER)));
 
     // Amp mode
     OIConstants.operatorController.rightBumper()
-      .and(OIConstants.operatorController.leftBumper().negate()).debounce(0.06) 
+      .and(OIConstants.operatorController.leftBumper().negate())
       .onTrue(Commands.runOnce(() -> StateManager.setState(State.AMP)));
 
     // Shuttle mode
-    OIConstants.operatorController.leftBumper()
-      .and(OIConstants.operatorController.rightBumper())
+    OIConstants.operatorController.povRight()
       .whileTrue((Commands.startEnd(
         () -> StateManager.setState(State.SHUTTLE),
         () -> StateManager.setState(State.SPEAKER))));

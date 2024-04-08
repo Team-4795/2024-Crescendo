@@ -59,7 +59,7 @@ public class PivotIOReal implements PivotIO {
 
     motorEncoderRight.setPositionConversionFactor(Math.PI * 2 / PivotConstants.gearing);
     motorEncoderRight.setVelocityConversionFactor(Math.PI * 2 / 60 / PivotConstants.gearing);
-    for(int i = 0; i < 3; i++){
+    for(int i = 0; i < 10; i++){
       pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
       pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
       pivotLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);

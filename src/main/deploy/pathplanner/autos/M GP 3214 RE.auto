@@ -1,10 +1,90 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.290597959227301,
+      "y": 5.445538993788401
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Initialize"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AlignCloseGP"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M GP321 Path"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.4
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Shooting"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "M GP 3214 P4 ALT"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Closer M GP 32145 P5"
+          }
+        },
         {
           "type": "parallel",
           "data": {
@@ -12,22 +92,16 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Align Speaker"
+                  "name": "VisionAlign 5k"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "VisionAlign"
+                  "name": "Align Speaker"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Initialize"
           }
         },
         {
@@ -53,7 +127,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "AS GP456 P1"
+                        "pathName": "Closer M GP 32145 P6"
                       }
                     },
                     {
@@ -77,131 +151,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Closer AS GP45 P2"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "VisionAlign 5k"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.3
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Closer AS GP45 P3"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Closer AS GP45 P4"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "VisionAlign 5k"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.3
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Closer AS GP45 P5"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              }
-            ]
+            "pathName": "Closer M GP 32145 P7"
           }
         }
       ]
     }
   },
-  "folder": "Amp",
+  "folder": "Middle",
   "choreoAuto": false
 }

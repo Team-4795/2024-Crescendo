@@ -3,51 +3,46 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.1,
-        "y": 6.7
+        "x": 4.07,
+        "y": 5.398695647605275
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.564090364757048,
-        "y": 6.680044321458116
+        "x": 4.589886872081437,
+        "y": 6.847658310701237
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.880728833818285,
-        "y": 5.881868371091429
+        "x": 7.895312713702351,
+        "y": 5.7721615443230885
       },
       "prevControl": {
-        "x": 6.984815108420252,
-        "y": 6.212966921782006
+        "x": 6.040327465270316,
+        "y": 6.7785897110255755
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
+  "rotationTargets": [],
+  "constraintZones": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -13.259497075757183,
-      "rotateFast": true
-    }
-  ],
-  "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0.7,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": []
-        }
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.35,
+      "maxWaypointRelativePos": 0.5,
+      "constraints": {
+        "maxVelocity": 3.5,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
       }
     }
   ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 6.0,
@@ -56,13 +51,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -9.819300638757841,
+    "rotation": -2.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "M 32145",
+  "folder": "SS 8765",
   "previewStartingState": {
-    "rotation": 20.0,
+    "rotation": -2.4095672031347672,
     "velocity": 0
   },
   "useDefaultConstraints": true

@@ -80,12 +80,12 @@
     },
     {
       "anchor": {
-        "x": 2.7,
-        "y": 6.9
+        "x": 2.563293411886691,
+        "y": 6.874514359659206
       },
       "prevControl": {
-        "x": 2.258228982356977,
-        "y": 6.682431747533925
+        "x": 2.1215223942436676,
+        "y": 6.65694610719313
       },
       "nextControl": null,
       "isLocked": false,
@@ -118,7 +118,7 @@
     },
     {
       "name": "Note 2 Zone",
-      "minWaypointRelativePos": 2.15,
+      "minWaypointRelativePos": 2.55,
       "maxWaypointRelativePos": 3.4499999999999997,
       "constraints": {
         "maxVelocity": 1.0,
@@ -129,7 +129,7 @@
     },
     {
       "name": "Note 1 Zone",
-      "minWaypointRelativePos": 4.5,
+      "minWaypointRelativePos": 4.55,
       "maxWaypointRelativePos": 5.0,
       "constraints": {
         "maxVelocity": 1.0,
@@ -160,7 +160,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 4.5,
+    "maxAcceleration": 6.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

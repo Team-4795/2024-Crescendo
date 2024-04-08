@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
@@ -61,6 +62,7 @@ public class AutoAlignAmp extends Command{
 
     @Override
     public void initialize(){
+        hasOuttook = false;
         DriverStation.getAlliance().ifPresent((alliance) -> {
             targetPose = (alliance == Alliance.Blue) ? BLUE_AMP : RED_AMP;
             mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
@@ -78,6 +80,8 @@ public class AutoAlignAmp extends Command{
 
     @Override
     public void execute() {
+        Logger.recordOutput("Has outtook", hasOuttook);
+
         currentPose = Drive.getInstance().getPose();
         distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
 

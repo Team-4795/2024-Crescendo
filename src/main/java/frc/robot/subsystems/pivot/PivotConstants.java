@@ -48,6 +48,8 @@ public final class PivotConstants {
         armAngleMap.put(3.88, 0.172);
         armAngleMap.put(4.2, 0.14);
         armAngleMap.put(5.0, 0.1);
+        armAngleMap.put(5.3, 0.089);
+        armAngleMap.put(5.54, 0.075);
         armAngleMap.put(5.83, 0.07);
         // armAngleMap.put(5.7, 0.112);
         // armAngleMap.put(6.1, 0.107);
@@ -58,7 +60,7 @@ public final class PivotConstants {
 
     public enum PivotMode {
         FAST(new PivotSettings(27, 2, 0.2, new Constraints(4.5, 5.5))),
-        SLOW(new PivotSettings(8, 4, 0.15, new Constraints(2.5, 3.5)));
+        SLOW(new PivotSettings(14, 4, 0.0, new Constraints(2.5, 3.5)));
 
         public PivotSettings settings;
 
