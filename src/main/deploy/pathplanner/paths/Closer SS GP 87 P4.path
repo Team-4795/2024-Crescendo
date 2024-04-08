@@ -1,0 +1,64 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.83,
+        "y": 2.2
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.45026922114913,
+        "y": 0.4386646941232814
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.75,
+        "y": 3.0
+      },
+      "prevControl": {
+        "x": 3.975439038609885,
+        "y": 2.041348673852839
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.65,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 3.5,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 6.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -42.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "SS 8765",
+  "previewStartingState": {
+    "rotation": 27.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

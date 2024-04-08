@@ -1,0 +1,68 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.487656336225653,
+        "y": 5.920165686485219
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.002933144240039,
+        "y": 6.604911811820771
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.86272249467576,
+        "y": 6.393778941404038
+      },
+      "prevControl": {
+        "x": 5.343798080879624,
+        "y": 6.475178849450491
+      },
+      "nextControl": {
+        "x": 6.365936578027003,
+        "y": 6.314843398917567
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.6881069146753696,
+        "y": 5.920165686485219
+      },
+      "prevControl": {
+        "x": 7.135558117270081,
+        "y": 6.078036771458158
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 6.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -13.736268305622572,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "SS 8765",
+  "previewStartingState": {
+    "rotation": -2.116339641124944,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

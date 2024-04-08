@@ -15,7 +15,7 @@ import frc.robot.subsystems.MAXSwerve.Drive;
 
 public class AlignHeading {
     public static Drive drive = Drive.getInstance();
-    public static final ProfiledPIDController controller = new ProfiledPIDController(3, 0, 0.5, new Constraints(4, 6));
+    public static final ProfiledPIDController controller = new ProfiledPIDController(4, 0, 0.5, new Constraints(6, 6));
 
     // private static double goal = 0;
     public static Command align(double angle){

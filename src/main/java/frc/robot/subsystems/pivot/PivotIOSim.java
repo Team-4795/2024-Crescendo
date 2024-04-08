@@ -3,6 +3,7 @@ package frc.robot.subsystems.pivot;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -17,18 +18,19 @@ public class PivotIOSim implements PivotIO {
         Units.degreesToRadians(0), 
         Units.degreesToRadians(75), 
         false,
-        Units.degreesToRadians(5));
+        Units.degreesToRadians(5),
+        VecBuilder.fill(0.001));
 
     private double pivotAppliedVolts = 0.0;
 
     @Override
     public void updateInputs(PivotIOInputs inputs) {
+        pivotSim.update(PivotConstants.kDt);
         inputs.pivotPositionRads = pivotSim.getAngleRads();
         inputs.pivotMotorPositionRads = pivotSim.getAngleRads();
         inputs.pivotMotorVelocityRadPerSec = pivotSim.getVelocityRadPerSec();
         inputs.pivotCurrent = pivotSim.getCurrentDrawAmps();
         inputs.pivotAppliedVolts = pivotAppliedVolts;
-        pivotSim.update(PivotConstants.kDt);
     }
     
     @Override

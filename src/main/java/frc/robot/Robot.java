@@ -18,6 +18,10 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.autoPaths.AutoGamepieces;
+import frc.robot.commands.AlignPose;
+import frc.robot.subsystems.MAXSwerve.Drive;
+import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.util.LocalADStarAK;
 import frc.robot.util.NoteVisualizer;
@@ -127,6 +131,8 @@ public class Robot extends LoggedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
+
+    robotContainer.init();
     Pivot.getInstance().setGoal(0.15);
   }
 
@@ -145,6 +151,8 @@ public class Robot extends LoggedRobot {
     Logger.recordOutput("Free memory", (double)Runtime.getRuntime().freeMemory() / 1024 / 1024);
     Logger.recordOutput("Current State", StateManager.getState());
     Logger.recordOutput("Automate", StateManager.isAutomate());
+    Logger.recordOutput("isReady?", robotContainer.readyToShoot());
+    AlignPose.periodic();
     Threads.setCurrentThreadPriority(true, 10);
   }
 
@@ -166,9 +174,11 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     NoteVisualizer.resetAutoNotes();
     NoteVisualizer.showAutoNotes();
+
+    robotContainer.init();
     Pivot.getInstance().setGoal(0.15);
     autonomousCommand = robotContainer.getAutonomousCommand();
-
+    AutoGamepieces.resetNotes();
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
@@ -191,7 +201,7 @@ public class Robot extends LoggedRobot {
       autonomousCommand.cancel();
     }
 
-    robotContainer.teleopInit();
+    robotContainer.init();
   }
 
   /** This function is called periodically during operator control. */

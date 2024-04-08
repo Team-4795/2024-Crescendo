@@ -1,76 +1,110 @@
 package frc.robot.commands;
 
-import org.littletonrobotics.junction.Logger    ;
-
+import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.ADXL345_I2C.AllAxes;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.MAXSwerve.Drive;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.MAXSwerve.DriveConstants;
+import frc.robot.subsystems.vision.intakeCam.IntakeCamVision;
+import frc.robot.util.LoggedTunableNumber;
 
 public class AlignToGamepiece extends Command {
     private Drive drive = Drive.getInstance();
-    private Vision vision = Vision.getInstance();
+    private IntakeCamVision vision = IntakeCamVision.getInstance();
 
-    private PIDController rotationPID = new PIDController(0.35, 0, 0); 
+    private LoggedTunableNumber kP = new LoggedTunableNumber("Gamepiece Align/kP", 1.35);
+    private LoggedTunableNumber kD = new LoggedTunableNumber("Gamepiece Align/kD", 0.1);
 
-    private Pose2d BLUE_SOURCE = new Pose2d(15.8,0.8, Rotation2d.fromDegrees(-45));
-    private Pose2d RED_SOURCE = new Pose2d(0.8,0.5, Rotation2d.fromDegrees(45));
-    private Pose2d sourcePose;
-    
+    private boolean noteRelative = true;
+    private PIDController rotationPID = new PIDController(kP.get(), 0, kD.get());
+    private boolean hasTargets;
+    private boolean startTimer;
+    private double time;
+    private boolean fieldRelative = true;
+    private Translation2d sourcePose;
+
     public AlignToGamepiece() {
-        addRequirements(drive);
-        if(Constants.hasVision){
-            vision = Vision.getInstance();
-            addRequirements(vision);
-        }
+        vision = IntakeCamVision.getInstance();
         rotationPID.enableContinuousInput(-180, 180);
+        rotationPID.setTolerance(3);
+        addRequirements(vision, drive);
     }
 
     @Override
-    public void initialize(){  
-            DriverStation.getAlliance().ifPresent((alliance) -> {
-            sourcePose = (alliance == Alliance.Blue) ? BLUE_SOURCE : RED_SOURCE;
+    public void initialize() {
+        DriverStation.getAlliance().ifPresent((alliance) -> {
+            if(alliance == Alliance.Blue){
+                sourcePose = FieldConstants.BLUE_SOURCE.getTranslation();
+            } else {
+                sourcePose = FieldConstants.RED_SOURCE.getTranslation();
+            }
         });
-        
+        AlignPose.setState(AlignPose.State.SOURCE);
+        rotationPID.reset();
     }
 
     @Override
     public void execute() {
-       double lifecamYaw = vision.getLifecamYaw();
-       boolean hasTargets = vision.lifeCamHastargets();
+        // rotationPID.setPID(kP.get(), 0, kD.get());
+        double lifecamYaw = Units.degreesToRadians(vision.getIntakeCamYaw());
 
-       double distanceToSource = drive.getPose().getTranslation().getDistance(sourcePose.getTranslation());
-       double driveHeading = Units.degreesToRadians(drive.getWrappedHeading());
-       
-       double x = MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband);
-       double y = MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband);
-       double output = -MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kAxisDeadband);
+        double x = MathUtil.applyDeadband(OIConstants.driverController.getLeftY(), OIConstants.kAxisDeadband);
+        double y = MathUtil.applyDeadband(OIConstants.driverController.getLeftX(), OIConstants.kAxisDeadband);
+        double output = -MathUtil.applyDeadband(OIConstants.driverController.getRightX(), OIConstants.kAxisDeadband);
+        fieldRelative = true;
 
-       if (hasTargets) {
-            output = MathUtil.clamp(rotationPID.calculate(Units.degreesToRadians(lifecamYaw), 0), -1, 1);
-       } 
-       else if (!hasTargets && distanceToSource < 10000) {
-            output = MathUtil.clamp(rotationPID.calculate(driveHeading, sourcePose.getRotation().getRadians()), -1, 1);
-       }
-
-       drive.drive(
-                -Math.copySign(x * x, x),
-                -Math.copySign(y * y, y),
-                output,
-                false, true);   
+        Rotation2d driveRotation = new Rotation2d(x, y); //X and Y may be flipped since X is technically forward, shouldn't matter though
+        driveRotation = driveRotation.minus(Rotation2d.fromDegrees(IntakeCamVision.getInstance().getIntakeCamYaw()));
+        double speed = StrictMath.hypot(x, y);
         
+        if(Drive.getInstance().getPose().getTranslation().getDistance(sourcePose) < 10){
+            output = AlignPose.calculateRotationSpeed();
+        }
+
+        hasTargets = vision.intakeCamHasTargets();
+
+        if(hasTargets){
+            output = rotationPID.calculate(lifecamYaw, 0) * DriveConstants.kMaxAngularSpeed;
+            fieldRelative = false;
+            OIConstants.driverController.getHID().setRumble(RumbleType.kBothRumble, 0.5);
+        }
+
+        output = MathUtil.clamp(output, -DriveConstants.kMaxAngularSpeed, DriveConstants.kMaxAngularSpeed);
+
+
+        if(noteRelative){
+            drive.runVelocity(new ChassisSpeeds(
+                -speed * driveRotation.getCos() * DriveConstants.kMaxSpeedMetersPerSecond,
+                -speed * driveRotation.getSin() * DriveConstants.kMaxSpeedMetersPerSecond, 
+                output), fieldRelative);
+        } else {
+            drive.runVelocity(new ChassisSpeeds(
+                -Math.copySign(x * x, x) * DriveConstants.kMaxSpeedMetersPerSecond,
+                -Math.copySign(y * y, y) * DriveConstants.kMaxSpeedMetersPerSecond,
+                output), fieldRelative);
+        }
+
         Logger.recordOutput("Vision/Note Yaw", lifecamYaw);
         Logger.recordOutput("Vision/Note PID", output);
-        Logger.recordOutput("Vision/drive heading", driveHeading);
-        Logger.recordOutput("Vision/Source Pos", sourcePose);
+        Logger.recordOutput("Vision/HasTargets", hasTargets);
+    }
+
+    @Override
+    public void end(boolean interrupted){
+        OIConstants.driverController.getHID().setRumble(RumbleType.kBothRumble, 0.0);
     }
 
     @Override

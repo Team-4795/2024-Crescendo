@@ -49,10 +49,35 @@
               {
                 "type": "path",
                 "data": {
+                  "pathName": "SS GP 876 P1"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
                   "pathName": "SS GP 876 P2"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionAlign"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
           }
         },
         {
@@ -68,16 +93,10 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Align Far Source"
+                  "name": "Intake"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score"
           }
         },
         {
@@ -89,14 +108,20 @@
                 "data": {
                   "pathName": "SS GP 876 P4"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionAlign"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
           }
         },
         {
@@ -112,31 +137,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Align Far Source"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SS GP 876 P6"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Intake"
                 }
               }
@@ -150,7 +150,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SS GP 876 P7"
+                  "pathName": "SS GP 876 P6"
                 }
               },
               {
@@ -171,7 +171,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.4
+            "waitTime": 0.5
           }
         },
         {
@@ -183,6 +183,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "Source",
   "choreoAuto": false
 }
