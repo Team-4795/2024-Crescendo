@@ -38,6 +38,8 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(4500));
 
+        NamedCommands.registerCommand("RunEverything 5k", AutoCommands.runEverything(5000));
+
         NamedCommands.registerCommand("Stop Shooting", AutoCommands.stopShooting());
 
         NamedCommands.registerCommand("SensePiece", AutoCommands.sensingPiece());
