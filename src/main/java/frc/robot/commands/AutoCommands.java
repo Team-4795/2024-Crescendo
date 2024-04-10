@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import org.ejml.equation.Sequence;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,6 +19,8 @@ import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.pivot.PivotConstants;
 import frc.robot.subsystems.vision.AprilTagVision.Vision;
 import frc.robot.util.NoteVisualizer;
+import frc.robot.util.AutoGenerator.Range;
+import frc.robot.util.AutoGenerator.ScoringSide;
 
 public class AutoCommands {
 
@@ -51,6 +55,12 @@ public class AutoCommands {
       ), 
       intake());
   }
+
+  public static Command revTrajectory(String PathName, double speed) {
+    return Commands.parallel(
+        followTrajectory(PathName),
+        revShooter(speed));
+  };
 
   public static Command score() {
     return Commands.sequence(
@@ -137,8 +147,34 @@ public class AutoCommands {
     );
   }
 
+  public static Command aimSpeakerDynamic(boolean timeout){
+    double timeLimit = (timeout) ? 0.5 : 15;
+    return Commands.run(() -> {
+              double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
+              if(distanceToSpeaker < 5.5){
+                pivot.setGoal(PivotConstants.armAngleMap.get(distanceToSpeaker));
+              }
+      }).withTimeout(timeLimit);
+  }
+
   public static Command rotateToSpeaker(){
     return new AlignSpeaker().withTimeout(0.6);
+  }
+
+  public static Command revShooter(double speed){
+    return Commands.runOnce(() -> shooter.setShootingSpeedRPM(-speed, speed));
+  }
+
+  public static Command getCompleteSequence(int note, ScoringSide side, Range range){
+    return Commands.sequence(
+      intakeTrajectory(PathPlannerPath.fromPathFile("Note " + note)),
+      revTrajectory("Score " + side.name() + " " + range.name(), 5000),
+      Commands.parallel(
+        rotateToSpeaker(),
+        aimSpeakerDynamic(true)
+      ),
+      score()
+    );
   }
 
 }

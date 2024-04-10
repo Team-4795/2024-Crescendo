@@ -6,6 +6,7 @@
     "AS 456",
     "M 2145",
     "M 32145",
+    "Note Paths",
     "SS 78",
     "SS 8765"
   ],
@@ -14,8 +15,8 @@
     "Middle",
     "Source"
   ],
-  "defaultMaxVel": 5.0,
-  "defaultMaxAccel": 6.0,
+  "defaultMaxVel": 5.3,
+  "defaultMaxAccel": 7.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "maxModuleSpeed": 4.5

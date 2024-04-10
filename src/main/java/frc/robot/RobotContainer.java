@@ -44,6 +44,7 @@ import frc.robot.subsystems.leds.LEDs;
 import frc.robot.subsystems.pivot.*;
 import frc.robot.subsystems.vision.intakeCam.*;
 import frc.robot.subsystems.vision.AprilTagVision.*;
+import frc.robot.util.AutoGenerator;
 import frc.robot.util.NamedCommandManager;
 import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -69,6 +70,7 @@ public class RobotContainer {
   private final Intake intake;
   private LEDs leds;
 
+  private AutoGenerator generator;
   LoggedDashboardChooser<Command> autoChooser;
 
   /**
@@ -128,6 +130,8 @@ public class RobotContainer {
 
     NamedCommandManager.registerAll();
     NoteVisualizer.setPivotPoseSupplier(pivot::getPose);
+    
+    generator = new AutoGenerator();
     autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser());
 
 
@@ -138,6 +142,7 @@ public class RobotContainer {
     // autoChooser.addOption("Pivot Model", new ArmFeedForwardCharacterization(pivot, (volts) -> pivot.runVoltage(volts), () -> pivot.getVelocity(), () -> pivot.getPosition(), (x) -> 0.0));
     autoChooser.addOption("TEST - SS GP 8765", GDA_SS8765.load());
     autoChooser.addOption("TEST - AS GP 456", GDA_AS1456.load());
+    autoChooser.addOption("Auto Generated Routine", null);
     // autoChooser.addOption("TEST - M GP 32145", GDA_M32145.load());
 
 
@@ -323,6 +328,10 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.get();
+    if(autoChooser.get() != null){
+      return autoChooser.get();
+    } else {
+      return generator.getGeneratedAuto();
+    }
   }
 }
