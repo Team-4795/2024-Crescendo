@@ -3,8 +3,10 @@ package frc.robot.commands;
 import org.ejml.equation.Sequence;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -29,6 +31,9 @@ public class AutoCommands {
   private static Intake intake = Intake.getInstance();
   private static Pivot pivot = Pivot.getInstance();
   private static Indexer indexer = Indexer.getInstance();
+
+  private static final PathConstraints PATHFINDING_CONSTRAINTS = new PathConstraints(5.3, 7, 
+    Units.degreesToRadians(540), Units.degreesToRadians(720));
 
   private AutoCommands() {
   }
@@ -55,6 +60,21 @@ public class AutoCommands {
       ), 
       intake());
   }
+
+  public static Command intakeTrajectory(PathPlannerPath path, PathConstraints constraints){
+    return Commands.race(
+      Commands.sequence(
+        AutoBuilder.pathfindThenFollowPath(path, constraints),
+        Commands.waitSeconds(0.25)
+      ), 
+      intake());
+  }
+
+  public static Command revTrajectory(String path, double speed, PathConstraints constraints) {
+    return Commands.parallel(
+        AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile(path), constraints),
+        revShooter(speed));
+  };
 
   public static Command revTrajectory(String PathName, double speed) {
     return Commands.parallel(
@@ -167,8 +187,8 @@ public class AutoCommands {
 
   public static Command getCompleteSequence(int note, ScoringSide side, Range range){
     return Commands.sequence(
-      intakeTrajectory(PathPlannerPath.fromPathFile("Note " + note)),
-      revTrajectory("Score " + side.name() + " " + range.name(), 5000),
+      intakeTrajectory(PathPlannerPath.fromPathFile("Note " + note), PATHFINDING_CONSTRAINTS),
+      revTrajectory("Score " + side.name() + " " + range.name(), 5000, PATHFINDING_CONSTRAINTS),
       Commands.parallel(
         rotateToSpeaker(),
         aimSpeakerDynamic(true)

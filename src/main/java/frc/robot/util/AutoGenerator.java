@@ -48,7 +48,7 @@ public class AutoGenerator {
                 AutoCommands.aimSpeakerDynamic(true, 5000)
             ),
             AutoCommands.score(),
-
+            AutoCommands.followTrajectory("Amp Leave").onlyIf(() -> scoreSide.get() == ScoringSide.AMP),
             AutoCommands.getCompleteSequence(firstNote.get(), scoreSide.get(), firstNoteRange.get()),
             AutoCommands.getCompleteSequence(secondNote.get(), scoreSide.get(), secondNoteRange.get())
         );
