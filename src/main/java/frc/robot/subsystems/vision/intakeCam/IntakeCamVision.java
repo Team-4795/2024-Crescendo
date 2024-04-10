@@ -31,7 +31,7 @@ public class IntakeCamVision extends SubsystemBase {
     }
 
     public double getIntakeCamYaw() {
-        return inputs.camYaw;
+        return inputs.noteYaw;
     }
 
     public boolean intakeCamHasTargets() {
@@ -56,6 +56,12 @@ public class IntakeCamVision extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Intake Cam", inputs);
+
+        // if (inputs.hasTargets) {
+        //     double camZ = Units.inchesToMeters(9.35);
+        //     double camY = Units.inchesToMeters(2.516);
+        //     double angle = Units.degreesToRadians(20.837);
+        // }
     }
     
 }

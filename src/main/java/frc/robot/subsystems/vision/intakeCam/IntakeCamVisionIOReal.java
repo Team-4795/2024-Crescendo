@@ -36,7 +36,8 @@ public class IntakeCamVisionIOReal implements IntakeCamVisionIO{
         if (inputs.hasTargets) {
             intakeCamResult.targets.sort(sortMode.getComparator());
             PhotonTrackedTarget intakeCamTarget = intakeCamResult.getBestTarget();
-            inputs.camYaw = intakeCamTarget.getYaw();
+            inputs.noteYaw = intakeCamTarget.getYaw();
+            inputs.notePitch = intakeCamTarget.getPitch();
             inputs.area = intakeCamTarget.getArea();
             lastDetectedTimestamp = intakeCamResult.getTimestampSeconds();
         } else if (DriverStation.isTeleopEnabled()){
