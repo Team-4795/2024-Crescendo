@@ -3,7 +3,11 @@ package frc.robot.subsystems.vision.intakeCam;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonTargetSortMode;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.Util;
 
 public class IntakeCamVision extends SubsystemBase {
     private static IntakeCamVisionIO io;
@@ -27,7 +31,7 @@ public class IntakeCamVision extends SubsystemBase {
     }
 
     public double getIntakeCamYaw() {
-        return inputs.camYaw;
+        return inputs.noteYaw;
     }
 
     public boolean intakeCamHasTargets() {
@@ -38,13 +42,26 @@ public class IntakeCamVision extends SubsystemBase {
         io.setTargetComparator(sortMode);
     }
 
-    public boolean isNoteInFront() {
-        return intakeCamHasTargets() && Math.abs(getIntakeCamYaw()) < 15;
+    public boolean isNoteInFront(Translation2d robotOdometry, Translation2d notePose, double photonVisionYaw) {
+        double distance = robotOdometry.getDistance(notePose);
+        double yChange = robotOdometry.getY() - notePose.getY();
+
+        double angle = robotOdometry.getAngle().getDegrees();
+
+        double yaw = Math.asin(yChange / distance) - angle;
+
+        return Math.abs(yaw - photonVisionYaw) < 5;
     }
 
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Intake Cam", inputs);
+
+        // if (inputs.hasTargets) {
+        //     double camZ = Units.inchesToMeters(9.35);
+        //     double camY = Units.inchesToMeters(2.516);
+        //     double angle = Units.degreesToRadians(20.837);
+        // }
     }
     
 }
