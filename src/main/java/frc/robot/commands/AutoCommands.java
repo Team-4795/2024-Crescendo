@@ -54,8 +54,8 @@ public class AutoCommands {
 
   public static Command score() {
     return Commands.sequence(
-          indexer.forwards().withTimeout(0.6).alongWith(Commands.waitSeconds(0.1).andThen(NoteVisualizer.shoot())),
-          Commands.runOnce(() -> shooter.setShootingSpeedRPM(0.0, 0.0))
+          indexer.forwards().withTimeout(0.6).alongWith(Commands.waitSeconds(0.1).andThen(NoteVisualizer.shoot()))
+          //Commands.runOnce(() -> shooter.setShootingSpeedRPM(0.0, 0.0))
     );
   }
 

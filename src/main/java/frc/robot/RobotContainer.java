@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.OIConstants;
 import frc.robot.StateManager.State;
-import frc.robot.autoPaths.GDA_AS1456;
+import frc.robot.autoPaths.GDA_AS456;
 import frc.robot.autoPaths.GDA_M2145;
 import frc.robot.autoPaths.GDA_M2145_RunEverything;
 import frc.robot.autoPaths.GDA_M32145;
@@ -137,7 +137,7 @@ public class RobotContainer {
     // autoChooser.addOption("Pivot SysIs (Dynamic everse)", pivot.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     // autoChooser.addOption("Pivot Model", new ArmFeedForwardCharacterization(pivot, (volts) -> pivot.runVoltage(volts), () -> pivot.getVelocity(), () -> pivot.getPosition(), (x) -> 0.0));
     autoChooser.addOption("TEST - SS GP 8765", GDA_SS8765.load());
-    autoChooser.addOption("TEST - AS GP 456", GDA_AS1456.load());
+    autoChooser.addOption("TEST - AS GP 456", GDA_AS456.load());
     // autoChooser.addOption("TEST - M GP 32145", GDA_M32145.load());
 
 

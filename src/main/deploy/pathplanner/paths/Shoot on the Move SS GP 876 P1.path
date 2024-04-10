@@ -50,7 +50,7 @@
   ],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
+      "name": "SetPivotAngle",
       "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
@@ -67,7 +67,7 @@
       }
     },
     {
-      "name": "New Event Marker",
+      "name": "Intake",
       "waypointRelativePos": 0.55,
       "command": {
         "type": "parallel",
@@ -84,7 +84,7 @@
       }
     },
     {
-      "name": "New Event Marker",
+      "name": "Score",
       "waypointRelativePos": 0.25,
       "command": {
         "type": "parallel",
