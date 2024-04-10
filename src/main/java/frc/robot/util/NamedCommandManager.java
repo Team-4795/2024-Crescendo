@@ -1,5 +1,7 @@
 package frc.robot.util;
 
+import java.util.Collections;
+
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -8,6 +10,7 @@ import frc.robot.Constants.Mode;
 import frc.robot.Constants;
 import frc.robot.autoPaths.AutoGamepieces;
 import frc.robot.commands.AutoCommands;
+import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.vision.intakeCam.IntakeCamVision;
 
 public class NamedCommandManager {
@@ -82,7 +85,11 @@ public class NamedCommandManager {
                     Commands.print("Note " + Integer.toString(note) + " not detected")).onlyIf(() -> !simDetect), 
                 Commands.parallel(
                     Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)),
-                    Commands.print("Note " + Integer.toString(note) + " not detected")).onlyIf(() -> !IntakeCamVision.getInstance().isNoteInFront()), 
+                    Commands.print("Note " + Integer.toString(note) + " not detected")).onlyIf(() -> 
+                                                                                    !IntakeCamVision.getInstance().isNoteInFront(
+                                                                                                    Drive.getInstance().getPose().getTranslation(), 
+                                                                                                    Constants.FieldConstants.StagingLocations.centerlineTranslations[8 - note], 
+                                                                                                    IntakeCamVision.getInstance().getIntakeCamYaw())), 
                 () -> Constants.currentMode == Mode.SIM)
         );
     }
