@@ -59,11 +59,11 @@ public class AlignShuttle extends Command{
         Logger.recordOutput("AlignShuttle/shootingSpeed", shootingSpeed);
 
         if(alliance == Alliance.Blue){
-            if(drive.getPose().getX() < FieldConstants.RED_WING_X && drive.getTranslationVelocity().getNorm() < velocityCutoff && AlignPose.atGoal()){
+            if(drive.getPose().getX() < FieldConstants.RED_WING_X && drive.getTranslationVelocity().getNorm() < velocityCutoff && AlignPose.atGoal() && shooter.atGoal()){
                 indexer.setIndexerSpeed(IndexerSetpoints.shoot);
             }
         } else {
-            if(drive.getPose().getX() > FieldConstants.BLUE_WING_X && drive.getTranslationVelocity().getNorm() < velocityCutoff && AlignPose.atGoal()){
+            if(drive.getPose().getX() > FieldConstants.BLUE_WING_X && drive.getTranslationVelocity().getNorm() < velocityCutoff && AlignPose.atGoal() && shooter.atGoal()){
                 indexer.setIndexerSpeed(IndexerSetpoints.shoot);
             }
         }

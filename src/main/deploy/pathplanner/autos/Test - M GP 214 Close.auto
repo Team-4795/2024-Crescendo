@@ -1,0 +1,231 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.2782342053414837,
+      "y": 5.574358195791997
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "AlignClose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Initialize"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.4
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "M GP2145 P1"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AlignGP2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.4
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "M GP2145 P2"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AlignGP1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.4
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "M GP 32145 P5"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Closer M GP214 P4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionAlign"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Closer M GP214 P5"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Middle",
+  "choreoAuto": false
+}

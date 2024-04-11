@@ -130,7 +130,7 @@ public class AutoCommands {
       Commands.runOnce(() -> shooter.setShootingSpeedRPM(-speed, speed)),
       Commands.run(() -> {
               double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
-              if(distanceToSpeaker < 5.5){
+              if(distanceToSpeaker < 8.5){
                 pivot.setGoal(PivotConstants.armAngleMap.get(distanceToSpeaker));
               }
       }).withTimeout(timeLimit)
