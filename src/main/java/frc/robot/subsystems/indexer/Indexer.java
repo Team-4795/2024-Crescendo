@@ -14,6 +14,7 @@ public class Indexer extends SubsystemBase {
     private final IndexerIOInputsAutoLogged inputs = new IndexerIOInputsAutoLogged(); 
     private double indexerSpeed = 0.0;
     private boolean overrideStoring = false;
+    private boolean currentSpeedStoring = false;
 
     public static boolean currentStoring = false;
     private CircularBuffer<Double> currents = new CircularBuffer<>(IndexerConstants.bufferSize);
@@ -89,6 +90,7 @@ public class Indexer extends SubsystemBase {
         double averageCurrent = this.averageCurrent();
         currents.addLast(Double.valueOf(inputs.bottomMotorCurrent));
         Logger.recordOutput("Indexer/Last Measured Speed", lastMeasuredSpeed);
+        double absoluteAcceleration = Math.abs(inputs.bottomMotorSpeed) - Math.abs(lastMeasuredSpeed);
         lastMeasuredSpeed = inputs.bottomMotorSpeed;
 
         if (Pivot.getInstance().getPosition() < 1.0) {
@@ -105,10 +107,18 @@ public class Indexer extends SubsystemBase {
             currentStoring = false;
         }
 
+        if(averageCurrent > IndexerConstants.currentThreshold && absoluteAcceleration < 0) { 
+            currentSpeedStoring = true;
+        }
+        else {
+            currentSpeedStoring = false;
+        }
+        
         Logger.recordOutput("Indexer/Average current", averageCurrent);
         Logger.recordOutput("Indexer/Acceleration", inputs.bottomMotorSpeed - lastMeasuredSpeed);
-        Logger.recordOutput("Indexer/Absolute Acceleration", Math.abs(inputs.bottomMotorSpeed) - Math.abs(lastMeasuredSpeed));
+        Logger.recordOutput("Indexer/Absolute Acceleration", absoluteAcceleration);
         Logger.recordOutput("Indexer/Storing (based on current)", currentStoring);
+        Logger.recordOutput("Indexer/Storing2 (based on current and speed)", currentStoring);
     }
 
     private double averageCurrent(){
