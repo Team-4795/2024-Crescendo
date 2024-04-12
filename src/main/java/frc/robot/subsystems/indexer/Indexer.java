@@ -5,8 +5,8 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.util.CircularBuffer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.Constants.IndexerSetpoints;
+import frc.robot.subsystems.pivot.Pivot;
 
 public class Indexer extends SubsystemBase {
     
@@ -17,6 +17,7 @@ public class Indexer extends SubsystemBase {
 
     public static boolean currentStoring = false;
     private CircularBuffer<Double> currents = new CircularBuffer<>(IndexerConstants.bufferSize);
+    private double lastMeasuredSpeed = 0.0;
 
     private static Indexer instance;
 
@@ -87,7 +88,8 @@ public class Indexer extends SubsystemBase {
         Logger.processInputs("Indexer", inputs);
         double averageCurrent = this.averageCurrent();
         currents.addLast(Double.valueOf(inputs.bottomMotorCurrent));
-
+        Logger.recordOutput("Indexer/Last Measured Speed", lastMeasuredSpeed);
+        lastMeasuredSpeed = inputs.bottomMotorSpeed;
 
         if (Pivot.getInstance().getPosition() < 1.0) {
             io.canSpinBottom(true);
@@ -104,6 +106,8 @@ public class Indexer extends SubsystemBase {
         }
 
         Logger.recordOutput("Indexer/Average current", averageCurrent);
+        Logger.recordOutput("Indexer/Acceleration", inputs.bottomMotorSpeed - lastMeasuredSpeed);
+        Logger.recordOutput("Indexer/Absolute Acceleration", Math.abs(inputs.bottomMotorSpeed) - Math.abs(lastMeasuredSpeed));
         Logger.recordOutput("Indexer/Storing (based on current)", currentStoring);
     }
 
