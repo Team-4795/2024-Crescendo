@@ -5,7 +5,7 @@
       "x": 1.3450058698654177,
       "y": 5.606826305389404
     },
-    "rotation": -7.513481315570705e-27
+    "rotation": -8.184857911721979e-22
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "named",
           "data": {
-            "name": "AlignCloseGP"
+            "name": ".29"
           }
         },
         {
@@ -32,19 +32,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.2
+            "waitTime": 0.5
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Stow"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop Shooting"
           }
         },
         {
@@ -73,15 +67,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "AlignCloseGP"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.4
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "VisionAlign"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Speaker"
+                }
+              }
+            ]
           }
         },
         {

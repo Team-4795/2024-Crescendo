@@ -27,6 +27,8 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("AlignCloseGP", AutoCommands.setPivotAndShooter(0.3, 4500)); // change later
 
+        NamedCommands.registerCommand(".29", AutoCommands.setPivotAndShooter(0.29, 4500)); // change later
+
         NamedCommands.registerCommand("AlignGP3", AutoCommands.setPivotAndShooter(0.21, 4000)); // change later
 
         NamedCommands.registerCommand("Align Far Source", AutoCommands.setPivotAndShooter(0.135, 5000));

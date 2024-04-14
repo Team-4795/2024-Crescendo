@@ -125,7 +125,7 @@ public class AutoCommands {
   }
 
   public static Command aimSpeakerDynamic(boolean timeout, double speed){
-    double timeLimit = (timeout) ? 0.6 : 15;
+    double timeLimit = (timeout) ? 0.7 : 15;
     return Commands.parallel(
       Commands.runOnce(() -> shooter.setShootingSpeedRPM(-speed, speed)),
       Commands.run(() -> {
@@ -138,7 +138,8 @@ public class AutoCommands {
   }
 
   public static Command rotateToSpeaker(){
-    return new AlignSpeaker().withTimeout(0.6);
+    return new AlignSpeaker().withTimeout(0.7);
   }
 
 }
+ 
