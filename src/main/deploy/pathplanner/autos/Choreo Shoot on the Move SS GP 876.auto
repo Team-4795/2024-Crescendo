@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.8133537769317627,
+      "y": 3.066394805908203
+    },
+    "rotation": -47.81557010267459
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SS GP 876 P1 Choreo"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SS GP 876 P2 Choreo"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SS GP 876 P3 Choreo"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SS GP 876 P4 Choero"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SS GP 876 P5 Choreo"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SS GP 876 P6 Choreo"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Source",
+  "choreoAuto": true
+}
