@@ -2,87 +2,38 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.373390793800354,
-      "y": 3.321857213973999
+      "x": 1.444,
+      "y": 7.37
     },
-    "rotation": -3.903634894901551e-25
+    "rotation": -3.1626659293235927e-26
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "SS ShootOnMove"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Initialize"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "SS GP 876 P1"
+            "pathName": "As GP 456 Reset Heading"
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Align Far Source"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SS GP 876 P2 Choreo"
-          }
-        },
-        {
-          "type": "race",
+          "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "SS GP 876 P3 Choreo"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    }
-                  ]
+                  "name": "Align Speaker"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Intake"
+                  "name": "VisionAlign 5k"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Align Far Source"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SS GP 876 P4 Choero"
           }
         },
         {
@@ -96,13 +47,19 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
                 "type": "sequential",
                 "data": {
                   "commands": [
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "SS GP 876 P5 Choreo"
+                        "pathName": "AS GP 456 P1"
                       }
                     },
                     {
@@ -113,11 +70,55 @@
                     }
                   ]
                 }
-              },
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": ".18"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS GP 456 P2 Choreo"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
               {
                 "type": "named",
                 "data": {
                   "name": "Intake"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "AS GP 456 P3 Choreo"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -126,13 +127,57 @@
         {
           "type": "named",
           "data": {
-            "name": "Stow"
+            "name": ".18"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SS GP 876 P6 Choreo"
+            "pathName": "AS GP 456 P4 Choreo"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "AS GP 456 P5 Choreo.1"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS GP 456 P6 Choreo"
           }
         },
         {
@@ -142,13 +187,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "VisionAlign 5k"
+                  "name": "Align Speaker"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Align Speaker"
+                  "name": "VisionAlign 5k"
                 }
               }
             ]
@@ -163,6 +208,6 @@
       ]
     }
   },
-  "folder": "Source",
+  "folder": "Amp",
   "choreoAuto": true
 }
