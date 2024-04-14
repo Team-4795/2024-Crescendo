@@ -4,10 +4,14 @@ import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonTargetSortMode;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.util.Util;
+import frc.robot.Constants;
+import frc.robot.Constants.FieldConstants.StagingLocations;
+import frc.robot.subsystems.MAXSwerve.Drive;
+import frc.robot.subsystems.vision.AprilTagVision.VisionConstants;
 
 public class IntakeCamVision extends SubsystemBase {
     private static IntakeCamVisionIO io;
@@ -42,20 +46,34 @@ public class IntakeCamVision extends SubsystemBase {
         io.setTargetComparator(sortMode);
     }
 
-    public boolean isNoteInFront(Translation2d robotOdometry, Translation2d notePose, double photonVisionYaw) {
-        double distance = robotOdometry.getDistance(notePose);
-        double yChange = robotOdometry.getY() - notePose.getY();
+    public boolean isNoteInFront(int note) {
+        Pose2d robotPose = Drive.getInstance().getPose();
+        Translation2d cameraPose = new Translation2d(
+            robotPose.getX() + robotPose.getRotation().getCos() * VisionConstants.intakeCamOffset, 
+            robotPose.getY() + robotPose.getRotation().getSin() * VisionConstants.intakeCamOffset);
+        Translation2d notePose = StagingLocations.centerlineTranslations[note];
+        double distance = cameraPose.getDistance(notePose);
+        double yChange = notePose.getY() - cameraPose.getY();
+        double yaw = 0.0;
+        if(Constants.alliance == Alliance.Red){
+            yaw = Math.asin(yChange / distance) + Drive.getInstance().getWrappedHeading();
+        } else {
+            yaw = Math.asin(yChange / distance) - Drive.getInstance().getWrappedHeading();
+        }
+        Logger.recordOutput("Intake Cam/Camera pose", cameraPose);
+        Logger.recordOutput("Intake Cam/Note 8 yaw", yaw);
+        Logger.recordOutput("Intake Cam/Unaltered yaw", Math.asin(yChange / distance));
+        Logger.recordOutput("Intake Cam/Note 8 Distance", distance);
+        Logger.recordOutput("Intake Cam/Note 8 delta Y", yChange);
+        Logger.recordOutput("Intake Cam/Note 8 error degrees", Math.abs(Units.radiansToDegrees(yaw) + this.getIntakeCamYaw()));
 
-        double angle = robotOdometry.getAngle().getDegrees();
-
-        double yaw = Math.asin(yChange / distance) - angle;
-
-        return Math.abs(yaw - photonVisionYaw) < 5;
+        return this.intakeCamHasTargets() && Math.abs(Units.radiansToDegrees(yaw) + this.getIntakeCamYaw()) < 5; //because photon and robot yaw coordinate systems are flipped
     }
 
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Intake Cam", inputs);
+        Logger.recordOutput("Intake Cam/Note in Front 8", this.isNoteInFront(8));
 
         // if (inputs.hasTargets) {
         //     double camZ = Units.inchesToMeters(9.35);

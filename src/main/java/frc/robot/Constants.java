@@ -22,6 +22,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /**
@@ -34,15 +36,22 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  */
 public final class Constants {
   // Mode of the robot, set to Mode.REPLAY for replay
-  public static final Mode currentMode = Mode.fromState();
+  public static final Mode currentMode = Mode.REPLAY;
   public static final boolean tuningMode = false;
   public static final boolean hasVision = true;
   public static final int tryConfigCount = 5;
   public static final double configDelay = 0.1;
   public static final int paramApplyAttemptLimit = 5;
   public static final double paramApplyTimemout = 0.05;
+  public static Alliance alliance;
 
   public static final boolean useLQR = false;
+
+  public static void getAlliance(){
+    DriverStation.getAlliance().ifPresent((ally) -> {
+      alliance = ally;
+    });
+  }
 
   public static final class Tolerances {
     public static final double turningSpeed = 0.2;
@@ -162,20 +171,20 @@ public final class Constants {
       public static final double centerlineX = fieldLength / 2.0;
 
       // need to update
-      public static final double centerlineFirstY = Units.inchesToMeters(29.638);
+      public static final double centerlineFirstY = fieldWidth - Units.inchesToMeters(29.638);
       public static final double centerlineSeparationY = Units.inchesToMeters(66);
       public static final double spikeX = Units.inchesToMeters(114);
       // need
       public static final double spikeFirstY = Units.inchesToMeters(161.638);
       public static final double spikeSeparationY = Units.inchesToMeters(57);
 
-      public static final Translation2d[] centerlineTranslations = new Translation2d[5];
+      public static final Translation2d[] centerlineTranslations = new Translation2d[9];
       public static final Translation2d[] spikeTranslations = new Translation2d[3];
 
       static {
-        for (int i = 0; i < centerlineTranslations.length; i++) {
+        for (int i = 4; i < centerlineTranslations.length; i++) {
           centerlineTranslations[i] =
-              new Translation2d(centerlineX, centerlineFirstY + (i * centerlineSeparationY));
+              new Translation2d(centerlineX, centerlineFirstY - ((i - 4) * centerlineSeparationY));
         }
       }
 

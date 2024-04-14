@@ -29,23 +29,23 @@ public class GDA_AS456 {
 
             Commands.sequence(
                 AutoCommands.intakeTrajectory(paths.get(0)),
-                Commands.deadline(
-                    Commands.sequence(
-                        AutoCommands.followTrajectory(paths.get(1)),
-                        Commands.waitSeconds(0.1)
-                    ), AutoCommands.aimSpeakerDynamic(false, 5000)
+                AutoCommands.followTrajectory(paths.get(1)),
+                Commands.parallel(
+                    AutoCommands.aimSpeakerDynamic(true, 5000),
+                    AutoCommands.rotateToSpeaker()
                 ),
+                Commands.waitSeconds(0.2),
                 AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(4)),
 
             Commands.sequence(
                 AutoCommands.intakeTrajectory(paths.get(2)),
-                Commands.deadline(
-                    Commands.sequence(
-                        AutoCommands.followTrajectory(paths.get(3)), 
-                        Commands.waitSeconds(0.1)
-                    ), AutoCommands.aimSpeakerDynamic(false, 5000)
+                AutoCommands.followTrajectory(paths.get(3)),
+                Commands.parallel(
+                    AutoCommands.aimSpeakerDynamic(true, 5000),
+                    AutoCommands.rotateToSpeaker()
                 ),
+                Commands.waitSeconds(0.2),
                 AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(5)),
 
@@ -53,9 +53,13 @@ public class GDA_AS456 {
                 AutoCommands.intakeTrajectory(paths.get(4)),
                 AutoCommands.SetPivotAngle(PivotSetpoints.stow),
                 AutoCommands.followTrajectory(paths.get(5)),
-                AutoCommands.aimSpeakerDynamic(true, 5000)
-            ),
-            AutoCommands.score()
+                Commands.parallel(
+                    AutoCommands.aimSpeakerDynamic(true, 5000),
+                    AutoCommands.rotateToSpeaker()
+                ),
+                Commands.waitSeconds(0.2),
+                AutoCommands.score()
+            )
         );
     }
 }

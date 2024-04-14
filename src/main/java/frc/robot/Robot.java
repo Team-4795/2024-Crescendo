@@ -133,6 +133,7 @@ public class Robot extends LoggedRobot {
     robotContainer = new RobotContainer();
 
     robotContainer.init();
+    Constants.getAlliance();
     Pivot.getInstance().setGoal(0.15);
   }
 
@@ -172,6 +173,7 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void autonomousInit() {
+    Constants.getAlliance();
     NoteVisualizer.resetAutoNotes();
     NoteVisualizer.showAutoNotes();
 
@@ -200,7 +202,7 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-
+    Constants.getAlliance();
     robotContainer.init();
   }
 

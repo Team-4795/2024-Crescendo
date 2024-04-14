@@ -137,7 +137,7 @@ public class RobotContainer {
     // autoChooser.addOption("Pivot SysIs (Dynamic everse)", pivot.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     // autoChooser.addOption("Pivot Model", new ArmFeedForwardCharacterization(pivot, (volts) -> pivot.runVoltage(volts), () -> pivot.getVelocity(), () -> pivot.getPosition(), (x) -> 0.0));
     
-    autoChooser.addOption("TEST - SS GP 8765", GDA_SS8765.load());
+    autoChooser.addOption("TEST - SS GP 876", GDA_SS8765.load());
     autoChooser.addOption("TEST - AS GP 456", GDA_AS456.load());
     // autoChooser.addOption("TEST - M GP 32145", GDA_M32145.load());
 

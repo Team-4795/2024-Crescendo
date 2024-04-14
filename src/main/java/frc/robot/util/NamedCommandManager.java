@@ -83,14 +83,14 @@ public class NamedCommandManager {
                 Commands.parallel(
                     Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)),
                     Commands.print("Note " + Integer.toString(note) + " not detected")).onlyIf(() -> !simDetect), 
-                Commands.parallel(
-                    Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)),
-                    Commands.print("Note " + Integer.toString(note) + " not detected")).onlyIf(() -> 
-                                                                                    !IntakeCamVision.getInstance().isNoteInFront(
-                                                                                                    Drive.getInstance().getPose().getTranslation(), 
-                                                                                                    Constants.FieldConstants.StagingLocations.centerlineTranslations[8 - note], 
-                                                                                                    IntakeCamVision.getInstance().getIntakeCamYaw())), 
+                Commands.run(() -> {
+                    if(!IntakeCamVision.getInstance().isNoteInFront(note)){
+                        AutoGamepieces.setNoteGone(note);
+                        System.out.println("Note " + Integer.toString(note) + " not detected");
+                    }
+                }).withTimeout(0.3),
                 () -> Constants.currentMode == Mode.SIM)
         );
     }
+
 }

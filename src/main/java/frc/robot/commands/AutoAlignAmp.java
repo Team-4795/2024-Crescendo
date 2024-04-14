@@ -25,6 +25,7 @@ import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.pivot.Pivot;
+import frc.robot.subsystems.vision.AprilTagVision.Vision;
 
 public class AutoAlignAmp extends Command{
     private static final Pose2d RED_AMP = new Pose2d(14.7, 7.68, Rotation2d.fromRadians(Math.PI / 2));
@@ -67,6 +68,7 @@ public class AutoAlignAmp extends Command{
             targetPose = (alliance == Alliance.Blue) ? BLUE_AMP : RED_AMP;
             mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
         });
+        Vision.getInstance().disableUpdates(0);
         currentPose = Drive.getInstance().getPose();
         double velocity = mult * projection(drive.getFieldRelativeTranslationVelocity(), targetPose.getTranslation().minus(currentPose.getTranslation()));
         rotationController.enableContinuousInput(-Math.PI, Math.PI);
@@ -130,6 +132,7 @@ public class AutoAlignAmp extends Command{
         indexer.setIndexerSpeed(0);
         pivot.setGoal(PivotSetpoints.stow);
         shooter.setShootingSpeedRPM(0, 0);
+        Vision.getInstance().enableUpdates(0);
     }
 
     private double projection(Translation2d v1, Translation2d onto){
