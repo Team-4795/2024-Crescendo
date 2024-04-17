@@ -34,7 +34,7 @@ public class GDA_AS456 {
                     AutoCommands.aimSpeakerDynamic(true, 5000),
                     AutoCommands.rotateToSpeaker()
                 ),
-                Commands.waitSeconds(0.2),
+                Commands.waitSeconds(0.1),
                 AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(4)),
 
@@ -45,7 +45,7 @@ public class GDA_AS456 {
                     AutoCommands.aimSpeakerDynamic(true, 5000),
                     AutoCommands.rotateToSpeaker()
                 ),
-                Commands.waitSeconds(0.2),
+                Commands.waitSeconds(0.1),
                 AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(5)),
 
@@ -57,7 +57,7 @@ public class GDA_AS456 {
                     AutoCommands.aimSpeakerDynamic(true, 5000),
                     AutoCommands.rotateToSpeaker()
                 ),
-                Commands.waitSeconds(0.2),
+                Commands.waitSeconds(0.1),
                 AutoCommands.score()
             )
         );

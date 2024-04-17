@@ -55,31 +55,39 @@ public class IntakeCamVision extends SubsystemBase {
         double distance = cameraPose.getDistance(notePose);
         double yChange = notePose.getY() - cameraPose.getY();
         double yaw = 0.0;
+        double error = 0.0;
         if(Constants.alliance == Alliance.Red){
             yaw = Math.asin(yChange / distance) + Drive.getInstance().getWrappedHeading();
+            error = Math.abs(Units.radiansToDegrees(yaw) - this.getIntakeCamYaw());
         } else {
             yaw = Math.asin(yChange / distance) - Drive.getInstance().getWrappedHeading();
+            error = Math.abs(Units.radiansToDegrees(yaw) + this.getIntakeCamYaw()); //because photon and robot yaw coordinate systems are flipped on blue
         }
         Logger.recordOutput("Intake Cam/Camera pose", cameraPose);
-        Logger.recordOutput("Intake Cam/Note 8 yaw", yaw);
-        Logger.recordOutput("Intake Cam/Unaltered yaw", Math.asin(yChange / distance));
-        Logger.recordOutput("Intake Cam/Note 8 Distance", distance);
-        Logger.recordOutput("Intake Cam/Note 8 delta Y", yChange);
-        Logger.recordOutput("Intake Cam/Note 8 error degrees", Math.abs(Units.radiansToDegrees(yaw) + this.getIntakeCamYaw()));
+        Logger.recordOutput("Intake Cam/Note " + note + "/ yaw", Units.radiansToDegrees(yaw));
+        Logger.recordOutput("Intake Cam/Note " + note + "/ Unaltered expected yaw", Math.asin(yChange / distance));
+        Logger.recordOutput("Intake Cam/Note " + note + "/ Distance", distance);
+        Logger.recordOutput("Intake Cam/Note " + note + "/ delta Y", yChange);
+        Logger.recordOutput("Intake Cam/Note " + note + "/ error degrees", error);
 
-        return this.intakeCamHasTargets() && Math.abs(Units.radiansToDegrees(yaw) + this.getIntakeCamYaw()) < 5; //because photon and robot yaw coordinate systems are flipped
+        return this.intakeCamHasTargets() && error < 5; 
+    }
+
+    public double getDistanceToNote(int note){
+        Pose2d robotPose = Drive.getInstance().getPose();
+        Translation2d cameraPose = new Translation2d(
+            robotPose.getX() + robotPose.getRotation().getCos() * VisionConstants.intakeCamOffset, 
+            robotPose.getY() + robotPose.getRotation().getSin() * VisionConstants.intakeCamOffset);
+        Translation2d notePose = StagingLocations.centerlineTranslations[note];
+        return cameraPose.getDistance(notePose);
     }
 
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Intake Cam", inputs);
-        Logger.recordOutput("Intake Cam/Note in Front 8", this.isNoteInFront(8));
-
-        // if (inputs.hasTargets) {
-        //     double camZ = Units.inchesToMeters(9.35);
-        //     double camY = Units.inchesToMeters(2.516);
-        //     double angle = Units.degreesToRadians(20.837);
-        // }
+        Logger.recordOutput("Intake Cam/Note in Front 4", this.isNoteInFront(4));
+        Logger.recordOutput("Intake Cam/ Note in Front 5", this.isNoteInFront(5));
+        Logger.recordOutput("Auto Notes/ Note Position 4", StagingLocations.centerlineTranslations[4]);
     }
     
 }

@@ -71,7 +71,7 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("Detect Note 4", detectNote(4, true));
 
-        NamedCommands.registerCommand("Detect Note 5", detectNote(5, true));
+        NamedCommands.registerCommand("Detect Note 5", detectNote(5, false));
 
         NamedCommands.registerCommand("Detect Note 6", detectNote(6, true));
 
@@ -84,15 +84,19 @@ public class NamedCommandManager {
         return Commands.parallel(
             Commands.print("Event Marker Executed For Note " + note),
             Commands.either(
-                Commands.parallel(
-                    Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)),
-                    Commands.print("Note " + Integer.toString(note) + " not detected")).onlyIf(() -> !simDetect), 
+                Commands.sequence(
+                    Commands.waitUntil(() -> IntakeCamVision.getInstance().getDistanceToNote(note) < 2),
+                    Commands.parallel(
+                        Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)),
+                        Commands.print("Note " + Integer.toString(note) + " not detected")
+                    ).onlyIf(() -> !simDetect)
+                ), 
                 Commands.run(() -> {
-                    if(!IntakeCamVision.getInstance().isNoteInFront(note)){
-                        AutoGamepieces.setNoteGone(note);
-                        System.out.println("Note " + Integer.toString(note) + " not detected");
+                    if(IntakeCamVision.getInstance().getDistanceToNote(note) < 4){
+                        AutoGamepieces.setNote(note, IntakeCamVision.getInstance().isNoteInFront(note));
                     }
-                }).withTimeout(0.3),
+                }).until(() -> IntakeCamVision.getInstance().getDistanceToNote(note) < 2)
+                  .finallyDo(() -> AutoGamepieces.updateNotes(note)),
                 () -> Constants.currentMode == Mode.SIM)
         );
     }

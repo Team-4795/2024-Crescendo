@@ -117,7 +117,6 @@ public class AutoCommands {
       return Commands.sequence(
         Commands.parallel(
           indexer.forwards(),
-          Commands.runOnce(() -> pivot.setGoal(0.3)),
           Commands.runOnce(() -> intake.setIntakeSpeed(-1))
         ).until(indexer::isStoring));
   }
