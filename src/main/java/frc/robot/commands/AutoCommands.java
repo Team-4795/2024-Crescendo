@@ -114,10 +114,12 @@ public class AutoCommands {
   }
 
   public static Command intakeWithoutPivot(){
-    return Commands.sequence(
-      Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
-      Commands.either(Commands.waitUntil(indexer::isStoring), Commands.waitSeconds(1), Robot::isReal),
-      indexer.reverse().withTimeout(0.1));
+      return Commands.sequence(
+        Commands.parallel(
+          indexer.forwards(),
+          Commands.runOnce(() -> pivot.setGoal(0.3)),
+          Commands.runOnce(() -> intake.setIntakeSpeed(-1))
+        ).until(indexer::isStoring));
   }
 
   public static Command sensingPiece() {

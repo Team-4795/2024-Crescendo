@@ -46,9 +46,28 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "M GP 2631 P2"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "M GP 2631 P2"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Run Intake"
                 }
               }
             ]

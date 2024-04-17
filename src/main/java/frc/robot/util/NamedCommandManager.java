@@ -33,6 +33,8 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("Align Far Source", AutoCommands.setPivotAndShooter(0.135, 5000));
 
+        NamedCommands.registerCommand("SetIntakeAngle", AutoCommands.SetPivotAngle(0.3));
+
         NamedCommands.registerCommand("Align Under Stage", AutoCommands.setPivotAndShooter(0.17, 4500));
 
         NamedCommands.registerCommand("Stow", AutoCommands.SetPivotAngle(0.08));

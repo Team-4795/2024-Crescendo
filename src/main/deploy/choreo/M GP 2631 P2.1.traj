@@ -331,7 +331,7 @@
       "command": {
         "type": "named",
         "data": {
-          "name": "Intake"
+          "name": "SetIntakeAngle"
         }
       }
     },
