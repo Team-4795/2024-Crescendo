@@ -128,7 +128,7 @@ public class RobotContainer {
 
     NamedCommandManager.registerAll();
     NoteVisualizer.setPivotPoseSupplier(pivot::getPose);
-    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser());
+    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("Choreo AS GP 564"));
 
 
     // autoChooser.addOption("Pivot SysIs (Quasistatic Forward)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
@@ -138,7 +138,7 @@ public class RobotContainer {
     // autoChooser.addOption("Pivot Model", new ArmFeedForwardCharacterization(pivot, (volts) -> pivot.runVoltage(volts), () -> pivot.getVelocity(), () -> pivot.getPosition(), (x) -> 0.0));
     // autoChooser.addDefaultOption("Sim AS GP 564");
     autoChooser.addOption("TEST - SS GP 876", GDA_SS8765.load());
-    autoChooser.addDefaultOption("TEST - AS GP 456", GDA_AS456.load());
+    autoChooser.addOption("TEST - AS GP 456", GDA_AS456.load());
     // autoChooser.addOption("TEST - M GP 32145", GDA_M32145.load());
 
 
