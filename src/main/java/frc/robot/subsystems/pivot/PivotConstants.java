@@ -55,7 +55,7 @@ public final class PivotConstants {
         armAngleMap.put(1.17, 0.6);
         armAngleMap.put(2.0, 0.4);
         armAngleMap.put(3.29, 0.2);
-        armAngleMap.put(3.88, 0.172);
+        armAngleMap.put(3.88, 0.156);
         armAngleMap.put(4.2, 0.14);
         armAngleMap.put(5.0, 0.1);
         armAngleMap.put(5.3, 0.089);
