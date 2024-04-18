@@ -73,6 +73,18 @@ public class IndexerIOReal implements IndexerIO {
     }
 
     @Override
+    public void setHandoffSpeed(double speed){
+        if(spinBottom){
+            bottomIndexMotor.set(speed);
+        }
+    }
+
+    @Override
+    public void setTowerSpeed(double speed){
+        towerIndexMotor.set(speed);
+    }
+
+    @Override
     public void updateInputs(IndexerIOInputs inputs) {    
         inputs.bottomMotorSpeed = bottomEncoder.getVelocity();
         inputs.bottomMotorCurrent = bottomIndexMotor.getOutputCurrent();

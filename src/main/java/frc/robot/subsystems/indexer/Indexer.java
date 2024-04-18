@@ -13,8 +13,9 @@ public class Indexer extends SubsystemBase {
     private IndexerIO io;
     private final IndexerIOInputsAutoLogged inputs = new IndexerIOInputsAutoLogged(); 
     private double indexerSpeed = 0.0;
+    private double handoffSpeed = 0.0;
     private boolean overrideStoring = false;
-    private boolean currentSpeedStoring = false;
+    private boolean unsyncronize = false;
 
     public static boolean currentStoring = false;
     private CircularBuffer<Double> currents = new CircularBuffer<>(IndexerConstants.bufferSize);
@@ -44,6 +45,16 @@ public class Indexer extends SubsystemBase {
 
     public void setIndexerSpeed(double motorValue) {
         indexerSpeed = motorValue;
+        handoffSpeed = motorValue;
+    }
+
+    public void setHandoffSpeed(double speed){
+        handoffSpeed = speed;
+        if(speed != 0){
+            unsyncronize = true;
+        } else {
+            unsyncronize = false;
+        }
     }
 
     public Command reverse() {
@@ -57,6 +68,13 @@ public class Indexer extends SubsystemBase {
         return startEnd(
             () -> setIndexerSpeed(IndexerSetpoints.shoot),
             () -> setIndexerSpeed(0)
+        );
+    }
+
+    public Command reverseHandoff(){
+        return startEnd(
+            () -> setHandoffSpeed(IndexerSetpoints.reverse),
+            () -> setHandoffSpeed(0)
         );
     }
 
@@ -99,19 +117,17 @@ public class Indexer extends SubsystemBase {
             io.canSpinBottom(false);
         }
 
-        io.setIndexerSpeed(indexerSpeed);
+        if(unsyncronize){
+            io.setHandoffSpeed(handoffSpeed);
+            io.setIndexerSpeed(indexerSpeed);
+        } else {
+            io.setIndexerSpeed(indexerSpeed);
+        }
 
         if(averageCurrent > IndexerConstants.currentThreshold){
             currentStoring = true;
         } else {
             currentStoring = false;
-        }
-
-        if(averageCurrent > IndexerConstants.currentThreshold && absoluteAcceleration < 0) { 
-            currentSpeedStoring = true;
-        }
-        else {
-            currentSpeedStoring = false;
         }
         
         Logger.recordOutput("Indexer/Average current", averageCurrent);

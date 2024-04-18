@@ -20,4 +20,6 @@ public interface IndexerIO {
    public default void canSpinBottom(boolean spin) {}
    public default void updateInputs(IndexerIOInputs inputs) {}
    public default void setIndexerSpeed(double speed) {}
+   public default void setHandoffSpeed(double speed) {}
+   public default void setTowerSpeed(double speed) {}
 }
