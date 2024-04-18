@@ -17,11 +17,11 @@ public class GDA_AS456 {
     PathPlannerAuto auto;
 
     public static Command load(){
-        paths = PathPlannerAuto.getPathGroupFromAutoFile("Choreo AS GP 456");
+        paths = PathPlannerAuto.getPathGroupFromAutoFile("AS GP 456");
         IntakeCamVision.getInstance().setTargetComparator(PhotonTargetSortMode.Centermost);
         
         return Commands.sequence(
-            AutoCommands.followTrajectory(paths.get(0)),
+            // AutoCommands.followTrajectory(paths.get(0)),
 
             Commands.parallel(
                 AutoCommands.rotateToSpeaker(),
@@ -31,8 +31,8 @@ public class GDA_AS456 {
             AutoCommands.score(),
 
             Commands.sequence(
-                AutoCommands.intakeTrajectory(paths.get(1)),
-                AutoCommands.followTrajectory(paths.get(2)),
+                AutoCommands.intakeTrajectory(paths.get(0)),
+                AutoCommands.followTrajectory(paths.get(1)),
                 Commands.parallel(
                     AutoCommands.aimSpeakerDynamic(true, 5000),
                     AutoCommands.rotateToSpeaker()
@@ -41,8 +41,8 @@ public class GDA_AS456 {
             ).until(() -> AutoGamepieces.isGone(4)),
 
             Commands.sequence(
-                AutoCommands.intakeTrajectory(paths.get(3)),
-                AutoCommands.followTrajectory(paths.get(4)),
+                AutoCommands.intakeTrajectory(paths.get(2)),
+                AutoCommands.followTrajectory(paths.get(3)),
                 Commands.parallel(
                     AutoCommands.aimSpeakerDynamic(true, 5000),
                     AutoCommands.rotateToSpeaker()
@@ -51,9 +51,9 @@ public class GDA_AS456 {
             ).until(() -> AutoGamepieces.isGone(5)),
 
             Commands.sequence(
-                AutoCommands.intakeTrajectory(paths.get(5)),
+                AutoCommands.intakeTrajectory(paths.get(4)),
                 AutoCommands.SetPivotAngle(PivotSetpoints.stow),
-                AutoCommands.followTrajectory(paths.get(6)),
+                AutoCommands.followTrajectory(paths.get(5)),
                 Commands.parallel(
                     AutoCommands.aimSpeakerDynamic(true, 5000),
                     AutoCommands.rotateToSpeaker()

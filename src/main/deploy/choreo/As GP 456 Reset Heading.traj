@@ -1,31 +1,31 @@
 {
   "samples": [
     {
-      "x": 1.444,
+      "x": 1.4,
       "y": 7.37,
-      "heading": -6.681346243596273e-29,
-      "angularVelocity": -7.387267906912055e-36,
-      "velocityX": 2.7969343123282806e-20,
-      "velocityY": -2.097702315067135e-19,
+      "heading": 0,
+      "angularVelocity": 0,
+      "velocityX": 0,
+      "velocityY": -2.114597728208693e-19,
       "timestamp": 0
     },
     {
-      "x": 1.44,
+      "x": 1.4,
       "y": 7.4,
-      "heading": 1.3412282286629984e-28,
-      "angularVelocity": 4.395219327293197e-27,
-      "velocityX": -0.0656616046091268,
-      "velocityY": 0.49246203456845816,
-      "timestamp": 0.06091840161097578
+      "heading": 0,
+      "angularVelocity": 0,
+      "velocityX": 0,
+      "velocityY": 0.4946363123888598,
+      "timestamp": 0.06065062197943857
     },
     {
-      "x": 1.44,
+      "x": 1.4,
       "y": 7.4,
-      "heading": 6.681346243596513e-29,
-      "angularVelocity": -8.140364154170613e-30,
-      "velocityX": 8.350413446492425e-20,
-      "velocityY": -6.262954968704002e-19,
-      "timestamp": 0.12183680322195156
+      "heading": 0,
+      "angularVelocity": 0,
+      "velocityX": 0,
+      "velocityY": -6.418962492389468e-19,
+      "timestamp": 0.12130124395887713
     }
   ],
   "eventMarkers": []
