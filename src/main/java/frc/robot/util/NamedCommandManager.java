@@ -88,12 +88,14 @@ public class NamedCommandManager {
                     Commands.waitUntil(() -> IntakeCamVision.getInstance().getDistanceToNote(note) < 2),
                     Commands.parallel(
                         Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)),
-                        Commands.print("Note " + Integer.toString(note) + " not detected")
+                        Commands.print("Note " + note + " not detected")
                     ).onlyIf(() -> !simDetect)
                 ), 
                 Commands.run(() -> {
                     if(IntakeCamVision.getInstance().getDistanceToNote(note) < 4){
-                        AutoGamepieces.setNote(note, IntakeCamVision.getInstance().isNoteInFront(note));
+                        boolean noteSeen;
+                        AutoGamepieces.setNote(note, noteSeen = IntakeCamVision.getInstance().isNoteInFront(note));
+                        System.out.println("Note " + note + " seen?: " + noteSeen);
                     }
                 }).until(() -> IntakeCamVision.getInstance().getDistanceToNote(note) < 2)
                   .finallyDo(() -> AutoGamepieces.updateNotes(note)),

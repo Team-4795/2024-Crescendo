@@ -28,8 +28,8 @@ import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.vision.AprilTagVision.Vision;
 
 public class AutoAlignAmp extends Command{
-    private static final Pose2d RED_AMP = new Pose2d(14.68, 7.6, Rotation2d.fromRadians(Math.PI / 2));
-    private static final Pose2d BLUE_AMP = new Pose2d(1.85, 7.62, Rotation2d.fromRadians(Math.PI / 2));
+    private static final Pose2d RED_AMP = new Pose2d(14.68, 7.62, Rotation2d.fromRadians(Math.PI / 2));
+    private static final Pose2d BLUE_AMP = new Pose2d(1.85, 7.64, Rotation2d.fromRadians(Math.PI / 2));
 
     private final double maxDistance = 0.6;
     private final double minDistance = -0.1;
@@ -104,7 +104,7 @@ public class AutoAlignAmp extends Command{
                 pivot.setGoal(PivotSetpoints.amp);
                 shooter.setShootingSpeedRPM(ShooterSetpoints.ampTop, ShooterSetpoints.ampBottom);
         }
-        if(rotationController.atGoal() && distance < 0.07){
+        if(rotationController.atGoal() && distance < 0.06){
                 hasOuttook = true;
                 indexer.setIndexerSpeed(IndexerSetpoints.shoot);
         }
