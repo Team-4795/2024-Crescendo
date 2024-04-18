@@ -5,7 +5,7 @@
       "x": 1.444,
       "y": 7.37
     },
-    "rotation": -3.1626659293235927e-26
+    "rotation": -3.828129412236528e-27
   },
   "command": {
     "type": "sequential",
@@ -75,21 +75,34 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": ".18"
+            "pathName": "AS GP 456 P2 Choreo"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "VisionAlign 5k"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Score"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AS GP 456 P2 Choreo"
           }
         },
         {
@@ -125,15 +138,28 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": ".18"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "AS GP 456 P4 Choreo"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "VisionAlign 5k"
+                }
+              }
+            ]
           }
         },
         {
@@ -159,7 +185,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "AS GP 456 P5 Choreo.1"
+                        "pathName": "AS GP 456 P5 Choreo"
                       }
                     },
                     {
@@ -172,6 +198,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
           }
         },
         {

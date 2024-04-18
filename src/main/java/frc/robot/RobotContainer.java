@@ -168,7 +168,7 @@ public class RobotContainer {
     Trigger isReadyRumble = isReady.and(StateManager::isAiming);
 
     // Gamepiece align
-    OIConstants.driverController.rightBumper().whileTrue(new AlignToGamepiece());
+    OIConstants.driverController.b().whileTrue(new AlignToGamepiece());
 
     // Align Amp / Speaker
     OIConstants.driverController.leftBumper().whileTrue(
@@ -228,17 +228,17 @@ public class RobotContainer {
       .onTrue(Commands.runOnce(() -> StateManager.setState(State.AMP)));
 
     // Shuttle mode
-    OIConstants.operatorController.povRight()
-      .whileTrue((Commands.startEnd(
+    OIConstants.operatorController.povUp()
+      .onTrue((Commands.startEnd(
         () -> StateManager.setState(State.SHUTTLE),
         () -> StateManager.setState(State.SPEAKER))));
 
     // Source Intake
-    OIConstants.operatorController.povUp().onTrue(
-        Commands.parallel(
-            shooter.slowReverse(),
-            indexer.slowReverse(),
-            pivot.aimSource()));
+    // OIConstants.operatorController.povUp().onTrue(
+    //     Commands.parallel(
+    //         shooter.slowReverse(),
+    //         indexer.slowReverse(),
+    //         pivot.aimSource()));
     
     // Ground Intake
     OIConstants.operatorController.povDown().or(OIConstants.operatorController.povDownLeft()).or(OIConstants.operatorController.povDownRight())

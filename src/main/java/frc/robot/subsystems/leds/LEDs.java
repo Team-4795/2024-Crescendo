@@ -252,7 +252,7 @@ public class LEDs extends SubsystemBase {
                 color = Color.kMidnightBlue;
                 break;
             case SHUTTLE:
-                color = Color.kCrimson;
+                color = Color.kGreen;
                 break;
             case SPEAKER:
                 color = Color.kFuchsia;

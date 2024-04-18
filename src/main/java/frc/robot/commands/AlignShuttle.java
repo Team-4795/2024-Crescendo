@@ -18,7 +18,7 @@ import frc.robot.subsystems.Shooter.ShooterConstants;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.pivot.Pivot;
 
-public class AlignShuttle extends Command{
+public class AlignShuttle extends Command {
 
     private Drive drive = Drive.getInstance();
     private Pivot pivot = Pivot.getInstance();
@@ -54,6 +54,9 @@ public class AlignShuttle extends Command{
                 output),
                 true);
 
+                
+        // double shootShuttle = OIConstants.operatorController.getRightY() * 1000 + 3000;
+               
         shootingSpeed = ShooterConstants.shuttleSpeeds.get(AlignPose.getDistanceToTarget()); //always positive
         shooter.setShootingSpeedRPM(-shootingSpeed, shootingSpeed);
         Logger.recordOutput("AlignShuttle/shootingSpeed", shootingSpeed);
@@ -79,5 +82,6 @@ public class AlignShuttle extends Command{
     @Override
     public boolean isFinished() {
         return false;
+     
     }
 }
