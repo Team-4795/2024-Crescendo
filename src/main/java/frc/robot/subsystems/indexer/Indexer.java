@@ -119,7 +119,7 @@ public class Indexer extends SubsystemBase {
 
         if(unsyncronize){
             io.setHandoffSpeed(handoffSpeed);
-            io.setIndexerSpeed(indexerSpeed);
+            io.setTowerSpeed(indexerSpeed);
         } else {
             io.setIndexerSpeed(indexerSpeed);
         }
