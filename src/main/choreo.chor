@@ -1158,11 +1158,11 @@
                     "target": 2,
                     "trajTargetIndex": 2,
                     "targetTimestamp": 1.4394765064708772,
-                    "offset": 0,
+                    "offset": 0.1,
                     "command": {
                         "type": "named",
                         "data": {
-                            "name": "Detect Note 4"
+                            "name": "Detect Note 5"
                         }
                     }
                 }

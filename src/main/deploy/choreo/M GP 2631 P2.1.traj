@@ -327,20 +327,11 @@
   ],
   "eventMarkers": [
     {
-      "timestamp": 1.1178345899798392,
+      "timestamp": 1.2178345899798393,
       "command": {
         "type": "named",
         "data": {
           "name": "SetIntakePose"
-        }
-      }
-    },
-    {
-      "timestamp": 2.0866754612867044,
-      "command": {
-        "type": "wait",
-        "data": {
-          "waitTime": 0.3
         }
       }
     }

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.444,
+      "x": 1.4,
       "y": 7.37
     },
-    "rotation": -3.828129412236528e-27
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
@@ -185,7 +185,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "AS GP 456 P5 Choreo"
+                        "pathName": "AS GP 456 P5"
                       }
                     },
                     {

@@ -38,6 +38,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Stop Shooting"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Stow"
           }
         },

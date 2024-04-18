@@ -720,24 +720,11 @@
                     "target": 2,
                     "trajTargetIndex": 2,
                     "targetTimestamp": 0.9178345899798392,
-                    "offset": 0.2,
+                    "offset": 0.3,
                     "command": {
                         "type": "named",
                         "data": {
                             "name": "SetIntakePose"
-                        }
-                    }
-                },
-                {
-                    "name": "Marker",
-                    "target": 3,
-                    "trajTargetIndex": 3,
-                    "targetTimestamp": 1.5866754612867044,
-                    "offset": 0.5,
-                    "command": {
-                        "type": "wait",
-                        "data": {
-                            "waitTime": 0.3
                         }
                     }
                 }
