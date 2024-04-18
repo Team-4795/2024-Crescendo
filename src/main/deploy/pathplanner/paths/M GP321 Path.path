@@ -156,6 +156,23 @@
           ]
         }
       }
+    },
+    {
+      "name": "Set Pivot Last Shot",
+      "waypointRelativePos": 3.9000000000000004,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "AlignGP1"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {
