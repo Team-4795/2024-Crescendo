@@ -271,9 +271,7 @@ public class RobotContainer {
 
     // Handoff unjam
     OIConstants.operatorController.y().whileTrue(
-        Commands.parallel(
-            intake.slowReverse(),
-            indexer.forwards()));
+      intake.reverse());
 
     // Toggle pivot idle mode
     OIConstants.operatorController.start().whileTrue(
