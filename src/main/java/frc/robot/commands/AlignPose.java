@@ -103,7 +103,7 @@ public class AlignPose {
         deltaY *= (inverted) ? -mult : mult;
         desiredAngle = Math.atan2(deltaY, deltaX);
         if(state == State.SPEAKER || state == State.SHUTTLE){
-            desiredAngle -= 0.1;
+            desiredAngle -= 0.07;
         }
 
         // deltaAngle = Units.degreesToRadians(desiredAngle - previousAngle);

@@ -17,47 +17,47 @@ public class GDA_AS456 {
     PathPlannerAuto auto;
 
     public static Command load(){
-        paths = PathPlannerAuto.getPathGroupFromAutoFile("AS GP 456");
+        paths = PathPlannerAuto.getPathGroupFromAutoFile("Choreo AS GP 456");
         IntakeCamVision.getInstance().setTargetComparator(PhotonTargetSortMode.Centermost);
         
         return Commands.sequence(
+            AutoCommands.followTrajectory(paths.get(0)),
+
             Commands.parallel(
                 AutoCommands.rotateToSpeaker(),
                 AutoCommands.aimSpeakerDynamic(true, 4500)
             ),
+            
             AutoCommands.score(),
 
             Commands.sequence(
-                AutoCommands.intakeTrajectory(paths.get(0)),
-                AutoCommands.followTrajectory(paths.get(1)),
+                AutoCommands.intakeTrajectory(paths.get(1)),
+                AutoCommands.followTrajectory(paths.get(2)),
                 Commands.parallel(
                     AutoCommands.aimSpeakerDynamic(true, 5000),
                     AutoCommands.rotateToSpeaker()
                 ),
-                Commands.waitSeconds(0.1),
                 AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(4)),
 
             Commands.sequence(
-                AutoCommands.intakeTrajectory(paths.get(2)),
-                AutoCommands.followTrajectory(paths.get(3)),
+                AutoCommands.intakeTrajectory(paths.get(3)),
+                AutoCommands.followTrajectory(paths.get(4)),
                 Commands.parallel(
                     AutoCommands.aimSpeakerDynamic(true, 5000),
                     AutoCommands.rotateToSpeaker()
                 ),
-                Commands.waitSeconds(0.1),
                 AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(5)),
 
             Commands.sequence(
-                AutoCommands.intakeTrajectory(paths.get(4)),
+                AutoCommands.intakeTrajectory(paths.get(5)),
                 AutoCommands.SetPivotAngle(PivotSetpoints.stow),
-                AutoCommands.followTrajectory(paths.get(5)),
+                AutoCommands.followTrajectory(paths.get(6)),
                 Commands.parallel(
                     AutoCommands.aimSpeakerDynamic(true, 5000),
                     AutoCommands.rotateToSpeaker()
                 ),
-                Commands.waitSeconds(0.1),
                 AutoCommands.score()
             )
         );
