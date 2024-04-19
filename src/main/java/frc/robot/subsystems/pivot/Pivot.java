@@ -122,8 +122,9 @@ public class Pivot extends SubsystemBase {
             // double change = -PivotConstants.manualSpeed *
             // MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(),
             // OIConstants.kAxisDeadband);
-
-            setGoal(goal + change);
+            if(DriverStation.isTeleop()){
+                setGoal(goal + change);   
+            }
         }));
     }
 
