@@ -51,7 +51,7 @@
   "eventMarkers": [
     {
       "name": "Detect Note 5",
-      "waypointRelativePos": 0.4,
+      "waypointRelativePos": 0.15,
       "command": {
         "type": "sequential",
         "data": {

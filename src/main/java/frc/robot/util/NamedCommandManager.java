@@ -89,19 +89,19 @@ public class NamedCommandManager {
             Commands.print("Event Marker Executed For Note " + note),
             Commands.either(
                 Commands.sequence(
-                    Commands.waitUntil(() -> IntakeCamVision.getInstance().getDistanceToNote(note) < 2),
+                    Commands.waitUntil(() -> IntakeCamVision.getInstance().getDistanceToNote(note) < 2.5),
                     Commands.parallel(
                         Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)),
                         Commands.print("Note " + note + " not detected")
                     ).onlyIf(() -> !simDetect)
                 ), 
                 Commands.run(() -> {
-                    if(IntakeCamVision.getInstance().getDistanceToNote(note) < 4){
+                    if(IntakeCamVision.getInstance().getDistanceToNote(note) < 5){
                         boolean noteSeen;
                         AutoGamepieces.setNote(note, noteSeen = IntakeCamVision.getInstance().isNoteInFront(note));
                         System.out.println("Note " + note + " seen?: " + noteSeen);
                     }
-                }).until(() -> IntakeCamVision.getInstance().getDistanceToNote(note) < 2)
+                }).until(() -> IntakeCamVision.getInstance().getDistanceToNote(note) < 2.5)
                   .finallyDo(() -> AutoGamepieces.updateNotes(note)),
                 () -> Constants.currentMode == Mode.SIM)
         );

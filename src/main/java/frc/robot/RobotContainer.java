@@ -229,9 +229,7 @@ public class RobotContainer {
 
     // Shuttle mode
     OIConstants.operatorController.povUp()
-      .onTrue((Commands.startEnd(
-        () -> StateManager.setState(State.SHUTTLE),
-        () -> StateManager.setState(State.SPEAKER))));
+      .onTrue(Commands.runOnce(() -> StateManager.setState(State.SHUTTLE)));
 
     // Source Intake
     // OIConstants.operatorController.povUp().onTrue(
