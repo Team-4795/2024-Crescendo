@@ -6,11 +6,17 @@ import org.photonvision.PhotonTargetSortMode;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Robot;
 import frc.robot.Constants.PivotSetpoints;
 import frc.robot.commands.AutoCommands;
+import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.vision.intakeCam.IntakeCamVision;
 
@@ -19,6 +25,16 @@ public class GDA_AS456 {
     PathPlannerAuto auto;
 
     public static Command load(){
+
+        if (Drive.getInstance().getPose().getX() == 0 && Drive.getInstance().getPose().getY() == 0) {
+            DriverStation.getAlliance().ifPresent((alliance) -> {
+                if(alliance == Alliance.Blue){
+                    Drive.getInstance().resetOdometry(new Pose2d(1.4, 7.37, new Rotation2d(0)));
+                } else {
+                    Drive.getInstance().resetOdometry(new Pose2d(15.09, 7.37, new Rotation2d(Math.PI)));
+                }
+            });
+        }
         paths = PathPlannerAuto.getPathGroupFromAutoFile("AS GP 456");
         PathPlannerPath note5 = PathPlannerPath.fromPathFile("AS GP456 P2.5");
         PathPlannerPath note6 = PathPlannerPath.fromPathFile("AS GP456 P4.5");

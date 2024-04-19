@@ -215,7 +215,7 @@ public class RobotContainer {
     OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));
 
     // Non auto amp align
-    OIConstants.operatorController.povLeft().whileTrue(pivot.aimAmp().alongWith(shooter.revAmp()));
+    OIConstants.operatorController.x().whileTrue(pivot.aimAmp().alongWith(shooter.revAmp()));
     
     // Speaker mode
     OIConstants.operatorController.leftBumper()
@@ -265,7 +265,7 @@ public class RobotContainer {
             shooter.reverse()));
 
     // Override storing (flips it)
-    OIConstants.operatorController.x().whileTrue(indexer.overrideStoring().ignoringDisable(true));
+    // OIConstants.operatorController.x().whileTrue(indexer.overrideStoring().ignoringDisable(true));
 
     // Handoff unjam
     OIConstants.operatorController.y().whileTrue(
