@@ -8,8 +8,10 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Robot;
 import frc.robot.Constants.PivotSetpoints;
 import frc.robot.commands.AutoCommands;
+import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.vision.intakeCam.IntakeCamVision;
 
 public class GDA_AS456 {
@@ -18,6 +20,8 @@ public class GDA_AS456 {
 
     public static Command load(){
         paths = PathPlannerAuto.getPathGroupFromAutoFile("AS GP 456");
+        PathPlannerPath note5 = PathPlannerPath.fromPathFile("AS GP456 P2.5");
+        PathPlannerPath note6 = PathPlannerPath.fromPathFile("AS GP456 P4.5");
         IntakeCamVision.getInstance().setTargetComparator(PhotonTargetSortMode.Centermost);
         
         return Commands.sequence(
@@ -32,6 +36,7 @@ public class GDA_AS456 {
 
             Commands.sequence(
                 AutoCommands.intakeTrajectory(paths.get(0)),
+                Commands.runOnce(() -> AutoGamepieces.setNoteGone(4)).onlyIf(() -> noNoteDetected(true)),
                 AutoCommands.followTrajectory(paths.get(1)),
                 Commands.parallel(
                     AutoCommands.aimSpeakerDynamic(true, 5000),
@@ -41,7 +46,11 @@ public class GDA_AS456 {
             ).until(() -> AutoGamepieces.isGone(4)),
 
             Commands.sequence(
-                AutoCommands.intakeTrajectory(paths.get(2)),
+                Commands.either(
+                    AutoCommands.intakeTrajectory(note5), 
+                    AutoCommands.intakeTrajectory(paths.get(2)), 
+                    () -> noNoteDetected()),
+                Commands.runOnce(() -> AutoGamepieces.setNoteGone(5)).onlyIf(() -> noNoteDetected(false)),
                 AutoCommands.followTrajectory(paths.get(3)),
                 Commands.parallel(
                     AutoCommands.aimSpeakerDynamic(true, 5000),
@@ -51,7 +60,10 @@ public class GDA_AS456 {
             ).until(() -> AutoGamepieces.isGone(5)),
 
             Commands.sequence(
-                AutoCommands.intakeTrajectory(paths.get(4)),
+                Commands.either(
+                    AutoCommands.intakeTrajectory(note6), 
+                    AutoCommands.intakeTrajectory(paths.get(4)), 
+                    () -> noNoteDetected()),
                 AutoCommands.SetPivotAngle(PivotSetpoints.stow),
                 AutoCommands.followTrajectory(paths.get(5)),
                 Commands.parallel(
@@ -61,5 +73,16 @@ public class GDA_AS456 {
                 AutoCommands.score()
             )
         );
+    }
+
+    private static boolean noNoteDetected(boolean simDetect){
+        if(Robot.isSimulation()){
+            Indexer.getInstance().setIntakeAuto(simDetect);
+        }
+        return !Indexer.getInstance().getIntakeDetected();
+    }
+
+    private static boolean noNoteDetected(){
+        return !Indexer.getInstance().getIntakeDetected();
     }
 }

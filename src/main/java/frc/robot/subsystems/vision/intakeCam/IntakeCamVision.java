@@ -70,7 +70,7 @@ public class IntakeCamVision extends SubsystemBase {
         Logger.recordOutput("Intake Cam/Note " + note + "/ delta Y", yChange);
         Logger.recordOutput("Intake Cam/Note " + note + "/ error degrees", error);
 
-        return this.intakeCamHasTargets() && error < 5; 
+        return this.intakeCamHasTargets() && error < VisionConstants.degreeTolerance; 
     }
 
     public double getDistanceToNote(int note){

@@ -69,4 +69,5 @@ public class VisionConstants {
     public static final double areaCutoff = 11;
     public static final double timeDelay = 0.5;
     public static final double intakeCamOffset = 0.3;
+    public static final double degreeTolerance = 6.5;
 }

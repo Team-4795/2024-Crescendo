@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.util.CircularBuffer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Constants.IndexerSetpoints;
 import frc.robot.subsystems.pivot.Pivot;
 
@@ -14,6 +15,8 @@ public class Indexer extends SubsystemBase {
     private final IndexerIOInputsAutoLogged inputs = new IndexerIOInputsAutoLogged(); 
     private double indexerSpeed = 0.0;
     private double handoffSpeed = 0.0;
+
+    private boolean intookNote = false;
     private boolean overrideStoring = false;
     private boolean unsyncronize = false;
 
@@ -97,6 +100,20 @@ public class Indexer extends SubsystemBase {
         return inputs.sensorActivated ^ overrideStoring;
     }
 
+    public boolean getIntakeDetected(){
+        return intookNote;
+    }
+
+    public void setIntakeAuto(boolean detected){
+        if(Robot.isSimulation()){
+            intookNote = detected;
+        }
+    }
+
+    public void resetIntakeStatus(){
+        intookNote = false;
+    }
+
     public boolean handoff(){
         return currentStoring;
     }
@@ -110,6 +127,10 @@ public class Indexer extends SubsystemBase {
         Logger.recordOutput("Indexer/Last Measured Speed", lastMeasuredSpeed);
         double absoluteAcceleration = Math.abs(inputs.bottomMotorSpeed) - Math.abs(lastMeasuredSpeed);
         lastMeasuredSpeed = inputs.bottomMotorSpeed;
+
+        if(!intookNote){
+            intookNote = inputs.bottomMotorCurrent > IndexerConstants.currentThreshold && inputs.bottomMotorSpeed > IndexerConstants.velocityThreshold;
+        }
 
         if (Pivot.getInstance().getPosition() < 1.0) {
             io.canSpinBottom(true);
@@ -134,7 +155,7 @@ public class Indexer extends SubsystemBase {
         Logger.recordOutput("Indexer/Acceleration", inputs.bottomMotorSpeed - lastMeasuredSpeed);
         Logger.recordOutput("Indexer/Absolute Acceleration", absoluteAcceleration);
         Logger.recordOutput("Indexer/Storing (based on current)", currentStoring);
-        Logger.recordOutput("Indexer/Storing2 (based on current and speed)", currentStoring);
+        Logger.recordOutput("Indexer/Detected note in auto?", intookNote);
     }
 
     private double averageCurrent(){

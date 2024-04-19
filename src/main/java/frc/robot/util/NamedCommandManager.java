@@ -2,6 +2,7 @@ package frc.robot.util;
 
 import java.util.Collections;
 
+import com.ctre.phoenix6.configs.jni.ConfigJNI;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -73,13 +74,14 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("Detect Note 4", detectNote(4, true));
 
-        NamedCommands.registerCommand("Detect Note 5", detectNote(5, false));
+        NamedCommands.registerCommand("Detect Note 5", detectNote(5, true));
 
         NamedCommands.registerCommand("Detect Note 6", detectNote(6, true));
 
         NamedCommands.registerCommand("Detect Note 7", detectNote(7, true));
 
         NamedCommands.registerCommand("Detect Note 8", detectNote(8, true));
+
     }
 
     private static Command detectNote(int note, boolean simDetect) {
@@ -104,5 +106,4 @@ public class NamedCommandManager {
                 () -> Constants.currentMode == Mode.SIM)
         );
     }
-
 }
