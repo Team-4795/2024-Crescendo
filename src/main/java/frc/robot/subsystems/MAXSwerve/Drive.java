@@ -304,7 +304,7 @@ public class Drive extends SubsystemBase {
             .plus(new Translation2d(0, -Tolerances.speakerWidth))
             .minus(getPose().getTranslation()).getAngle();
 
-        return between(getPose().getRotation().rotateBy(new Rotation2d(Math.PI)), min, max);
+        return between(getPose().getRotation().rotateBy(new Rotation2d(Math.PI + 0.1)), min, max);
     }
 
     public double wrapDeg(double angle) {
