@@ -160,8 +160,10 @@ public final class Constants {
     public static final double fieldWidth = Units.inchesToMeters(323.277);
     public static final Pose2d BLUE_SOURCE = new Pose2d(15.9,0.4, Rotation2d.fromDegrees(-45));
     public static final Pose2d RED_SOURCE = new Pose2d(0.6,0.25, Rotation2d.fromDegrees(45));
-    public static final Pose2d BLUE_SHUTTLE = new Pose2d(2.9, 7, new Rotation2d());
-    public static final Pose2d RED_SHUTTLE = new Pose2d(13.8, 7, new Rotation2d());
+    // public static final Pose2d BLUE_SHUTTLE = new Pose2d(2.9, 7, new Rotation2d());
+    // public static final Pose2d RED_SHUTTLE = new Pose2d(13.8, 7, new Rotation2d());
+    public static final Pose2d BLUE_SHUTTLE = new Pose2d(1.86, 6.0, new Rotation2d());
+    public static final Pose2d RED_SHUTTLE = new Pose2d(14.6, 6.0, new Rotation2d());
     public static final Pose2d RED_SPEAKER = new Pose2d(16.379342, 5.547868, new Rotation2d());
     public static final Pose2d BLUE_SPEAKER = new Pose2d(0.1619, 5.547868, new Rotation2d());
     public static double RED_WING_X = 10.0;
