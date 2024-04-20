@@ -207,6 +207,13 @@ public class Pivot extends SubsystemBase {
         ).alongWith(aiming());
     }
 
+    public Command aimAmpManual(){
+        return Commands.startEnd(
+            () -> setGoal(PivotSetpoints.manualAmp),
+            () -> setGoal(PivotSetpoints.stow)
+        ).alongWith(aiming());
+    }
+
     public Command aimSource() {
         return Commands.startEnd(
             () -> setGoal(PivotSetpoints.source),

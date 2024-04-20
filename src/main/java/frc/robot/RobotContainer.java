@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.PivotSetpoints;
 import frc.robot.StateManager.State;
 import frc.robot.autoPaths.GDA_AS456;
 import frc.robot.autoPaths.GDA_M2145;
@@ -215,7 +216,7 @@ public class RobotContainer {
     OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));
 
     // Non auto amp align
-    OIConstants.operatorController.x().whileTrue(pivot.aimAmp().alongWith(shooter.revAmp()));
+    OIConstants.operatorController.x().whileTrue(pivot.aimAmpManual().alongWith(shooter.revAmp()));
     
     // Speaker mode
     OIConstants.operatorController.leftBumper()
@@ -239,10 +240,22 @@ public class RobotContainer {
     //         pivot.aimSource()));
     
     // Ground Intake
-    OIConstants.operatorController.povDown().or(OIConstants.operatorController.povDownLeft()).or(OIConstants.operatorController.povDownRight())
+    OIConstants.operatorController.povDown().or(OIConstants.operatorController.povDownRight())
     .whileTrue(
         Commands.parallel(
             pivot.aimIntake(),
+            intake.intake(),
+            indexer.forwards())
+        .until(indexer::isStoring)
+        .andThen(
+          indexer.reverse().withTimeout(0.05)
+        ).onlyIf(() -> !indexer.isStoring())
+    );
+
+    OIConstants.operatorController.povLeft().or(OIConstants.operatorController.povDownLeft())
+    .whileTrue(
+        Commands.parallel(
+            Commands.runOnce(()-> pivot.setGoal(PivotSetpoints.stow)),
             intake.intake(),
             indexer.forwards())
         .until(indexer::isStoring)
