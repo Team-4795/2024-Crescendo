@@ -77,20 +77,27 @@
                 "data": {
                   "pathName": "AS GP456 P2"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Wing Amp"
-                }
               }
             ]
           }
         },
         {
-          "type": "wait",
+          "type": "parallel",
           "data": {
-            "waitTime": 0.2
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "VisionAlign"
+                }
+              }
+            ]
           }
         },
         {
@@ -140,20 +147,27 @@
                 "data": {
                   "pathName": "AS GP456 P4"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Wing Amp"
-                }
               }
             ]
           }
         },
         {
-          "type": "wait",
+          "type": "parallel",
           "data": {
-            "waitTime": 0.2
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "VisionAlign"
+                }
+              }
+            ]
           }
         },
         {

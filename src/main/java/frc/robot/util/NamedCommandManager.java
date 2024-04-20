@@ -26,6 +26,8 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("AlignCommunityLine", AutoCommands.setPivotAndShooter(0.25, 4000)); // change later
 
+        NamedCommands.registerCommand("PoopOut", AutoCommands.setPivotAndShooter(0.25, 2000)); // change later
+
         NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.27, 4000)); // change later
 
         NamedCommands.registerCommand("AlignCloseGP", AutoCommands.setPivotAndShooter(0.3, 4500)); // change later

@@ -95,7 +95,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1.0,
-      "rotationDegrees": -27.0,
+      "rotationDegrees": -22.0,
       "rotateFast": true
     },
     {
@@ -168,6 +168,23 @@
               "type": "named",
               "data": {
                 "name": "AlignGP1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Align Note 2",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "AlignCloseGP"
               }
             }
           ]
