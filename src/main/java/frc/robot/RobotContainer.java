@@ -30,8 +30,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.PivotSetpoints;
 import frc.robot.StateManager.State;
-import frc.robot.autoPaths.GDA_AS1456;
+import frc.robot.autoPaths.GDA_AS456;
 import frc.robot.autoPaths.GDA_M2145;
 import frc.robot.autoPaths.GDA_M2145_RunEverything;
 import frc.robot.autoPaths.GDA_M32145;
@@ -128,16 +129,17 @@ public class RobotContainer {
 
     NamedCommandManager.registerAll();
     NoteVisualizer.setPivotPoseSupplier(pivot::getPose);
-    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser());
+    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("SS GP 87"));
 
 
     // autoChooser.addOption("Pivot SysIs (Quasistatic Forward)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     // autoChooser.addOption("Pivot SysIs (Quasistatic Reverse)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    // autoChooser.addOption("Pivot SysIs (Dynamic Forward)", pivot.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption("Pivot SysIs (Dynamic Forward)", pivot.sysIdDynamic(SysIdRoutine.Direction.kForw ard));
     // autoChooser.addOption("Pivot SysIs (Dynamic everse)", pivot.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     // autoChooser.addOption("Pivot Model", new ArmFeedForwardCharacterization(pivot, (volts) -> pivot.runVoltage(volts), () -> pivot.getVelocity(), () -> pivot.getPosition(), (x) -> 0.0));
-    autoChooser.addOption("TEST - SS GP 8765", GDA_SS8765.load());
-    autoChooser.addOption("TEST - AS GP 456", GDA_AS1456.load());
+    // autoChooser.addDefaultOption("Sim AS GP 564");
+    autoChooser.addOption("TEST - SS GP 876", GDA_SS8765.load());
+    autoChooser.addOption("TEST - AS GP 456", GDA_AS456.load());
     // autoChooser.addOption("TEST - M GP 32145", GDA_M32145.load());
 
 
@@ -167,7 +169,7 @@ public class RobotContainer {
     Trigger isReadyRumble = isReady.and(StateManager::isAiming);
 
     // Gamepiece align
-    OIConstants.driverController.rightBumper().whileTrue(new AlignToGamepiece());
+    OIConstants.driverController.b().whileTrue(new AlignToGamepiece());
 
     // Align Amp / Speaker
     OIConstants.driverController.leftBumper().whileTrue(
@@ -214,7 +216,7 @@ public class RobotContainer {
     OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));
 
     // Non auto amp align
-    OIConstants.operatorController.povLeft().whileTrue(pivot.aimAmp().alongWith(shooter.revAmp()));
+    OIConstants.operatorController.x().whileTrue(pivot.aimAmpManual().alongWith(shooter.revAmp()));
     
     // Speaker mode
     OIConstants.operatorController.leftBumper()
@@ -227,23 +229,33 @@ public class RobotContainer {
       .onTrue(Commands.runOnce(() -> StateManager.setState(State.AMP)));
 
     // Shuttle mode
-    OIConstants.operatorController.povRight()
-      .whileTrue((Commands.startEnd(
-        () -> StateManager.setState(State.SHUTTLE),
-        () -> StateManager.setState(State.SPEAKER))));
+    OIConstants.operatorController.povUp()
+      .onTrue(Commands.runOnce(() -> StateManager.setState(State.SHUTTLE)));
 
     // Source Intake
-    OIConstants.operatorController.povUp().onTrue(
-        Commands.parallel(
-            shooter.slowReverse(),
-            indexer.slowReverse(),
-            pivot.aimSource()));
+    // OIConstants.operatorController.povUp().onTrue(
+    //     Commands.parallel(
+    //         shooter.slowReverse(),
+    //         indexer.slowReverse(),
+    //         pivot.aimSource()));
     
     // Ground Intake
-    OIConstants.operatorController.povDown().or(OIConstants.operatorController.povDownLeft()).or(OIConstants.operatorController.povDownRight())
+    OIConstants.operatorController.povDown().or(OIConstants.operatorController.povDownRight())
     .whileTrue(
         Commands.parallel(
             pivot.aimIntake(),
+            intake.intake(),
+            indexer.forwards())
+        .until(indexer::isStoring)
+        .andThen(
+          indexer.reverse().withTimeout(0.05)
+        ).onlyIf(() -> !indexer.isStoring())
+    );
+
+    OIConstants.operatorController.povLeft().or(OIConstants.operatorController.povDownLeft())
+    .whileTrue(
+        Commands.parallel(
+            Commands.runOnce(()-> pivot.setGoal(PivotSetpoints.stow)),
             intake.intake(),
             indexer.forwards())
         .until(indexer::isStoring)
@@ -266,13 +278,11 @@ public class RobotContainer {
             shooter.reverse()));
 
     // Override storing (flips it)
-    OIConstants.operatorController.x().whileTrue(indexer.overrideStoring().ignoringDisable(true));
+    // OIConstants.operatorController.x().whileTrue(indexer.overrideStoring().ignoringDisable(true));
 
     // Handoff unjam
     OIConstants.operatorController.y().whileTrue(
-        Commands.parallel(
-            intake.slowReverse(),
-            indexer.forwards()));
+      intake.reverse().alongWith(indexer.reverseHandoff()));
 
     // Toggle pivot idle mode
     OIConstants.operatorController.start().whileTrue(

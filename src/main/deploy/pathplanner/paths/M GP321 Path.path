@@ -95,12 +95,12 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1.0,
-      "rotationDegrees": -27.0,
+      "rotationDegrees": -22.0,
       "rotateFast": true
     },
     {
       "waypointRelativePos": 3.0,
-      "rotationDegrees": 0,
+      "rotationDegrees": -2.0,
       "rotateFast": false
     }
   ],
@@ -151,6 +151,40 @@
               "type": "named",
               "data": {
                 "name": "RunEverything"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Set Pivot Last Shot",
+      "waypointRelativePos": 3.9000000000000004,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "AlignGP1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Align Note 2",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "AlignCloseGP"
               }
             }
           ]

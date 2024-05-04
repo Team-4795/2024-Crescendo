@@ -23,6 +23,7 @@ import frc.robot.subsystems.MAXSwerve.Drive;
 public class Vision extends SubsystemBase {
     private VisionIO io[];
     private VisionIOInputsAutoLogged inputs[];
+    private boolean[] shouldUpdate = new boolean[] {true, true, true};
 
     private final Translation3d redSpeaker = new Translation3d(16.379342, 5.547868, 2.06);
     private final Translation3d blueSpeaker = new Translation3d(0.1619, 5.547868, 2.06);
@@ -84,6 +85,14 @@ public class Vision extends SubsystemBase {
         }
     }
 
+    public void disableUpdates(int id){
+        shouldUpdate[id] = false;
+    }
+
+    public void enableUpdates(int id){
+        shouldUpdate[id] = true;
+    }
+
     public void periodic() {
         for (int i = 0; i < io.length; i++) {
             io[i].updateInputs(inputs[i]);
@@ -123,7 +132,9 @@ public class Vision extends SubsystemBase {
                 Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/Avg distance", distance);
                 Logger.recordOutput("Vision/" + VisionConstants.cameraIds[i] + "/xy std dev", xyStdDev);
                 
-                Drive.getInstance().addVisionMeasurement(robotPose.toPose2d(), inputs[i].timestamp[p], stddevs);
+                if(shouldUpdate[i]){
+                    Drive.getInstance().addVisionMeasurement(robotPose.toPose2d(), inputs[i].timestamp[p], stddevs);
+                }
             }
         }
     }

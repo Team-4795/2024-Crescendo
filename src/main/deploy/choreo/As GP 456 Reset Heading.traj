@@ -1,0 +1,32 @@
+{
+  "samples": [
+    {
+      "x": 1.4,
+      "y": 7.37,
+      "heading": 0,
+      "angularVelocity": 0,
+      "velocityX": 0,
+      "velocityY": -2.114597728208693e-19,
+      "timestamp": 0
+    },
+    {
+      "x": 1.4,
+      "y": 7.4,
+      "heading": 0,
+      "angularVelocity": 0,
+      "velocityX": 0,
+      "velocityY": 0.4946363123888598,
+      "timestamp": 0.06065062197943857
+    },
+    {
+      "x": 1.4,
+      "y": 7.4,
+      "heading": 0,
+      "angularVelocity": 0,
+      "velocityX": 0,
+      "velocityY": -6.418962492389468e-19,
+      "timestamp": 0.12130124395887713
+    }
+  ],
+  "eventMarkers": []
+}

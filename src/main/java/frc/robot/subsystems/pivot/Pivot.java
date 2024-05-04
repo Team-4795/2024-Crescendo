@@ -122,8 +122,9 @@ public class Pivot extends SubsystemBase {
             // double change = -PivotConstants.manualSpeed *
             // MathUtil.applyDeadband(OIConstants.operatorController.getLeftY(),
             // OIConstants.kAxisDeadband);
-
-            setGoal(goal + change);
+            if(DriverStation.isTeleop()){
+                setGoal(goal + change);   
+            }
         }));
     }
 
@@ -202,6 +203,13 @@ public class Pivot extends SubsystemBase {
     public Command aimAmp() {
         return Commands.startEnd(
             () -> setGoal(PivotSetpoints.amp),
+            () -> setGoal(PivotSetpoints.stow)
+        ).alongWith(aiming());
+    }
+
+    public Command aimAmpManual(){
+        return Commands.startEnd(
+            () -> setGoal(PivotSetpoints.manualAmp),
             () -> setGoal(PivotSetpoints.stow)
         ).alongWith(aiming());
     }

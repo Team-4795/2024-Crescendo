@@ -32,23 +32,23 @@ public class GDA_SS8765 {
             
             Commands.sequence(
                 AutoCommands.intakeTrajectory(paths.get(0)),
-                Commands.deadline(
-                    Commands.sequence(
-                        AutoCommands.followTrajectory(paths.get(1)),
-                        Commands.waitSeconds(0.2)
-                    ), AutoCommands.aimSpeakerDynamic(false, 5000)
+                AutoCommands.followTrajectory(paths.get(1)),
+                Commands.parallel(
+                    AutoCommands.aimSpeakerDynamic(true, 5000),
+                    AutoCommands.rotateToSpeaker()
                 ),
+                Commands.waitSeconds(0.2),
                 AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(8)),
 
             Commands.sequence(
                 AutoCommands.intakeTrajectory(paths.get(2)),
-                Commands.deadline(
-                    Commands.sequence(
-                        AutoCommands.followTrajectory(paths.get(3)),
-                        Commands.waitSeconds(0.2)
-                    ), AutoCommands.aimSpeakerDynamic(false, 5000)
+                AutoCommands.followTrajectory(paths.get(3)),
+                Commands.parallel(
+                    AutoCommands.aimSpeakerDynamic(true, 5000),
+                    AutoCommands.rotateToSpeaker()
                 ),
+                Commands.waitSeconds(0.2),
                 AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(7)),
 
@@ -56,7 +56,11 @@ public class GDA_SS8765 {
                 AutoCommands.intakeTrajectory(paths.get(4)),
                 AutoCommands.SetPivotAngle(PivotSetpoints.stow),
                 AutoCommands.followTrajectory(paths.get(5)),
-                AutoCommands.aimSpeakerDynamic(true, 5000),
+                Commands.parallel(
+                    AutoCommands.aimSpeakerDynamic(true, 5000),
+                    AutoCommands.rotateToSpeaker()
+                ),
+                Commands.waitSeconds(0.2),
                 AutoCommands.score()
             ).until(() -> AutoGamepieces.isGone(6)),
 
@@ -66,12 +70,12 @@ public class GDA_SS8765 {
                     AutoCommands.intakeTrajectory(altPath), 
                     () -> AutoGamepieces.isGone(6)
                 ),
-                Commands.deadline(
-                    Commands.sequence(
-                        AutoCommands.followTrajectory(scorePath),
-                        Commands.waitSeconds(0.2)
-                    ), AutoCommands.aimSpeakerDynamic(false, 5000)
+                AutoCommands.followTrajectory(scorePath),
+                Commands.parallel(
+                    AutoCommands.aimSpeakerDynamic(true, 5000),
+                    AutoCommands.rotateToSpeaker()
                 ),
+                Commands.waitSeconds(0.2),
                 AutoCommands.score()
             )
         );

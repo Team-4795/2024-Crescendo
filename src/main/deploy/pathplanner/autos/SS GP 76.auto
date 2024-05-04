@@ -31,12 +31,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.2
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Score"
@@ -180,12 +174,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.2
           }
         },
         {

@@ -71,7 +71,7 @@ public class NoteVisualizer {
     for (int i = FieldConstants.StagingLocations.spikeTranslations.length - 1; i >= 0; i--) {
       autoNotes.add(flip(FieldConstants.StagingLocations.spikeTranslations[i]));
     }
-    for (int i = FieldConstants.StagingLocations.centerlineTranslations.length - 1; i >= 0; i--) {
+    for (int i = FieldConstants.StagingLocations.centerlineTranslations.length - 1; i >= 4; i--) {
       autoNotes.add(
           flip(FieldConstants.StagingLocations.centerlineTranslations[i]));
     }

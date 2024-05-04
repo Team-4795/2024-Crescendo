@@ -1,5 +1,8 @@
 package frc.robot.util;
 
+import java.util.Collections;
+
+import com.ctre.phoenix6.configs.jni.ConfigJNI;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -8,6 +11,7 @@ import frc.robot.Constants.Mode;
 import frc.robot.Constants;
 import frc.robot.autoPaths.AutoGamepieces;
 import frc.robot.commands.AutoCommands;
+import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.vision.intakeCam.IntakeCamVision;
 
 public class NamedCommandManager {
@@ -16,17 +20,25 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("Align", AutoCommands.SetPivotAngle(0.2)); // change later
 
-        NamedCommands.registerCommand("AlignGP1", AutoCommands.setPivotAndShooter(0.275, 4000)); // change later
+        NamedCommands.registerCommand("AlignGP1", AutoCommands.SetPivotAngle(0.275)); // change later
+
+        //NamedCommands.registerCommand("AlignGP1", AutoCommands.setPivotAndShooter(0.275, 4000)); // change later
 
         NamedCommands.registerCommand("AlignCommunityLine", AutoCommands.setPivotAndShooter(0.25, 4000)); // change later
+
+        NamedCommands.registerCommand("PoopOut", AutoCommands.setPivotAndShooter(0.25, 2000)); // change later
 
         NamedCommands.registerCommand("AlignGP2", AutoCommands.setPivotAndShooter(0.27, 4000)); // change later
 
         NamedCommands.registerCommand("AlignCloseGP", AutoCommands.setPivotAndShooter(0.3, 4500)); // change later
 
+        NamedCommands.registerCommand(".29", AutoCommands.setPivotAndShooter(0.29, 4500)); // change later
+
         NamedCommands.registerCommand("AlignGP3", AutoCommands.setPivotAndShooter(0.21, 4000)); // change later
 
         NamedCommands.registerCommand("Align Far Source", AutoCommands.setPivotAndShooter(0.135, 5000));
+
+        NamedCommands.registerCommand("SetIntakeAngle", AutoCommands.SetPivotAngle(0.3));
 
         NamedCommands.registerCommand("Align Under Stage", AutoCommands.setPivotAndShooter(0.17, 4500));
 
@@ -37,6 +49,8 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("Initialize", AutoCommands.initialize(4500));
 
         NamedCommands.registerCommand("RunEverything", AutoCommands.runEverything(4500));
+
+        NamedCommands.registerCommand("RunEverything 5k", AutoCommands.runEverything(5000));
 
         NamedCommands.registerCommand("Stop Shooting", AutoCommands.stopShooting());
 
@@ -69,18 +83,28 @@ public class NamedCommandManager {
         NamedCommands.registerCommand("Detect Note 7", detectNote(7, true));
 
         NamedCommands.registerCommand("Detect Note 8", detectNote(8, true));
+
     }
 
     private static Command detectNote(int note, boolean simDetect) {
         return Commands.parallel(
             Commands.print("Event Marker Executed For Note " + note),
             Commands.either(
-                Commands.parallel(
-                    Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)),
-                    Commands.print("Note " + Integer.toString(note) + " not detected")).onlyIf(() -> !simDetect), 
-                Commands.parallel(
-                    Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)),
-                    Commands.print("Note " + Integer.toString(note) + " not detected")).onlyIf(() -> !IntakeCamVision.getInstance().isNoteInFront()), 
+                Commands.sequence(
+                    Commands.waitUntil(() -> IntakeCamVision.getInstance().getDistanceToNote(note) < 2.5),
+                    Commands.parallel(
+                        Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)),
+                        Commands.print("Note " + note + " not detected")
+                    ).onlyIf(() -> !simDetect)
+                ), 
+                Commands.run(() -> {
+                    if(IntakeCamVision.getInstance().getDistanceToNote(note) < 5){
+                        boolean noteSeen;
+                        AutoGamepieces.setNote(note, noteSeen = IntakeCamVision.getInstance().isNoteInFront(note));
+                        System.out.println("Note " + note + " seen?: " + noteSeen);
+                    }
+                }).until(() -> IntakeCamVision.getInstance().getDistanceToNote(note) < 2.5)
+                  .finallyDo(() -> AutoGamepieces.updateNotes(note)),
                 () -> Constants.currentMode == Mode.SIM)
         );
     }

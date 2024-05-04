@@ -7,7 +7,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
+import frc.robot.autoPaths.AutoGamepieces;
+import frc.robot.Constants;
 import frc.robot.Constants.IndexerSetpoints;
+import frc.robot.Constants.Mode;
 import frc.robot.Constants.ShooterSetpoints;
 import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
@@ -32,30 +35,30 @@ public class AutoCommands {
   public static Command followTrajectory(String pathName) {
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
     // DriverStation.getAlliance().ifPresent((alliance) -> {
-    //   if(alliance == Alliance.Red){
-    //     path.flipPath();
-    //   }
+    // if(alliance == Alliance.Red){
+    // path.flipPath();
+    // }
     // });
     return AutoBuilder.followPath(path);
   }
 
-  public static Command followTrajectory(PathPlannerPath path){
+  public static Command followTrajectory(PathPlannerPath path) {
     return AutoBuilder.followPath(path);
   }
 
-  public static Command intakeTrajectory(PathPlannerPath path){
+  public static Command intakeTrajectory(PathPlannerPath path) {
     return Commands.race(
-      Commands.sequence(
-        followTrajectory(path),
-        Commands.waitSeconds(0.25)
-      ), 
-      intake());
+        Commands.sequence(
+            Commands.runOnce(indexer::resetIntakeStatus),
+            followTrajectory(path),
+            Commands.waitSeconds(0.3)),
+        intake());
   }
 
   public static Command score() {
     return Commands.sequence(
-          indexer.forwards().withTimeout(0.6).alongWith(Commands.waitSeconds(0.1).andThen(NoteVisualizer.shoot())),
-          Commands.runOnce(() -> shooter.setShootingSpeedRPM(0.0, 0.0))
+        indexer.forwards().withTimeout(0.6).alongWith(Commands.waitSeconds(0.1).andThen(NoteVisualizer.shoot()))
+    // Commands.runOnce(() -> shooter.setShootingSpeedRPM(0.0, 0.0))
     );
   }
 
@@ -65,11 +68,10 @@ public class AutoCommands {
     });
   }
 
-  public static Command setPivotAndShooter(double setpoint, double shooterRPM){
+  public static Command setPivotAndShooter(double setpoint, double shooterRPM) {
     return Commands.parallel(
-      Commands.runOnce(() -> pivot.setGoal(setpoint)),
-      Commands.runOnce(() -> shooter.setShootingSpeedRPM(-shooterRPM, shooterRPM))
-    );
+        Commands.runOnce(() -> pivot.setGoal(setpoint)),
+        Commands.runOnce(() -> shooter.setShootingSpeedRPM(-shooterRPM, shooterRPM)));
   }
 
   public static Command alignTrajectory(String PathName, double setpoint) {
@@ -80,9 +82,8 @@ public class AutoCommands {
 
   public static Command initialize(double shooterRPM) {
     return Commands.parallel(
-      Commands.runOnce(() -> intake.setIntakeSpeed(-0.9)),
-      Commands.runOnce(() -> shooter.setShootingSpeedRPM(-shooterRPM, shooterRPM))
-    );
+        Commands.runOnce(() -> intake.setIntakeSpeed(-0.9)),
+        Commands.runOnce(() -> shooter.setShootingSpeedRPM(-shooterRPM, shooterRPM)));
   }
 
   public static Command resetOdometry(Pose2d pose) {
@@ -93,9 +94,8 @@ public class AutoCommands {
 
   public static Command stopShooting() {
     return Commands.parallel(
-      Commands.runOnce(() -> indexer.setIndexerSpeed(0)),
-      Commands.runOnce(() -> shooter.setShootingSpeedRPM(0, 0))
-    );
+        Commands.runOnce(() -> indexer.setIndexerSpeed(0)),
+        Commands.runOnce(() -> shooter.setShootingSpeedRPM(0, 0)));
   }
 
   public static Command runEverything(double shooterRPM) {
@@ -106,39 +106,44 @@ public class AutoCommands {
 
   public static Command intake() {
     return Commands.sequence(
-      Commands.parallel(
-        indexer.forwards(),
-        Commands.runOnce(() -> pivot.setGoal(0.3)),
-        Commands.runOnce(() -> intake.setIntakeSpeed(-1))
-      ).until(indexer::isStoring));
+        Commands.parallel(
+            indexer.forwards(),
+            Commands.runOnce(() -> pivot.setGoal(0.3)),
+            Commands.runOnce(() -> intake.setIntakeSpeed(-1))).until(indexer::isStoring));
   }
 
-  public static Command intakeWithoutPivot(){
+  public static Command intakeWithoutPivot() {
     return Commands.sequence(
-      Commands.runOnce(() -> indexer.setIndexerSpeed(IndexerSetpoints.shoot)),
-      Commands.either(Commands.waitUntil(indexer::isStoring), Commands.waitSeconds(1), Robot::isReal),
-      indexer.reverse().withTimeout(0.1));
+        Commands.parallel(
+            indexer.forwards(),
+            Commands.runOnce(() -> intake.setIntakeSpeed(-1))).until(indexer::isStoring));
   }
 
   public static Command sensingPiece() {
     return Commands.waitUntil(() -> indexer.isStoring());
   }
 
-  public static Command aimSpeakerDynamic(boolean timeout, double speed){
-    double timeLimit = (timeout) ? 0.5 : 15;
+  public static Command aimSpeakerDynamic(boolean timeout, double speed) {
+    double timeLimit = (timeout) ? 0.7 : 15;
     return Commands.parallel(
-      Commands.runOnce(() -> shooter.setShootingSpeedRPM(-speed, speed)),
-      Commands.run(() -> {
-              double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
-              if(distanceToSpeaker < 5.5){
-                pivot.setGoal(PivotConstants.armAngleMap.get(distanceToSpeaker));
-              }
-      }).withTimeout(timeLimit)
-    );
+        Commands.runOnce(() -> shooter.setShootingSpeedRPM(-speed, speed)),
+        Commands.run(() -> {
+          double distanceToSpeaker = Vision.getInstance().getDistancetoSpeaker(Drive.getInstance().getPose());
+          if (distanceToSpeaker < 8.5) {
+            pivot.setGoal(PivotConstants.armAngleMap.get(distanceToSpeaker));
+          }
+        }).withTimeout(timeLimit));
   }
 
-  public static Command rotateToSpeaker(){
-    return new AlignSpeaker().withTimeout(0.6);
+  public static Command rotateToSpeaker() {
+    return new AlignSpeaker().withTimeout(0.7);
+  }
+
+  public static Command checkNote(int note, boolean simDetect) {
+    return Commands.either(
+        Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)).onlyIf(() -> !simDetect),
+        Commands.runOnce(() -> AutoGamepieces.setNoteGone(note)).onlyIf(() -> !(indexer.isStoring() || intake.isIntaking())),
+        () -> Constants.currentMode == Mode.SIM);
   }
 
 }

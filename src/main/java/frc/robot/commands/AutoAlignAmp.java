@@ -25,13 +25,14 @@ import frc.robot.subsystems.MAXSwerve.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.pivot.Pivot;
+import frc.robot.subsystems.vision.AprilTagVision.Vision;
 
 public class AutoAlignAmp extends Command{
-    private static final Pose2d RED_AMP = new Pose2d(14.7, 7.68, Rotation2d.fromRadians(Math.PI / 2));
-    private static final Pose2d BLUE_AMP = new Pose2d(1.86, 7.68, Rotation2d.fromRadians(Math.PI / 2));
+    private static final Pose2d RED_AMP = new Pose2d(14.68, 7.62, Rotation2d.fromRadians(Math.PI / 2));
+    private static final Pose2d BLUE_AMP = new Pose2d(1.85, 7.64, Rotation2d.fromRadians(Math.PI / 2));
 
-    private final double maxDistance = 1.0;
-    private final double minDistance = 0.0;
+    private final double maxDistance = 0.6;
+    private final double minDistance = -0.1;
 
     private ProfiledPIDController translationController;
     private ProfiledPIDController rotationController;
@@ -67,6 +68,7 @@ public class AutoAlignAmp extends Command{
             targetPose = (alliance == Alliance.Blue) ? BLUE_AMP : RED_AMP;
             mult = (alliance == Alliance.Red) ? -1.0 : 1.0;
         });
+        Vision.getInstance().disableUpdates(0);
         currentPose = Drive.getInstance().getPose();
         double velocity = mult * projection(drive.getFieldRelativeTranslationVelocity(), targetPose.getTranslation().minus(currentPose.getTranslation()));
         rotationController.enableContinuousInput(-Math.PI, Math.PI);
@@ -102,7 +104,7 @@ public class AutoAlignAmp extends Command{
                 pivot.setGoal(PivotSetpoints.amp);
                 shooter.setShootingSpeedRPM(ShooterSetpoints.ampTop, ShooterSetpoints.ampBottom);
         }
-        if(rotationController.atGoal() && distance < 0.1){
+        if(rotationController.atGoal() && distance < 0.06){
                 hasOuttook = true;
                 indexer.setIndexerSpeed(IndexerSetpoints.shoot);
         }
@@ -130,6 +132,7 @@ public class AutoAlignAmp extends Command{
         indexer.setIndexerSpeed(0);
         pivot.setGoal(PivotSetpoints.stow);
         shooter.setShootingSpeedRPM(0, 0);
+        Vision.getInstance().enableUpdates(0);
     }
 
     private double projection(Translation2d v1, Translation2d onto){

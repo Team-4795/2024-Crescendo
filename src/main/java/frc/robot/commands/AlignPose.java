@@ -29,8 +29,8 @@ public class AlignPose {
     private static double omega;
     private static double output;
 
-    private static Pose2d targetPose;
-    private static Pose2d currentPose;
+    private static Pose2d targetPose = new Pose2d();
+    private static Pose2d currentPose = new Pose2d();
     private static Pose2d augmentedPose;
     private static boolean inverted; //intake facing or shooter facing (true for shooter)
 
@@ -102,6 +102,9 @@ public class AlignPose {
         deltaX *= (inverted) ? -mult : mult;
         deltaY *= (inverted) ? -mult : mult;
         desiredAngle = Math.atan2(deltaY, deltaX);
+        if(state == State.SPEAKER || state == State.SHUTTLE){
+            desiredAngle -= 0.1;
+        }
 
         // deltaAngle = Units.degreesToRadians(desiredAngle - previousAngle);
         // omega = deltaAngle / 0.02;
@@ -139,5 +142,6 @@ public class AlignPose {
         Logger.recordOutput("Pose Align/previous angle", previousAngle);
         Logger.recordOutput("Pose Align/omega", omega);
         Logger.recordOutput("Pose Align/At goal", atGoal());
+        Logger.recordOutput("Pose Align/distance to target", targetPose.getTranslation().getDistance(currentPose.getTranslation()));
     }
 }

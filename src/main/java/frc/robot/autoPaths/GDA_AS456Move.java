@@ -12,7 +12,7 @@ import frc.robot.Constants.PivotSetpoints;
 import frc.robot.commands.AutoCommands;
 import frc.robot.subsystems.vision.intakeCam.IntakeCamVision;
 
-public class GDA_AS1456 {
+public class GDA_AS456Move {
     private static List<PathPlannerPath> paths;
     PathPlannerAuto auto;
 
@@ -29,25 +29,19 @@ public class GDA_AS1456 {
 
             Commands.sequence(
                 AutoCommands.intakeTrajectory(paths.get(0)),
-                Commands.deadline(
-                    Commands.sequence(
+                    Commands.parallel(
+                        AutoCommands.setPivotAndShooter(0.17, 5000), //change this later
                         AutoCommands.followTrajectory(paths.get(1)),
-                        Commands.waitSeconds(0.1)
-                    ), AutoCommands.aimSpeakerDynamic(false, 5000)
-                ),
-                AutoCommands.score()
-            ).until(() -> AutoGamepieces.isGone(4)),
+                        Commands.sequence(Commands.waitSeconds(1.5), AutoCommands.score())
+                )).until(() -> AutoGamepieces.isGone(4)),
 
             Commands.sequence(
                 AutoCommands.intakeTrajectory(paths.get(2)),
-                Commands.deadline(
-                    Commands.sequence(
+                AutoCommands.setPivotAndShooter(0.17, 5000),
+                Commands.parallel(
                         AutoCommands.followTrajectory(paths.get(3)), 
-                        Commands.waitSeconds(0.1)
-                    ), AutoCommands.aimSpeakerDynamic(false, 5000)
-                ),
-                AutoCommands.score()
-            ).until(() -> AutoGamepieces.isGone(5)),
+                        Commands.sequence(Commands.waitSeconds(1.4), AutoCommands.score()) //change this later
+                    )).until(() -> AutoGamepieces.isGone(5)),
 
             Commands.sequence(
                 AutoCommands.intakeTrajectory(paths.get(4)),

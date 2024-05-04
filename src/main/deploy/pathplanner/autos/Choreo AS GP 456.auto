@@ -2,43 +2,19 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2782342053414837,
-      "y": 5.574358195791997
+      "x": 1.4,
+      "y": 7.37
     },
-    "rotation": 0
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "AlignClose"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Initialize"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.7
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "RunEverything"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.4
+            "pathName": "As GP 456 Reset Heading"
           }
         },
         {
@@ -46,112 +22,18 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "M GP2145 P1"
+                  "name": "Align Speaker"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "AlignGP2"
+                  "name": "VisionAlign 5k"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.2
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "M GP2145 P2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AlignGP1"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.4
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop Shooting"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "M GP2145 P3"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "M GP2145 P4"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Wing Amp"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.2
           }
         },
         {
@@ -161,9 +43,15 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
               {
                 "type": "sequential",
                 "data": {
@@ -171,7 +59,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "M GP2145 P5"
+                        "pathName": "AS GP 456 P1"
                       }
                     },
                     {
@@ -182,14 +70,14 @@
                     }
                   ]
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS GP 456 P2 Choreo"
           }
         },
         {
@@ -197,24 +85,150 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "M GP2145 P6"
+                  "name": "Align Speaker"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Align Wing Amp"
+                  "name": "VisionAlign 5k"
                 }
               }
             ]
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.2
+            "name": "Score"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "AS GP 456 P3"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS GP 456 P4 Choreo"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "VisionAlign 5k"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "AS GP 456 P5"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS GP 456 P6 Choreo"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "VisionAlign 5k"
+                }
+              }
+            ]
           }
         },
         {
@@ -226,6 +240,6 @@
       ]
     }
   },
-  "folder": "Middle",
-  "choreoAuto": false
+  "folder": "Amp",
+  "choreoAuto": true
 }

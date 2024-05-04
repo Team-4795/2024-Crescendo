@@ -91,7 +91,6 @@ public class ModuleIOSparkFlex implements ModuleIO {
     m_drivingPIDController.setFF(ModuleConstants.kDrivingFF);
     m_drivingPIDController.setOutputRange(ModuleConstants.kDrivingMinOutput,
         ModuleConstants.kDrivingMaxOutput);
-
     // Set the PID gains for the turning motor. Note these are example gains, and
     // you
     // may need to tune them for your own robot!

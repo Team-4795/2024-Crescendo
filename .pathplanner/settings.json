@@ -14,7 +14,7 @@
     "Middle",
     "Source"
   ],
-  "defaultMaxVel": 5.0,
+  "defaultMaxVel": 4.8,
   "defaultMaxAccel": 6.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,

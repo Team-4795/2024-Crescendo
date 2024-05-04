@@ -22,10 +22,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /**
- * The Constants class provides a csonvenient place for teams to hold robot-wide numerical or boolean
+ * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
@@ -41,8 +43,15 @@ public final class Constants {
   public static final double configDelay = 0.1;
   public static final int paramApplyAttemptLimit = 5;
   public static final double paramApplyTimemout = 0.05;
+  public static Alliance alliance;
 
   public static final boolean useLQR = false;
+
+  public static void getAlliance(){
+    DriverStation.getAlliance().ifPresent((ally) -> {
+      alliance = ally;
+    });
+  }
 
   public static final class Tolerances {
     public static final double turningSpeed = 0.2;
@@ -68,7 +77,8 @@ public final class Constants {
   public static final class PivotSetpoints {
     public static final double speaker = 0.6;
     public static final double amp = 1.15;
-    public static final double shuttle = 0.72;
+    public static final double manualAmp = 1.25;
+    public static final double shuttle = 0.55;
     public static final double stow = 0.08;
     public static final double intake = 0.3;
     public static final double source = 0.96;
@@ -151,8 +161,10 @@ public final class Constants {
     public static final double fieldWidth = Units.inchesToMeters(323.277);
     public static final Pose2d BLUE_SOURCE = new Pose2d(15.9,0.4, Rotation2d.fromDegrees(-45));
     public static final Pose2d RED_SOURCE = new Pose2d(0.6,0.25, Rotation2d.fromDegrees(45));
-    public static final Pose2d BLUE_SHUTTLE = new Pose2d(2.9, 7, new Rotation2d());
-    public static final Pose2d RED_SHUTTLE = new Pose2d(13.8, 7, new Rotation2d());
+    // public static final Pose2d BLUE_SHUTTLE = new Pose2d(2.9, 7, new Rotation2d());
+    // public static final Pose2d RED_SHUTTLE = new Pose2d(13.8, 7, new Rotation2d());
+    public static final Pose2d BLUE_SHUTTLE = new Pose2d(1.86, 6.0, new Rotation2d());
+    public static final Pose2d RED_SHUTTLE = new Pose2d(14.6, 6.0, new Rotation2d());
     public static final Pose2d RED_SPEAKER = new Pose2d(16.379342, 5.547868, new Rotation2d());
     public static final Pose2d BLUE_SPEAKER = new Pose2d(0.1619, 5.547868, new Rotation2d());
     public static double RED_WING_X = 10.0;
@@ -162,20 +174,20 @@ public final class Constants {
       public static final double centerlineX = fieldLength / 2.0;
 
       // need to update
-      public static final double centerlineFirstY = Units.inchesToMeters(29.638);
+      public static final double centerlineFirstY = fieldWidth - Units.inchesToMeters(29.638);
       public static final double centerlineSeparationY = Units.inchesToMeters(66);
       public static final double spikeX = Units.inchesToMeters(114);
       // need
       public static final double spikeFirstY = Units.inchesToMeters(161.638);
       public static final double spikeSeparationY = Units.inchesToMeters(57);
 
-      public static final Translation2d[] centerlineTranslations = new Translation2d[5];
+      public static final Translation2d[] centerlineTranslations = new Translation2d[9];
       public static final Translation2d[] spikeTranslations = new Translation2d[3];
 
       static {
-        for (int i = 0; i < centerlineTranslations.length; i++) {
+        for (int i = 4; i < centerlineTranslations.length; i++) {
           centerlineTranslations[i] =
-              new Translation2d(centerlineX, centerlineFirstY + (i * centerlineSeparationY));
+              new Translation2d(centerlineX, centerlineFirstY - ((i - 4) * centerlineSeparationY));
         }
       }
 
