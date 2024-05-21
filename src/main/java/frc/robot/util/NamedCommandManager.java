@@ -1,6 +1,7 @@
 package frc.robot.util;
 
 import java.util.Collections;
+import java.util.Set;
 
 import com.ctre.phoenix6.configs.jni.ConfigJNI;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -66,6 +67,10 @@ public class NamedCommandManager {
 
         NamedCommands.registerCommand("Align Speaker", AutoCommands.rotateToSpeaker());
 
+        NamedCommands.registerCommand("pass in setpoint here", Commands.waitSeconds(1));
+
+        NamedCommands.registerCommand("Set pivot angle here", Commands.waitSeconds(1));
+        
         NamedCommands.registerCommand("VisionAlign", AutoCommands.aimSpeakerDynamic(true, 4500));
 
         NamedCommands.registerCommand("VisionAlign 5k", AutoCommands.aimSpeakerDynamic(true, 5000));
