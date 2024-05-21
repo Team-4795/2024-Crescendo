@@ -60,7 +60,7 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
-
+    enableLiveWindowInTest(true);
     Pathfinding.setPathfinder(new LocalADStarAK());
 
     // Record metadata
