@@ -8,20 +8,18 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class CircularZone extends Trigger{
     private double radius;
-    private double x;
-    private double y;
-    public CircularZone(double radius, double centerX, double centerY, Supplier<Pose2d> pose) {
+    private Translation2d center;
+    public CircularZone(double radius, Translation2d center, Supplier<Pose2d> pose) {
         super(() -> {
-            return Math.sqrt(Math.pow(centerX - pose.get().getX(),2) + Math.pow(centerY - pose.get().getY(),2)) <= radius;
+            return center.getDistance(pose.get().getTranslation()) <= radius;
         });
-        this.x = centerX;
-        this.y = centerY;
+        this.center = center;
         this.radius = radius;
     }
     public double getRadius() {
         return radius;
     }
     public Translation2d getCenter() {
-        return new Translation2d(x, y);
+        return center;
     }
 }
