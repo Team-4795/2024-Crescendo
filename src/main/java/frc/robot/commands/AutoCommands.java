@@ -51,7 +51,7 @@ public class AutoCommands {
         Commands.sequence(
             Commands.runOnce(indexer::resetIntakeStatus),
             followTrajectory(path),
-            Commands.waitSeconds(0.3)),
+            Commands.waitSeconds(0.5)),
         intake());
   }
 

@@ -5,18 +5,12 @@
       "x": 1.373390793800354,
       "y": 3.321857213973999
     },
-    "rotation": -3.903634894901551e-25
+    "rotation": 5.0704968087933786e-20
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "SS ShootOnMove"
-          }
-        },
         {
           "type": "named",
           "data": {

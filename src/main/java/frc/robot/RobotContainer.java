@@ -32,6 +32,7 @@ import frc.robot.Constants.Mode;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PivotSetpoints;
 import frc.robot.StateManager.State;
+import frc.robot.autoPaths.Adaptive_Test;
 import frc.robot.autoPaths.GDA_AS456;
 import frc.robot.autoPaths.GDA_M2145;
 import frc.robot.autoPaths.GDA_M2145_RunEverything;
@@ -140,6 +141,7 @@ public class RobotContainer {
     // autoChooser.addDefaultOption("Sim AS GP 564");
     autoChooser.addOption("TEST - SS GP 876", GDA_SS8765.load());
     autoChooser.addOption("TEST - AS GP 456", GDA_AS456.load());
+    autoChooser.addOption("Adaptive - Test", Adaptive_Test.load());
     // autoChooser.addOption("TEST - M GP 32145", GDA_M32145.load());
 
 
