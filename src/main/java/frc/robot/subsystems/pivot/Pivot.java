@@ -41,7 +41,7 @@ public class Pivot extends SubsystemBase {
     private PivotIOInputsAutoLogged inputs = new PivotIOInputsAutoLogged();
 
     @AutoLogOutput
-    private PivotMode mode = PivotMode.FAST;
+    private PivotMode mode = Constants.slowMode ? PivotMode.SLOW : PivotMode.FAST;
 
     LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", PivotConstants.kP);
     LoggedTunableNumber kI = new LoggedTunableNumber("Pivot/kI", PivotConstants.kI);

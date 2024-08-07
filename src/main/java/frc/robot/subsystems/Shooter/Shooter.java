@@ -7,6 +7,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.StateManager;
 import frc.robot.Constants.ShooterSetpoints;
 import frc.robot.Constants.Tolerances;
@@ -26,7 +27,7 @@ public class Shooter extends SubsystemBase {
     private double minDistance = 1.5;
     private double minSpeed = 3000;
     private double maxDistance = 5.0;
-    private double maxSpeed = 5000;
+    private double maxSpeed = Constants.slowMode ? 3000 : 5000;
 
     private static Shooter instance;
     
