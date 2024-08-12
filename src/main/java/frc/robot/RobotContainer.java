@@ -174,29 +174,23 @@ public class RobotContainer {
     OIConstants.driverController.b().whileTrue(new AlignToGamepiece());
 
     // Align Amp / Speaker
-    // OIConstants.driverController.leftBumper().whileTrue(
-    //   Commands.either(
-    //     Commands.select(
-    //       Map.ofEntries(
-    //         Map.entry(State.AMP, drive.AutoAlignAmp()),
-    //         Map.entry(State.SPEAKER, Commands.parallel(
-    //           new AlignSpeaker(),
-    //           pivot.aimSpeakerDynamic(),
-    //           shooter.revSpeaker()
-    //         )),
-    //         Map.entry(State.SHUTTLE, new AlignShuttle())),
-    //         StateManager::getState),
-    //     shooter.revSpeaker()
-    //       .alongWith(pivot.aimSpeakerDynamic()),
-    //     () -> StateManager.isAutomate()
-    //   )
-    // );
-
-    //some slowmo stuff for outreach events
-    OIConstants.driverController.povRight().whileTrue(shooter.revSpeakerMedium());
-    OIConstants.driverController.povUp().whileTrue(shooter.revSpeakerFast());
-    OIConstants.driverController.povDown().whileTrue(shooter.revSpeakerSlow());
-    OIConstants.driverController.y().whileTrue(indexer.forwards());
+    OIConstants.driverController.leftBumper().whileTrue(
+      Commands.either(
+        Commands.select(
+          Map.ofEntries(
+            Map.entry(State.AMP, drive.AutoAlignAmp()),
+            Map.entry(State.SPEAKER, Commands.parallel(
+              new AlignSpeaker(),
+              pivot.aimSpeakerDynamic(),
+              shooter.revSpeaker()
+            )),
+            Map.entry(State.SHUTTLE, new AlignShuttle())),
+            StateManager::getState),
+        shooter.revSpeaker()
+          .alongWith(pivot.aimSpeakerDynamic()),
+        () -> StateManager.isAutomate()
+      )
+    );
 
     // Auto Shoot
     OIConstants.driverController.rightTrigger(0.3)

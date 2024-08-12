@@ -37,7 +37,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public final class Constants {
   // Mode of the robot, set to Mode.REPLAY for replay
   public static final Mode currentMode = Mode.fromState();
-  public static final boolean slowMode = true;
+  public static final boolean slowMode = false;
   public static final boolean tuningMode = false;
   public static final boolean hasVision = true;
   public static final int tryConfigCount = 5;
@@ -93,8 +93,8 @@ public final class Constants {
   }
 
   public static final class ShooterSetpoints {
-    public static final double speakerTop = -3000;
-    public static final double speakerBottom = 3000;
+    public static final double speakerTop = -5000;
+    public static final double speakerBottom = 5000;
 
     public static final double shuttleTop = -3500;
     public static final double shuttleBottom = 3500;
@@ -123,7 +123,7 @@ public final class Constants {
     public static final Setpoint groundIntake = new Setpoint(0.0,0.0, 0.16, 1.0, -0.7);
     public static final Setpoint sourceIntake = new Setpoint(750.0, -750.0, 0.96, -0.5, 0.0);
     public static final Setpoint scoreAmp = new Setpoint(600.0,600.0, 1.0, 1.0, 0.0);
-    public static final Setpoint scoreSpeaker = new Setpoint(-3000.0,3000.0,0.6, 1.0, 0.0);  
+    public static final Setpoint scoreSpeaker = new Setpoint(-5000.0,5000.0,0.6, 1.0, 0.0);  
     public static final Setpoint load = new Setpoint(null, null, null, -1.0, 0.0);
     public static final Setpoint reverse = new Setpoint(1000.0, -1000.0, null, -1.0, 0.7);
     public static final Setpoint counter = new Setpoint(null, null, null, 1.0, 0.6);

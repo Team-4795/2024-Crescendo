@@ -145,7 +145,7 @@ public class Pivot extends SubsystemBase {
             if(Math.abs(goal - this.getPosition()) < 0.4){
                 setPivotMode(PivotMode.SLOW);
             } else {
-                setPivotMode(PivotMode.SLOW);
+                setPivotMode(PivotMode.FAST);
             }
         }
     }
