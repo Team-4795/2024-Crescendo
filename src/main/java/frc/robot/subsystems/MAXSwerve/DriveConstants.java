@@ -15,7 +15,7 @@ import frc.robot.Constants;
 public final class DriveConstants {
 
     public static final double driftRate = 1.0;
-        public static final int accelSize = 5;
+    public static final int accelSize = 5;
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = Constants.slowMode ? 2 : 4.6;
