@@ -149,7 +149,7 @@ public class ModuleIOTalon implements ModuleIO {
         talonFXConfig.Slot0.kV = ModuleConstants.kDrivingFF;
 
         talonFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-        talonFXConfig.CurrentLimits.StatorCurrentLimit = CurrentLimits.drive;
+        talonFXConfig.CurrentLimits.StatorCurrentLimit = 40; //CurrentLimits.drive;
 
         talonFXConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
