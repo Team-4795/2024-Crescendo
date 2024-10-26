@@ -220,15 +220,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
@@ -236,7 +234,6 @@
                         2
                     ],
                     "type": "MaxVelocity",
-                    "direction": 0,
                     "velocity": 2
                 },
                 {
@@ -245,7 +242,6 @@
                         "last"
                     ],
                     "type": "MaxVelocity",
-                    "direction": 0,
                     "velocity": 1.2
                 }
             ],
@@ -706,15 +702,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
@@ -722,8 +716,15 @@
                         "last"
                     ],
                     "type": "MaxVelocity",
-                    "direction": 0,
                     "velocity": 1.5
+                },
+                {
+                    "scope": [
+                        3,
+                        4
+                    ],
+                    "type": "MaxVelocity",
+                    "velocity": 1
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -736,7 +737,7 @@
                     "target": 2,
                     "trajTargetIndex": 2,
                     "targetTimestamp": 0.9178345899798392,
-                    "offset": 0.3,
+                    "offset": 0.5,
                     "command": {
                         "type": "named",
                         "data": {
@@ -745,7 +746,7 @@
                     }
                 }
             ],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "M GP 2631 P3": {
             "waypoints": [
@@ -1210,15 +1211,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -1397,15 +1396,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
@@ -1413,7 +1410,6 @@
                         1
                     ],
                     "type": "MaxVelocity",
-                    "direction": 0,
                     "velocity": 2
                 }
             ],
@@ -1739,15 +1735,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
@@ -1755,7 +1749,6 @@
                         "last"
                     ],
                     "type": "MaxVelocity",
-                    "direction": 0,
                     "velocity": 1.25
                 }
             ],
