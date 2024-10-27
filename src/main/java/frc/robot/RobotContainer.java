@@ -170,33 +170,30 @@ public class RobotContainer {
     Trigger isReady = new Trigger(this::readyToShoot);
     Trigger isReadyRumble = isReady.and(StateManager::isAiming);
 
-    // Gamepiece align
-    OIConstants.driverController.b().whileTrue(new AlignToGamepiece());
-
     // Align Amp / Speaker
-    OIConstants.driverController.leftBumper().whileTrue(
-      Commands.either(
-        Commands.select(
-          Map.ofEntries(
-            Map.entry(State.AMP, drive.AutoAlignAmp()),
-            Map.entry(State.SPEAKER, Commands.parallel(
-              new AlignSpeaker(),
-              pivot.aimSpeakerDynamic(),
-              shooter.revSpeaker()
-            )),
-            Map.entry(State.SHUTTLE, new AlignShuttle())),
-            StateManager::getState),
-        shooter.revSpeaker()
-          .alongWith(pivot.aimSpeakerDynamic()),
-        () -> StateManager.isAutomate()
-      )
-    );
+    // OIConstants.driverController.leftBumper().whileTrue(
+    //   Commands.either(
+    //     Commands.select(
+    //       Map.ofEntries(
+    //         Map.entry(State.AMP, drive.AutoAlignAmp()),
+    //         Map.entry(State.SPEAKER, Commands.parallel(
+    //           new AlignSpeaker(),
+    //           pivot.aimSpeakerDynamic(),
+    //           shooter.revSpeaker()
+    //         )),
+    //         Map.entry(State.SHUTTLE, new AlignShuttle())),
+    //         StateManager::getState),
+    //     shooter.revSpeaker()
+    //       .alongWith(pivot.aimSpeakerDynamic()),
+    //     () -> StateManager.isAutomate()
+    //   )
+    // );
 
     // Auto Shoot
-    OIConstants.driverController.rightTrigger(0.3)
-      .and(isReady)
-      .whileTrue(indexer.forwards().finallyDo(() -> StateManager.setState(State.SPEAKER)))
-      .onTrue(NoteVisualizer.shoot());
+    // OIConstants.driverController.rightTrigger(0.3)
+    //   .and(isReady)
+    //   .whileTrue(indexer.forwards().finallyDo(() -> StateManager.setState(State.SPEAKER)))
+    //   .onTrue(NoteVisualizer.shoot());
     
     //Drive robot relative
     // OIConstants.driverController.leftTrigger(0.3)
@@ -213,6 +210,13 @@ public class RobotContainer {
       StateManager.toggleAutomate();
       leds.toggleYellow();
     }));
+    OIConstants.driverController.povRight().whileTrue(shooter.revSpeakerMedium());
+    OIConstants.driverController.povUp().whileTrue(shooter.revSpeakerFast());
+    OIConstants.driverController.povDown().whileTrue(shooter.revSpeakerSlow());
+    OIConstants.driverController.y().whileTrue(indexer.forwards());
+
+       // Gamepiece align
+    OIConstants.driverController.b().whileTrue(new AlignToGamepiece());
 
     // Zero heading
     OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));

@@ -113,6 +113,27 @@ public class Shooter extends SubsystemBase {
         );
     }
 
+    public Command revSpeakerMedium() {
+        return startEnd(
+            () -> setShootingSpeedRPM(-2000, 2000),
+            () -> setShootingSpeedRPM(0, 0)
+        );
+    }
+
+    public Command revSpeakerFast() {
+        return startEnd(
+            () -> setShootingSpeedRPM(-3000, 3000),
+            () -> setShootingSpeedRPM(0, 0)
+        );
+    }
+
+    public Command revSpeakerSlow() {
+        return startEnd(
+            () -> setShootingSpeedRPM(-1000, 1000),
+            () -> setShootingSpeedRPM(0, 0)
+        );
+    }
+
     public Command reverse() {
         return startEnd(
             () -> setShootingSpeedRPM(ShooterSetpoints.reverseTop, ShooterSetpoints.reverseBottom),
