@@ -120,6 +120,12 @@ public class Shooter extends SubsystemBase {
         );
     }
 
+        public Command revSpeakerSuperFast() {
+        return startEnd(
+            () -> setShootingSpeedRPM(-6000, 6000),
+            () -> setShootingSpeedRPM(0, 0)
+        );
+    }
     public Command revSpeakerFast() {
         return startEnd(
             () -> setShootingSpeedRPM(-3000, 3000),

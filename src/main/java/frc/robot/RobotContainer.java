@@ -215,6 +215,7 @@ public class RobotContainer {
     OIConstants.driverController.povUp().whileTrue(shooter.revSpeakerFast());
     OIConstants.driverController.povDown().whileTrue(shooter.revSpeakerSlow());
     OIConstants.driverController.y().whileTrue(indexer.forwards());
+    OIConstants.operatorController.povUp().whileTrue(shooter.revSpeakerSuperFast());
 
        // Gamepiece align
     OIConstants.driverController.b().whileTrue(new AlignToGamepiece());
@@ -247,7 +248,7 @@ public class RobotContainer {
     //         pivot.aimSource()));
     
     // Ground Intake
-    OIConstants.operatorController.povDown().or(OIConstants.operatorController.povDownRight())
+    OIConstants.driverController.leftBumper().or(OIConstants.operatorController.povDownRight())
     .whileTrue(
         Commands.parallel(
             pivot.aimIntake(),
