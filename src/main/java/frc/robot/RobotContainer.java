@@ -211,9 +211,12 @@ public class RobotContainer {
       StateManager.toggleAutomate();
       leds.toggleYellow();
     }));
-    OIConstants.driverController.povRight().whileTrue(shooter.revSpeakerMedium());
-    OIConstants.driverController.povUp().whileTrue(shooter.revSpeakerFast());
-    OIConstants.driverController.povDown().whileTrue(shooter.revSpeakerSlow());
+    
+    OIConstants.driverController.povRight().toggleOnTrue(shooter.revSpeakerMedium());
+    OIConstants.driverController.povUp().toggleOnTrue(shooter.revSpeakerFast());
+    OIConstants.driverController.povLeft().whileTrue(shooter.stopSpeaker());
+    OIConstants.driverController.povDown().toggleOnTrue(shooter.revSpeakerSlow());
+   
     OIConstants.driverController.y().whileTrue(indexer.forwards());
     OIConstants.operatorController.povUp().whileTrue(shooter.revSpeakerSuperFast());
 
