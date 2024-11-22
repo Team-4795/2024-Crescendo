@@ -7,6 +7,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.StateManager;
 import frc.robot.Constants.ShooterSetpoints;
 import frc.robot.Constants.Tolerances;
@@ -26,7 +27,7 @@ public class Shooter extends SubsystemBase {
     private double minDistance = 1.5;
     private double minSpeed = 3000;
     private double maxDistance = 5.0;
-    private double maxSpeed = 5000;
+    private double maxSpeed = Constants.slowMode ? 3000 : 5000;
 
     private static Shooter instance;
     
@@ -108,6 +109,39 @@ public class Shooter extends SubsystemBase {
     public Command revShuttle() {
         return startEnd(
             () -> setShootingSpeedRPM(ShooterSetpoints.shuttleTop, ShooterSetpoints.shuttleBottom),
+            () -> setShootingSpeedRPM(0, 0)
+        );
+    }
+
+    public Command revSpeakerMedium() {
+        return startEnd(
+            () -> setShootingSpeedRPM(-2000, 2000),
+            () -> setShootingSpeedRPM(0, 0)
+        );
+    }
+
+        public Command revSpeakerSuperFast() {
+        return startEnd(
+            () -> setShootingSpeedRPM(-6000, 6000),
+            () -> setShootingSpeedRPM(0, 0)
+        );
+    }
+    public Command revSpeakerFast() {
+        return startEnd(
+            () -> setShootingSpeedRPM(-3000, 3000),
+            () -> setShootingSpeedRPM(0, 0)
+        );
+    }
+
+    public Command stopSpeaker() {
+        return runOnce(
+            () -> setShootingSpeedRPM(0, 0)
+        );
+    }
+
+    public Command revSpeakerSlow() {
+        return startEnd(
+            () -> setShootingSpeedRPM(-1000, 1000),
             () -> setShootingSpeedRPM(0, 0)
         );
     }

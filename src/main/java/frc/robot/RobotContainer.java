@@ -32,6 +32,7 @@ import frc.robot.Constants.Mode;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PivotSetpoints;
 import frc.robot.StateManager.State;
+import frc.robot.autoPaths.Adaptive_Test;
 import frc.robot.autoPaths.GDA_AS456;
 import frc.robot.autoPaths.GDA_M2145;
 import frc.robot.autoPaths.GDA_M2145_RunEverything;
@@ -129,17 +130,19 @@ public class RobotContainer {
 
     NamedCommandManager.registerAll();
     NoteVisualizer.setPivotPoseSupplier(pivot::getPose);
-    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("SS GP 87"));
-
+    // autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("SS GP 876"));
+    autoChooser = new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("Preload Choreo SS GP 876"));
 
     // autoChooser.addOption("Pivot SysIs (Quasistatic Forward)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    // autoChooser.addOption("Pivot SysIs (Quasistatic Reverse)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption("Pivot SysIsautho(Quasistatic Reverse)", pivot.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
     // autoChooser.addOption("Pivot SysIs (Dynamic Forward)", pivot.sysIdDynamic(SysIdRoutine.Direction.kForw ard));
     // autoChooser.addOption("Pivot SysIs (Dynamic everse)", pivot.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     // autoChooser.addOption("Pivot Model", new ArmFeedForwardCharacterization(pivot, (volts) -> pivot.runVoltage(volts), () -> pivot.getVelocity(), () -> pivot.getPosition(), (x) -> 0.0));
     // autoChooser.addDefaultOption("Sim AS GP 564");
     autoChooser.addOption("TEST - SS GP 876", GDA_SS8765.load());
+    
     autoChooser.addOption("TEST - AS GP 456", GDA_AS456.load());
+    autoChooser.addOption("Adaptive - Test", Adaptive_Test.load());
     // autoChooser.addOption("TEST - M GP 32145", GDA_M32145.load());
 
 
@@ -168,33 +171,30 @@ public class RobotContainer {
     Trigger isReady = new Trigger(this::readyToShoot);
     Trigger isReadyRumble = isReady.and(StateManager::isAiming);
 
-    // Gamepiece align
-    OIConstants.driverController.b().whileTrue(new AlignToGamepiece());
-
     // Align Amp / Speaker
-    OIConstants.driverController.leftBumper().whileTrue(
-      Commands.either(
-        Commands.select(
-          Map.ofEntries(
-            Map.entry(State.AMP, drive.AutoAlignAmp()),
-            Map.entry(State.SPEAKER, Commands.parallel(
-              new AlignSpeaker(),
-              pivot.aimSpeakerDynamic(),
-              shooter.revSpeaker()
-            )),
-            Map.entry(State.SHUTTLE, new AlignShuttle())),
-            StateManager::getState),
-        shooter.revSpeaker()
-          .alongWith(pivot.aimSpeakerDynamic()),
-        () -> StateManager.isAutomate()
-      )
-    );
+    // OIConstants.driverController.leftBumper().whileTrue(
+    //   Commands.either(
+    //     Commands.select(
+    //       Map.ofEntries(
+    //         Map.entry(State.AMP, drive.AutoAlignAmp()),
+    //         Map.entry(State.SPEAKER, Commands.parallel(
+    //           new AlignSpeaker(),
+    //           pivot.aimSpeakerDynamic(),
+    //           shooter.revSpeaker()
+    //         )),
+    //         Map.entry(State.SHUTTLE, new AlignShuttle())),
+    //         StateManager::getState),
+    //     shooter.revSpeaker()
+    //       .alongWith(pivot.aimSpeakerDynamic()),
+    //     () -> StateManager.isAutomate()
+    //   )
+    // );
 
     // Auto Shoot
-    OIConstants.driverController.rightTrigger(0.3)
-      .and(isReady)
-      .whileTrue(indexer.forwards().finallyDo(() -> StateManager.setState(State.SPEAKER)))
-      .onTrue(NoteVisualizer.shoot());
+    // OIConstants.driverController.rightTrigger(0.3)
+    //   .and(isReady)
+    //   .whileTrue(indexer.forwards().finallyDo(() -> StateManager.setState(State.SPEAKER)))
+    //   .onTrue(NoteVisualizer.shoot());
     
     //Drive robot relative
     // OIConstants.driverController.leftTrigger(0.3)
@@ -211,6 +211,17 @@ public class RobotContainer {
       StateManager.toggleAutomate();
       leds.toggleYellow();
     }));
+    
+    OIConstants.driverController.povRight().toggleOnTrue(shooter.revSpeakerMedium());
+    OIConstants.driverController.povUp().toggleOnTrue(shooter.revSpeakerFast());
+    OIConstants.driverController.povLeft().whileTrue(shooter.stopSpeaker());
+    OIConstants.driverController.povDown().toggleOnTrue(shooter.revSpeakerSlow());
+   
+    OIConstants.driverController.y().whileTrue(indexer.forwards());
+    OIConstants.operatorController.povUp().whileTrue(shooter.revSpeakerSuperFast());
+
+       // Gamepiece align
+    OIConstants.driverController.b().whileTrue(new AlignToGamepiece());
 
     // Zero heading
     OIConstants.driverController.a().whileTrue(Commands.runOnce(drive::zeroHeading));
@@ -240,7 +251,7 @@ public class RobotContainer {
     //         pivot.aimSource()));
     
     // Ground Intake
-    OIConstants.operatorController.povDown().or(OIConstants.operatorController.povDownRight())
+    OIConstants.driverController.leftBumper().or(OIConstants.operatorController.povDownRight())
     .whileTrue(
         Commands.parallel(
             pivot.aimIntake(),

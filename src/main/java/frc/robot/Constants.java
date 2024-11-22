@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public final class Constants {
   // Mode of the robot, set to Mode.REPLAY for replay
   public static final Mode currentMode = Mode.fromState();
+  public static final boolean slowMode = true;
   public static final boolean tuningMode = false;
   public static final boolean hasVision = true;
   public static final int tryConfigCount = 5;
@@ -70,7 +71,7 @@ public final class Constants {
     public static final int intakeVortex = 60;
     public static final int intakeKraken = 80;
     public static final int tower = 30;
-    public static final int handoff = 25;
+    public static final int handoff = 30;
     public static final int shooter = 80;
   }
 

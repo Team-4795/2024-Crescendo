@@ -10,15 +10,16 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.Constants;
 
 public final class DriveConstants {
 
     public static final double driftRate = 1.0;
-        public static final int accelSize = 5;
+    public static final int accelSize = 5;
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 4.6;
-    public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
+    public static final double kMaxSpeedMetersPerSecond = Constants.slowMode ? 1.5 : 4.6;
+    public static final double kMaxAngularSpeed = Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 10.0; // radians per second
     public static final double kMagnitudeSlewRate = 10.0; // percent per second (1 = 100%)

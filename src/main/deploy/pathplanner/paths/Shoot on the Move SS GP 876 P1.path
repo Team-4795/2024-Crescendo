@@ -50,23 +50,6 @@
   ],
   "eventMarkers": [
     {
-      "name": "SetPivotAngle",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "VisionAlign 5k"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
       "name": "Intake",
       "waypointRelativePos": 0.55,
       "command": {

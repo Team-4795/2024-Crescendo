@@ -163,6 +163,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
           "type": "race",
           "data": {
             "commands": [

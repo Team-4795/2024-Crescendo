@@ -41,7 +41,7 @@ public class Pivot extends SubsystemBase {
     private PivotIOInputsAutoLogged inputs = new PivotIOInputsAutoLogged();
 
     @AutoLogOutput
-    private PivotMode mode = PivotMode.FAST;
+    private PivotMode mode = Constants.slowMode ? PivotMode.SLOW : PivotMode.FAST;
 
     LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", PivotConstants.kP);
     LoggedTunableNumber kI = new LoggedTunableNumber("Pivot/kI", PivotConstants.kI);
@@ -145,7 +145,7 @@ public class Pivot extends SubsystemBase {
             if(Math.abs(goal - this.getPosition()) < 0.4){
                 setPivotMode(PivotMode.SLOW);
             } else {
-                setPivotMode(PivotMode.FAST);
+                setPivotMode(PivotMode.SLOW);
             }
         }
     }
