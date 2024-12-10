@@ -49,6 +49,7 @@ import frc.robot.subsystems.vision.AprilTagVision.*;
 import frc.robot.util.NamedCommandManager;
 import frc.robot.util.NoteVisualizer;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.*;
 
 /**

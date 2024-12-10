@@ -10,11 +10,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public final class DriveConstants {
-
-    public static final double driftRate = 1.0;
+    public static final double driftRate = Robot.isPerseus ? 1.0 : 0.0;
     public static final int accelSize = 5;
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
@@ -45,9 +46,9 @@ public final class DriveConstants {
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
     // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 2;
-    public static final int kRearLeftDrivingCanId = 6;
-    public static final int kFrontRightDrivingCanId = 4;
+    public static final int kFrontLeftDrivingCanId = RobotController.getSerialNumber().equals("03260A14") ? 2 : 0;
+    public static final int kRearLeftDrivingCanId = RobotController.getSerialNumber().equals("03260A14") ? 6 : 0;
+    public static final int kFrontRightDrivingCanId = RobotController.getSerialNumber().equals("03260A14") ? 4 : 0;
     public static final int kRearRightDrivingCanId = 8;
 
     public static final int kFrontLeftTurningCanId = 3;

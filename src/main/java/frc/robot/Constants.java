@@ -23,6 +23,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -45,6 +46,8 @@ public final class Constants {
   public static final int paramApplyAttemptLimit = 5;
   public static final double paramApplyTimemout = 0.05;
   public static Alliance alliance;
+  public static String roboSerialNum = RobotController.getSerialNumber();
+  public static boolean isPerseus = roboSerialNum.equals("03260A14");
 
   public static final boolean useLQR = false;
 
