@@ -54,8 +54,6 @@ import com.pathplanner.lib.pathfinding.Pathfinding;
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
-  private String roboRioSerialNumber;
-  public static boolean isPerseus;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -144,7 +142,6 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically during all modes. */
   @Override
   public void robotPeriodic() {
-    roboRioSerialNumber = RobotController.getSerialNumber();
     // Runs the Scheduler. This is responsible for polling buttons, adding
     // newly-scheduled commands, running already-scheduled commands, removing
     // finished or interrupted commands, and running subsystem periodic() methods.
@@ -158,15 +155,8 @@ public class Robot extends LoggedRobot {
     Logger.recordOutput("Current State", StateManager.getState());
     Logger.recordOutput("Automate", StateManager.isAutomate());
     Logger.recordOutput("isReady?", robotContainer.readyToShoot());
-    Logger.recordOutput("Robo Rio Serial Number", roboRioSerialNumber);
-    Logger.recordOutput("Is Perseus", isPerseus);
     AlignPose.periodic();
     Threads.setCurrentThreadPriority(true, 10);
-
-    if(roboRioSerialNumber.equals("03260A14"))
-    {
-      isPerseus = true;
-    }
   }
 
   /** This function is called once when the robot is disabled. */

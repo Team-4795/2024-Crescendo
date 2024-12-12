@@ -46,8 +46,6 @@ public final class Constants {
   public static final int paramApplyAttemptLimit = 5;
   public static final double paramApplyTimemout = 0.05;
   public static Alliance alliance;
-  public static String roboSerialNum = RobotController.getSerialNumber();
-  public static boolean isPerseus = roboSerialNum.equals("03260A14");
 
   public static final boolean useLQR = false;
 

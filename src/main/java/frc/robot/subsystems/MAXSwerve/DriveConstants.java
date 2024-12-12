@@ -15,7 +15,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 
 public final class DriveConstants {
-    public static final double driftRate = Robot.isPerseus ? 1.0 : 0.0;
+    public static final double driftRate = 1.0;
     public static final int accelSize = 5;
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
@@ -49,12 +49,12 @@ public final class DriveConstants {
     public static final int kFrontLeftDrivingCanId = RobotController.getSerialNumber().equals("03260A14") ? 2 : 0;
     public static final int kRearLeftDrivingCanId = RobotController.getSerialNumber().equals("03260A14") ? 6 : 0;
     public static final int kFrontRightDrivingCanId = RobotController.getSerialNumber().equals("03260A14") ? 4 : 0;
-    public static final int kRearRightDrivingCanId = 8;
+    public static final int kRearRightDrivingCanId = RobotController.getSerialNumber().equals("03260A14") ? 8 : 0;
 
-    public static final int kFrontLeftTurningCanId = 3;
-    public static final int kRearLeftTurningCanId = 7;
-    public static final int kFrontRightTurningCanId = 5;
-    public static final int kRearRightTurningCanId = 9;
+    public static final int kFrontLeftTurningCanId = RobotController.getSerialNumber().equals("03260A14") ? 3 : 0;
+    public static final int kRearLeftTurningCanId = RobotController.getSerialNumber().equals("03260A14") ? 7 : 0;
+    public static final int kFrontRightTurningCanId = RobotController.getSerialNumber().equals("03260A14") ? 5 : 0;
+    public static final int kRearRightTurningCanId = RobotController.getSerialNumber().equals("03260A14") ? 9 : 0;
 
     public static final int kPigeonCanId = 20;
 
