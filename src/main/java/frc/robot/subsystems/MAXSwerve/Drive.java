@@ -67,7 +67,7 @@ public class Drive extends SubsystemBase {
     // The gyro sensor
     private GyroIO gyro;
     private GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
-    private boolean fieldRelative = true;
+    private boolean fieldRelative = false;
 
     // Slew rate filter variables for controlling lateral acceleration
     private double m_currentRotation = 0.0;
@@ -147,7 +147,7 @@ public class Drive extends SubsystemBase {
                         m_frontRight.getPosition(),
                         m_rearLeft.getPosition(),
                         m_rearRight.getPosition()
-                }, new Pose2d(0,0, Rotation2d.fromDegrees(0)));
+                }, new Pose2d(13.8,2.9, Rotation2d.fromDegrees(130)));
 
         this.zeroHeading();
 

@@ -7,6 +7,10 @@ import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import frc.robot.subsystems.MAXSwerve.Drive;
 
 public class VisionIOSim implements VisionIO {
@@ -21,26 +25,67 @@ public class VisionIOSim implements VisionIO {
         visionSim.addAprilTags(VisionConstants.aprilTagFieldLayout);
 
         cameraProperties = new SimCameraProperties();
-        cameraProperties.setCalibration(1280, 720, Rotation2d.fromDegrees(78));
-        // Approximate detection noise with average and standard deviation error in pixels.
+        cameraProperties.setCalibration(1280, 800, Rotation2d.fromDegrees(78));
         cameraProperties.setCalibError(0.38, 0.2);
-        // Set the camera image capture framerate (Note: this is limited by robot loop rate).
         cameraProperties.setFPS(30);
-        // The average and standard deviation in milliseconds of image data latency.
         cameraProperties.setAvgLatencyMs(35);
         cameraProperties.setLatencyStdDevMs(5);
 
-        camera = new PhotonCamera("Barbary Fig");
+        camera = new PhotonCamera("Jermaine Coral");
+        // camera2 = new PhotonCamera("Kendrick LaBarge");
 
         cameraSim = new PhotonCameraSim(camera, cameraProperties);
 
-        visionSim.addCamera(cameraSim, VisionConstants.cameraPoses[0]);
+        // Front sideways Camera
+        /*
+        visionSim.addCamera(
+            cameraSim, 
+            new Transform3d(
+                new Translation3d(
+                    0.3,
+                    0,
+                    Units.inchesToMeters(7)), 
+                new Rotation3d(
+                    Units.degreesToRadians(90), 
+                    Units.degreesToRadians(-30), 
+                    0)));
+                */
+        
+
+        // Backwards sideways Camera
+        /* 
+        visionSim.addCamera(
+            cameraSim, 
+            new Transform3d(
+                new Translation3d(
+                    -0.3,
+                    0,
+                    Units.inchesToMeters(7)), 
+                new Rotation3d(
+                    Units.degreesToRadians(90), 
+                    Units.degreesToRadians(-30), 
+                    Units.degreesToRadians(180))));
+                */
+
+        //Back left Normal Camera
+        visionSim.addCamera(
+            cameraSim, 
+            new Transform3d(
+                new Translation3d(
+                    -0.375,
+                    -0.375,
+                    Units.inchesToMeters(7)), 
+                new Rotation3d(
+                    0, 
+                    Units.degreesToRadians(-45), 
+                    135)));
 
         cameraSim.enableRawStream(true);
         cameraSim.enableProcessedStream(true);
-
         cameraSim.enableDrawWireframe(true);
+
     }
+    
     @Override
     public void updateInputs(VisionIOInputs inputs) {
         // if (Drive.getInstance() != null) {

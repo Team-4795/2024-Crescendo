@@ -2,6 +2,7 @@ package frc.robot.subsystems.vision.AprilTagVision;
 
 import java.io.IOException;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -59,7 +60,7 @@ public class VisionConstants {
 
     static {
         try {
-            aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+            aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource("/frc/robot/2025AprilTag.json");
             aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
         } catch (IOException e) {
             e.printStackTrace();
