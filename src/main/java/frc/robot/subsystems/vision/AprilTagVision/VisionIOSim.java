@@ -36,8 +36,7 @@ public class VisionIOSim implements VisionIO {
 
         cameraSim = new PhotonCameraSim(camera, cameraProperties);
 
-        // Front sideways Camera
-        /*
+        // Front sideways Camera: Allows view of reef tags at reef
         visionSim.addCamera(
             cameraSim, 
             new Transform3d(
@@ -49,36 +48,50 @@ public class VisionIOSim implements VisionIO {
                     Units.degreesToRadians(90), 
                     Units.degreesToRadians(-30), 
                     0)));
-                */
+                
         
 
-        // Backwards sideways Camera
-        /* 
-        visionSim.addCamera(
-            cameraSim, 
-            new Transform3d(
-                new Translation3d(
-                    -0.3,
-                    0,
-                    Units.inchesToMeters(7)), 
-                new Rotation3d(
-                    Units.degreesToRadians(90), 
-                    Units.degreesToRadians(-30), 
-                    Units.degreesToRadians(180))));
-                */
+        // Backwards sideways Camera: Allows view of reef tags from feeders. Kinda works at processor
+        // visionSim.addCamera(
+        //     cameraSim, 
+        //     new Transform3d(
+        //         new Translation3d(
+        //             -0.3,
+        //             0,
+        //             Units.inchesToMeters(7)), 
+        //         new Rotation3d(
+        //             Units.degreesToRadians(90), 
+        //             Units.degreesToRadians(-30), 
+        //             Units.degreesToRadians(180))));
 
-        //Back left Normal Camera
-        visionSim.addCamera(
-            cameraSim, 
-            new Transform3d(
-                new Translation3d(
-                    -0.375,
-                    -0.375,
-                    Units.inchesToMeters(7)), 
-                new Rotation3d(
-                    0, 
-                    Units.degreesToRadians(-45), 
-                    135)));
+            
+
+        //Back left Normal Camera: Works for all reef sides except one on tag 6
+        // visionSim.addCamera(
+        //     cameraSim, 
+        //     new Transform3d(
+        //         new Translation3d(
+        //             -0.375,
+        //             -0.375,
+        //             Units.inchesToMeters(7)), 
+        //         new Rotation3d(
+        //             0, 
+        //             Units.degreesToRadians(-30), 
+        //             Units.degreesToRadians(130))));
+            
+        
+        //Back Right Normal Camera: Works for all reef sides except one on tag 11
+        // visionSim.addCamera(
+        //     cameraSim, 
+        //     new Transform3d(
+        //         new Translation3d(
+        //             -0.375,
+        //             0.375,
+        //             Units.inchesToMeters(7)), 
+        //         new Rotation3d(
+        //             0, 
+        //             Units.degreesToRadians(-30), 
+        //             Units.degreesToRadians(-130))));
 
         cameraSim.enableRawStream(true);
         cameraSim.enableProcessedStream(true);
